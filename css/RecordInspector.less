@@ -1,0 +1,147 @@
+.record-inspector {
+    padding: 1em;
+    font-family: Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
+
+    // Navigation inside of an object
+    .nav {
+        color: #666;
+        margin-bottom: 1em;
+        margin-left: 1em;
+
+        a {
+            margin-left: 0.6em;
+            cursor: pointer;
+
+            &:hover {
+                color: #052b75;
+            }
+
+            &::before {
+                margin-right: 0.6em;
+                content: '➤';
+            }
+
+            a + &:hover::before {
+                color: #666;
+            }
+        }
+    }
+
+    .root-header {
+        margin-left: 1em;
+    }
+
+    ul {
+        margin-top: 0.5em;
+        list-style: none;
+
+        li {
+            margin-top: 0.3em;
+        }
+    }
+
+    // Various elements of key-headers
+    .header-container--updated {
+        animation-name: flash-animation;
+        animation-duration: 1s;
+        animation-timing-function: cubic-bezier(0.895, 0.03, 0.685, 0.22);
+    }
+    @keyframes flash-animation {
+        from { background: rgb(255, 252, 175); }
+        to { background: default; }
+    }
+    .header {
+        white-space: nowrap;
+
+        .key-desc {
+            color: rgb(136, 18, 128);
+            margin-right: 1em;
+
+            &.key-deemph {
+                color: rgb(171, 130, 168);
+            }
+        }
+
+        .link-desc {
+            color: rgb(18, 36, 136);
+        }
+
+        .value-desc-string {
+            color: rgb(0, 120, 80);
+
+            &::before, &::after {
+                content: '"';
+            }
+        }
+
+        .value-desc-number {
+            color: #0067ad;
+        }
+
+        .value-desc-boolean {
+            color: rgb(0, 36, 40);
+        }
+
+        .summary-desc {
+            color: #aaa;
+            margin-left: 0.4em;
+
+            &::before {
+                content: '(';
+            }
+
+            &::after {
+                content: ')';
+            }
+        }
+    }
+
+    // Collapsable React class
+    .collapsable {
+        a.collapse-button {
+            cursor: pointer;
+            &::before {
+                color: #444;
+                cursor: pointer;
+                content: '\25B6';
+                margin-left: -1em;
+                margin-right: 0.5em;
+            }
+
+            &[data-opened=true]::before {
+                content: '\25BC';
+            }
+        }
+
+
+        .focus-button {
+            cursor: pointer;
+
+            .link-desc {
+                padding: 2px;
+                border: solid 1px #555;
+                border-radius: 2px;
+                font-size: 0.8em;
+            }
+
+            &:hover .link-desc {
+                background-color: rgb(255, 252, 187);
+            }
+        }
+    }
+
+    .ellipsis {
+        font-size: 1.5em;
+        color: #555;
+        cursor: pointer;
+        padding: 0.2em;
+        padding-top: 0em;
+        margin-top: 0.5em;
+        margin-bottom: 0.5em;
+        display: inline-block;
+
+        &:hover {
+            background-color: rgb(255, 255, 187);
+        }
+    }
+}

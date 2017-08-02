@@ -1,0 +1,174 @@
+.store-explorer {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+
+    & > .panel {
+        flex: 0 0 50px;
+
+        background: linear-gradient(#f7f7f7, #e2e2e2);
+        border-bottom: 1px solid #d0d0d0;
+
+        padding-left: 1em;
+        padding-right: 1em;
+
+        display: flex;
+        align-items: center;
+
+        .left-panel {
+            flex: 0 0 30%;
+
+            button {
+                background: linear-gradient(#fdfdfd, #d2d3d6);
+                border-radius: 17px;
+                border: 1px solid rgba(0,0,0,0.25);
+                box-shadow: 0 1px 0 #fff;
+                cursor: pointer;
+                fill: #444;
+                height: 32px;
+                width: 32px;
+                margin: 0;
+                padding: 0;
+                padding-left: 3px;
+                padding-top: 2px;
+                margin-left: 5px;
+            }
+
+            button.refresh-button {
+                font-size: 13px;
+                padding: 10px;
+
+                i {
+                    margin-top: -8px;
+                    margin-left: -7px;
+                }
+            }
+        }
+
+        .right-panel {
+            flex: 0 0 70%;
+        }
+
+        button.back-button {
+            transform: rotateY(180deg);
+        }
+
+        i {
+            font-size: 1.3em;
+            position: absolute;
+            line-height: 1;
+            text-align: center;
+            opacity: 0.5;
+        }
+
+        .store-view {
+            flex: 1;
+        }
+
+        // Search Input
+        .search {
+            font-size: 1em;
+            display: inline-flex;
+            position: relative;
+
+            & > * {
+                z-index: 100;
+            }
+
+            input.prompt {
+                padding: 0.6em;
+                padding-left: 2.67em;
+                padding-right: 3em;
+                border-radius: 1.3em;
+                margin: 0;
+                max-width: 100%;
+                min-width: 20em;
+                flex: 1 0 auto;
+                outline: 0;
+                text-align: left;
+                background: #fff;
+                color: rgba(0,0,0,.87);
+                border: 1px solid rgba(34,36,38,.15);
+                box-shadow: none;
+                transition: box-shadow .1s ease,border-color .1s ease;
+
+                &:focus {
+                    border-color: #85b7d9;
+                    background: #fff;
+                    color: rgba(0,0,0,.8);
+                    box-shadow: none;
+
+                    & ~ .search-icon {
+                        opacity: 0.8;
+                    }
+                }
+
+                &:not(:placeholder-shown) ~ .star-button {
+                    opacity: 0.8;
+                }
+            }
+
+            .search-icon {
+                left: 10px;
+                top: 7px;
+            }
+
+            .star-button {
+                right: 1px;
+                top: 1px;
+                opacity: 0;
+                padding: 0.4em;
+                padding-left: 0.3em;
+                border-top-right-radius: 1.3em;
+                border-bottom-right-radius: 1.3em;
+
+                &:hover {
+                    background: #eee;
+                }
+
+                &.unstar {
+                    color: #85b7d9;/*rgba(115, 164, 243, 0.72);*/
+                }
+            }
+
+            .search-details {
+                position: absolute;
+                top: 16px;
+                padding-top: 2em;
+                padding-bottom: 0.5em;
+                padding-left: 2.67em;
+                padding-right: 0.5em;
+                box-sizing: border-box;
+                width: 100%;
+                z-index: 0;
+                border: solid 1px #bbb;
+                background: #fff;
+                border-bottom-right-radius: 0.3em;
+                border-bottom-left-radius: 0.3em;
+
+                .search-config {
+                    font-size: 10px;
+                    text-align: right;
+                    margin-top: 2em;
+                }
+
+                .saved-search {
+                    display: flex;
+                    justify-content: space-between;
+                    margin-bottom: 0.5em;
+
+                    .star-button {
+                        position: static;
+                        padding: 0;
+                        opacity: 1;
+
+                        &:hover {
+                            opacity: 0.5;
+                            background: transparent;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

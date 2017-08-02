@@ -1,0 +1,24 @@
+#devtools-root {
+    font-family:
+        system,
+        -apple-system,
+        'San Francisco',
+        '.SFNSDisplay-Regular',
+        'Segoe UI',
+        Segoe,
+        'Segoe WP',
+        'Helvetica Neue',
+        helvetica,
+        'Lucida Grande',
+        arial,
+        sans-serif;
+    font-size: 14px;
+}
+
+.placeholder {
+    color: #ccc;
+    font-size: 3em;
+    line-height: 5em;
+    text-align: center;
+    margin-top: 1em;
+}
