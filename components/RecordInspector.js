@@ -9,14 +9,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import AnimateOnChange from 'react-animate-on-change';
-import API from '../api';
 import { shallowArraysEqual } from '../util/objCompare';
 
 import '../css/RecordInspector.less';
 
 export class RecordInspector extends React.Component {
-  constructor(props) {
-    super(props);
+  constructor(props, context) {
+    super(props, context);
 
     const { id } = this.props;
 
@@ -27,7 +26,6 @@ export class RecordInspector extends React.Component {
     };
 
     this.navigateToPath = this.navigateToPath.bind(this);
-    this.isPathOpened = this.isPathOpened.bind(this);
     this.openOrClosePath = this.openOrClosePath.bind(this);
     this.getType = this.getType.bind(this);
   }
@@ -35,7 +33,6 @@ export class RecordInspector extends React.Component {
   getChildContext() {
     return {
       navigateToPath: this.navigateToPath,
-      isPathOpened: this.isPathOpened,
       openOrClosePath: this.openOrClosePath,
       getType: this.getType,
     };
@@ -46,16 +43,8 @@ export class RecordInspector extends React.Component {
     return typeMapping[id];
   }
 
-  _stringifyPath(path) {
-    return path.map(e => e.id).join('/');
-  }
-
-  isPathOpened(path) {
-    return this.state.pathOpened[this._stringifyPath(path)];
-  }
-
   openOrClosePath(path) {
-    const stringified = this._stringifyPath(path);
+    const stringified = stringifyPath(path);
     const pathOpened = Object.assign({}, this.state.pathOpened, {
       [stringified]: !this.state.pathOpened[stringified],
     });
@@ -79,7 +68,8 @@ export class RecordInspector extends React.Component {
 
   // Overridable method
   renderRecordFields(path) {
-    return <RecordFields path={path} />;
+    const { pathOpened } = this.state;
+    return <RecordFields path={path} pathOpened={pathOpened} />;
   }
 
   renderNav() {
@@ -162,8 +152,8 @@ export class RecordInspector extends React.Component {
 }
 
 export default class LatestRecordInspector extends RecordInspector {
-  constructor(props) {
-    super(props);
+  constructor(props, context) {
+    super(props, context);
 
     const { id, environment } = this.props;
     this.recordSubscribers = {};
@@ -175,6 +165,7 @@ export default class LatestRecordInspector extends RecordInspector {
 
     this.fetch({ id, environment });
 
+    const { API } = context;
     API.onChange({ environment, callback: this.refetch });
   }
 
@@ -193,11 +184,8 @@ export default class LatestRecordInspector extends RecordInspector {
   }
 
   fetch(props) {
-    API.getAllRecordDescriptions(props).then((res, err) => {
-      if (err) {
-        throw err;
-      }
-
+    const { API } = this.context;
+    API.getAllRecordDescriptions(props).then(res => {
       const typeMapping = {};
       res.forEach(({ id, type }) => (typeMapping[id] = type));
       this.setState({
@@ -213,12 +201,9 @@ export default class LatestRecordInspector extends RecordInspector {
 
   fetchRecord(id) {
     const { environment } = this.props;
+    const { API } = this.context;
 
-    API.getRecord({ environment, id }).then((record, err) => {
-      if (err) {
-        throw err;
-      }
-
+    API.getRecord({ environment, id }).then(record => {
       const callbacks = this.recordSubscribers[id] || [];
       this.fetchedRecords[id] = record;
 
@@ -251,6 +236,7 @@ export default class LatestRecordInspector extends RecordInspector {
 
   componentWillReceiveProps(props) {
     const { id, environment } = props;
+    const { API } = this.context;
     if (this.props.id === id && this.props.environment === environment) {
       return;
     }
@@ -267,11 +253,13 @@ export default class LatestRecordInspector extends RecordInspector {
   }
 
   componentWillUnmount() {
+    const { API } = this.context;
     API.stopObservingChange(this.props);
   }
 
   renderRecordFields(path) {
-    return <LatestRecordFields path={path} />;
+    const { pathOpened } = this.state;
+    return <LatestRecordFields path={path} pathOpened={pathOpened} />;
   }
 }
 
@@ -319,7 +307,7 @@ export class SnapshotRecordInspector extends RecordInspector {
 
   renderRecordFields(path) {
     const { snapshotBefore, snapshotAfter } = this.props;
-    const { splitView } = this.state;
+    const { splitView, pathOpened } = this.state;
 
     if (splitView) {
       return (
@@ -327,6 +315,7 @@ export class SnapshotRecordInspector extends RecordInspector {
           <div className="before record-inspector">
             <RecordFields
               path={path}
+              pathOpened={pathOpened}
               snapshot={snapshotBefore}
               otherSnapshot={snapshotAfter}
             />
@@ -334,6 +323,7 @@ export class SnapshotRecordInspector extends RecordInspector {
           <div className="after record-inspector">
             <RecordFields
               path={path}
+              pathOpened={pathOpened}
               snapshot={snapshotAfter}
               otherSnapshot={snapshotBefore}
             />
@@ -345,6 +335,7 @@ export class SnapshotRecordInspector extends RecordInspector {
     return (
       <InlineDiffRecordFields
         path={path}
+        pathOpened={pathOpened}
         snapshot={snapshotAfter}
         otherSnapshot={snapshotBefore}
       />
@@ -368,6 +359,8 @@ class RecordFields extends React.Component {
       record: null,
       previousRecord: null,
     };
+
+    this.isPathOpened = this.isPathOpened.bind(this);
   }
 
   componentDidMount() {
@@ -399,6 +392,16 @@ class RecordFields extends React.Component {
 
   getSelfClass() {
     return RecordFields;
+  }
+
+  isPathOpened(path) {
+    return this.props.pathOpened[stringifyPath(path)];
+  }
+
+  getChildContext() {
+    return {
+      isPathOpened: this.isPathOpened,
+    };
   }
 
   makeFocusButtonHandler(id, name) {
@@ -453,7 +456,7 @@ class RecordFields extends React.Component {
       <li key={key}>
         <Collapsable header={header} path={newPath}>
           <ul>
-            {array.map((el, i) => this.renderChild(el, i))}
+            {array.map((el, i) => this.renderChild(el, prev[i], i))}
           </ul>
         </Collapsable>
       </li>
@@ -462,7 +465,7 @@ class RecordFields extends React.Component {
 
   renderRefs(refs, prev, key) {
     const { getType } = this.context;
-    const { path, snapshot, otherSnapshot } = this.props;
+    const { path, snapshot, otherSnapshot, pathOpened } = this.props;
 
     const children = refs.map((ref, i) => {
       const name = `${key}[${i}]`;
@@ -494,6 +497,7 @@ class RecordFields extends React.Component {
           <Collapsable header={header} path={newPath}>
             <Fields
               path={newPath}
+              pathOpened={pathOpened}
               getType={getType}
               snapshot={snapshot}
               otherSnapshot={otherSnapshot}
@@ -529,7 +533,7 @@ class RecordFields extends React.Component {
 
   renderRef(ref, prev, key) {
     const { getType } = this.context;
-    const { path, snapshot, otherSnapshot } = this.props;
+    const { path, snapshot, otherSnapshot, pathOpened } = this.props;
 
     const newPath = [...path, { id: ref, name: key }];
     const clickHandler = this.makeFocusButtonHandler(ref, key);
@@ -559,6 +563,7 @@ class RecordFields extends React.Component {
         <Collapsable header={header} path={newPath}>
           <Fields
             path={newPath}
+            pathOpened={pathOpened}
             getType={getType}
             snapshot={snapshot}
             otherSnapshot={otherSnapshot}
@@ -675,7 +680,8 @@ class LatestRecordFields extends RecordFields {
   shouldComponentUpdate(nextProps, nextState) {
     if (
       this.props.id !== nextProps.id ||
-      this.props.environment !== nextProps.environment
+      this.props.environment !== nextProps.environment ||
+      this.props.pathOpened !== nextProps.pathOpened
     ) {
       return true;
     }
@@ -685,7 +691,7 @@ class LatestRecordFields extends RecordFields {
 
   shouldAnimate() {
     const { record, previousRecord } = this.state;
-    return previousRecord && previousRecord.__id === record.__id;
+    return previousRecord ? previousRecord.__id === record.__id : false;
   }
 
   onNewRecord(record) {
@@ -838,15 +844,22 @@ export function ObjectFields({ value }) {
   );
 }
 
+function stringifyPath(path) {
+  return path.map(e => e.id).join('/');
+}
+
 // In order to avoid passing down functions recursively all over the place, use
 // context as a hack.
 RecordInspector.childContextTypes = {
   navigateToPath: PropTypes.func,
   getType: PropTypes.func,
-  isPathOpened: PropTypes.func,
   openOrClosePath: PropTypes.func,
   subscribeForRecord: PropTypes.func,
   unsubscribeFromRecord: PropTypes.func,
+};
+
+LatestRecordInspector.contextTypes = {
+  API: PropTypes.object,
 };
 
 RecordFields.contextTypes = {
@@ -854,6 +867,10 @@ RecordFields.contextTypes = {
   getType: PropTypes.func,
   subscribeForRecord: PropTypes.func,
   unsubscribeFromRecord: PropTypes.func,
+};
+
+RecordFields.childContextTypes = {
+  isPathOpened: PropTypes.func,
 };
 
 Collapsable.contextTypes = {

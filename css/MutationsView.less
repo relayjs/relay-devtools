@@ -13,19 +13,16 @@
 
     .views {
         flex: 1;
-        display: flex;
-        flex-direction: column;
-
-        @media only screen and (min-width: 1024px) {
-            flex-direction: row;
-        }
+        position: relative;
     }
 
     .events-map {
         padding: 2em 5em;
         overflow-x: auto;
         overflow-y: auto;
-        flex: 1 1 30%;
+        height: 100%;
+        width: 100%;
+        box-sizing: border-box;
 
         .mutation-events {
             position: relative;
@@ -134,10 +131,16 @@
     }
 
     .mutation-inspector {
-        flex: 1 1 70%;
+        background: white;
         border-left: solid 1px #ddd;
         width: 100%;
         min-width: 0;
+        height: 100%;
+        min-height: 0;
+        // a hack. "height: 100%" doesn't work unless this element is absolutely
+        // positioned. I suspect it has something to do with Flexbox and
+        // relatively positioned elements.
+        position: absolute;
 
         display: flex;
         flex-direction: column;
@@ -171,17 +174,26 @@
                 }
             }
 
-            .close {
+            .right-buttons {
                 float: right;
-                margin-right: 5px;
-                margin-top: -5px;
-                font-size: 1.5em;
                 color: #777;
                 cursor: pointer;
+                margin-right: 5px;
+                margin-top: -5px;
 
-                &:hover {
+                & > a:hover {
                     color: #333;
                 }
+            }
+
+            .close {
+                font-size: 1.5em;
+            }
+
+            .change-layout {
+                margin-right: 5px;
+                position: relative;
+                top: -1px;
             }
         }
 

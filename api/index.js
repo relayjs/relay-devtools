@@ -8,8 +8,14 @@
  */
 import ChromeDevtoolsAPI from './ChromeDevtoolsAPI';
 import DevelMockAPI from './DevelMockAPI';
+import ReactNativeBridgeAPI from './ReactNativeBridgeAPI';
 
-import { inDevMode } from '../util/util.js';
+import { inDevMode, inChromeDevTools, inElectron } from '../util/util.js';
 
-const API = inDevMode() ? DevelMockAPI : ChromeDevtoolsAPI;
+const API = inDevMode()
+  ? DevelMockAPI
+  : inChromeDevTools()
+    ? ChromeDevtoolsAPI
+    : inElectron() ? ReactNativeBridgeAPI : null;
+
 export default API;

@@ -7,7 +7,7 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 import React from 'react';
-import API from '../api';
+import PropTypes from 'prop-types';
 
 import '../css/EnvironmentChooser.less';
 
@@ -20,6 +20,10 @@ export default class EnvironmentChooser extends React.Component {
     };
 
     this.handleChange = this.handleChange.bind(this);
+  }
+
+  componentDidMount() {
+    const { API } = this.context;
 
     API.getEnvironments().then((res, err) => {
       if (err) {
@@ -79,3 +83,7 @@ export default class EnvironmentChooser extends React.Component {
     });
   }
 }
+
+EnvironmentChooser.contextTypes = {
+  API: PropTypes.object,
+};

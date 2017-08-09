@@ -48,22 +48,22 @@ const CHECK_RELAY = '!!window.__RELAY_DEBUGGER__';
 const changeCallbacks = {};
 
 export default class ChromeDevtoolsAPI {
-  static async getEnvironments() {
+  async getEnvironments() {
     return inspectedEval(GET_REGISTERED_ENVIRONMENT_IDS);
   }
 
-  static async getRecord({ id, environment }) {
+  async getRecord({ id, environment }) {
     if (!id) {
       return null;
     }
     return inspectedEval(GET_RECORD, environment, id);
   }
 
-  static async getAllRecordDescriptions({ environment }) {
+  async getAllRecordDescriptions({ environment }) {
     return inspectedEval(GET_MATCHING_RECORDS, environment, '', 'idtype');
   }
 
-  static async getRecords({ matchTerm, matchType, environment }) {
+  async getRecords({ matchTerm, matchType, environment }) {
     const recordsPromise = inspectedEval(
       GET_MATCHING_RECORDS,
       environment,
@@ -79,7 +79,7 @@ export default class ChromeDevtoolsAPI {
     );
   }
 
-  static onChange({ environment, callback }) {
+  onChange({ environment, callback }) {
     if (!changeCallbacks[environment]) {
       const interval = setInterval(async () => {
         const isDirty = await inspectedEval(CHECK_DIRTY, environment);
@@ -97,7 +97,7 @@ export default class ChromeDevtoolsAPI {
     }
   }
 
-  static stopObservingChange({ environment }) {
+  stopObservingChange({ environment }) {
     if (!changeCallbacks[environment]) {
       return;
     }
@@ -105,19 +105,19 @@ export default class ChromeDevtoolsAPI {
     delete changeCallbacks[environment];
   }
 
-  static startRecordingMutations({ environment }) {
+  startRecordingMutations({ environment }) {
     inspectedEval(MUTATIONS_START_RECORDING, environment);
   }
 
-  static stopRecordingMutations({ environment }) {
+  stopRecordingMutations({ environment }) {
     inspectedEval(MUTATIONS_STOP_RECORDING, environment);
   }
 
-  static async getRecordedMutationEvents({ environment }) {
+  async getRecordedMutationEvents({ environment }) {
     return inspectedEval(MUTATIONS_GET_RECORDED_EVENTS, environment);
   }
 
-  static async checkForRelay() {
+  async checkForRelay() {
     return inspectedEval(CHECK_RELAY);
   }
 }

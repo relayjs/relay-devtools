@@ -1,7 +1,19 @@
 /* global chrome:false */
 export function inDevMode() {
+  return !inChromeDevTools() && !inElectron();
+}
+
+export function inElectron() {
   return (
-    typeof chrome === 'undefined' || typeof chrome.devtools === 'undefined'
+    typeof process !== 'undefined' &&
+    process.versions &&
+    process.versions.electron
+  );
+}
+
+export function inChromeDevTools() {
+  return (
+    typeof chrome !== 'undefined' && typeof chrome.devtools !== 'undefined'
   );
 }
 

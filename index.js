@@ -10,15 +10,16 @@ import React from 'react';
 import { render } from 'react-dom';
 
 import './css/reset.css';
-import './css/global.css';
-import 'font-awesome/css/font-awesome.css';
 
+import api from './api';
 import App from './components/App.js';
 import RelayDetector from './components/RelayDetector.js';
 
+const API = new api();
+
 render(
-  <RelayDetector>
-    <App />
+  <RelayDetector API={API}>
+    <App API={API} />
   </RelayDetector>,
   document.getElementById('devtools-root'),
 );

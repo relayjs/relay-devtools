@@ -8,7 +8,7 @@
  */
 let intervals = [];
 export default class DevelMockAPI {
-  static async getEnvironments() {
+  async getEnvironments() {
     return [
       'Relay Modern Environment 1',
       'Relay Modern Environment 2',
@@ -17,7 +17,7 @@ export default class DevelMockAPI {
     ];
   }
 
-  static async getRecord({ id }) {
+  async getRecord({ id }) {
     if (!id) {
       return null;
     }
@@ -51,7 +51,7 @@ export default class DevelMockAPI {
     };
   }
 
-  static async getAllRecordDescriptions() {
+  async getAllRecordDescriptions() {
     return [
       { id: 'id100', type: 'User' },
       { id: 'id200', type: 'User' },
@@ -67,7 +67,7 @@ export default class DevelMockAPI {
     ];
   }
 
-  static async getRecords() {
+  async getRecords() {
     return [
       {
         id: 'id100',
@@ -84,21 +84,21 @@ export default class DevelMockAPI {
     ];
   }
 
-  static onChange({ callback }) {
+  onChange({ callback }) {
     const interval = setInterval(callback, 3000);
     intervals.push(interval);
   }
 
-  static stopObservingChange() {
+  stopObservingChange() {
     intervals.forEach(clearInterval);
     intervals = [];
   }
 
-  static startRecordingMutations() {}
+  startRecordingMutations() {}
 
-  static stopRecordingMutations() {}
+  stopRecordingMutations() {}
 
-  static async getRecordedMutationEvents() {
+  async getRecordedMutationEvents() {
     const snapshotBefore = {};
     const snapshotAfter = {};
     [
@@ -186,7 +186,7 @@ export default class DevelMockAPI {
     ];
   }
 
-  static async checkForRelay() {
+  async checkForRelay() {
     return true;
   }
 }

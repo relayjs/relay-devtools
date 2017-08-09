@@ -13,12 +13,13 @@ const HTMLWebpackPluginConfig = new HtmlWebpackPlugin({
   template: path.join(__dirname, '/index.html'),
   filename: 'index.html',
   inject: 'body',
+  chunks: ['index'],
 });
 
 module.exports = {
   entry: {
-    devtools: [ './devtools.js' ],
-    index: [ './index.js' ],
+    devtools: ['./devtools.js'],
+    index: ['./index.js'],
   },
   output: {
     filename: '[name]_bundle.js',
@@ -43,8 +44,8 @@ module.exports = {
       {
         test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
         loader: 'url-loader?limit=10000',
-      }
-    ]
+      },
+    ],
   },
-  plugins: [ HTMLWebpackPluginConfig ],
+  plugins: [HTMLWebpackPluginConfig],
 };

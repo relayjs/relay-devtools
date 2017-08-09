@@ -7,15 +7,15 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 import React from 'react';
-import API from '../api';
+import PropTypes from 'prop-types';
 
 import RecordInspector, { SnapshotRecordInspector } from './RecordInspector';
 
 import '../css/StoreView.less';
 
 export class StoreView extends React.Component {
-  constructor(props) {
-    super(props);
+  constructor(props, context) {
+    super(props, context);
 
     this.state = {
       selectedRecord: null,
@@ -104,20 +104,22 @@ export class StoreView extends React.Component {
 
 // StoreView connected to the API fetching the latest records
 export default class LatestStoreView extends StoreView {
-  constructor(props) {
-    super(props);
+  constructor(props, context) {
+    super(props, context);
 
     const { environment } = this.props;
     const callback = () => {
       this.fetch(this.props);
     };
 
+    const { API } = context;
     API.onChange({ environment, callback });
     this.fetch(this.props);
   }
 
   componentWillReceiveProps(nextProps) {
     const { environment } = this.props;
+    const { API } = this.context;
 
     if (environment !== nextProps.environment) {
       API.stopObservingChange({ environment });
@@ -135,6 +137,7 @@ export default class LatestStoreView extends StoreView {
   }
 
   fetch(props) {
+    const { API } = this.context;
     API.getRecords(props).then((res, err) => {
       if (err) {
         throw err;
@@ -147,9 +150,14 @@ export default class LatestStoreView extends StoreView {
 
   componentWillUnmount() {
     const { environment } = this.props;
+    const { API } = this.context;
     API.stopObservingChange({ environment });
   }
 }
+
+LatestStoreView.contextTypes = {
+  API: PropTypes.object,
+};
 
 export class SnapshotStoreView extends StoreView {
   renderTableRecord({ id, type }) {

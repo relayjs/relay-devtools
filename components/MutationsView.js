@@ -6,10 +6,13 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 import React from 'react';
-import API from '../api';
+import PropTypes from 'prop-types';
 
 import { GraphqlCodeBlock } from 'graphql-syntax-highlighter-react';
 import 'graphql-syntax-highlighter-react/dist/style.css';
+
+import SplitPane from 'react-split-pane';
+import '../css/Resizer.less';
 
 import { ObjectFields } from './RecordInspector';
 import { SnapshotStoreView } from './StoreView';
@@ -19,14 +22,17 @@ import '../css/panels.less';
 import '../css/MutationsView.less';
 import '../css/Tooltip.less';
 
+const SPLIT_TYPE_PERSIST_KEY = 'RELAY_DEVTOOLS_SPLIT_TYPE';
 export default class MutationsView extends React.Component {
-  constructor(props) {
-    super(props);
+  constructor(props, context) {
+    super(props, context);
 
     this.state = {
       isRecording: false,
       events: null,
       selectedEvent: null,
+      splitType:
+        window.localStorage.getItem(SPLIT_TYPE_PERSIST_KEY) || 'vertical',
     };
 
     this.startOrStopRecording = this.startOrStopRecording.bind(this);
@@ -34,10 +40,12 @@ export default class MutationsView extends React.Component {
     this.fetch = this.fetch.bind(this);
     this.refetch = this.refetch.bind(this);
     this.selectEvent = this.selectEvent.bind(this);
+    this.changeSplitType = this.changeSplitType.bind(this);
 
     const { environment } = this.props;
     this.fetch({ environment });
 
+    const { API } = context;
     API.onChange({ environment, callback: this.refetch });
   }
 
@@ -56,6 +64,7 @@ export default class MutationsView extends React.Component {
   }
 
   fetch({ environment }) {
+    const { API } = this.context;
     API.getRecordedMutationEvents({ environment }).then((events, err) => {
       if (err) {
         throw err;
@@ -73,6 +82,7 @@ export default class MutationsView extends React.Component {
 
   startOrStopRecording() {
     const newState = !this.state.isRecording;
+    const { API } = this.context;
 
     if (newState) {
       API.startRecordingMutations(this.props);
@@ -97,6 +107,17 @@ export default class MutationsView extends React.Component {
     this.setState({
       selectedEvent: event,
     });
+  }
+
+  changeSplitType() {
+    const splitType =
+      this.state.splitType === 'vertical' ? 'horizontal' : 'vertical';
+
+    this.setState({
+      splitType,
+    });
+
+    window.localStorage.setItem(SPLIT_TYPE_PERSIST_KEY, splitType);
   }
 
   _renderEvents() {
@@ -143,10 +164,11 @@ export default class MutationsView extends React.Component {
     });
 
     const mutationEls = Object.keys(eventsByMutation).map((seriesId, i) => {
+      const orderedEvents = eventsByMutation[seriesId];
       const eventsEls = [];
       let lastOrdered = null;
 
-      eventsByMutation[seriesId].forEach((event, j) => {
+      orderedEvents.forEach((event, j) => {
         if (lastOrdered === null) {
           eventsEls.push(
             <li key={`${i}-offset`} style={{ width: event.order * 40 }} />,
@@ -195,10 +217,12 @@ export default class MutationsView extends React.Component {
         lastOrdered = event.order;
       });
 
+      const firstEvent = orderedEvents[0];
+
       return (
         <div className="mutation-events" key={seriesId}>
-          <span className="description" style={{ left: events[0].order * 40 }}>
-            {events[0].mutation.node.name}
+          <span className="description" style={{ left: firstEvent.order * 40 }}>
+            {firstEvent.mutation.node.name}
           </span>
           <ul>
             {eventsEls}
@@ -215,11 +239,15 @@ export default class MutationsView extends React.Component {
   }
 
   render() {
-    const { isRecording, selectedEvent } = this.state;
+    const { isRecording, selectedEvent, splitType } = this.state;
     const recordingClassName =
       'recording fa ' +
       (isRecording ? 'fa-stop recording-active' : 'fa-circle');
     const clearSelection = () => this.selectEvent(null);
+    const pane1Style = selectedEvent
+      ? {}
+      : { minWidth: '100%', minHeight: '100%' };
+    const pane2Style = selectedEvent ? {} : { display: 'none' };
 
     return (
       <div className="mutations-view">
@@ -235,8 +263,19 @@ export default class MutationsView extends React.Component {
           <div className="right-panel" />
         </div>
         <div className="views">
-          {this._renderEvents()}
-          <MutationInspector event={selectedEvent} onClose={clearSelection} />
+          <SplitPane
+            split={splitType}
+            minSize={100}
+            defaultSize={400}
+            pane2Style={pane2Style}
+            pane1Style={pane1Style}>
+            {this._renderEvents()}
+            <MutationInspector
+              event={selectedEvent}
+              onClose={clearSelection}
+              onLayoutChange={this.changeSplitType}
+            />
+          </SplitPane>
         </div>
       </div>
     );
@@ -269,7 +308,7 @@ class MutationInspector extends React.Component {
   }
 
   render() {
-    const { event, onClose } = this.props;
+    const { event, onClose, onLayoutChange } = this.props;
     const { currentTab } = this.state;
 
     if (!event) {
@@ -360,9 +399,14 @@ class MutationInspector extends React.Component {
               </a>
             );
           })}
-          <a className="close" onClick={onClose}>
-            &times;
-          </a>
+          <span className="right-buttons">
+            <a className="change-layout" onClick={onLayoutChange}>
+              <i className="fa fa-columns" />
+            </a>
+            <a className="close" onClick={onClose}>
+              &times;
+            </a>
+          </span>
         </div>
         <div className="tab-content">
           {tabContent}
@@ -371,6 +415,10 @@ class MutationInspector extends React.Component {
     );
   }
 }
+
+MutationsView.contextTypes = {
+  API: PropTypes.object,
+};
 
 // Return only records affected by the change in the following order:
 // - added records

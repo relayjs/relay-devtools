@@ -7,7 +7,6 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 import React from 'react';
-import API from '../api';
 
 export default class RelayDetector extends React.Component {
   constructor() {
@@ -21,6 +20,7 @@ export default class RelayDetector extends React.Component {
   }
 
   checkForRelay() {
+    const { API } = this.props;
     API.checkForRelay().then(exists => {
       if (exists !== this.state.isRelayPresent) {
         this.setState({ isRelayPresent: exists });

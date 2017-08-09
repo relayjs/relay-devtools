@@ -8,6 +8,10 @@
  */
 import React from 'react';
 
+import '../css/global.css';
+import 'font-awesome/css/font-awesome.css';
+import PropTypes from 'prop-types';
+
 import EnvironmentChooser from './EnvironmentChooser';
 import StoreExplorer from './StoreExplorer';
 import MutationsView from './MutationsView';
@@ -23,6 +27,10 @@ export default class App extends React.Component {
     };
 
     this.onSwitch = this.onSwitch.bind(this);
+  }
+
+  getChildContext() {
+    return { API: this.props.API };
   }
 
   onSwitch(tool) {
@@ -72,6 +80,10 @@ export default class App extends React.Component {
     );
   }
 }
+
+App.childContextTypes = {
+  API: PropTypes.object,
+};
 
 // Hacky wrapper component to hide components without unmounting them.
 // This is important so components don't lose their state.
