@@ -7,7 +7,7 @@
   "scripts": {
     "build": "webpack",
     "start": "webpack-dev-server -d --hot --inline --port 3000",
-    "prettier": "prettier --single-quote --trailing-comma all --jsx-bracket-same-line --write **/*.js"
+    "prettier": "prettier --single-quote --trailing-comma all --jsx-bracket-same-line --write **/*.{js,css,less}"
   },
   "dependencies": {
     "debounce": "^1.0.2",

@@ -1,104 +1,107 @@
 .store-view {
-    display: flex;
+  display: flex;
+  height: 100%;
+  flex: 1 1 auto;
+
+  .records-table {
+    flex: 1 0 30%;
+    overflow-y: auto;
+    border-right: 1px solid rgba(34, 36, 38, .1);
+    box-sizing: border-box;
+  }
+
+  .details {
+    flex: 2 0 70%;
+    overflow-y: auto;
+  }
+
+  table {
+    width: 100%;
+    table-layout: fixed;
+    background: #fff;
+    box-shadow: none;
+    border-radius: 3px;
+    text-align: left;
+    color: rgba(0, 0, 0, .87);
+    border-collapse: separate;
+    border-spacing: 0;
+    user-select: none;
+  }
+
+  thead {
+    display: table-header-group;
+    vertical-align: middle;
+    border-color: inherit;
+
+    th {
+      background: #f9fafb;
+      text-align: inherit;
+      color: rgba(0, 0, 0, .87);
+      padding: 14px 11px;
+      vertical-align: inherit;
+      font-style: none;
+      font-weight: 700;
+      text-transform: none;
+      border-bottom: 1px solid rgba(34, 36, 38, .1);
+    }
+  }
+
+  tr {
+    th,
+    td {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      border-left: 1px solid rgba(34, 36, 38, .1);
+      border-top: 1px solid rgba(34, 36, 38, .1);
+      padding: 11px 11px;
+    }
+
+    &:hover {
+      background: rgba(0, 0, 0, .05);
+      cursor: pointer;
+    }
+
+    &.added {
+      background: rgba(194, 255, 183, 0.5);
+    }
+
+    &.changed {
+      background: rgba(253, 255, 183, 0.5);
+    }
+
+    &.removed {
+      background: rgba(255, 219, 219, 0.5);
+    }
+
+    &.selected {
+      background: #ddeaff;
+    }
+  }
+
+  .details-diff {
     height: 100%;
-    flex: 1 1 auto;
+    overflow: visible;
 
-    .records-table {
-        flex: 1 0 30%;
-        overflow-y: auto;
-        border-right: 1px solid rgba(34,36,38,.1);
-        box-sizing: border-box;
+    &.added {
+      background-color: rgba(214, 255, 183, 0.4);
+      .before {
+        flex: 0 0 0;
+      }
+      .header-container.diff,
+      .header-before,
+      .header-after {
+        background-color: transparent !important;
+      }
     }
 
-    .details {
-        flex: 2 0 70%;
-        overflow-y: auto;
+    &.removed {
+      background-color: rgba(255, 219, 218, 0.4);
+      .after {
+        flex: 0 0 0;
+      }
+      .header-container.diff {
+        background-color: transparent !important;
+      }
     }
-
-    table {
-        width: 100%;
-        table-layout: fixed;
-        background: #fff;
-        box-shadow: none;
-        border-radius: 3px;
-        text-align: left;
-        color: rgba(0,0,0,.87);
-        border-collapse: separate;
-        border-spacing: 0;
-        user-select: none;
-    }
-
-    thead {
-        display: table-header-group;
-        vertical-align: middle;
-        border-color: inherit;
-
-        th {
-            background: #f9fafb;
-            text-align: inherit;
-            color: rgba(0,0,0,.87);
-            padding: 14px 11px;
-            vertical-align: inherit;
-            font-style: none;
-            font-weight: 700;
-            text-transform: none;
-            border-bottom: 1px solid rgba(34,36,38,.1);
-        }
-    }
-
-    tr {
-        th, td {
-            overflow: hidden;
-            text-overflow: ellipsis;
-            border-left: 1px solid rgba(34,36,38,.1);
-            border-top: 1px solid rgba(34,36,38,.1);
-            padding: 11px 11px;
-        }
-
-        &:hover {
-            background: rgba(0,0,0,.05);
-            cursor: pointer;
-        }
-
-        &.added {
-            background: rgba(194, 255, 183, 0.5);
-        }
-
-        &.changed {
-            background: rgba(253, 255, 183, 0.5);
-        }
-
-        &.removed {
-            background: rgba(255, 219, 219, 0.5);
-        }
-
-        &.selected {
-            background: #ddeaff;
-        }
-    }
-
-    .details-diff {
-        height: 100%;
-        overflow: visible;
-
-        &.added {
-            background-color: rgba(214, 255, 183, 0.4);
-            .before {
-                flex: 0 0 0;
-            }
-            .header-container.diff, .header-before, .header-after {
-                background-color: transparent !important;
-            }
-        }
-
-        &.removed {
-            background-color: rgba(255, 219, 218, 0.4);
-            .after {
-                flex: 0 0 0;
-            }
-            .header-container.diff {
-                background-color: transparent !important;
-            }
-        }
-    }
+  }
 }

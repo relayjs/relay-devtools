@@ -1,244 +1,250 @@
 .mutations-view {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  button.recording {
+    color: #c11300;
+  }
+
+  button.recording-active {
+    color: #444;
+  }
+
+  .views {
+    flex: 1;
+    position: relative;
+  }
+
+  .events-map {
+    padding: 2em 5em;
+    overflow-x: auto;
+    overflow-y: auto;
     height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+
+    .mutation-events {
+      position: relative;
+      margin-top: 0.3em;
+
+      @event-width: 40px;
+      @event-margin: 0px;
+
+      .description {
+        left: 40px;
+        position: relative;
+        margin-left: 1em;
+        color: #555;
+      }
+
+      ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        width: 100%;
+        white-space: nowrap;
+
+        li {
+          display: inline-block;
+          box-sizing: border-box;
+          margin-left: @event-margin;
+          width: @event-width;
+          position: relative;
+
+          &:last-child {
+            margin-right: 6em;
+          }
+
+          a {
+            width: 12px;
+            height: 12px;
+            display: inline-block;
+            box-sizing: border-box;
+            margin: 10;
+            position: relative;
+            left: 4px;
+
+            color: transparent;
+            background-color: #7b9d6f;
+            border: 3px solid #7b9d6f;
+            border-radius: 50%;
+
+            &.error {
+              background-color: #be4f54;
+              border-color: #be4f54;
+            }
+
+            &.selected {
+              box-shadow: 0px 0px 15px 5px rgba(82, 151, 255, 0.75);
+            }
+          }
+
+          &:not(:last-child) a:before {
+            display: inline-block;
+            position: absolute;
+            top: 2px;
+            left: 7px;
+
+            content: ' ';
+            height: 2px;
+            width: @event-width + @event-margin;
+            background-color: #7b9d6f;
+          }
+        }
+
+        li.noop {
+          color: rgba(0, 0, 0, 0);
+          a {
+            border: 0;
+            background-color: transparent;
+            &:before {
+              left: 0px;
+              width: @event-width + @event-margin + 10px;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .instructions {
+    padding: 5em 0;
+    color: #888;
+    text-align: center;
+    margin: 0 auto;
+
+    button {
+      padding: 0.3em;
+      border: solid 1px #c5c5c5;
+      background: linear-gradient(to bottom right, #f5f5f5, white);
+      color: #555;
+
+      &:hover {
+        color: red;
+      }
+    }
+  }
+
+  .placeholder {
+    margin: 0 auto;
+  }
+
+  .mutation-inspector {
+    background: white;
+    border-left: solid 1px #ddd;
+    width: 100%;
+    min-width: 0;
+    height: 100%;
+    min-height: 0;
+    // a hack. "height: 100%" doesn't work unless this element is absolutely
+    // positioned. I suspect it has something to do with Flexbox and
+    // relatively positioned elements.
+    position: absolute;
+
     display: flex;
     flex-direction: column;
 
-    button.recording {
-        color: #c11300;
-    }
+    .tab-panel {
+      display: block;
+      border: solid 1px #ddd;
+      padding: 3px 5px 0px 5px;
+      background: #f5f5f5;
 
-    button.recording-active {
-        color: #444;
-    }
+      .tab {
+        display: inline-block;
+        padding: 3px 5px;
+        color: #555;
+        margin-left: 3px;
+        border: solid 1px #f5f5f5;
+        border-bottom: 0;
+        cursor: pointer;
+        user-select: none;
 
-    .views {
-        flex: 1;
+        &:hover {
+          border: solid 1px #ddd;
+          border-bottom: 0;
+          background: #fefefe;
+        }
+
+        &.active {
+          border: solid 1px #ccc;
+          border-bottom: 0;
+          background: white;
+        }
+      }
+
+      .right-buttons {
+        float: right;
+        color: #777;
+        cursor: pointer;
+        margin-right: 5px;
+        margin-top: -5px;
+
+        & > a:hover {
+          color: #333;
+        }
+      }
+
+      .close {
+        font-size: 1.5em;
+      }
+
+      .change-layout {
+        margin-right: 5px;
         position: relative;
+        top: -1px;
+      }
     }
 
-    .events-map {
-        padding: 2em 5em;
-        overflow-x: auto;
-        overflow-y: auto;
-        height: 100%;
-        width: 100%;
-        box-sizing: border-box;
-
-        .mutation-events {
-            position: relative;
-            margin-top: 0.3em;
-
-            @event-width: 40px;
-            @event-margin: 0px;
-
-            .description {
-                left: 40px;
-                position: relative;
-                margin-left: 1em;
-                color: #555;
-            }
-
-            ul {
-                list-style: none;
-                padding: 0;
-                margin: 0;
-                width: 100%;
-                white-space: nowrap;
-
-                li {
-                    display: inline-block;
-                    box-sizing: border-box;
-                    margin-left: @event-margin;
-                    width: @event-width;
-                    position: relative;
-
-                    &:last-child {
-                        margin-right: 6em;
-                    }
-
-                    a {
-                        width: 12px;
-                        height: 12px;
-                        display: inline-block;
-                        box-sizing: border-box;
-                        margin: 10;
-                        position: relative;
-                        left: 4px;
-
-                        color: transparent;
-                        background-color: #7b9d6f;
-                        border: 3px solid #7b9d6f;
-                        border-radius: 50%;
-
-                        &.error {
-                            background-color: #be4f54;
-                            border-color: #be4f54;
-                        }
-
-                        &.selected {
-                            box-shadow: 0px 0px 15px 5px rgba(82, 151, 255, 0.75);
-                        }
-                    }
-
-                    &:not(:last-child) a:before {
-                        display: inline-block;
-                        position: absolute;
-                        top: 2px;
-                        left: 7px;
-
-                        content: ' ';
-                        height: 2px;
-                        width: @event-width + @event-margin;
-                        background-color: #7b9d6f;
-                    }
-                }
-
-                li.noop {
-                    color: rgba(0, 0, 0, 0);
-                    a {
-                        border: 0;
-                        background-color: transparent;
-                        &:before {
-                            left: 0px;
-                            width: @event-width + @event-margin + 10px;
-                        }
-                    }
-                }
-            }
-        }
+    .tab-content {
+      overflow: auto;
+      height: 100%;
     }
 
-    .instructions {
-        padding: 5em 0;
-        color: #888;
-        text-align: center;
-        margin: 0 auto;
-
-        button {
-            padding: 0.3em;
-            border: solid 1px #c5c5c5;
-            background: linear-gradient(to bottom right, #f5f5f5, white);
-            color: #555;
-
-            &:hover {
-                color: red;
-            }
-        }
+    .query,
+    .variables,
+    .payload {
+      padding: 10px 20px;
+    }
+    .query pre,
+    .variables,
+    .payload {
+      font-family: Menlo, Monaco, Consolas, "Liberation Mono", "Courier New",
+        monospace;
+      font-size: 14px;
     }
 
-    .placeholder {
-        margin: 0 auto;
+    .query {
+      pre {
+        margin: 0.5em 0 0.5em;
+      }
     }
 
-    .mutation-inspector {
-        background: white;
-        border-left: solid 1px #ddd;
-        width: 100%;
-        min-width: 0;
-        height: 100%;
-        min-height: 0;
-        // a hack. "height: 100%" doesn't work unless this element is absolutely
-        // positioned. I suspect it has something to do with Flexbox and
-        // relatively positioned elements.
-        position: absolute;
-
-        display: flex;
-        flex-direction: column;
-
-        .tab-panel {
-            display: block;
-            border: solid 1px #ddd;
-            padding: 3px 5px 0px 5px;
-            background: #f5f5f5;
-
-            .tab {
-                display: inline-block;
-                padding: 3px 5px;
-                color: #555;
-                margin-left: 3px;
-                border: solid 1px #f5f5f5;
-                border-bottom: 0;
-                cursor: pointer;
-                user-select: none;
-
-                &:hover {
-                    border: solid 1px #ddd;
-                    border-bottom: 0;
-                    background: #fefefe;
-                }
-
-                &.active {
-                    border: solid 1px #ccc;
-                    border-bottom: 0;
-                    background: white;
-                }
-            }
-
-            .right-buttons {
-                float: right;
-                color: #777;
-                cursor: pointer;
-                margin-right: 5px;
-                margin-top: -5px;
-
-                & > a:hover {
-                    color: #333;
-                }
-            }
-
-            .close {
-                font-size: 1.5em;
-            }
-
-            .change-layout {
-                margin-right: 5px;
-                position: relative;
-                top: -1px;
-            }
-        }
-
-        .tab-content {
-            overflow: auto;
-            height: 100%;
-        }
-
-        .query, .variables, .payload {
-            padding: 10px 20px;
-        }
-        .query pre, .variables, .payload {
-            font-family: Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
-            font-size: 14px;
-        }
-
-        .query {
-            pre {
-                margin: 0.5em 0 0.5em;
-            }
-        }
-
-        .variables, .payload {
-            & > ul {
-                padding-left: 0;
-            }
-            ul {
-                list-style: none;
-                margin-top: 0.5em;
-            }
-            li {
-                margin-top: 0.3em;
-            }
-        }
-
-        .store-diff {
-            height: 100%;
-        }
-
-        .payload {
-            height: 100%;
-
-            .error {
-                color: #ff0033;
-            }
-        }
+    .variables,
+    .payload {
+      & > ul {
+        padding-left: 0;
+      }
+      ul {
+        list-style: none;
+        margin-top: 0.5em;
+      }
+      li {
+        margin-top: 0.3em;
+      }
     }
+
+    .store-diff {
+      height: 100%;
+    }
+
+    .payload {
+      height: 100%;
+
+      .error {
+        color: #ff0033;
+      }
+    }
+  }
 }
