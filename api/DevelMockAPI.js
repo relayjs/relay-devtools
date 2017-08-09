@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree. An additional grant
  * of patent rights can be found in the PATENTS file in the same directory.
  */
+let intervals = [];
 export default class DevelMockAPI {
   static async getEnvironments() {
     return [
@@ -20,9 +21,10 @@ export default class DevelMockAPI {
     if (!id) {
       return null;
     }
-    if (id.startsWith('user:')) {
+    if (id.startsWith('client:')) {
       return {
         id,
+        __id: id,
         __typename: 'User',
         name: 'Some real special friend',
         favs: {
@@ -32,10 +34,11 @@ export default class DevelMockAPI {
     }
     return {
       id,
+      __id: id,
       __typename: 'User',
-      bestFriend: { __ref: 'user:id200' },
+      bestFriend: { __ref: 'client:id200' },
       friends: {
-        __refs: ['user:id100', 'user:id101', 'user:id102'],
+        __refs: ['client:id100', 'client:id101', 'client:id102'],
       },
       name: 'John Doe',
       nested: {
@@ -57,10 +60,10 @@ export default class DevelMockAPI {
       { id: 'id111', type: 'User' },
       { id: 'id112', type: 'User' },
       { id: 'id113', type: 'User' },
-      { id: 'user:id100', type: 'User' },
-      { id: 'user:id101', type: 'User' },
-      { id: 'user:id102', type: 'User' },
-      { id: 'user:id200', type: 'User' },
+      { id: 'client:id100', type: 'User' },
+      { id: 'client:id101', type: 'User' },
+      { id: 'client:id102', type: 'User' },
+      { id: 'client:id200', type: 'User' },
     ];
   }
 
@@ -81,10 +84,109 @@ export default class DevelMockAPI {
     ];
   }
 
-  static onChange() {
-    // noop: nothing ever changes
+  static onChange({ callback }) {
+    const interval = setInterval(callback, 3000);
+    intervals.push(interval);
   }
+
   static stopObservingChange() {
-    // noop
+    intervals.forEach(clearInterval);
+    intervals = [];
+  }
+
+  static startRecordingMutations() {}
+
+  static stopRecordingMutations() {}
+
+  static async getRecordedMutationEvents() {
+    const snapshotBefore = {};
+    const snapshotAfter = {};
+    [
+      'id100',
+      'id200',
+      'id300',
+      'client:id100',
+      'client:id200',
+      'client:id102',
+      'client:id101',
+    ].forEach(async id => {
+      snapshotBefore[id] = await this.getRecord({ id });
+    });
+    [
+      'id200',
+      'id300',
+      'id400',
+      'client:id100',
+      'client:id200',
+      'client:id102',
+      'client:id101',
+    ].forEach(async id => {
+      snapshotAfter[id] = await this.getRecord({ id });
+      if (id === 'id200') {
+        snapshotAfter[id].name = 'Jane Doe';
+      }
+    });
+
+    /* eslint-disable max-len */
+    const mutationText =
+      'mutation ChangeTodoStatusMutation(\n  $input: ChangeTodoStatusInput!\n) {\n  changeTodoStatus(input: $input) {\n    todo {\n      id\n      complete\n    }\n    viewer {\n      id\n      completedCount\n    }\n  }\n}\n';
+    /* eslint-enable max-len */
+
+    const mutation = {
+      node: {
+        name: 'ChangeTodoStatusMutation',
+        text: mutationText,
+      },
+      variables: { input: { complete: true, id: 'VG9kbzox' } },
+    };
+
+    return [
+      {
+        seriesId: '0.000001',
+        eventName: 'Apply Optimistic Update',
+        mutation,
+        snapshotBefore,
+        snapshotAfter,
+      },
+      {
+        seriesId: '0.000001',
+        eventName: 'Commit Payload',
+        mutation,
+        snapshotBefore,
+        snapshotAfter,
+      },
+      {
+        seriesId: '0.000002',
+        eventName: 'Apply Optimistic Update',
+        mutation,
+        snapshotBefore,
+        snapshotAfter,
+      },
+      {
+        seriesId: '0.000003',
+        eventName: 'Apply Optimistic Update',
+        mutation,
+        snapshotBefore,
+        snapshotAfter,
+      },
+      {
+        seriesId: '0.000002',
+        eventName: 'Commit Payload',
+        mutation,
+        snapshotBefore,
+        snapshotAfter,
+      },
+      {
+        seriesId: '0.000003',
+        eventName: 'Commit Payload',
+        mutation,
+        snapshotBefore,
+        snapshotAfter,
+      },
+    ];
+  }
+
+  static async checkForRelay() {
+    return true;
   }
 }

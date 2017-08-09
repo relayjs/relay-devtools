@@ -1,6 +1,7 @@
 .store-view {
     display: flex;
     height: 100%;
+    flex: 1 1 auto;
 
     .records-table {
         flex: 1 0 30%;
@@ -57,6 +58,47 @@
         &:hover {
             background: rgba(0,0,0,.05);
             cursor: pointer;
+        }
+
+        &.added {
+            background: rgba(194, 255, 183, 0.5);
+        }
+
+        &.changed {
+            background: rgba(253, 255, 183, 0.5);
+        }
+
+        &.removed {
+            background: rgba(255, 219, 219, 0.5);
+        }
+
+        &.selected {
+            background: #ddeaff;
+        }
+    }
+
+    .details-diff {
+        height: 100%;
+        overflow: visible;
+
+        &.added {
+            background-color: rgba(214, 255, 183, 0.4);
+            .before {
+                flex: 0 0 0;
+            }
+            .header-container.diff, .header-before, .header-after {
+                background-color: transparent !important;
+            }
+        }
+
+        &.removed {
+            background-color: rgba(255, 219, 218, 0.4);
+            .after {
+                flex: 0 0 0;
+            }
+            .header-container.diff {
+                background-color: transparent !important;
+            }
         }
     }
 }

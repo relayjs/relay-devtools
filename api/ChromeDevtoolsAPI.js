@@ -14,12 +14,36 @@ const GET_RECORD =
   '__RELAY_DEBUGGER__.getEnvironmentDebugger(%s).getRecord(%s)';
 const GET_MATCHING_RECORDS =
   '__RELAY_DEBUGGER__.getEnvironmentDebugger(%s).getMatchingRecords(%s, %s)';
+
+// Check the flag and reset it before returning
 const CHECK_DIRTY = `
 var d = __RELAY_DEBUGGER__.getEnvironmentDebugger(%s);
 var isDirty = d.isDirty();
 d.resetDirty();
 isDirty;
 `;
+const MUTATIONS_START_RECORDING = `
+__RELAY_DEBUGGER__.getEnvironmentDebugger(%s).startRecordingMutationEvents();
+`;
+
+const MUTATIONS_STOP_RECORDING = `
+__RELAY_DEBUGGER__.getEnvironmentDebugger(%s).stopRecordingMutationEvents();
+`;
+
+// Because Chrome Devtools API can't correctly serialize Errors, convert them to
+// plain objects
+const MUTATIONS_GET_RECORDED_EVENTS = `
+var events =
+  __RELAY_DEBUGGER__.getEnvironmentDebugger(%s).getRecordedMutationEvents();
+events.forEach(event => {
+  if (event.payload instanceof Error) {
+    event.payload = {isError: true, message: event.payload.message};
+  }
+});
+events;
+`;
+
+const CHECK_RELAY = '!!window.__RELAY_DEBUGGER__';
 
 const changeCallbacks = {};
 
@@ -57,15 +81,11 @@ export default class ChromeDevtoolsAPI {
 
   static onChange({ environment, callback }) {
     if (!changeCallbacks[environment]) {
-      const interval = setInterval(() => {
-        inspectedEval(CHECK_DIRTY, environment).then((isDirty, err) => {
-          if (err) {
-            throw err;
-          }
-          if (isDirty) {
-            changeCallbacks[environment].callbacks.forEach(cb => cb());
-          }
-        });
+      const interval = setInterval(async () => {
+        const isDirty = await inspectedEval(CHECK_DIRTY, environment);
+        if (isDirty) {
+          changeCallbacks[environment].callbacks.forEach(cb => cb());
+        }
       }, 500);
 
       changeCallbacks[environment] = {
@@ -78,7 +98,26 @@ export default class ChromeDevtoolsAPI {
   }
 
   static stopObservingChange({ environment }) {
+    if (!changeCallbacks[environment]) {
+      return;
+    }
     clearInterval(changeCallbacks[environment].interval);
     delete changeCallbacks[environment];
+  }
+
+  static startRecordingMutations({ environment }) {
+    inspectedEval(MUTATIONS_START_RECORDING, environment);
+  }
+
+  static stopRecordingMutations({ environment }) {
+    inspectedEval(MUTATIONS_STOP_RECORDING, environment);
+  }
+
+  static async getRecordedMutationEvents({ environment }) {
+    return inspectedEval(MUTATIONS_GET_RECORDED_EVENTS, environment);
+  }
+
+  static async checkForRelay() {
+    return inspectedEval(CHECK_RELAY);
   }
 }

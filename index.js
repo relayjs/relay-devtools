@@ -13,10 +13,12 @@ import './css/reset.css';
 import './css/global.css';
 import 'font-awesome/css/font-awesome.css';
 
-import EnvironmentChooser from './components/EnvironmentChooser';
-import StoreExplorer from './components/StoreExplorer';
+import App from './components/App.js';
+import RelayDetector from './components/RelayDetector.js';
 
 render(
-  <EnvironmentChooser><StoreExplorer /></EnvironmentChooser>,
-  document.getElementById('devtools-root')
+  <RelayDetector>
+    <App />
+  </RelayDetector>,
+  document.getElementById('devtools-root'),
 );

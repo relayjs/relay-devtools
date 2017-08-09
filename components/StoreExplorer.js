@@ -13,6 +13,7 @@ import onClickOutside from 'react-onclickoutside';
 import StoreView from './StoreView';
 
 import '../css/StoreExplorer.less';
+import '../css/panels.less';
 
 const SAVED_SEARCHES_PERSIST_KEY = 'RELAY_DEVTOOLS_SAVED_SEARCHES';
 
@@ -37,6 +38,8 @@ export default class StoreExplorer extends React.Component {
 
   render() {
     const { matchTerm, matchType } = this.state.latest;
+    const { environment } = this.props;
+
     return (
       <div className="store-explorer">
         <div className="panel">
@@ -54,23 +57,24 @@ export default class StoreExplorer extends React.Component {
               ▶
             </button>
           </div>
-          <div className="right-panel">
+          <div className="center-panel">
             <HidableSearch
               rref={ref => (this.searchRef = ref)}
               pushNewSearch={this.pushNewSearch}
             />
           </div>
+          <div className="right-panel" />
         </div>
         <StoreView
           matchTerm={matchTerm}
           matchType={matchType}
-          environment={this.props.environment}
+          environment={environment}
         />
       </div>
     );
   }
 
-  pushNewSearch({ matchTerm, matchType }, resetDOMFields=true) {
+  pushNewSearch({ matchTerm, matchType }, resetDOMFields = true) {
     const prev = this.searchRef.getMatch();
 
     this.setState({
@@ -205,7 +209,7 @@ class Search extends React.Component {
     };
   }
 
-  setMatch({ matchTerm, matchType }, resetDOMFields=true) {
+  setMatch({ matchTerm, matchType }, resetDOMFields = true) {
     this.setState({
       matchTerm,
       matchType,
@@ -290,12 +294,15 @@ class Search extends React.Component {
   }
 
   handleSearchChange() {
-    this.pushNewSearch({
-      matchTerm: this.inputRef.value,
-      matchType: this.typeSelectRef.options[
-        this.typeSelectRef.selectedIndex
-      ].getAttribute('data-option-name'),
-    }, false);
+    this.pushNewSearch(
+      {
+        matchTerm: this.inputRef.value,
+        matchType: this.typeSelectRef.options[
+          this.typeSelectRef.selectedIndex
+        ].getAttribute('data-option-name'),
+      },
+      false,
+    );
   }
 
   _setDOMNodes(matchTerm, matchType) {
