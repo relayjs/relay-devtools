@@ -1,4 +1,4 @@
-import { inspectedEval } from './util/util.js';
+import inspectedEval from './util/inspectedEval';
 
 /* global chrome:false */
 

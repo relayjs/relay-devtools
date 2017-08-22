@@ -8,18 +8,21 @@
  */
 import React from 'react';
 import { render } from 'react-dom';
+import 'font-awesome-webpack';
 
 import './css/reset.css';
 
 import api from './api';
+import setupRedux from './redux/setupRedux';
 import App from './components/App.js';
 import RelayDetector from './components/RelayDetector.js';
 
 const API = new api();
+const store = setupRedux(API);
 
 render(
   <RelayDetector API={API}>
-    <App API={API} />
+    <App store={store} />
   </RelayDetector>,
   document.getElementById('devtools-root'),
 );

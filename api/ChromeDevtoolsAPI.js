@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree. An additional grant
  * of patent rights can be found in the PATENTS file in the same directory.
  */
-import { inspectedEval } from '../util/util.js';
+import inspectedEval from '../util/inspectedEval';
 
 const GET_REGISTERED_ENVIRONMENT_IDS =
   '__RELAY_DEBUGGER__.getRegisteredEnvironmentIds()';

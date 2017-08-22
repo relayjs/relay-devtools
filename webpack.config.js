@@ -18,8 +18,8 @@ const HTMLWebpackPluginConfig = new HtmlWebpackPlugin({
 
 module.exports = {
   entry: {
-    devtools: ['./devtools.js'],
-    index: ['./index.js'],
+    devtools: ['babel-polyfill', './devtools.js'],
+    index: ['babel-polyfill', './index.js'],
   },
   output: {
     filename: '[name]_bundle.js',

@@ -6,42 +6,30 @@
  * LICENSE file in the root directory of this source tree. An additional grant
  * of patent rights can be found in the PATENTS file in the same directory.
  */
+
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import '../css/EnvironmentChooser.less';
 
-export default class EnvironmentChooser extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      environment: null,
-      environments: null,
-    };
-
-    this.handleChange = this.handleChange.bind(this);
-  }
-
+export default class EnvironmentChooser extends React.PureComponent {
   componentDidMount() {
-    const { API } = this.context;
-
-    API.getEnvironments().then((res, err) => {
-      if (err) {
-        throw err;
-      }
-      this.setState({
-        environment: res[0],
-        environments: res,
-      });
-    });
+    this.props.loadEnvironments();
   }
 
   render() {
-    if (!this.state.environments) {
+    const {
+      environments,
+      currentEnvironment,
+      onChange,
+      subscribeEnvironment,
+      children,
+    } = this.props;
+
+    if (!currentEnvironment) {
       return <div className="placeholder">Loading</div>;
     }
 
-    if (!this.state.environments.length) {
+    if (!environments.length) {
       return (
         <div className="placeholder">
           No Relay Modern Environments found on the page
@@ -49,16 +37,16 @@ export default class EnvironmentChooser extends React.Component {
       );
     }
 
+    subscribeEnvironment(currentEnvironment);
+
     return (
       <div className="environment-chooser">
         <div className="contained">
-          {this.renderChildren(this.props.children)}
+          {children}
         </div>
         <div className="footer">
-          <select
-            defaultValue={this.state.environments[0]}
-            onChange={this.handleChange}>
-            {this.state.environments.map(env =>
+          <select defaultValue={currentEnvironment} onChange={onChange}>
+            {environments.map(env =>
               <option key={env}>
                 {env}
               </option>,
@@ -68,22 +56,4 @@ export default class EnvironmentChooser extends React.Component {
       </div>
     );
   }
-
-  handleChange(event) {
-    this.setState({
-      environment: event.target.value,
-    });
-  }
-
-  renderChildren(children) {
-    return React.Children.map(children, child => {
-      return React.cloneElement(child, {
-        environment: this.state.environment,
-      });
-    });
-  }
 }
-
-EnvironmentChooser.contextTypes = {
-  API: PropTypes.object,
-};

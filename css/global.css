@@ -1,8 +1,11 @@
-#devtools-root {
+.relay-devtools {
   font-family: system, -apple-system, 'San Francisco', '.SFNSDisplay-Regular',
     'Segoe UI', Segoe, 'Segoe WP', 'Helvetica Neue', helvetica, 'Lucida Grande',
     arial, sans-serif;
   font-size: 14px;
+  position: relative;
+  width: 100%;
+  height: 100%;
 }
 
 .placeholder {

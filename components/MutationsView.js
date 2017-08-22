@@ -5,123 +5,64 @@
  * LICENSE file in the root directory of this source tree. An additional grant
  * of patent rights can be found in the PATENTS file in the same directory.
  */
-import React from 'react';
-import PropTypes from 'prop-types';
 
-import { GraphqlCodeBlock } from 'graphql-syntax-highlighter-react';
-import 'graphql-syntax-highlighter-react/dist/style.css';
+import React from 'react';
 
 import SplitPane from 'react-split-pane';
 import '../css/Resizer.less';
 
-import { ObjectFields } from './RecordInspector';
-import { SnapshotStoreView } from './StoreView';
-import { deepObjectEqual } from '../util/objCompare';
+import MutationInspector from './MutationInspector';
 
+import '../css/Tooltip.less';
 import '../css/panels.less';
 import '../css/MutationsView.less';
-import '../css/Tooltip.less';
 
-const SPLIT_TYPE_PERSIST_KEY = 'RELAY_DEVTOOLS_SPLIT_TYPE';
 export default class MutationsView extends React.Component {
   constructor(props, context) {
     super(props, context);
 
-    this.state = {
-      isRecording: false,
-      events: null,
-      selectedEvent: null,
-      splitType:
-        window.localStorage.getItem(SPLIT_TYPE_PERSIST_KEY) || 'vertical',
-    };
-
-    this.startOrStopRecording = this.startOrStopRecording.bind(this);
-    this.clearEvents = this.clearEvents.bind(this);
-    this.fetch = this.fetch.bind(this);
-    this.refetch = this.refetch.bind(this);
-    this.selectEvent = this.selectEvent.bind(this);
-    this.changeSplitType = this.changeSplitType.bind(this);
-
-    const { environment } = this.props;
-    this.fetch({ environment });
-
-    const { API } = context;
-    API.onChange({ environment, callback: this.refetch });
+    const { refetchEvents } = this.props;
+    refetchEvents();
   }
 
   componentDidMount() {
     // start recording on load
-    this.startOrStopRecording();
+    this.props.startRecordingEvents();
   }
 
   componentWillUnmount() {
-    const { isRecording } = this.state;
+    const { isRecording } = this.props;
 
     // stop recording on unmount
     if (isRecording) {
-      this.startOrStopRecording();
+      this.stopRecordingEvents();
     }
   }
 
-  fetch({ environment }) {
-    const { API } = this.context;
-    API.getRecordedMutationEvents({ environment }).then((events, err) => {
-      if (err) {
-        throw err;
-      }
-      if (this.state.events && events.length > this.state.events.length) {
-        this.props.onNotification();
-        this.setState({ events });
-      }
-    });
-  }
-
-  refetch() {
-    this.fetch(this.props);
-  }
-
-  startOrStopRecording() {
-    const newState = !this.state.isRecording;
-    const { API } = this.context;
+  startOrStopRecording = () => {
+    const {
+      isRecording,
+      startRecordingEvents,
+      stopRecordingEvents,
+    } = this.props;
+    const newState = !isRecording;
 
     if (newState) {
-      API.startRecordingMutations(this.props);
-      this.setState({ events: [], selectedEvent: null });
+      startRecordingEvents();
     } else {
-      API.stopRecordingMutations(this.props);
+      stopRecordingEvents();
     }
+  };
 
-    this.setState({
-      isRecording: newState,
-    });
-  }
-
-  clearEvents() {
-    const { isRecording } = this.state;
-    this.setState({
-      events: isRecording ? [] : null,
-    });
-  }
-
-  selectEvent(event) {
-    this.setState({
-      selectedEvent: event,
-    });
-  }
-
-  changeSplitType() {
+  changeSplitType = () => {
     const splitType =
-      this.state.splitType === 'vertical' ? 'horizontal' : 'vertical';
+      this.props.splitType === 'vertical' ? 'horizontal' : 'vertical';
 
-    this.setState({
-      splitType,
-    });
-
-    window.localStorage.setItem(SPLIT_TYPE_PERSIST_KEY, splitType);
-  }
+    this.props.changeSplitType(splitType);
+  };
 
   _renderEvents() {
-    const { events, selectedEvent } = this.state;
+    const { events, selectedEvent, selectEvent } = this.props;
     const selectedSeries = selectedEvent && selectedEvent.seriesId;
     const selectedEventName = selectedEvent && selectedEvent.eventName;
 
@@ -140,7 +81,7 @@ export default class MutationsView extends React.Component {
     }
 
     if (events.length === 0) {
-      const { isRecording } = this.state;
+      const { isRecording } = this.props;
       const text = isRecording
         ? 'Recording. No mutation events yet.'
         : 'Stopped. No mutation events recorded.';
@@ -210,7 +151,7 @@ export default class MutationsView extends React.Component {
           <li
             key={key}
             data-tooltip={readableEventName(eventName)}
-            onClick={() => this.selectEvent(event)}>
+            onClick={() => selectEvent(event)}>
             <a className={classNames.join(' ')}>(placeholder)</a>
           </li>,
         );
@@ -239,11 +180,17 @@ export default class MutationsView extends React.Component {
   }
 
   render() {
-    const { isRecording, selectedEvent, splitType } = this.state;
+    const {
+      isRecording,
+      selectedEvent,
+      splitType,
+      selectEvent,
+      clearEvents,
+    } = this.props;
     const recordingClassName =
       'recording fa ' +
       (isRecording ? 'fa-stop recording-active' : 'fa-circle');
-    const clearSelection = () => this.selectEvent(null);
+    const clearSelection = () => selectEvent(null);
     const pane1Style = selectedEvent
       ? {}
       : { minWidth: '100%', minHeight: '100%' };
@@ -257,7 +204,7 @@ export default class MutationsView extends React.Component {
               className={recordingClassName}
               onClick={this.startOrStopRecording}
             />
-            <button className="fa fa-ban" onClick={this.clearEvents} />
+            <button className="fa fa-ban" onClick={clearEvents} />
           </div>
           <div className="center-panel" />
           <div className="right-panel" />
@@ -265,7 +212,7 @@ export default class MutationsView extends React.Component {
         <div className="views">
           <SplitPane
             split={splitType}
-            minSize={100}
+            minSize={200}
             defaultSize={400}
             pane2Style={pane2Style}
             pane1Style={pane1Style}>
@@ -280,183 +227,4 @@ export default class MutationsView extends React.Component {
       </div>
     );
   }
-}
-
-class MutationInspector extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      currentTab: 'query',
-    };
-
-    this.switchToTab = this.switchToTab.bind(this);
-  }
-
-  componentWillReceiveProps(props) {
-    const { event } = props;
-    const { currentTab } = this.state;
-    if (event && !event.payload && currentTab === 'payload') {
-      this.switchToTab('query');
-    }
-  }
-
-  switchToTab(tab) {
-    this.setState({
-      currentTab: tab,
-    });
-  }
-
-  render() {
-    const { event, onClose, onLayoutChange } = this.props;
-    const { currentTab } = this.state;
-
-    if (!event) {
-      return null;
-    }
-
-    const { payload } = event;
-
-    const tabs = {
-      query: 'Query',
-      variables: 'Variables',
-      payload: 'Payload',
-      storeDiff: 'Store Diff',
-    };
-
-    // only include payload tab if it is present on the event
-    const availableTabs = Object.keys(tabs).filter(
-      tab => tab !== 'payload' || Boolean(event.payload),
-    );
-
-    let tabContent = null;
-    if (currentTab === 'query') {
-      const { node } = event.mutation;
-      if (node && node.text) {
-        tabContent = (
-          <GraphqlCodeBlock
-            className="query GraphqlCodeBlock"
-            queryBody={node.text}
-          />
-        );
-      } else if (node && node.name) {
-        tabContent = (
-          <div className="query name">
-            {node.name}
-          </div>
-        );
-      }
-    } else if (currentTab === 'variables') {
-      const { variables } = event.mutation;
-      tabContent = (
-        <div className="variables">
-          <ObjectFields value={variables} />
-        </div>
-      );
-    } else if (currentTab === 'storeDiff') {
-      const { snapshotBefore, snapshotAfter } = event;
-      const records = changedRecords(snapshotBefore, snapshotAfter);
-
-      tabContent = (
-        <div className="store-diff">
-          <SnapshotStoreView
-            records={records}
-            snapshotBefore={snapshotBefore}
-            snapshotAfter={snapshotAfter}
-          />
-        </div>
-      );
-    } else if (currentTab === 'payload') {
-      let payloadEl = null;
-
-      if (payload.isError) {
-        payloadEl = (
-          <span className="error">
-            {payload.message}
-          </span>
-        );
-      } else {
-        payloadEl = <ObjectFields value={payload} />;
-      }
-      tabContent = (
-        <div className="payload">
-          {payloadEl}
-        </div>
-      );
-    }
-
-    return (
-      <div className="mutation-inspector">
-        <div className="tab-panel">
-          {availableTabs.map(tabId => {
-            const onClick = () => this.switchToTab(tabId);
-            const classes = 'tab' + (currentTab === tabId ? ' active' : '');
-            const tabName =
-              tabId === 'payload' && payload.isError ? 'Error' : tabs[tabId];
-            return (
-              <a key={tabId} className={classes} onClick={onClick}>
-                {tabName}
-              </a>
-            );
-          })}
-          <span className="right-buttons">
-            <a className="change-layout" onClick={onLayoutChange}>
-              <i className="fa fa-columns" />
-            </a>
-            <a className="close" onClick={onClose}>
-              &times;
-            </a>
-          </span>
-        </div>
-        <div className="tab-content">
-          {tabContent}
-        </div>
-      </div>
-    );
-  }
-}
-
-MutationsView.contextTypes = {
-  API: PropTypes.object,
-};
-
-// Return only records affected by the change in the following order:
-// - added records
-// - removed records
-// - changed records
-function changedRecords(snapshotBefore, snapshotAfter) {
-  const added = [];
-  const removed = [];
-  const changed = [];
-
-  Object.keys(snapshotBefore).forEach(key => {
-    if (key.startsWith('client:')) {
-      return;
-    }
-
-    const record = snapshotBefore[key];
-    const recordDesc = { id: record.__id, type: record.__typename };
-    if (!snapshotAfter[key]) {
-      removed.push(recordDesc);
-    } else if (!deepObjectEqual(record, snapshotAfter[key])) {
-      changed.push(recordDesc);
-    }
-  });
-
-  Object.keys(snapshotAfter).forEach(key => {
-    if (key.startsWith('client:')) {
-      return;
-    }
-
-    const record = snapshotAfter[key];
-    const recordDesc = {
-      id: record.__id || record.id,
-      type: record.__typename,
-    };
-    if (!snapshotBefore[key]) {
-      added.push(recordDesc);
-    }
-  });
-
-  return [...added, ...removed, ...changed];
 }
