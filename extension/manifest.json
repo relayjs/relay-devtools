@@ -1,8 +1,8 @@
 {
-  "version": "0.1.1",
+  "version": "0.2.0",
   "name": "Relay DevTools",
   "short_name": "Relay DevTools",
-  "description": "Relay DevTools. Experimental release. Contact slv@fb.com for help.",
+  "description": "Relay DevTools. Developer Tools extension to inspect Relay store and how it changes.",
   "icons": {
     "16": "imgs/logo.png",
     "48": "imgs/logo.png",
