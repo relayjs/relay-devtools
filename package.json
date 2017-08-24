@@ -1,6 +1,6 @@
 {
   "name": "relay-devtools-core",
-  "version": "0.0.6",
+  "version": "0.0.8",
   "description": "Relay Modern Devtools",
   "main": "lib/index.js",
   "license": "MIT",

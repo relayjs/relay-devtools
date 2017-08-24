@@ -17,7 +17,7 @@ import './css/reset.css';
 import api from './api';
 import setupRedux from './redux/setupRedux';
 import App from './components/App';
-import { Bridge } from './react-native-runtime/bridge';
+import { Bridge } from '../react-native-runtime/src/bridge';
 
 export function start(node, port) {
   startServer(port, wall => {

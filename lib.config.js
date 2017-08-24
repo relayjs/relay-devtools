@@ -10,9 +10,9 @@ const path = require('path');
 
 module.exports = {
   entry: [
-    './util/loadRegeneratorRuntime.js',
-    './util/setElectronEnv.js',
-    './lib.js',
+    './src/util/loadRegeneratorRuntime.js',
+    './src/util/setElectronEnv.js',
+    './src/lib.js',
   ],
   output: {
     filename: 'index.js',
