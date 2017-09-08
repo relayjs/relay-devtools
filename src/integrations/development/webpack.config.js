@@ -10,7 +10,7 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const HTMLWebpackPluginConfig = new HtmlWebpackPlugin({
-  template: path.join(__dirname, '/src/index.html'),
+  template: path.join(__dirname, './index.html'),
   filename: 'index.html',
   inject: 'body',
   chunks: ['index'],
@@ -18,12 +18,11 @@ const HTMLWebpackPluginConfig = new HtmlWebpackPlugin({
 
 module.exports = {
   entry: {
-    devtools: ['babel-polyfill', './src/devtools.js'],
-    index: ['babel-polyfill', './src/index.js'],
+    index: ['babel-polyfill', path.join(__dirname, 'index.js')],
   },
   output: {
     filename: '[name]_bundle.js',
-    path: path.join(__dirname, '/extension/dist'),
+    path: path.join(__dirname, '../../../lib/development'),
   },
   module: {
     loaders: [
@@ -37,7 +36,7 @@ module.exports = {
       },
       {
         test: /\.js$/,
-        include: __dirname,
+        include: path.join(__dirname, '../../'),
         loader: 'babel-loader',
         exclude: /(node_modules)/,
       },

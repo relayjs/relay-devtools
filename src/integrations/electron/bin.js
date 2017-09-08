@@ -8,7 +8,7 @@ const updateNotifier = require('update-notifier');
 // notify if there's an update
 updateNotifier({ pkg }).notify({ defer: false });
 
-const result = spawn.sync(electron, [require.resolve('./app')].concat(argv), {
+const result = spawn.sync(electron, [require.resolve('./main')].concat(argv), {
   stdio: 'ignore',
 });
 process.exit(result.status);

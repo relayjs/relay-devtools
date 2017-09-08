@@ -10,13 +10,13 @@ const path = require('path');
 
 module.exports = {
   entry: [
-    './src/util/loadRegeneratorRuntime.js',
-    './src/util/setElectronEnv.js',
-    './src/lib.js',
+    path.join(__dirname, '../../util/loadRegeneratorRuntime.js'),
+    path.join(__dirname, '../../util/setElectronEnv.js'),
+    path.join(__dirname, './app.js'),
   ],
   output: {
-    filename: 'index.js',
-    path: path.join(__dirname, '/lib'),
+    filename: 'app.js',
+    path: path.join(__dirname, '../../../lib/electron'),
     library: 'relay-devtools',
     libraryTarget: 'commonjs2',
   },
@@ -32,7 +32,7 @@ module.exports = {
       },
       {
         test: /\.js$/,
-        include: __dirname,
+        include: path.join(__dirname, '../../'),
         loader: 'babel-loader',
         exclude: /(node_modules)/,
         options: {
