@@ -11,7 +11,7 @@ import { inDevMode } from './util';
 
 // require('util').format-like interface that escapes arguments before eval
 /* global chrome:false */
-export default (async function inspectedEval(templateString, ...args) {
+export default function inspectedEval(templateString, ...args) {
   return new Promise((resolve, reject) => {
     if (inDevMode()) {
       reject(new Error('Cannot eval while developing devtool.'));
@@ -28,7 +28,7 @@ export default (async function inspectedEval(templateString, ...args) {
       );
     }
   });
-});
+}
 
 function format(fmt, args) {
   if (!args.length) {

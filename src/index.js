@@ -10,19 +10,40 @@ import React from 'react';
 import { render } from 'react-dom';
 import 'font-awesome-webpack';
 
-import './css/reset.css';
+import './frontend/css/reset.css';
 
-import api from './api';
-import setupRedux from './redux/setupRedux';
-import App from './components/App.js';
-import RelayDetector from './components/RelayDetector.js';
+import createPostMessageBridgeTransport from './transport/createPostMessageBridgeTransport';
+import Bridge from './transport/Bridge';
 
-const API = new api();
-const store = setupRedux(API);
+import API from './frontend/api';
+import setupRedux from './frontend/redux/setupRedux';
+import App from './frontend/components/App.js';
+import RelayDetector from './frontend/components/RelayDetector.js';
+import DevelMockAPI from './api/DevelMockAPI.js';
 
-render(
-  <RelayDetector API={API}>
-    <App store={store} />
-  </RelayDetector>,
-  document.getElementById('devtools-root'),
-);
+import { inDevMode, inChromeDevTools } from './util/util.js';
+
+if (inDevMode()) {
+  const api = new DevelMockAPI();
+  const store = setupRedux(api);
+
+  render(
+    <RelayDetector API={api}>
+      <App store={store} />
+    </RelayDetector>,
+    document.getElementById('devtools-root'),
+  );
+} else if (inChromeDevTools()) {
+  createPostMessageBridgeTransport(window).then(transport => {
+    const bridge = new Bridge(transport);
+    const api = new API(bridge);
+    const store = setupRedux(api);
+
+    render(
+      <RelayDetector API={api}>
+        <App store={store} />
+      </RelayDetector>,
+      document.getElementById('devtools-root'),
+    );
+  });
+}
