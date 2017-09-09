@@ -11,31 +11,6 @@
 
 'use strict';
 
-let lastRunTime = 50;
-const performanceNow =
-  typeof performance === 'object' ? () => performance.now() : () => Date.now();
-const cancelIdle =
-  typeof cancelIdleCallback === 'function' ? cancelIdleCallback : clearTimeout;
-const requestIdle =
-  typeof requestIdleCallback === 'function'
-    ? requestIdleCallback
-    : function(cb) {
-        // Custom polyfill that runs the queue with a backoff.
-        // If you change it, make sure it behaves reasonably well in Firefox.
-        // Magic numbers determined by tweaking in Firefox.
-        // There is no special meaning to them.
-        return setTimeout(() => {
-          const startTime = performanceNow();
-          cb({
-            didTimeout: false,
-            timeRemaining() {
-              return Infinity;
-            },
-          });
-          lastRunTime = performanceNow() - startTime;
-        }, Math.min(500, 3 * lastRunTime));
-      };
-
 // A transport for sending and listening for messages over the bridge.
 export type BridgeTransport = {|
   listen: (callback: (data: BridgeMessage) => mixed) => void,
@@ -96,6 +71,35 @@ type IdleDeadline = {|
   timeRemaining(): number,
 |};
 
+// Ensure every call can be associated with call resolution using a nonce.
+let nonceCounter = 0;
+
+// Polyfill requestIdleCallback
+let lastRunTime = 50;
+const performanceNow =
+  typeof performance === 'object' ? () => performance.now() : () => Date.now();
+const cancelIdle =
+  typeof cancelIdleCallback === 'function' ? cancelIdleCallback : clearTimeout;
+const requestIdle =
+  typeof requestIdleCallback === 'function'
+    ? requestIdleCallback
+    : function(cb) {
+        // Custom polyfill that runs the queue with a backoff.
+        // If you change it, make sure it behaves reasonably well in Firefox.
+        // Magic numbers determined by tweaking in Firefox.
+        // There is no special meaning to them.
+        return setTimeout(() => {
+          const startTime = performanceNow();
+          cb({
+            didTimeout: false,
+            timeRemaining() {
+              return Infinity;
+            },
+          });
+          lastRunTime = performanceNow() - startTime;
+        }, Math.min(500, 3 * lastRunTime));
+      };
+
 /**
  * Bridge:
  *
@@ -112,7 +116,6 @@ export default class Bridge {
   _listeners: { [key: string]: Array<(data: mixed) => mixed> };
   _callers: { [key: string]: AnyFn };
   _defers: { [key: number]: { resolve: mixed => void, reject: Error => void } };
-  _nonce: number;
   _flushHandle: ?number;
   _paused: boolean;
 
@@ -123,7 +126,6 @@ export default class Bridge {
     this._listeners = {};
     this._callers = {};
     this._defers = {};
-    this._nonce = 0;
     this._flushHandle = null;
     this._paused = false;
     transport.listen(message => this._receiveMessage(message));
@@ -167,7 +169,7 @@ export default class Bridge {
 
   call(name: string, ...args: Array<mixed>): Promise<mixed> {
     return new Promise((resolve, reject) => {
-      const nonce = this.nonce++;
+      const nonce = ++nonceCounter;
       this._defers[nonce] = { resolve, reject };
       this._sendMessage({ type: 'call', nonce, name, args });
     });
@@ -192,7 +194,7 @@ export default class Bridge {
   }
 
   _scheduleFlush(): void {
-    if (!this._flushHandle && this._buffer.length) {
+    if (!this._flushHandle && this._hasBufferedMessages()) {
       const timeout = this._paused ? 5000 : 500;
       this._flushHandle = requestIdle(
         deadline => this._flushWhileIdle(deadline),
@@ -239,9 +241,13 @@ export default class Bridge {
       this._flushOutgoingMessages(this._outgoingBuffer.splice(0, take));
     }
 
-    if (this._incomingBuffer.length > 0 || this._outgoingBuffer.length > 0) {
+    if (this._hasBufferedMessages()) {
       this._scheduleFlush();
     }
+  }
+
+  _hasBufferedMessages(): boolean {
+    return this._incomingBuffer.length > 0 || this._outgoingBuffer.length > 0;
   }
 
   _handleIncomingMessage(message: BridgeMessage): void {
@@ -254,17 +260,18 @@ export default class Bridge {
     }
 
     if (message.type === 'call') {
-      try {
+      new Promise(resolve => {
         const fn = this._callers[message.name];
         if (!fn) {
           throw new Error(`unknown call: "${message.name}"`);
         }
-        const value = fn(...message.args);
-        this._sendMessage({ type: 'resolve', nonce: message.nonce, value });
-      } catch (e) {
-        const error = String(e);
-        this._sendMessage({ type: 'reject', nonce: message.nonce, error });
-      }
+        resolve(fn(...message.args));
+      }).then(
+        value =>
+          this._sendMessage({ type: 'resolve', nonce: message.nonce, value }),
+        error =>
+          this._sendMessage({ type: 'reject', nonce: message.nonce, error }),
+      );
       return;
     }
 
@@ -296,16 +303,16 @@ export default class Bridge {
 
     if (message.type === 'batch') {
       message.messages.forEach(batchedMessage => {
-        this._handleMessage(batchedMessage);
+        this._handleIncomingMessage(batchedMessage);
       });
     }
   }
 
   _flushOutgoingMessages(messages: Array<BridgeMessage>): void {
     if (messages.length === 1) {
-      this._wall.send(messages[0]);
+      this._transport.send(messages[0]);
     } else {
-      this._wall.send({ type: 'batch', messages });
+      this._transport.send({ type: 'batch', messages });
     }
   }
 }
