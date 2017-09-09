@@ -7,14 +7,8 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 const path = require('path');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-
-const HTMLWebpackPluginConfig = new HtmlWebpackPlugin({
-  template: path.join(__dirname, './index.html'),
-  filename: 'index.html',
-  inject: 'body',
-  chunks: ['index'],
-});
 
 module.exports = {
   entry: {
@@ -47,5 +41,21 @@ module.exports = {
       },
     ],
   },
-  plugins: [HTMLWebpackPluginConfig],
+  plugins: [
+    new CopyWebpackPlugin([
+      { from: path.join(__dirname, 'manifest.json') },
+      { from: path.join(__dirname, 'imgs'), to: './imgs' },
+    ]),
+    new HtmlWebpackPlugin({
+      template: path.join(__dirname, './index.html'),
+      filename: 'index.html',
+      inject: 'body',
+      chunks: ['index'],
+    }),
+    new HtmlWebpackPlugin({
+      filename: 'devtools.html',
+      inject: 'body',
+      chunks: ['devtools'],
+    }),
+  ],
 };
