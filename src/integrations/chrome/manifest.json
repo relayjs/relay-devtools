@@ -1,22 +1,30 @@
 {
-  "version": "0.2.0",
+  "manifest_version": 2,
   "name": "Relay DevTools",
+  "version": "0.2.0",
   "short_name": "Relay DevTools",
-  "description": "Relay DevTools. Developer Tools extension to inspect Relay store and how it changes.",
+  "description": "Developer Tools extension to inspect Relay store and how it changes.",
   "icons": {
     "16": "imgs/logo.png",
     "48": "imgs/logo.png",
     "128": "imgs/logo.png"
   },
-
-  "page_action": {},
-  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
   "permissions": [
     "tabs",
     "http://*/*",
     "https://*/*"
   ],
-
-  "devtools_page": "devtools.html",
-  "manifest_version": 2
+  "devtools_page": "devtoolsMain.html",
+  "web_accessible_resources": [ "globalHook.js", "backendAgent.js" ],
+  "background": {
+    "scripts": [ "backgroundMessageBus.js" ],
+    "persistent": false
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["injectGlobalHook.js"],
+      "run_at": "document_start"
+    }
+  ]
 }

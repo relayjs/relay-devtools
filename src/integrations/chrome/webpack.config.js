@@ -12,11 +12,20 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   entry: {
-    devtools: ['babel-polyfill', path.join(__dirname, './devtools.js')],
-    index: ['babel-polyfill', path.join(__dirname, './index.js')],
+    backendAgent: [path.join(__dirname, './scripts/backendAgent.js')],
+    backgroundMessageBus: [
+      path.join(__dirname, './scripts/backgroundMessageBus.js'),
+    ],
+    devtoolsMain: [path.join(__dirname, './scripts/devtoolsMain.js')],
+    devtoolsPanel: [path.join(__dirname, './scripts/devtoolsPanel.js')],
+    globalHook: [path.join(__dirname, './scripts/globalHook.js')],
+    injectBackendAgent: [
+      path.join(__dirname, './scripts/injectBackendAgent.js'),
+    ],
+    injectGlobalHook: [path.join(__dirname, './scripts/injectGlobalHook.js')],
   },
   output: {
-    filename: '[name]_bundle.js',
+    filename: '[name].js',
     path: path.join(__dirname, '../../../lib/chrome'),
   },
   module: {
@@ -47,15 +56,15 @@ module.exports = {
       { from: path.join(__dirname, 'imgs'), to: './imgs' },
     ]),
     new HtmlWebpackPlugin({
-      template: path.join(__dirname, './index.html'),
-      filename: 'index.html',
+      template: path.join(__dirname, './devtoolsPanel.html'),
+      filename: 'devtoolsPanel.html',
       inject: 'body',
-      chunks: ['index'],
+      chunks: ['devtoolsPanel'],
     }),
     new HtmlWebpackPlugin({
-      filename: 'devtools.html',
+      filename: 'devtoolsMain.html',
       inject: 'body',
-      chunks: ['devtools'],
+      chunks: ['devtoolsMain'],
     }),
   ],
 };

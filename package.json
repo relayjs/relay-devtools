@@ -14,7 +14,7 @@
     "start": "webpack-dev-server --config ./src/integrations/development/webpack.config.js -d --hot --inline --port 3000",
     "start:electron": "webpack --config ./src/integrations/electron/webpack.config.js --watch",
     "start:dist": "./lib/integrations/electron/bin.js",
-    "prettier": "prettier --single-quote --trailing-comma all --jsx-bracket-same-line --write **/*.{js,css,less} components/*/*.js",
+    "prettier": "prettier --single-quote --trailing-comma all --jsx-bracket-same-line --write src/**/*.{js,css,less}",
     "prepublishOnly": "yarn install && yarn build",
     "test:chrome": "./src/integrations/chrome/test.js"
   },
@@ -34,6 +34,7 @@
     "react-split-pane": "^0.1.65",
     "redux": "^3.7.2",
     "redux-devtools-extension": "^2.13.2",
+    "relay-runtime": "^1.3.0",
     "update-notifier": "^2.2.0",
     "ws": "^3.1.0"
   },
