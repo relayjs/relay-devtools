@@ -1,67 +1,66 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Relay Developer Tools</title>
-        <meta charset=utf8>
-        <style>
-         html {
-             display: flex;
-             font-family: sans-serif;
-         }
-         body {
-             margin: 0;
-             padding: 0;
-             flex: 1;
-             display: flex;
-         }
-         #container {
-             display: flex;
-             position: fixed;
-             top: 0;
-             left: 0;
-             right: 0;
-             bottom: 0;
-             background-color: white;
-         }
-         #waiting {
-             flex-direction: column;
-             text-align: center;
-             font-family: sans-serif;
-             color: #aaa;
-             flex: 1;
-         }
-         #waiting h2 {
-             padding: 30px;
-         }
-         #loading-status {
-             margin-top: 10px;
-         }
-
-         @font-face {
-             font-family: 'FontAwesome';
-             src: url('fonts/fontawesome-webfont.eot?v=4.7.0');
-             src: url('fonts/fontawesome-webfont.eot?#iefix&v=4.7.0') format('embedded-opentype'), url('fonts/fontawesome-webfont.woff2?v=4.7.0') format('woff2'), url('fonts/fontawesome-webfont.woff?v=4.7.0') format('woff'), url('fonts/fontawesome-webfont.ttf?v=4.7.0') format('truetype'), url('fonts/fontawesome-webfont.svg?v=4.7.0#fontawesomeregular') format('svg');
-             font-weight: normal;
-             font-style: normal;
-         };
-        </style>
-        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    </head>
-    <body>
-        <div id="container">
-            <div id="waiting">
-                <h2>Waiting for React to connect…</h2>
-                <div>
-                    <h4>Relay DevTools for React Native</h4>
-                    <div>The active app will automatically connect in a few seconds.</div>
-                </div>
-                <br />
-                <br />
-                <div id="loading-status">Starting the server…</div>
-            </div>
+  <head>
+    <title>Relay Developer Tools</title>
+    <meta charset=utf8>
+    <style>
+      html {
+        display: flex;
+        font-family: sans-serif;
+      }
+      body {
+        margin: 0;
+        padding: 0;
+        flex: 1;
+        display: flex;
+      }
+      #container {
+        display: flex;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: white;
+      }
+      #waiting {
+        flex-direction: column;
+        text-align: center;
+        font-family: sans-serif;
+        color: #aaa;
+        flex: 1;
+      }
+      #waiting h2 {
+        padding: 30px;
+      }
+      #loading-status {
+        margin-top: 10px;
+      }
+      @font-face {
+        font-family: 'FontAwesome';
+        src: url('fonts/fontawesome-webfont.eot?v=4.7.0');
+        src: url('fonts/fontawesome-webfont.eot?#iefix&v=4.7.0') format('embedded-opentype'), url('fonts/fontawesome-webfont.woff2?v=4.7.0') format('woff2'), url('fonts/fontawesome-webfont.woff?v=4.7.0') format('woff'), url('fonts/fontawesome-webfont.ttf?v=4.7.0') format('truetype'), url('fonts/fontawesome-webfont.svg?v=4.7.0#fontawesomeregular') format('svg');
+        font-weight: normal;
+        font-style: normal;
+      };
+    </style>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  </head>
+  <body>
+    <div id="container">
+      <div id="waiting">
+        <h2>Waiting for React to connect…</h2>
+        <div>
+          <h4>Relay DevTools for React Native</h4>
+          <div>The active app will automatically connect in a few seconds.</div>
         </div>
-        <script>
-            require('./app');
-        </script>
-    </body>
+        <br />
+        <br />
+        <div id="loading-status">Starting the server…</div>
+      </div>
+    </div>
+    <script>
+      require('./app');
+    </script>
+  </body>
 </html>
