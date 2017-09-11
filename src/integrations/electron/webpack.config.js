@@ -11,7 +11,6 @@ const path = require('path');
 module.exports = {
   entry: [
     path.join(__dirname, '../../util/loadRegeneratorRuntime.js'),
-    path.join(__dirname, '../../util/setElectronEnv.js'),
     path.join(__dirname, './app.js'),
   ],
   output: {
