@@ -11,7 +11,7 @@
 
 'use strict';
 
-import type { BridgeTransport } from './Bridge';
+import type { BridgeTransport } from '../../../transport/Bridge';
 
 /**
  * Creates a WebSocket based BridgeTransport for use on the client, which can
@@ -21,9 +21,9 @@ import type { BridgeTransport } from './Bridge';
  * The resulting Promise will resolve when a WebSocket connection is
  * successfully connected.
  */
-export default function createWebSocketClientBridgeTransport(
-  host: string = 'localhost',
-  port: number = 8098,
+export default function wsClientTransport(
+  host: string,
+  port: number,
 ): Promise<BridgeTransport> {
   return new Promise((resolve, reject) => {
     let connection;
@@ -80,7 +80,7 @@ export default function createWebSocketClientBridgeTransport(
     function handleMessage(evt) {
       try {
         const data = JSON.parse(evt.data);
-        const message = data.relayDebuggerMessage;
+        const message = data.relayDevTools;
         if (message) {
           messageListeners.forEach(fn => fn(message));
         }
@@ -92,7 +92,7 @@ export default function createWebSocketClientBridgeTransport(
 
     function sendMessage(message) {
       if (connection && connection.readyState === WebSocket.OPEN) {
-        connection.send(JSON.stringify({ relayDebuggerMessage: message }));
+        connection.send(JSON.stringify({ relayDevTools: message }));
       }
     }
   });

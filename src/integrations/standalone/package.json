@@ -1,0 +1,18 @@
+{
+  "name": "relay-devtools",
+  "version": "0.0.5",
+  "description": "Connect Relay DevTools to a Relay app.",
+  "productName": "Relay DevTools",
+  "bin": {
+    "relay-devtools": "./launchApp.js"
+  },
+  "scripts": {
+    "start": "./launchApp.js"
+  },
+  "dependencies": {
+    "cross-spawn": "^5.1.0",
+    "electron": "^1.6.11",
+    "update-notifier": "^2.2.0",
+    "ws": "^3.1.0"
+  }
+}

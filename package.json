@@ -2,21 +2,17 @@
   "name": "relay-devtools-core",
   "version": "0.0.8",
   "description": "Relay Modern Devtools",
-  "main": "lib/index.js",
-  "bin": {
-    "relay-devtools": "./lib/integrations/electron/bin.js"
-  },
   "license": "MIT",
   "scripts": {
-    "build": "yarn run build:chrome && yarn run build:electron",
+    "build": "yarn run build:chrome && yarn run build:standalone",
     "build:chrome": "webpack --config ./src/integrations/chrome/webpack.config.js",
-    "build:electron": "webpack --config ./src/integrations/electron/webpack.config.js",
+    "build:standalone": "webpack --config ./src/integrations/standalone/webpack.config.js",
     "start": "webpack-dev-server --config ./src/integrations/development/webpack.config.js -d --hot --inline --port 3000",
-    "start:electron": "webpack --config ./src/integrations/electron/webpack.config.js --watch",
-    "start:dist": "./lib/integrations/electron/bin.js",
+    "start:standalone": "webpack --config ./src/integrations/standalone/webpack.config.js --watch",
     "prettier": "prettier --single-quote --trailing-comma all --jsx-bracket-same-line --write src/**/*.{js,css,less}",
     "prepublishOnly": "yarn install && yarn build",
-    "test:chrome": "./src/integrations/chrome/test.js"
+    "test:chrome": "./src/integrations/chrome/test.js",
+    "test:standalone": "node ./lib/standalone/launchApp.js"
   },
   "dependencies": {
     "cross-spawn": "^5.1.0",

@@ -7,19 +7,26 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 const path = require('path');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
-  entry: [
-    path.join(__dirname, '../../util/loadRegeneratorRuntime.js'),
-    path.join(__dirname, './app.js'),
-  ],
+  target: 'node',
+  node: {
+    __dirname: false,
+    __filename: false,
+  },
+  entry: {
+    app: [path.join(__dirname, './app.js')],
+    main: [path.join(__dirname, './main.js')],
+    index: [path.join(__dirname, './index.js')],
+  },
   output: {
-    filename: 'app.js',
-    path: path.join(__dirname, '../../../lib/electron'),
-    library: 'relay-devtools',
+    filename: '[name].js',
+    path: path.join(__dirname, '../../../lib/standalone'),
     libraryTarget: 'commonjs2',
   },
   module: {
+    // noParse: ['ws'],
     loaders: [
       {
         test: /\.css$/,
@@ -34,14 +41,6 @@ module.exports = {
         include: path.join(__dirname, '../../'),
         loader: 'babel-loader',
         exclude: /(node_modules)/,
-        options: {
-          presets: ['react', 'es2017', 'es2016', 'es2015', 'stage-2'],
-          plugins: [
-            'transform-regenerator',
-            'transform-class-properties',
-            'transform-object-rest-spread',
-          ],
-        },
       },
       {
         test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
@@ -49,9 +48,13 @@ module.exports = {
       },
     ],
   },
-  externals: {
-    http: 'commonjs http', // The polyfill version differ from node's http
-    buffer: 'root global', // Polyfilled version fails the instanceof check
-  },
-  devtool: 'eval',
+  externals: ['cross-spawn', 'electron', 'update-notifier', 'ws'],
+  plugins: [
+    new CopyWebpackPlugin([
+      { from: path.join(__dirname, 'app.html') },
+      { from: path.join(__dirname, 'launchApp.js') },
+      { from: path.join(__dirname, 'imgs'), to: './imgs' },
+      { from: path.join(__dirname, 'package.json') },
+    ]),
+  ],
 };

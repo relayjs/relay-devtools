@@ -11,7 +11,7 @@
 
 'use strict';
 
-import type { BridgeTransport } from './Bridge';
+import type { BridgeTransport } from '../../../transport/Bridge';
 
 import * as WebSocket from 'ws';
 
@@ -23,7 +23,7 @@ import * as WebSocket from 'ws';
  * The resulting Promise will resolve when a client WebSocket connection
  * successfully connects.
  */
-export default function createWebSocketServerBridgeTransport(
+export default function wsServerTransport(
   port: number = 8098,
 ): Promise<BridgeTransport> {
   return new Promise((resolve, reject) => {
@@ -49,14 +49,14 @@ export default function createWebSocketServerBridgeTransport(
       }
     }
 
-    function handleConnection(socket) {
+    function handleConnection(newConnection) {
       if (connection) {
         connection.close();
       }
-      connection = socket;
-      connection.onclose = handleClose;
-      connection.onerror = handleError;
-      connection.onmessage = handleMessage;
+      connection = newConnection;
+      connection.on('close', handleClose);
+      connection.on('error', handleError);
+      connection.on('message', handleMessage);
       const transport = {
         listen(fn) {
           messageListeners.push(fn);
@@ -94,22 +94,23 @@ export default function createWebSocketServerBridgeTransport(
       connection = null;
     }
 
-    function handleMessage(evt) {
+    function handleMessage(rawMessage) {
+      let data;
       try {
-        const data = JSON.parse(evt.data);
-        const message = data.relayDebuggerMessage;
-        if (message) {
-          messageListeners.forEach(fn => fn(message));
-        }
+        data = JSON.parse(rawMessage);
       } catch (error) {
         // eslint-disable-next-line no-console
-        console.error('WebSocketTransport: failed to parse: ' + evt.data);
+        console.error('WebSocketTransport: failed to parse: ' + rawMessage);
+      }
+      const message = data.relayDevTools;
+      if (message) {
+        messageListeners.forEach(fn => fn(message));
       }
     }
 
     function sendMessage(message) {
       if (connection && connection.readyState === WebSocket.OPEN) {
-        connection.send(JSON.stringify({ relayDebuggerMessage: message }));
+        connection.send(JSON.stringify({ relayDevTools: message }));
       }
     }
   });

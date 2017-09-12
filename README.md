@@ -8,10 +8,30 @@ For Google Chrome, install the [extension from WebStore][0].
 After installation "Relay" tab will be available in the Chrome developer tools
 apps using Relay are inspected.
 
-For inspecting React Native apps using Relay, install a desktop Electron app:
+For inspecting Relay outside of Chrome, such as in Safari or React Native,
+use the standalone Relay DevTools app.
 
 ```bash
 npm install -g relay-devtools
+```
+
+Install Relay DevTools into your application somewhere before a Relay
+Environment is created. Don't forget to remove DevTools when you release to
+production!
+
+```js
+const {Environment} = require('relay-runtime');
+const {installRelayDevTools} = require('relay-devtools');
+
+installRelayDevTools();
+
+new Environment(...);
+```
+
+Run the Relay DevTools standalone app from the terminal, and it will connect
+to your running Relay application.
+
+```bash
 relay-devtools
 ```
 
@@ -27,7 +47,7 @@ store and expanding their connections.
 In addition to that, you can record all mutation events happenning to the store
 and inspect how they changed the store.
 
-![Mutaitons View](./images/mutations-view.png)
+![Mutations View](./images/mutations-view.png)
 
 ## Development
 

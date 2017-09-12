@@ -93,7 +93,8 @@ const requestIdle =
           cb({
             didTimeout: false,
             timeRemaining() {
-              return Infinity;
+              // Upper limit of 50ms
+              return startTime + 50 - performanceNow();
             },
           });
           lastRunTime = performanceNow() - startTime;
@@ -213,6 +214,14 @@ export default class Bridge {
   _flushWhileIdle(deadline: IdleDeadline): void {
     this._flushHandle = null;
 
+    const halfPast = deadline.timeRemaining() / 2;
+    while (
+      this._incomingBuffer.length > 0 &&
+      (deadline.didTimeout || deadline.timeRemaining() > halfPast)
+    ) {
+      this._handleIncomingMessage(this._incomingBuffer.shift());
+    }
+
     // Magic numbers were determined by tweaking in a heavy UI and seeing
     // what performs reasonably well both when DevTools are hidden and visible.
     // The goal is that we try to catch up but avoid blocking the UI.
@@ -221,14 +230,6 @@ export default class Bridge {
     const chunkCount = this._paused ? 20 : 10;
     const chunkSize = Math.round(this._outgoingBuffer.length / chunkCount);
     const minChunkSize = this._paused ? 50 : 100;
-
-    const halfPast = deadline.timeRemaining() / 2;
-    while (
-      this._incomingBuffer.length > 0 &&
-      (deadline.didTimeout || deadline.timeRemaining() > halfPast)
-    ) {
-      this._handleIncomingMessage(this._incomingBuffer.shift());
-    }
 
     while (
       this._outgoingBuffer.length > 0 &&

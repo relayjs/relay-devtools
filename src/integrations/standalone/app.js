@@ -7,19 +7,24 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
+'use strict';
+
 import React from 'react';
 import { render } from 'react-dom';
+import 'font-awesome-webpack';
+import 'babel-polyfill';
 
 import '../../frontend/css/reset.css';
 
-import createWebSocketServerBridgeTransport from '../../transport/createWebSocketServerBridgeTransport';
+import wsServerTransport from './transport/wsServerTransport';
 import Bridge from '../../transport/Bridge';
 
 import API from '../../frontend/api';
 import setupRedux from '../../frontend/redux/setupRedux';
 import App from '../../frontend/components/App';
+import RelayDetector from '../../frontend/components/RelayDetector.js';
 
-createWebSocketServerBridgeTransport(process.env.PORT).then(transport => {
+wsServerTransport(process.env.PORT).then(transport => {
   const bridge = new Bridge(transport);
   const api = new API(bridge);
   const store = setupRedux(api);
