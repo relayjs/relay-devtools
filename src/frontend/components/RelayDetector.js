@@ -10,32 +10,25 @@
 import React from 'react';
 
 export default class RelayDetector extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = {
       isRelayPresent: false,
     };
 
-    setInterval(this.checkForRelay.bind(this), 250);
-  }
+    props.API.onRegister(() => {
+      this.setState({ isRelayPresent: true });
+    });
 
-  checkForRelay() {
-    const { API } = this.props;
-    API.checkForRelay().then(exists => {
-      if (exists !== this.state.isRelayPresent) {
-        this.setState({ isRelayPresent: exists });
-      }
+    props.API.hasDetectedRelay().then(isRelayPresent => {
+      this.setState({ isRelayPresent });
     });
   }
 
   render() {
     if (this.state.isRelayPresent) {
-      return (
-        <div>
-          {this.props.children}
-        </div>
-      );
+      return <div>{this.props.children}</div>;
     }
 
     return <div className="placeholder">Looking for Relay...</div>;

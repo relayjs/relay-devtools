@@ -15,6 +15,7 @@ import EnvironmentAgent from './EnvironmentAgent';
 
 import type { Environment } from 'RelayRuntime';
 import type { GlobalHook } from './GlobalHook';
+import type Bridge from '../transport/Bridge';
 
 /**
  * connectBackend:
@@ -27,8 +28,12 @@ export default function connectBackend(hook: GlobalHook, bridge: Bridge): void {
 
   function connectAgent(environment: Environment): void {
     const id = agents.length;
-    const agent = new EnvironmentAgent(environment, id);
+    function emit(name, data) {
+      bridge.emit(name, { ...data, environment: id });
+    }
+    const agent = new EnvironmentAgent(environment, id, emit);
     agents.push(agent);
+    bridge.emit('register');
   }
 
   hook.getEnvironments().forEach(connectAgent);
@@ -44,13 +49,6 @@ export default function connectBackend(hook: GlobalHook, bridge: Bridge): void {
 
   bridge.onCall('relayDebugger:getMatchingRecords', (env, search, type) => {
     return agents[env].getMatchingRecords(search, type);
-  });
-
-  bridge.onCall('relayDebugger:checkDirty', env => {
-    const envDebugger = agents[env];
-    const isDirty = envDebugger.isDirty();
-    envDebugger.resetDirty();
-    return isDirty;
   });
 
   bridge.onCall('relayDebugger:startRecording', env => {
@@ -74,7 +72,7 @@ export default function connectBackend(hook: GlobalHook, bridge: Bridge): void {
     return events;
   });
 
-  bridge.onCall('relayDebugger:check', () => {
+  bridge.onCall('hasDetectedRelay', () => {
     return agents.length !== 0;
   });
 }

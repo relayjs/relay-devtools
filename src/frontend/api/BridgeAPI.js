@@ -21,16 +21,23 @@ import type { Bridge } from '../../transport/Bridge';
  */
 export default class BridgeAPI {
   _bridge: Bridge;
-  _changeCallbacks: {
-    [environment: string]: {
-      interval: number,
-      callbacks: Array<() => void>,
-    },
-  };
+  _changeCallbacks: { [environment: string]: Array<() => void> };
 
   constructor(bridge: Bridge): void {
     this._bridge = bridge;
     this._changeCallbacks = {};
+    this._onRegisterListeners = [];
+
+    this._bridge.on('register', () => {
+      this._onRegisterListeners.forEach(cb => cb());
+    });
+
+    this._bridge.on('dirty', ({ environment }) => {
+      const callbacks = this._changeCallbacks[environment];
+      if (callbacks) {
+        callbacks.forEach(cb => cb());
+      }
+    });
   }
 
   callBridge(method, ...args) {
@@ -72,30 +79,13 @@ export default class BridgeAPI {
 
   onChange({ environment, callback }) {
     if (!this._changeCallbacks[environment]) {
-      const interval = setInterval(async () => {
-        const isDirty = await this._bridge.call(
-          'relayDebugger:checkDirty',
-          environment,
-        );
-        if (isDirty) {
-          this._changeCallbacks[environment].callbacks.forEach(cb => cb());
-        }
-      }, 500);
-
-      this._changeCallbacks[environment] = {
-        interval,
-        callbacks: [callback],
-      };
+      this._changeCallbacks[environment] = [callback];
     } else {
-      this._changeCallbacks[environment].callbacks.push(callback);
+      this._changeCallbacks[environment].push(callback);
     }
   }
 
   stopObservingChange({ environment }) {
-    if (!this._changeCallbacks[environment]) {
-      return;
-    }
-    clearInterval(this._changeCallbacks[environment].interval);
     delete this._changeCallbacks[environment];
   }
 
@@ -111,7 +101,11 @@ export default class BridgeAPI {
     return this._bridge.call('relayDebugger:getRecordedEvents', environment);
   }
 
-  checkForRelay() {
-    return this._bridge.call('relayDebugger:check');
+  hasDetectedRelay() {
+    return this._bridge.call('hasDetectedRelay');
+  }
+
+  onRegister(callback) {
+    this._onRegisterListeners.push(callback);
   }
 }

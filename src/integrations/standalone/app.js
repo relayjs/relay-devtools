@@ -19,7 +19,7 @@ import '../../frontend/css/reset.css';
 import wsServerTransport from './transport/wsServerTransport';
 import Bridge from '../../transport/Bridge';
 
-import API from '../../frontend/api';
+import API from '../../frontend/api/BridgeAPI';
 import setupRedux from '../../frontend/redux/setupRedux';
 import App from '../../frontend/components/App';
 import RelayDetector from '../../frontend/components/RelayDetector.js';

@@ -26,6 +26,8 @@ type MutationEvent = {
   mutation: OperationSelector,
 };
 
+type EmitFn = (name: string, data: { [key: string]: mixed }) => void;
+
 /**
  * Agent:
  *
@@ -34,19 +36,20 @@ type MutationEvent = {
  */
 export default class EnvironmentAgent {
   _environment: Environment;
+  _emit: EmitFn;
   _id: string;
-  _envIsDirty: boolean;
   _isRecordingMutationEvents: boolean;
   _recordedMutationEvents: Array<MutationEvent>;
 
-  constructor(environment: Environment, id: string) {
+  constructor(environment: Environment, id: string, emit: EmitFn): void {
     this._environment = environment;
     this._id = id;
-    this._envIsDirty = false;
-    this._monkeyPatchSource();
-
+    this._emit = emit;
     this._recordedMutationEvents = [];
     this._isRecordingMutationEvents = false;
+
+    // Monkey patch methods within Environment to follow various events.
+    this._monkeyPatchPublishQueue();
   }
 
   getEnvironment(): Environment {
@@ -100,31 +103,17 @@ export default class EnvironmentAgent {
     return recordInspector && recordInspector.inspect();
   }
 
-  _monkeyPatchSource() {
-    const source = (this._environment.getStore().getSource(): any);
-    const originalSet = source.set;
-    const originalRemove = source.remove;
-
-    source.set = (...args) => {
-      originalSet.apply(source, args);
-      this.triggerDirty();
-    };
-    source.remove = (...args) => {
-      originalRemove.apply(source, args);
-      this.triggerDirty();
-    };
-  }
-
-  triggerDirty() {
-    this._envIsDirty = true;
-  }
-
-  isDirty() {
-    return this._envIsDirty;
-  }
-
-  resetDirty() {
-    this._envIsDirty = false;
+  _monkeyPatchPublishQueue() {
+    const emit = this._emit;
+    monkeyPatch(
+      this._environment._publishQueue,
+      'run',
+      run =>
+        function() {
+          run.apply(this, arguments);
+          emit('dirty');
+        },
+    );
   }
 
   startRecordingMutationEvents() {
@@ -182,4 +171,8 @@ export default class EnvironmentAgent {
       fn();
     }
   }
+}
+
+function monkeyPatch(source, method, patch) {
+  source[method] = patch(source[method]);
 }

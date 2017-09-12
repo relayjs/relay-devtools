@@ -186,7 +186,11 @@ export default class DevelMockAPI {
     ];
   }
 
-  async checkForRelay() {
+  hasDetectedRelay() {
     return true;
+  }
+
+  onRegister({ callback }) {
+    callback();
   }
 }
