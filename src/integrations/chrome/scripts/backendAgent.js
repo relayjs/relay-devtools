@@ -14,13 +14,16 @@
 import connectBackend from '../../../backend/connectBackend';
 import createChromeBackendTransport from '../transport/createChromeBackendTransport';
 import Bridge from '../../../transport/Bridge';
+import { getGlobalHook } from '../../../backend/GlobalHook';
 
 /**
  * This script is loaded into the document and is responsible for creating
  * a bridge, and connecting it to the backend via the relay global hook.
  */
 
-const transport = createChromeBackendTransport();
-const bridge = new Bridge(transport);
-const hook = window.__RELAY_DEVTOOLS_HOOK__;
-connectBackend(hook, bridge);
+const hook = getGlobalHook(window);
+if (hook) {
+  const transport = createChromeBackendTransport();
+  const bridge = new Bridge(transport);
+  connectBackend(hook, bridge);
+}

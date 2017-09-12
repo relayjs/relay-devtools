@@ -14,7 +14,7 @@
 import EnvironmentAgent from './EnvironmentAgent';
 
 import type { Environment } from 'RelayRuntime';
-import type { Hook } from './installGlobalHook';
+import type { GlobalHook } from './GlobalHook';
 
 /**
  * connectBackend:
@@ -22,7 +22,7 @@ import type { Hook } from './installGlobalHook';
  * Given a Hook and a Bridge, create Agents for every Relay Environment found,
  * and attach Bridge callbacks to Agent methods.
  */
-export default function connectBackend(hook: Hook, bridge: Bridge): void {
+export default function connectBackend(hook: GlobalHook, bridge: Bridge): void {
   const agents = [];
 
   function connectAgent(environment: Environment): void {

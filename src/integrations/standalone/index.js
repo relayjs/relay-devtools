@@ -11,7 +11,7 @@
 
 'use strict';
 
-import installGlobalHook from '../../backend/installGlobalHook';
+import { installGlobalHook, getGlobalHook } from '../../backend/GlobalHook';
 import connectBackend from '../../backend/connectBackend';
 import Bridge from '../../transport/Bridge';
 import wsClientTransport from './transport/wsClientTransport';
@@ -34,10 +34,13 @@ export function installRelayDevTools(
     'Installing Relay DevTools backend. Inspect Relay Environments in this ' +
       'app by running `relay-devtools`. Remember to remove this in production!',
   );
-  installGlobalHook(global);
-  wsClientTransport(host, port).then(transport => {
-    const bridge = new Bridge(transport);
-    const hook = global.__RELAY_DEVTOOLS_HOOK__;
-    connectBackend(hook, bridge);
-  });
+  if (installGlobalHook(global)) {
+    wsClientTransport(host, port).then(transport => {
+      const hook = getGlobalHook(global);
+      if (hook) {
+        const bridge = new Bridge(transport);
+        connectBackend(hook, bridge);
+      }
+    });
+  }
 }

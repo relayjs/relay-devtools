@@ -13,7 +13,7 @@
 
 import type { Environment } from 'RelayRuntime';
 
-export type Hook = {
+export type GlobalHook = {
   /**
    * Called by RelayEnvironment during initialization.
    */
@@ -39,14 +39,14 @@ export type Hook = {
  * Environment instances will look for to register themselves, and which
  * connectBackend will use to find environments.
  */
-export default function installGlobalHook(window: any) {
+export function installGlobalHook(window: any): boolean {
   if (!window || window.__RELAY_DEVTOOLS_HOOK__) {
-    return;
+    return false;
   }
   const environments = [];
   const listeners = [];
 
-  const hook: Hook = {
+  const hook: GlobalHook = {
     registerEnvironment(environment) {
       environments.push(environment);
       listeners.forEach(listener => listener(environment));
@@ -64,4 +64,10 @@ export default function installGlobalHook(window: any) {
   Object.defineProperty(window, '__RELAY_DEVTOOLS_HOOK__', {
     value: hook,
   });
+
+  return true;
+}
+
+export function getGlobalHook(window: any): ?GlobalHook {
+  return window && window.__RELAY_DEVTOOLS_HOOK__;
 }

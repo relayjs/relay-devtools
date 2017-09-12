@@ -11,7 +11,7 @@
 
 'use strict';
 
-import installGlobalHook from '../../../backend/installGlobalHook';
+import { installGlobalHook } from '../../../backend/GlobalHook';
 import createChromeBackendTransport from '../transport/createChromeBackendTransport';
 
 /**
@@ -23,23 +23,23 @@ import createChromeBackendTransport from '../transport/createChromeBackendTransp
  * every page load.
  */
 
-installGlobalHook(window);
+if (installGlobalHook(window)) {
+  const transport = createChromeBackendTransport();
 
-const transport = createChromeBackendTransport();
-
-let foundEnvironment = false;
-function detectedRelayEnvironment() {
-  if (!foundEnvironment) {
-    foundEnvironment = true;
-    transport.send({ type: 'event', name: 'detectedRelayEnvironment' });
-  }
-}
-
-transport.listen(msg => {
-  if (msg.type === 'event' && msg.name === 'connect') {
-    if (window.__RELAY_DEVTOOLS_HOOK__.getEnvironments().length) {
-      detectedRelayEnvironment();
+  let foundEnvironment = false;
+  function detectedRelayEnvironment() {
+    if (!foundEnvironment) {
+      foundEnvironment = true;
+      transport.send({ type: 'event', name: 'detectedRelayEnvironment' });
     }
-    window.__RELAY_DEVTOOLS_HOOK__.onEnvironment(detectedRelayEnvironment);
   }
-});
+
+  transport.listen(msg => {
+    if (msg.type === 'event' && msg.name === 'connect') {
+      if (window.__RELAY_DEVTOOLS_HOOK__.getEnvironments().length) {
+        detectedRelayEnvironment();
+      }
+      window.__RELAY_DEVTOOLS_HOOK__.onEnvironment(detectedRelayEnvironment);
+    }
+  });
+}
