@@ -23,7 +23,7 @@ export default function setupRedux(API) {
     composeWithDevTools(
       applyMiddleware(callAPIMiddleware, throwOnAsyncErrorMiddleware),
       persistEnhancer(
-        ['mutationsView.splitType', 'recordInspector.diffMode'],
+        ['updatesView.splitType', 'recordInspector.diffMode'],
         'RELAY_DEVTOOLS',
       ),
     ),

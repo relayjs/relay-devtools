@@ -14,13 +14,14 @@ import { deepObjectEqual } from '../util/objCompare';
 import { ObjectFields } from './RecordInspector';
 import { SnapshotStoreView } from './StoreView';
 
-export default class MutationInspector extends React.Component {
+export default class UpdateInspector extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      currentTab: 'query',
-    };
+    const event = props.event;
+    const currentTab = event ? Object.keys(getTabs(event))[0] : 'query';
+
+    this.state = { currentTab };
 
     this.switchToTab = this.switchToTab.bind(this);
   }
@@ -28,15 +29,16 @@ export default class MutationInspector extends React.Component {
   componentWillReceiveProps(props) {
     const { event } = props;
     const { currentTab } = this.state;
-    if (event && !event.payload && currentTab === 'payload') {
-      this.switchToTab('query');
+    if (event) {
+      const tabs = getTabs(event);
+      if (!tabs[currentTab]) {
+        this.switchToTab(Object.keys(tabs)[0]);
+      }
     }
   }
 
   switchToTab(tab) {
-    this.setState({
-      currentTab: tab,
-    });
+    this.setState({ currentTab: tab });
   }
 
   render() {
@@ -49,12 +51,7 @@ export default class MutationInspector extends React.Component {
 
     const { payload } = event;
 
-    const tabs = {
-      query: 'Query',
-      variables: 'Variables',
-      payload: 'Payload',
-      storeDiff: 'Store Diff',
-    };
+    const tabs = getTabs(event);
 
     // only include payload tab if it is present on the event
     const availableTabs = Object.keys(tabs).filter(
@@ -63,7 +60,7 @@ export default class MutationInspector extends React.Component {
 
     let tabContent = null;
     if (currentTab === 'query') {
-      const { node } = event.mutation;
+      const node = event.operation;
       if (node && node.text) {
         tabContent = (
           <GraphqlCodeBlock
@@ -72,14 +69,10 @@ export default class MutationInspector extends React.Component {
           />
         );
       } else if (node && node.name) {
-        tabContent = (
-          <div className="query name">
-            {node.name}
-          </div>
-        );
+        tabContent = <div className="query name">{node.name}</div>;
       }
     } else if (currentTab === 'variables') {
-      const { variables } = event.mutation;
+      const variables = event.variables;
       tabContent = (
         <div className="variables">
           <ObjectFields value={variables} />
@@ -102,23 +95,15 @@ export default class MutationInspector extends React.Component {
       let payloadEl = null;
 
       if (payload.isError) {
-        payloadEl = (
-          <span className="error">
-            {payload.message}
-          </span>
-        );
+        payloadEl = <span className="error">{payload.message}</span>;
       } else {
         payloadEl = <ObjectFields value={payload} />;
       }
-      tabContent = (
-        <div className="payload">
-          {payloadEl}
-        </div>
-      );
+      tabContent = <div className="payload">{payloadEl}</div>;
     }
 
     return (
-      <div className="mutation-inspector">
+      <div className="update-inspector">
         <div className="tab-panel">
           {availableTabs.map(tabId => {
             const onClick = () => this.switchToTab(tabId);
@@ -140,12 +125,32 @@ export default class MutationInspector extends React.Component {
             </a>
           </span>
         </div>
-        <div className="tab-content">
-          {tabContent}
-        </div>
+        <div className="tab-content">{tabContent}</div>
       </div>
     );
   }
+}
+
+function getTabs(event) {
+  const tabs = {};
+
+  // Only include query & variables tabs for a network operation.
+  if (event.operation) {
+    tabs.query = 'Query';
+    tabs.variables = 'Variables';
+  }
+
+  // Only include payload tab if it is present on the event.
+  if (event.payload) {
+    tabs.payload = 'Payload';
+  }
+
+  // Only include storeDiff tab if it is present on the event.
+  if (event.snapshotAfter) {
+    tabs.storeDiff = 'Store Update';
+  }
+
+  return tabs;
 }
 
 // Return only records affected by the change in the following order:
@@ -163,11 +168,13 @@ function changedRecords(snapshotBefore, snapshotAfter) {
     }
 
     const record = snapshotBefore[key];
-    const recordDesc = { id: record.__id, type: record.__typename };
-    if (!snapshotAfter[key]) {
-      removed.push(recordDesc);
-    } else if (!deepObjectEqual(record, snapshotAfter[key])) {
-      changed.push(recordDesc);
+    if (record) {
+      const recordDesc = { id: record.__id, type: record.__typename };
+      if (!snapshotAfter[key]) {
+        removed.push(recordDesc);
+      } else if (!deepObjectEqual(record, snapshotAfter[key])) {
+        changed.push(recordDesc);
+      }
     }
   });
 
@@ -177,12 +184,14 @@ function changedRecords(snapshotBefore, snapshotAfter) {
     }
 
     const record = snapshotAfter[key];
-    const recordDesc = {
-      id: record.__id || record.id,
-      type: record.__typename,
-    };
-    if (!snapshotBefore[key]) {
-      added.push(recordDesc);
+    if (record) {
+      const recordDesc = {
+        id: record.__id || record.id,
+        type: record.__typename,
+      };
+      if (!snapshotBefore[key]) {
+        added.push(recordDesc);
+      }
     }
   });
 

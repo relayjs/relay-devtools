@@ -9,8 +9,7 @@
 
 export default function(
   state = {
-    isRecording: false,
-    events: null,
+    events: [],
     selectedEvent: null,
     splitType: 'vertical',
     newNotifications: false,
@@ -18,7 +17,7 @@ export default function(
   action,
 ) {
   switch (action.type) {
-    case 'LOAD_MUTATION_EVENTS_SUCCESS':
+    case 'LOAD_UPDATE_EVENTS_SUCCESS':
       if (!state.events || action.response.length > state.events.length) {
         return {
           ...state,
@@ -28,34 +27,20 @@ export default function(
       }
       return state;
 
-    case 'START_RECORDING_EVENTS':
+    case 'UPDATES_VIEW_CLEAR_EVENTS':
       return {
         ...state,
-        isRecording: true,
         events: [],
         selectedEvent: null,
       };
 
-    case 'STOP_RECORDING_EVENTS':
-      return {
-        ...state,
-        isRecording: false,
-      };
-
-    case 'MUTATIONS_VIEW_CLEAR_EVENTS':
-      return {
-        ...state,
-        events: state.isRecording ? [] : null,
-        selectedEvent: null,
-      };
-
-    case 'MUTATIONS_VIEW_SELECT_EVENT':
+    case 'UPDATES_VIEW_SELECT_EVENT':
       return {
         ...state,
         selectedEvent: action.event,
       };
 
-    case 'MUTATIONS_VIEW_CHANGE_SPLIT_TYPE':
+    case 'UPDATES_VIEW_CHANGE_SPLIT_TYPE':
       return {
         ...state,
         splitType: action.splitType,

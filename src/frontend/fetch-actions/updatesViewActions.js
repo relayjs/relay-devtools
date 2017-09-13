@@ -6,14 +6,14 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-export function loadMutations() {
+export function loadUpdates() {
   return {
     types: [
-      'LOAD_MUTATION_EVENTS_REQUEST',
-      'LOAD_MUTATION_EVENTS_SUCCESS',
-      'LOAD_MUTATION_EVENTS_FAILURE',
+      'LOAD_UPDATE_EVENTS_REQUEST',
+      'LOAD_UPDATE_EVENTS_SUCCESS',
+      'LOAD_UPDATE_EVENTS_FAILURE',
     ],
     callAPI: (API, environment) =>
-      API.getRecordedMutationEvents({ environment }),
+      Promise.resolve(API.getUpdateEvents({ environment })),
   };
 }

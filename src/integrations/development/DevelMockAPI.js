@@ -94,11 +94,7 @@ export default class DevelMockAPI {
     intervals = [];
   }
 
-  startRecordingMutations() {}
-
-  stopRecordingMutations() {}
-
-  async getRecordedMutationEvents() {
+  async getUpdateEvents() {
     const snapshotBefore = {};
     const snapshotAfter = {};
     [
@@ -133,53 +129,72 @@ export default class DevelMockAPI {
     /* eslint-enable max-len */
 
     const mutation = {
-      node: {
-        name: 'ChangeTodoStatusMutation',
-        text: mutationText,
-      },
-      variables: { input: { complete: true, id: 'VG9kbzox' } },
+      name: 'ChangeTodoStatusMutation',
+      query: { operation: 'mutation' },
+      text: mutationText,
+    };
+
+    const variables = { input: { complete: true, id: 'VG9kbzox' } };
+
+    const query = {
+      name: 'GetTodoQuery',
+      query: { operation: 'query' },
+      text: 'query GetTodoQuery { todos }',
     };
 
     return [
       {
-        seriesId: '0.000001',
+        seriesId: 'A',
+        eventName: 'Response',
+        operation: query,
+        snapshotBefore,
+        snapshotAfter,
+      },
+      {
+        seriesId: 'B',
         eventName: 'Apply Optimistic Update',
-        mutation,
+        operation: mutation,
+        variables,
         snapshotBefore,
         snapshotAfter,
       },
       {
-        seriesId: '0.000001',
+        seriesId: 'B',
         eventName: 'Commit Payload',
-        mutation,
+        operation: mutation,
+        variables,
         snapshotBefore,
         snapshotAfter,
       },
       {
-        seriesId: '0.000002',
+        seriesId: 'C',
         eventName: 'Apply Optimistic Update',
-        mutation,
+        operation: mutation,
+        variables,
         snapshotBefore,
         snapshotAfter,
       },
       {
-        seriesId: '0.000003',
+        seriesId: 'D',
         eventName: 'Apply Optimistic Update',
-        mutation,
+        operation: mutation,
+        variables,
         snapshotBefore,
         snapshotAfter,
       },
       {
-        seriesId: '0.000002',
+        seriesId: 'C',
         eventName: 'Commit Payload',
-        mutation,
+        operation: mutation,
+        variables,
         snapshotBefore,
         snapshotAfter,
       },
       {
-        seriesId: '0.000003',
+        seriesId: 'D',
         eventName: 'Commit Payload',
-        mutation,
+        operation: mutation,
+        variables,
         snapshotBefore,
         snapshotAfter,
       },
@@ -187,10 +202,10 @@ export default class DevelMockAPI {
   }
 
   hasDetectedRelay() {
-    return true;
+    return Promise.resolve(true);
   }
 
-  onRegister({ callback }) {
+  onRegister(callback) {
     callback();
   }
 }

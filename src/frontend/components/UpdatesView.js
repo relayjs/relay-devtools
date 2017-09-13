@@ -11,48 +11,19 @@ import React from 'react';
 import SplitPane from 'react-split-pane';
 import '../css/Resizer.less';
 
-import MutationInspector from './MutationInspector';
+import UpdateInspector from './UpdateInspector';
 
 import '../css/Tooltip.less';
 import '../css/panels.less';
-import '../css/MutationsView.less';
+import '../css/UpdatesView.less';
 
-export default class MutationsView extends React.Component {
+export default class UpdatesView extends React.Component {
   constructor(props, context) {
     super(props, context);
 
     const { refetchEvents } = this.props;
     refetchEvents();
   }
-
-  componentDidMount() {
-    // start recording on load
-    this.props.startRecordingEvents();
-  }
-
-  componentWillUnmount() {
-    const { isRecording } = this.props;
-
-    // stop recording on unmount
-    if (isRecording) {
-      this.stopRecordingEvents();
-    }
-  }
-
-  startOrStopRecording = () => {
-    const {
-      isRecording,
-      startRecordingEvents,
-      stopRecordingEvents,
-    } = this.props;
-    const newState = !isRecording;
-
-    if (newState) {
-      startRecordingEvents();
-    } else {
-      stopRecordingEvents();
-    }
-  };
 
   changeSplitType = () => {
     const splitType =
@@ -66,46 +37,28 @@ export default class MutationsView extends React.Component {
     const selectedSeries = selectedEvent && selectedEvent.seriesId;
     const selectedEventName = selectedEvent && selectedEvent.eventName;
 
-    if (events === null) {
-      const button = (
-        <button className="recording" onClick={this.startOrStopRecording}>
-          <i className="fa fa-circle" />
-        </button>
-      );
-
-      return (
-        <div className="instructions">
-          Press {button} to start recording mutations on the page
-        </div>
-      );
-    }
-
     if (events.length === 0) {
-      const { isRecording } = this.props;
-      const text = isRecording
-        ? 'Recording. No mutation events yet.'
-        : 'Stopped. No mutation events recorded.';
       return (
         <div className="placeholder">
-          {text}
+          Waiting for updates from Relay application
         </div>
       );
     }
 
-    const eventsByMutation = {};
+    const eventsByRequest = {};
 
     events.forEach((event, i) => {
       const { seriesId } = event;
-      if (!eventsByMutation[seriesId]) {
-        eventsByMutation[seriesId] = [];
+      if (!eventsByRequest[seriesId]) {
+        eventsByRequest[seriesId] = [];
       }
 
       const extendedEvent = Object.assign({ order: i }, event);
-      eventsByMutation[seriesId].push(extendedEvent);
+      eventsByRequest[seriesId].push(extendedEvent);
     });
 
-    const mutationEls = Object.keys(eventsByMutation).map((seriesId, i) => {
-      const orderedEvents = eventsByMutation[seriesId];
+    const updateEls = Object.keys(eventsByRequest).map((seriesId, i) => {
+      const orderedEvents = eventsByRequest[seriesId];
       const eventsEls = [];
       let lastOrdered = null;
 
@@ -134,23 +87,10 @@ export default class MutationsView extends React.Component {
         if (seriesId === selectedSeries && eventName === selectedEventName) {
           classNames.push('selected');
         }
-
-        function readableEventName(enumName) {
-          switch (enumName) {
-            case 'optimistic_update':
-              return 'Optimistic Update';
-            case 'optimistic_revert':
-              return 'Optimistic Update Revert';
-            case 'request_commit':
-              return 'Request Commit';
-            case 'request_error':
-              return 'Request Error';
-          }
-        }
         eventsEls.push(
           <li
             key={key}
-            data-tooltip={readableEventName(eventName)}
+            data-tooltip={eventName}
             onClick={() => selectEvent(event)}>
             <a className={classNames.join(' ')}>(placeholder)</a>
           </li>,
@@ -159,37 +99,28 @@ export default class MutationsView extends React.Component {
       });
 
       const firstEvent = orderedEvents[0];
+      const type = firstEvent.operation && firstEvent.operation.query.operation;
+      const updatesClass = ['update-events', type].filter(x => x).join(' ');
 
       return (
-        <div className="mutation-events" key={seriesId}>
+        <div className={updatesClass} key={seriesId}>
           <span className="description" style={{ left: firstEvent.order * 40 }}>
-            {firstEvent.mutation.node.name}
+            {firstEvent.operation ? (
+              firstEvent.operation.name
+            ) : (
+              firstEvent.eventName
+            )}
           </span>
-          <ul>
-            {eventsEls}
-          </ul>
+          <ul>{eventsEls}</ul>
         </div>
       );
     });
 
-    return (
-      <div className="events-map">
-        {mutationEls}
-      </div>
-    );
+    return <div className="events-map">{updateEls}</div>;
   }
 
   render() {
-    const {
-      isRecording,
-      selectedEvent,
-      splitType,
-      selectEvent,
-      clearEvents,
-    } = this.props;
-    const recordingClassName =
-      'recording fa ' +
-      (isRecording ? 'fa-stop recording-active' : 'fa-circle');
+    const { selectedEvent, splitType, selectEvent, clearEvents } = this.props;
     const clearSelection = () => selectEvent(null);
     const pane1Style = selectedEvent
       ? {}
@@ -197,13 +128,9 @@ export default class MutationsView extends React.Component {
     const pane2Style = selectedEvent ? {} : { display: 'none' };
 
     return (
-      <div className="mutations-view">
+      <div className="updates-view">
         <div className="panel">
           <div className="left-panel">
-            <button
-              className={recordingClassName}
-              onClick={this.startOrStopRecording}
-            />
             <button className="fa fa-ban" onClick={clearEvents} />
           </div>
           <div className="center-panel" />
@@ -217,7 +144,7 @@ export default class MutationsView extends React.Component {
             pane2Style={pane2Style}
             pane1Style={pane1Style}>
             {this._renderEvents()}
-            <MutationInspector
+            <UpdateInspector
               event={selectedEvent}
               onClose={clearSelection}
               onLayoutChange={this.changeSplitType}

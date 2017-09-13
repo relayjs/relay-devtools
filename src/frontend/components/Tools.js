@@ -9,8 +9,10 @@
 
 import React from 'react';
 import StoreExplorer from '../containers/StoreExplorer';
-import MutationsView from '../containers/MutationsView';
+import UpdatesView from '../containers/UpdatesView';
 import Nav from './Nav';
+
+import '../css/Tools.less';
 
 export default class Tools extends React.Component {
   render() {
@@ -18,11 +20,11 @@ export default class Tools extends React.Component {
 
     const tools = {
       store: StoreExplorer,
-      mutations: MutationsView,
+      updates: UpdatesView,
     };
 
     return (
-      <div>
+      <div className="tools">
         {Object.keys(tools).map(key => {
           const Comp = tools[key];
           return (

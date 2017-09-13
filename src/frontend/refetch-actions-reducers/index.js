@@ -7,7 +7,7 @@
  */
 
 import { loadRecordDescs } from '../fetch-actions/storeExplorer';
-import { loadMutations } from '../fetch-actions/mutationsViewActions';
+import { loadUpdates } from '../fetch-actions/updatesViewActions';
 import {
   loadRecord,
   loadTypeMapping,
@@ -19,8 +19,8 @@ export default function({ storeExplorer, recordInspector }) {
   // storeExplorer
   actions.push(loadRecordDescs(storeExplorer.latest));
 
-  // mutationsView
-  actions.push(loadMutations());
+  // updatesView
+  actions.push(loadUpdates());
 
   // recordInspector
   Object.keys(recordInspector.fetchedRecords).forEach(id =>

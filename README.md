@@ -44,10 +44,10 @@ store and expanding their connections.
 
 ![Store Explorer](./images/store-explorer.png)
 
-In addition to that, you can record all mutation events happenning to the store
+In addition to that, you can record all update events happenning to the store
 and inspect how they changed the store.
 
-![Mutations View](./images/mutations-view.png)
+![Updates View](./images/updates-view.png)
 
 ## Development
 

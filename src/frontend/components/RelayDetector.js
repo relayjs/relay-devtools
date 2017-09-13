@@ -9,6 +9,8 @@
 
 import React from 'react';
 
+import '../css/RelayDetector.less';
+
 export default class RelayDetector extends React.Component {
   constructor(props) {
     super(props);
@@ -28,9 +30,11 @@ export default class RelayDetector extends React.Component {
 
   render() {
     if (this.state.isRelayPresent) {
-      return <div>{this.props.children}</div>;
+      return <div className="relay-detector">{this.props.children}</div>;
     }
 
-    return <div className="placeholder">Looking for Relay...</div>;
+    return (
+      <div className="relay-detector placeholder">Looking for Relay...</div>
+    );
   }
 }

@@ -13,6 +13,10 @@ import StoreView from './StoreView';
 import SnapshotRecordInspector from '../../containers/SnapshotRecordInspector';
 
 export default class SnapshotStoreView extends StoreView {
+  getPlaceholderText = () => {
+    return 'No changes';
+  };
+
   renderTableRecord = ({ id, type }) => {
     const { selectedRecord } = this.state;
     const { snapshotBefore, snapshotAfter } = this.props;
@@ -36,12 +40,8 @@ export default class SnapshotStoreView extends StoreView {
 
     return (
       <tr key={id} onClick={onClick} className={className}>
-        <td>
-          {id}
-        </td>
-        <td>
-          {type}
-        </td>
+        <td>{id}</td>
+        <td>{type}</td>
       </tr>
     );
   };

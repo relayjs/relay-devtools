@@ -11,6 +11,8 @@
 
 import type { Bridge } from '../../transport/Bridge';
 
+import type { UpdateEvent } from '../../backend/EnvironmentAgent';
+
 /**
  * API:
  *
@@ -22,26 +24,29 @@ import type { Bridge } from '../../transport/Bridge';
 export default class BridgeAPI {
   _bridge: Bridge;
   _changeCallbacks: { [environment: string]: Array<() => void> };
+  _updateEvents: Array<UpdateEvent>;
 
   constructor(bridge: Bridge): void {
     this._bridge = bridge;
     this._changeCallbacks = {};
     this._onRegisterListeners = [];
+    this._updateEvents = {};
 
     this._bridge.on('register', () => {
       this._onRegisterListeners.forEach(cb => cb());
     });
 
-    this._bridge.on('dirty', ({ environment }) => {
-      const callbacks = this._changeCallbacks[environment];
+    this._bridge.on('update', event => {
+      if (!this._updateEvents[event.environment]) {
+        this._updateEvents[event.environment] = [event];
+      } else {
+        this._updateEvents[event.environment].push(event);
+      }
+      const callbacks = this._changeCallbacks[event.environment];
       if (callbacks) {
         callbacks.forEach(cb => cb());
       }
     });
-  }
-
-  callBridge(method, ...args) {
-    return this._bridge.call(method, args);
   }
 
   getEnvironments() {
@@ -89,16 +94,9 @@ export default class BridgeAPI {
     delete this._changeCallbacks[environment];
   }
 
-  startRecordingMutations({ environment }) {
-    this._bridge.call('relayDebugger:startRecording', environment);
-  }
-
-  stopRecordingMutations({ environment }) {
-    this._bridge.call('relayDebugger:stopRecording', environment);
-  }
-
-  getRecordedMutationEvents({ environment }) {
-    return this._bridge.call('relayDebugger:getRecordedEvents', environment);
+  getUpdateEvents({ environment }) {
+    // Return a copy to ensure immutability.
+    return (this._updateEvents[environment] || []).slice();
   }
 
   hasDetectedRelay() {

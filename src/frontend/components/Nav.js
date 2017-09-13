@@ -24,7 +24,7 @@ export default class Nav extends React.Component {
 
     const displayNames = {
       store: 'Store Explorer',
-      mutations: 'Mutations',
+      updates: 'Updates',
     };
 
     return (

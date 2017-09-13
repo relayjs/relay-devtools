@@ -271,7 +271,11 @@ export default class Bridge {
         value =>
           this._sendMessage({ type: 'resolve', nonce: message.nonce, value }),
         error =>
-          this._sendMessage({ type: 'reject', nonce: message.nonce, error }),
+          this._sendMessage({
+            type: 'reject',
+            nonce: message.nonce,
+            error: `${error.message}\n${error.stack}`,
+          }),
       );
       return;
     }

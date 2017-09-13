@@ -11,14 +11,14 @@ import { combineReducers } from 'redux';
 import tools from './tools';
 import environments from './environments';
 import storeExplorer from './storeExplorer';
-import mutationsView from './mutationsView';
+import updatesView from './updatesView';
 import recordInspector from './recordInspector';
 
 const combinedReducers = combineReducers({
   tools,
   environments,
   storeExplorer,
-  mutationsView,
+  updatesView,
   recordInspector,
 });
 
@@ -27,16 +27,16 @@ export default function(state, action) {
 
   // A hack to propagate new notifications from one part of state to another in
   // the same reducer run
-  if (newState.mutationsView.newNotifications) {
+  if (newState.updatesView.newNotifications) {
     newState.tools = tools(newState.tools, {
       type: 'NEW_NOTIFICATION',
-      tool: 'mutations',
+      tool: 'updates',
     });
 
     return {
       ...newState,
-      mutationsView: {
-        ...newState.mutationsView,
+      updatesView: {
+        ...newState.updatesView,
         newNotifications: false,
       },
     };

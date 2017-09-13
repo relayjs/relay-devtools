@@ -51,27 +51,6 @@ export default function connectBackend(hook: GlobalHook, bridge: Bridge): void {
     return agents[env].getMatchingRecords(search, type);
   });
 
-  bridge.onCall('relayDebugger:startRecording', env => {
-    agents[env].startRecordingMutationEvents();
-  });
-
-  bridge.onCall('relayDebugger:stopRecording', env => {
-    agents[env].stopRecordingMutationEvents();
-  });
-
-  bridge.onCall('relayDebugger:getRecordedEvents', env => {
-    const events = agents[env].getRecordedMutationEvents();
-
-    // serialize errors
-    events.forEach(event => {
-      if (event.payload instanceof Error) {
-        event.payload = { isError: true, message: event.payload.message };
-      }
-    });
-
-    return events;
-  });
-
   bridge.onCall('hasDetectedRelay', () => {
     return agents.length !== 0;
   });
