@@ -23,8 +23,6 @@ export default class SnapshotStoreView extends StoreView {
     const onClick = () => this.selectRecord(id);
     let className = selectedRecord === id ? 'selected' : '';
 
-    // TODO instead of comparisons of snapshots, could have stored diffs in
-    // relay-runtime. Cheaper to calculate, already calculated somewhere.
     const before = snapshotBefore[id];
     const after = snapshotAfter[id];
 

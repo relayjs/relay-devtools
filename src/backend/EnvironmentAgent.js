@@ -41,9 +41,9 @@ type EmitFn = (name: string, data: { [key: string]: mixed }) => void;
  */
 export default class EnvironmentAgent {
   _environment: Environment;
-  _emit: EmitFn;
   _id: string;
-  _beforeSnapshot: any;
+  _emit: EmitFn;
+  _snapshot: any;
   _lastNetworkEvent: ?UpdateEvent;
   _flushLastNetworkEventTimer: number;
 
@@ -51,13 +51,13 @@ export default class EnvironmentAgent {
     this._environment = environment;
     this._id = id;
     this._emit = emit;
-    this._beforeSnapshot = this._getSnapshot();
+    this._snapshot = getInitialSnapshot(environment.getStore());
 
     // Monkey patch methods within Environment to follow various events.
     this._monkeyPatchExecute();
     this._monkeyPatchExecuteMutation();
     this._monkeyPatchNetwork();
-    this._monkeyPatchPublishQueue();
+    this._monkeyPatchStoreNotify();
   }
 
   getEnvironment(): Environment {
@@ -182,15 +182,15 @@ export default class EnvironmentAgent {
     );
   }
 
-  _monkeyPatchPublishQueue() {
+  _monkeyPatchStoreNotify() {
     const agent = this;
     monkeyPatch(
-      this._environment._publishQueue,
-      'run',
-      run =>
+      this._environment.getStore(),
+      'notify',
+      notify =>
         function() {
-          run.apply(this, arguments);
           agent._runPublishEvent();
+          notify.apply(this, arguments);
         },
     );
   }
@@ -218,6 +218,7 @@ export default class EnvironmentAgent {
   }
 
   _runPublishEvent() {
+    const store = this._environment.getStore();
     const lastNetworkEvent = this._lastNetworkEvent;
     const networkEventName = lastNetworkEvent && lastNetworkEvent.eventName;
     const eventName =
@@ -229,31 +230,48 @@ export default class EnvironmentAgent {
     const seriesId = lastNetworkEvent
       ? lastNetworkEvent.seriesId
       : nextSeriesId();
-    const afterSnapshot = this._getSnapshot();
     const data: UpdateEvent = {
       ...lastNetworkEvent,
+      ...getSnapshotChanges(store, this._snapshot, store._updatedRecordIDs),
       eventName,
       seriesId,
-      snapshotBefore: this._beforeSnapshot,
-      snapshotAfter: afterSnapshot,
     };
-    this._beforeSnapshot = afterSnapshot;
     this._clearLastNetworkEvent();
     this._emit('update', data);
   }
+}
 
-  _getSnapshot() {
-    const source = this._environment.getStore().getSource();
-    const snapshot = {};
-    const ids = source.getRecordIDs();
-    ids.forEach(id => {
-      const record = source.get(id);
-      if (record) {
-        snapshot[id] = record;
-      }
-    });
-    return snapshot;
+// Create an in-memory copy of the store which can be used to derive diffs
+// on each publish event.
+function getInitialSnapshot(store) {
+  const snapshot = {};
+  const source = store.getSource();
+  const ids = source.getRecordIDs();
+  ids.forEach(id => {
+    snapshot[id] = source.get(id);
+  });
+  return snapshot;
+}
+
+// From a publish event, update the store snapshot with the latest data
+// while returning a before/after of any updated records to visualize.
+function getSnapshotChanges(store, snapshot, updatedRecordIds) {
+  const snapshotBefore = {};
+  const snapshotAfter = {};
+  const source = store.getSource();
+  const ids = Object.keys(updatedRecordIds);
+  for (let ii = 0; ii < ids.length; ii++) {
+    const id = ids[ii];
+    const beforeRecord = snapshot[id];
+    if (beforeRecord) {
+      snapshotBefore[id] = beforeRecord;
+    }
+    const afterRecord = (snapshot[id] = source.get(id));
+    if (afterRecord) {
+      snapshotAfter[id] = afterRecord;
+    }
   }
+  return { snapshotBefore, snapshotAfter };
 }
 
 function monkeyPatch(source, method, patch) {

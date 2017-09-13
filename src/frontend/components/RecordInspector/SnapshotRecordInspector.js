@@ -83,6 +83,10 @@ export default class SnapshotRecordInspector extends RecordInspector {
   getType = id => {
     const { snapshotBefore, snapshotAfter } = this.props;
     const record = snapshotBefore[id] || snapshotAfter[id];
-    return record.__typename;
+    if (record) {
+      return record.__typename;
+    }
+    const { typeMapping } = this.props;
+    return typeMapping[id];
   };
 }
