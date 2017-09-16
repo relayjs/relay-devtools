@@ -35,10 +35,7 @@ export default function(
       };
 
     case 'LOAD_TYPE_MAPPING_SUCCESS':
-      const typeMapping = {};
-      action.response.forEach(recordDesc => {
-        typeMapping[recordDesc.id] = recordDesc.type;
-      });
+      const typeMapping = action.response;
 
       if (deepObjectEqual(state.typeMapping, typeMapping)) {
         return state;

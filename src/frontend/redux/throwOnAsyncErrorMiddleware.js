@@ -11,7 +11,7 @@ export default function throwOnAsyncErrorMiddleware() {
   return next => action => {
     if (action.type && action.type.match(/_FAILURE$/)) {
       setTimeout(() => {
-        throw new Error('FAILURE action: ' + action.type);
+        throw action.error;
       });
     } else {
       next(action);

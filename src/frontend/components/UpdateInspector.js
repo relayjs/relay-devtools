@@ -153,9 +153,9 @@ function getTabs(event) {
 // - removed records
 // - changed records
 function changedRecords(snapshotBefore, snapshotAfter) {
-  const added = [];
-  const removed = [];
-  const changed = [];
+  const added = {};
+  const removed = {};
+  const changed = {};
 
   Object.keys(snapshotBefore).forEach(key => {
     if (key.startsWith('client:')) {
@@ -164,11 +164,10 @@ function changedRecords(snapshotBefore, snapshotAfter) {
 
     const record = snapshotBefore[key];
     if (record) {
-      const recordDesc = { id: record.__id, type: record.__typename };
       if (!snapshotAfter[key]) {
-        removed.push(recordDesc);
+        removed[record.__id] = record.__typename;
       } else if (!deepObjectEqual(record, snapshotAfter[key])) {
-        changed.push(recordDesc);
+        changed[record.__id] = record.__typename;
       }
     }
   });
@@ -180,15 +179,11 @@ function changedRecords(snapshotBefore, snapshotAfter) {
 
     const record = snapshotAfter[key];
     if (record) {
-      const recordDesc = {
-        id: record.__id || record.id,
-        type: record.__typename,
-      };
       if (!snapshotBefore[key]) {
-        added.push(recordDesc);
+        added[record.__id] = record.__typename;
       }
     }
   });
 
-  return [...added, ...removed, ...changed];
+  return { ...added, ...removed, ...changed };
 }

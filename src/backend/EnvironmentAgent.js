@@ -71,7 +71,7 @@ export default class EnvironmentAgent {
   getMatchingRecords(
     matchStr: string,
     matchType: MatchType,
-  ): Array<RecordSummaryType> {
+  ): { [id: string]: string } {
     const inspector = RelayRecordSourceInspector.getForEnvironment(
       this._environment,
     );
@@ -100,7 +100,14 @@ export default class EnvironmentAgent {
       throw new Error('Unknown match type: ' + matchType);
     }
 
-    return inspector.getRecords().filter(isMatching);
+    const recordMap = {};
+    inspector
+      .getRecords()
+      .filter(isMatching)
+      .forEach(summary => {
+        recordMap[summary.id] = summary.type;
+      });
+    return recordMap;
   }
 
   getRecord(id: DataID) {
@@ -268,13 +275,11 @@ function getSnapshotChanges(store, snapshot, updatedRecordIds) {
   for (let ii = 0; ii < ids.length; ii++) {
     const id = ids[ii];
     const beforeRecord = snapshot[id];
-    if (beforeRecord) {
+    if (beforeRecord !== undefined) {
       snapshotBefore[id] = beforeRecord;
     }
-    const afterRecord = (snapshot[id] = source.get(id));
-    if (afterRecord) {
-      snapshotAfter[id] = afterRecord;
-    }
+    // Always include records in "after", even if they're null.
+    snapshotAfter[id] = snapshot[id] = source.get(id);
   }
   return { snapshotBefore, snapshotAfter };
 }

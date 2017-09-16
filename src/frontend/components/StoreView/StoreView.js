@@ -22,21 +22,17 @@ export default class StoreView extends React.Component {
     return 'Store is empty';
   };
 
-  renderTableRecord = ({ id, type }) => {
+  renderTableRecord(id, type) {
     const { selectedRecord } = this.state;
     const onClick = () => this.selectRecord(id);
     const className = selectedRecord === id ? 'selected' : '';
     return (
       <tr key={id} onClick={onClick} className={className}>
-        <td>
-          {id}
-        </td>
-        <td>
-          {type}
-        </td>
+        <td>{id}</td>
+        <td>{type}</td>
       </tr>
     );
-  };
+  }
 
   renderDetails() {
     return null;
@@ -48,12 +44,10 @@ export default class StoreView extends React.Component {
       return <div>Loading</div>;
     }
 
-    if (!records.length) {
-      return (
-        <div className="placeholder">
-          {this.getPlaceholderText()}
-        </div>
-      );
+    const ids = Object.keys(records);
+
+    if (!ids.length) {
+      return <div className="placeholder">{this.getPlaceholderText()}</div>;
     }
 
     return (
@@ -67,13 +61,11 @@ export default class StoreView extends React.Component {
               </tr>
             </thead>
             <tbody>
-              {records.map(this.renderTableRecord)}
+              {ids.map(id => this.renderTableRecord(id, records[id]))}
             </tbody>
           </table>
         </div>
-        <div className="details">
-          {this.renderDetails()}
-        </div>
+        <div className="details">{this.renderDetails()}</div>
       </div>
     );
   }

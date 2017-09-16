@@ -24,12 +24,14 @@ import type { UpdateEvent } from '../../backend/EnvironmentAgent';
 export default class BridgeAPI {
   _bridge: Bridge;
   _changeCallbacks: { [environment: string]: Array<() => void> };
+  _recordSummaryCache: { [environment: string]: { [id: string]: string } };
   _updateEvents: Array<UpdateEvent>;
 
   constructor(bridge: Bridge): void {
     this._bridge = bridge;
     this._changeCallbacks = {};
     this._onRegisterListeners = [];
+    this._recordSummaryCache = {};
     this._updateEvents = {};
 
     this._bridge.on('register', () => {
@@ -41,6 +43,9 @@ export default class BridgeAPI {
         this._updateEvents[event.environment] = [event];
       } else {
         this._updateEvents[event.environment].push(event);
+      }
+      if (event.snapshotAfter) {
+        this._updateRecordSummary(event.environment, event.snapshotAfter);
       }
       const callbacks = this._changeCallbacks[event.environment];
       if (callbacks) {
@@ -61,12 +66,43 @@ export default class BridgeAPI {
   }
 
   getAllRecordDescriptions({ environment }) {
+    const recordSummaryCache = this._recordSummaryCache[environment];
+    if (recordSummaryCache) {
+      return Promise.resolve(recordSummaryCache);
+    }
+    return this._getAllRecordDescriptions(environment).then(result => {
+      if (!this._recordSummaryCache[environment]) {
+        this._recordSummaryCache[environment] = result;
+      }
+      return result;
+    });
+  }
+
+  _getAllRecordDescriptions(environment) {
     return this._bridge.call(
       'relayDebugger:getMatchingRecords',
       environment,
       '',
       'idtype',
     );
+  }
+
+  _updateRecordSummary(environment, snapshot) {
+    const recordSummaryCache = this._recordSummaryCache[environment];
+    if (!recordSummaryCache) {
+      return;
+    }
+    Object.keys(snapshot).forEach(id => {
+      if (id.startsWith('client:')) {
+        return;
+      }
+      const record = snapshot[id];
+      if (!record) {
+        delete recordSummaryCache[id];
+      } else {
+        recordSummaryCache[id] = record.__typename;
+      }
+    });
   }
 
   async getRecords({ matchTerm, matchType, environment }) {
@@ -77,9 +113,13 @@ export default class BridgeAPI {
       matchType,
     );
 
-    return records.filter(
-      record => !record.id.startsWith('client:') || record.id === 'client:root',
-    );
+    Object.keys(records).forEach(id => {
+      if (id.startsWith('client:') && id !== 'client:root') {
+        delete records[id];
+      }
+    });
+
+    return records;
   }
 
   onChange({ environment, callback }) {
