@@ -11,15 +11,15 @@
 
 'use strict';
 
-const RelayRecordSourceInspector = require('relay-runtime/lib/RelayRecordSourceInspector');
+import deepCopy from './deepCopy';
 
+import type { Record } from 'RelayCombinedEnvironmentTypes';
 import type { ConcreteBatch } from 'RelayConcreteNode';
 import type { DataID } from 'RelayInternalTypes';
-import type { RecordSummaryType } from 'RelayRecordSourceInspector';
 import type { Environment } from 'RelayStoreTypes';
 import type { Variables } from 'RelayTypes';
 
-type MatchType = 'idtype' | 'id' | 'type' | 'predicate';
+type MatchType = 'idtype' | 'id' | 'type';
 
 export type UpdateEvent = {
   eventName: string,
@@ -72,50 +72,42 @@ export default class EnvironmentAgent {
     matchStr: string,
     matchType: MatchType,
   ): { [id: string]: string } {
-    const inspector = RelayRecordSourceInspector.getForEnvironment(
-      this._environment,
-    );
-
-    function isMatching(record: RecordSummaryType): boolean {
+    function isMatching(id: DataID, record: Record): boolean {
       if (matchType === 'idtype') {
         return (
-          record.id.includes(matchStr) ||
-          (Boolean(record.type) && record.type.includes(matchStr))
+          id.includes(matchStr) ||
+          (Boolean(record.__typename) && record.__typename.includes(matchStr))
         );
       }
       if (matchType === 'id') {
-        return record.id.includes(matchStr);
+        return id.includes(matchStr);
       }
       if (matchType === 'type') {
-        return Boolean(record.type) && record.type.includes(matchStr);
-      }
-      if (matchType === 'predicate') {
-        const recordInspector = inspector.get(record.id);
-        const fields = recordInspector && recordInspector.inspect();
-        if (typeof fields === 'object' && fields !== null) {
-          throw new Error('Not implemented');
-        }
-        return false;
+        return (
+          Boolean(record.__typename) && record.__typename.includes(matchStr)
+        );
       }
       throw new Error('Unknown match type: ' + matchType);
     }
 
+    const source = this._environment.getStore().getSource();
     const recordMap = {};
-    inspector
-      .getRecords()
-      .filter(isMatching)
-      .forEach(summary => {
-        recordMap[summary.id] = summary.type;
-      });
+    source.getRecordIDs().forEach(id => {
+      const record = source.get(id);
+      if (isMatching(id, record)) {
+        recordMap[id] = record.__typename;
+      }
+    });
     return recordMap;
   }
 
-  getRecord(id: DataID) {
-    const inspector = RelayRecordSourceInspector.getForEnvironment(
-      this._environment,
+  getRecord(id: DataID): Record {
+    return deepCopy(
+      this._environment
+        .getStore()
+        .getSource()
+        .get(id),
     );
-    const recordInspector = inspector.get(id);
-    return recordInspector && recordInspector.inspect();
   }
 
   _monkeyPatchExecute() {
@@ -260,7 +252,7 @@ function getInitialSnapshot(store) {
   const source = store.getSource();
   const ids = source.getRecordIDs();
   ids.forEach(id => {
-    snapshot[id] = source.get(id);
+    snapshot[id] = deepCopy(source.get(id));
   });
   return snapshot;
 }
@@ -279,7 +271,7 @@ function getSnapshotChanges(store, snapshot, updatedRecordIds) {
       snapshotBefore[id] = beforeRecord;
     }
     // Always include records in "after", even if they're null.
-    snapshotAfter[id] = snapshot[id] = source.get(id);
+    snapshotAfter[id] = snapshot[id] = deepCopy(source.get(id));
   }
   return { snapshotBefore, snapshotAfter };
 }
