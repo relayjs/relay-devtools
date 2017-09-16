@@ -25,12 +25,20 @@ import wsClientTransport from './transport/wsClientTransport';
  * By default, this will look for the Relay DevTools app at localhost:8734,
  * however both the port and host can be configured.
  */
-export function installRelayDevTools(port?: number, host?: string): void {
-  // eslint-disable-next-line no-console
-  console.log(
-    'Installing Relay DevTools backend. Inspect Relay Environments in this ' +
-      'app by running `relay-devtools`. Remember to remove this in production!',
-  );
+export function installRelayDevTools(
+  port?: number,
+  host?: string,
+  prompt?: string,
+): void {
+  if (prompt !== null) {
+    // eslint-disable-next-line no-console
+    console.log(
+      prompt ||
+        'Installing Relay DevTools backend. Inspect Relay Environments in ' +
+          'this app by running `relay-devtools`. Remember to remove this ' +
+          'in production!',
+    );
+  }
   if (installGlobalHook(global)) {
     wsClientTransport(host, port).then(transport => {
       const hook = getGlobalHook(global);
