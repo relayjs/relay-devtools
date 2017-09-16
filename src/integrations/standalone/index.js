@@ -22,13 +22,10 @@ import wsClientTransport from './transport/wsClientTransport';
  *
  * Ensure this function is called *before* creating a Relay Environment.
  *
- * By default, this will look for the Relay DevTools app at localhost:8098,
+ * By default, this will look for the Relay DevTools app at localhost:8734,
  * however both the port and host can be configured.
  */
-export function installRelayDevTools(
-  port: number = 8098,
-  host: string = 'localhost',
-): void {
+export function installRelayDevTools(port?: number, host?: string): void {
   // eslint-disable-next-line no-console
   console.log(
     'Installing Relay DevTools backend. Inspect Relay Environments in this ' +

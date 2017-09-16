@@ -24,7 +24,7 @@ import * as WebSocket from 'ws';
  * successfully connects.
  */
 export default function wsServerTransport(
-  port: number = 8098,
+  port: number = 8734,
 ): Promise<BridgeTransport> {
   return new Promise((resolve, reject) => {
     let connection;

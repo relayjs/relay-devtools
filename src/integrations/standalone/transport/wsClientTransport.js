@@ -22,8 +22,8 @@ import type { BridgeTransport } from '../../../transport/Bridge';
  * successfully connected.
  */
 export default function wsClientTransport(
-  host: string,
-  port: number,
+  host: string = 'localhost',
+  port: number = 8734,
 ): Promise<BridgeTransport> {
   return new Promise((resolve, reject) => {
     let connection;
