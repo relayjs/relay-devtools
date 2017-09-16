@@ -148,7 +148,7 @@ export default class EnvironmentAgent {
   _monkeyPatchNetwork() {
     const agent = this;
     monkeyPatch(
-      this._environment._network,
+      this._environment.getNetwork(),
       'execute',
       execute =>
         function(operation, variables) {
@@ -230,9 +230,14 @@ export default class EnvironmentAgent {
     const seriesId = lastNetworkEvent
       ? lastNetworkEvent.seriesId
       : nextSeriesId();
+    const snapshotChanges = getSnapshotChanges(
+      store,
+      this._snapshot,
+      store.__getUpdatedRecordIDs(),
+    );
     const data: UpdateEvent = {
       ...lastNetworkEvent,
-      ...getSnapshotChanges(store, this._snapshot, store._updatedRecordIDs),
+      ...snapshotChanges,
       eventName,
       seriesId,
     };

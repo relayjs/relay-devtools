@@ -27,13 +27,20 @@ export default function connectBackend(hook: GlobalHook, bridge: Bridge): void {
   const agents = [];
 
   function connectAgent(environment: Environment): void {
-    const id = agents.length;
-    function emit(name, data) {
-      bridge.emit(name, { ...data, environment: id });
+    try {
+      const id = agents.length;
+      function emit(name, data) {
+        bridge.emit(name, { ...data, environment: id });
+      }
+      const agent = new EnvironmentAgent(environment, id, emit);
+      agents.push(agent);
+      bridge.emit('register');
+    } catch (error) {
+      /* eslint-disable no-console */
+      console.error('Relay DevTools: Failed to connect agent');
+      console.error(error);
+      /* eslint-enable no-console */
     }
-    const agent = new EnvironmentAgent(environment, id, emit);
-    agents.push(agent);
-    bridge.emit('register');
   }
 
   hook.getEnvironments().forEach(connectAgent);

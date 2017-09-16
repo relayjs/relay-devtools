@@ -49,14 +49,9 @@ export default class UpdateInspector extends React.Component {
       return null;
     }
 
-    const { payload } = event;
+    const { response } = event;
 
     const tabs = getTabs(event);
-
-    // only include payload tab if it is present on the event
-    const availableTabs = Object.keys(tabs).filter(
-      tab => tab !== 'payload' || Boolean(event.payload),
-    );
 
     let tabContent = null;
     if (currentTab === 'query') {
@@ -91,25 +86,25 @@ export default class UpdateInspector extends React.Component {
           />
         </div>
       );
-    } else if (currentTab === 'payload') {
-      let payloadEl = null;
+    } else if (currentTab === 'response') {
+      let responseEl = null;
 
-      if (payload.isError) {
-        payloadEl = <span className="error">{payload.message}</span>;
+      if (response.isError) {
+        responseEl = <span className="error">{response.message}</span>;
       } else {
-        payloadEl = <ObjectFields value={payload} />;
+        responseEl = <ObjectFields value={response} />;
       }
-      tabContent = <div className="payload">{payloadEl}</div>;
+      tabContent = <div className="response">{responseEl}</div>;
     }
 
     return (
       <div className="update-inspector">
         <div className="tab-panel">
-          {availableTabs.map(tabId => {
+          {Object.keys(tabs).map(tabId => {
             const onClick = () => this.switchToTab(tabId);
             const classes = 'tab' + (currentTab === tabId ? ' active' : '');
             const tabName =
-              tabId === 'payload' && payload.isError ? 'Error' : tabs[tabId];
+              tabId === 'response' && response.isError ? 'Error' : tabs[tabId];
             return (
               <a key={tabId} className={classes} onClick={onClick}>
                 {tabName}
@@ -140,9 +135,9 @@ function getTabs(event) {
     tabs.variables = 'Variables';
   }
 
-  // Only include payload tab if it is present on the event.
-  if (event.payload) {
-    tabs.payload = 'Payload';
+  // Only include response tab if it is present on the event.
+  if (event.response) {
+    tabs.response = 'Response';
   }
 
   // Only include storeDiff tab if it is present on the event.

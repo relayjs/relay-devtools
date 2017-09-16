@@ -25,9 +25,9 @@ export default class Collapsable extends React.Component {
     const childrenElements = opened ? children : null;
     return (
       <div className="collapsable">
-        <a className="collapse-button" data-opened={opened} onClick={flip}>
+        <span className="collapse-button" data-opened={opened} onClick={flip}>
           {header}
-        </a>
+        </span>
         {childrenElements}
       </div>
     );

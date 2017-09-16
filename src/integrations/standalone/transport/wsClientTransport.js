@@ -36,8 +36,8 @@ export default function wsClientTransport(
       try {
         connection = new WebSocket(`ws://${host}:${port}`);
         connection.onopen = handleOpen;
-        connection.onclose = handleClose;
-        connection.onerror = handleError;
+        connection.onclose = attemptReconnect;
+        connection.onerror = attemptReconnect;
         connection.onmessage = handleMessage;
       } catch (error) {
         reject(error);
@@ -56,19 +56,8 @@ export default function wsClientTransport(
       resolve(transport);
     }
 
-    function handleClose() {
-      connection = null;
-      attemptReconnect();
-    }
-
-    function handleError(error) {
-      // eslint-disable-next-line no-console
-      console.error('WebSocketTransport: connection error', error);
-      connection = null;
-      attemptReconnect();
-    }
-
     function attemptReconnect() {
+      connection = null;
       if (!reconnect) {
         reconnect = setTimeout(() => {
           reconnect = null;
@@ -78,15 +67,18 @@ export default function wsClientTransport(
     }
 
     function handleMessage(evt) {
+      let data;
       try {
-        const data = JSON.parse(evt.data);
+        data = JSON.parse(evt.data);
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error('Relay DevTools: Failed to parse message: ' + evt.data);
+      }
+      if (data) {
         const message = data.relayDevTools;
         if (message) {
           messageListeners.forEach(fn => fn(message));
         }
-      } catch (error) {
-        // eslint-disable-next-line no-console
-        console.error('WebSocketTransport: failed to parse: ' + evt.data);
       }
     }
 

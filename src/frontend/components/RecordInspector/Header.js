@@ -19,11 +19,9 @@ export default function Header(props) {
       : '');
 
   const keySpan =
-    keyName !== undefined
-      ? <span className={keyClasses}>
-          {keyName}:
-        </span>
-      : null;
+    keyName !== undefined ? (
+      <span className={keyClasses}>{keyName}:</span>
+    ) : null;
 
   const valueSpanClass = isLink ? 'link-desc' : `value-desc-${typeof value}`;
   const displayValue =
@@ -31,24 +29,26 @@ export default function Header(props) {
       ? value
       : typeof value === 'undefined' ? 'undefined' : JSON.stringify(value);
   const valueSpan =
-    'value' in props
-      ? <span className={valueSpanClass} key="value">
-          {displayValue}
-        </span>
-      : null;
-
-  const summarySpan = summary
-    ? <span className="summary-desc" key="summary">
-        {summary}
+    'value' in props ? (
+      <span className={valueSpanClass} key="value">
+        {displayValue}
       </span>
-    : null;
+    ) : null;
 
-  const valueAndSummary = focusHandler
-    ? <a className="focus-button" onClick={focusHandler}>
-        {valueSpan}
-        {summarySpan}
-      </a>
-    : [valueSpan, summarySpan];
+  const summarySpan = summary ? (
+    <span className="summary-desc" key="summary">
+      {summary}
+    </span>
+  ) : null;
+
+  const valueAndSummary = focusHandler ? (
+    <span className="focus-button" onClick={focusHandler}>
+      {valueSpan}
+      {summarySpan}
+    </span>
+  ) : (
+    [valueSpan, summarySpan]
+  );
 
   return (
     <span className="pretty-printer-header">
