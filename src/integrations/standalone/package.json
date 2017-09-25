@@ -1,6 +1,6 @@
 {
   "name": "relay-devtools",
-  "version": "0.0.5",
+  "version": "1.4.0",
   "description": "Connect Relay DevTools to a Relay app.",
   "productName": "Relay DevTools",
   "bin": {
