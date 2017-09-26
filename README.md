@@ -64,7 +64,8 @@ Build a Chrome Extension build. The extension output will be placed to the
 extension folder.
 
 ```
-yarn build:extension
+yarn build:chrome
+yarn test:chrome
 ```
 
 ### Electron
@@ -77,20 +78,6 @@ This app is distributed as `relay-devtools` on npm. [npmjs link][1].
 
 
 ```
-yarn build:lib
-cd react-native-shell
-yarn start
-```
-
-### React Native runtime lib
-
-Build a runtime that is required to debug apps running on React Native. This
-runtime lib is imported by Relay in runtime. This lib is published as
-`relay-debugger-react-native-runtime`. [npmjs.com link][2].
-
-[2]: https://www.npmjs.com/package/relay-debugger-react-native-runtime
-
-```
-cd react-native-runtime
-yarn build
+yarn build:standalone
+yarn test:standalone
 ```
