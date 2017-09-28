@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Relay DevTools",
-  "version": "0.2.0",
+  "version": "1.4.0",
   "short_name": "Relay DevTools",
   "description": "Developer Tools extension to inspect Relay store and how it changes.",
   "icons": {

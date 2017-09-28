@@ -5,14 +5,15 @@
   "license": "MIT",
   "scripts": {
     "build": "yarn run build:chrome && yarn run build:standalone",
-    "build:chrome": "webpack --config ./src/integrations/chrome/webpack.config.js",
-    "build:standalone": "webpack --config ./src/integrations/standalone/webpack.config.js",
+    "build:chrome": "rm -rf lib/chrome && webpack --config ./src/integrations/chrome/webpack.config.js",
+    "build:standalone": "rm -rf lib/standalone && webpack --config ./src/integrations/standalone/webpack.config.js",
     "start": "webpack-dev-server --config ./src/integrations/development/webpack.config.js -d --hot --inline --port 3000",
     "start:standalone": "webpack --config ./src/integrations/standalone/webpack.config.js --watch",
     "prettier": "prettier --single-quote --trailing-comma all --jsx-bracket-same-line --write src/**/*.{js,css,less}",
     "prepublishOnly": "yarn install && yarn build",
     "test:chrome": "./src/integrations/chrome/test.js",
-    "test:standalone": "node ./lib/standalone/launchApp.js"
+    "test:standalone": "node ./lib/standalone/launchApp.js",
+    "bundle:chrome": "yarn build:chrome && cd lib && zip -r relay-devtools-v`node -p \"require('./chrome/manifest').version\"`.chrome.zip chrome"
   },
   "dependencies": {
     "cross-spawn": "^5.1.0",
