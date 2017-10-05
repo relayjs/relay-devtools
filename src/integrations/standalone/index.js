@@ -46,6 +46,11 @@ export function installRelayDevTools(
         const bridge = new Bridge(transport);
         connectBackend(hook, bridge);
       }
+    }, error => {
+      // Assuming having `prompt` means "verbose"
+      if (prompt !== null) {
+        console.error('Failed to initialize WebSocket transport', error);
+      }
     });
   }
 }
