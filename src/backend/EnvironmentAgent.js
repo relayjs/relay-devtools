@@ -160,13 +160,13 @@ export default class EnvironmentAgent {
           });
           const observable = execute.apply(this, arguments);
           return observable.do({
-            next: response =>
+            next: payload =>
               agent._networkEvent({
                 eventName: 'Response',
                 seriesId,
                 operation,
                 variables,
-                response,
+                response: payload.response || payload,
               }),
             error: error =>
               agent._networkEvent({
