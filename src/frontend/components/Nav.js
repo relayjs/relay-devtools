@@ -36,11 +36,10 @@ export default class Nav extends React.Component {
           const animated = current !== previous;
           const showIndicator = Boolean(current) && !selected;
           return (
-            <a
-              className={selected ? 'current' : ''}
+            <span
+              className={`nav-item ${selected ? 'current' : ''}`}
               key={tool}
-              onClick={() => onSwitch(tool)}
-              href="#">
+              onClick={() => onSwitch(tool)}>
               {displayNames[tool]}
               <AnimateOnChange
                 baseClassName="indicator-container"
@@ -50,7 +49,7 @@ export default class Nav extends React.Component {
                   className={'indicator' + (showIndicator ? '' : ' disabled')}
                 />
               </AnimateOnChange>
-            </a>
+            </span>
           );
         })}
         <hr />
