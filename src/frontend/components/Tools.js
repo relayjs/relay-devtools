@@ -49,7 +49,7 @@ export default class Tools extends React.Component {
 function Hidable(props) {
   const { hide, children } = props;
   const style = Object.assign(
-    { height: '100%' },
+    { height: '100%', width: '100%' },
     hide ? { display: 'none' } : {},
   );
   return (
