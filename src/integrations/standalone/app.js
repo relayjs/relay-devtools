@@ -9,30 +9,11 @@
 
 'use strict';
 
-import React from 'react';
-import { render } from 'react-dom';
-import 'font-awesome-webpack';
 import 'babel-polyfill';
 
-import '../../frontend/css/reset.css';
+import * as DevtoolsUI from './DevtoolsUI';
 
-import wsServerTransport from './transport/wsServerTransport';
-import Bridge from '../../transport/Bridge';
+const container = document.getElementById('container');
 
-import API from '../../frontend/api/BridgeAPI';
-import setupRedux from '../../frontend/redux/setupRedux';
-import App from '../../frontend/components/App';
-import RelayDetector from '../../frontend/components/RelayDetector.js';
-
-wsServerTransport(process.env.PORT).then(transport => {
-  const bridge = new Bridge(transport);
-  const api = new API(bridge);
-  const store = setupRedux(api);
-
-  render(
-    <RelayDetector API={api}>
-      <App store={store} />
-    </RelayDetector>,
-    document.getElementById('container'),
-  );
-});
+DevtoolsUI.setContentDOMNode(container);
+DevtoolsUI.startServer(process.env.PORT);

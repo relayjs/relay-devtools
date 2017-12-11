@@ -105,21 +105,23 @@ export default class BridgeAPI {
     });
   }
 
-  async getRecords({ matchTerm, matchType, environment }) {
-    const records = await this._bridge.call(
-      'relayDebugger:getMatchingRecords',
-      environment,
-      matchTerm,
-      matchType,
-    );
+  getRecords({matchTerm, matchType, environment}) {
+    return this._bridge
+      .call(
+        'relayDebugger:getMatchingRecords',
+        environment,
+        matchTerm,
+        matchType,
+      )
+      .then(records => {
+        Object.keys(records).forEach(id => {
+          if (id.startsWith('client:') && id !== 'client:root') {
+            delete records[id];
+          }
+        });
 
-    Object.keys(records).forEach(id => {
-      if (id.startsWith('client:') && id !== 'client:root') {
-        delete records[id];
-      }
-    });
-
-    return records;
+        return records;
+      });
   }
 
   onChange({ environment, callback }) {

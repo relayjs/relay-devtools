@@ -9,6 +9,8 @@
 const path = require('path');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
+const isDev = process.env.NODE_ENV !== 'production';
+
 module.exports = {
   target: 'node',
   node: {
@@ -19,6 +21,7 @@ module.exports = {
     app: [path.join(__dirname, './app.js')],
     main: [path.join(__dirname, './main.js')],
     index: [path.join(__dirname, './index.js')],
+    DevtoolsUI: [path.join(__dirname, './DevtoolsUI.js')],
   },
   output: {
     filename: '[name].js',
@@ -30,11 +33,11 @@ module.exports = {
     loaders: [
       {
         test: /\.css$/,
-        loader: 'style-loader!css-loader',
+        loader: `style-loader?hmr=${isDev}!css-loader`,
       },
       {
         test: /\.less$/,
-        loader: 'style-loader!css-loader!less-loader',
+        loader: `style-loader?hmr=${isDev}!css-loader!less-loader`,
       },
       {
         test: /\.js$/,

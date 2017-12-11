@@ -7,14 +7,16 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  *
  * @flow
+ * @format
  */
 
 'use strict';
 
-import { installGlobalHook, getGlobalHook } from '../../backend/GlobalHook';
+import * as GlobalHook from '../../backend/GlobalHook';
 import connectBackend from '../../backend/connectBackend';
 import Bridge from '../../transport/Bridge';
 import wsClientTransport from './transport/wsClientTransport';
+import wsClientSocketTransport from './transport/wsClientSocketTransport';
 
 /**
  * Install the Relay DevTools backend in your application code so it can be
@@ -39,18 +41,31 @@ export function installRelayDevTools(
           'in production!',
     );
   }
-  if (installGlobalHook(global)) {
-    wsClientTransport(host, port).then(transport => {
-      const hook = getGlobalHook(global);
-      if (hook) {
-        const bridge = new Bridge(transport);
-        connectBackend(hook, bridge);
-      }
-    }, error => {
-      // Assuming having `prompt` means "verbose"
-      if (prompt !== null) {
-        console.error('Failed to initialize WebSocket transport', error);
-      }
-    });
+  if (GlobalHook.installGlobalHook(global)) {
+    wsClientTransport(host, port).then(
+      transport => {
+        const hook = GlobalHook.getGlobalHook(global);
+        if (hook) {
+          const bridge = new Bridge(transport);
+          connectBackend(hook, bridge);
+        }
+      },
+      error => {
+        // Assuming having `prompt` means "verbose"
+        if (prompt !== null) {
+          // eslint-disable-next-line no-console
+          console.error('Failed to initialize WebSocket transport', error);
+        }
+      },
+    );
+  }
+}
+
+export function connectToBackendWithSocket(socket) {
+  const hook = GlobalHook.getGlobalHook(global);
+  if (hook) {
+    const transport = wsClientSocketTransport(socket);
+    const bridge = new Bridge(transport);
+    connectBackend(hook, bridge);
   }
 }
