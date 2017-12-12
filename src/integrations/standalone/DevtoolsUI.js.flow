@@ -1,8 +1,8 @@
-declare function startServer(port: number): Promise;
-declare function setContentDOMNode(node: HTMLElement): void;
+declare export function startServer(port: number): Promise<void>;
+declare export function setContentDOMNode(node: HTMLElement): void;
 
-declare interface Subscription {
+export interface Subscription {
   close(): void;
 };
 
-declare function connectToSocket(socket: Object) : Subscription;
+declare export function connectToSocket(socket: Object) : Subscription;
