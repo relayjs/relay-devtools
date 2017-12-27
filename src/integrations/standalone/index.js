@@ -69,3 +69,9 @@ export function connectToBackendWithSocket(socket) {
     connectBackend(hook, bridge);
   }
 }
+
+export function prepareRelayDevTools() {
+  if (!GlobalHook.getGlobalHook(global)) {
+    GlobalHook.installGlobalHook(global);
+  }
+}
