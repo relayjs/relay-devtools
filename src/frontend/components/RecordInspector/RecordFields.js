@@ -16,7 +16,7 @@ import {shallowArraysEqual} from '../../util/objCompare';
 
 export const NON_EXISTENT = {};
 
-export default class RecordFields extends React.PureComponent {
+export default class RecordFields extends React.Component {
   loadFromSnapshot() {
     const {path, snapshot, otherSnapshot} = this.props;
     const {id} = path[path.length - 1];
