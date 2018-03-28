@@ -16,7 +16,7 @@ export default function persistEnhancer(paths, key) {
     }
 
     if (!initialState) {
-      initialState = reducer(initialState, { type: '@@INIT' });
+      initialState = reducer(initialState, {type: '@@INIT'});
     }
     /* eslint-enable no-param-reassign */
 

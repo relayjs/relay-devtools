@@ -11,7 +11,7 @@
 
 'use strict';
 
-import type { Environment } from 'RelayRuntime';
+import type {Environment} from 'RelayRuntime';
 
 export type GlobalHook = {
   /**

@@ -12,7 +12,7 @@
 const path = require('path');
 const url = require('url');
 
-const { app, BrowserWindow } = require('electron');
+const {app, BrowserWindow} = require('electron');
 
 app.setName('Relay DevTools');
 app.dock.setIcon(path.join(__dirname, 'imgs/logo.png'));

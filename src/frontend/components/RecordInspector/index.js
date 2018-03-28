@@ -16,4 +16,4 @@ import LatestRecordInspector from './LatestRecordInspector';
 import SnapshotRecordInspector from './SnapshotRecordInspector';
 import ObjectFields from './ObjectFields';
 
-export { LatestRecordInspector, SnapshotRecordInspector, ObjectFields };
+export {LatestRecordInspector, SnapshotRecordInspector, ObjectFields};

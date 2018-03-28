@@ -13,8 +13,8 @@
 
 import EnvironmentAgent from './EnvironmentAgent';
 
-import type { Environment } from 'RelayRuntime';
-import type { GlobalHook } from './GlobalHook';
+import type {Environment} from 'RelayRuntime';
+import type {GlobalHook} from './GlobalHook';
 import type Bridge from '../transport/Bridge';
 
 /**
@@ -30,7 +30,7 @@ export default function connectBackend(hook: GlobalHook, bridge: Bridge): void {
     try {
       const id = agents.length;
       function emit(name, data) {
-        bridge.emit(name, { ...data, environment: id });
+        bridge.emit(name, {...data, environment: id});
       }
       const agent = new EnvironmentAgent(environment, id, emit);
       agents.push(agent);

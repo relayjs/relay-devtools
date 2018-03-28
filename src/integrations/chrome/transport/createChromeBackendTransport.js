@@ -11,7 +11,7 @@
 
 'use strict';
 
-import type { BridgeTransport } from '../../../transport/Bridge';
+import type {BridgeTransport} from '../../../transport/Bridge';
 
 /**
  * Creates a BridgeTransport for use in the backend of a Chrome plugin, which
@@ -40,7 +40,7 @@ export default function createChromeBackendTransport(): BridgeTransport {
       messageListeners.push(fn);
     },
     send(message) {
-      window.postMessage({ source: 'relayDevtoolsBackend', message }, '*');
+      window.postMessage({source: 'relayDevtoolsBackend', message}, '*');
     },
   };
 }

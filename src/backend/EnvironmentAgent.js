@@ -13,11 +13,11 @@
 
 import deepCopy from './deepCopy';
 
-import type { Record } from 'RelayCombinedEnvironmentTypes';
-import type { ConcreteBatch } from 'RelayConcreteNode';
-import type { DataID } from 'RelayInternalTypes';
-import type { Environment } from 'RelayStoreTypes';
-import type { Variables } from 'RelayTypes';
+import type {Record} from 'RelayCombinedEnvironmentTypes';
+import type {ConcreteBatch} from 'RelayConcreteNode';
+import type {DataID} from 'RelayInternalTypes';
+import type {Environment} from 'RelayStoreTypes';
+import type {Variables} from 'RelayTypes';
 
 type MatchType = 'idtype' | 'id' | 'type';
 
@@ -31,7 +31,7 @@ export type UpdateEvent = {
   snapshotAfter: any,
 };
 
-type EmitFn = (name: string, data: { [key: string]: mixed }) => void;
+type EmitFn = (name: string, data: {[key: string]: mixed}) => void;
 
 /**
  * Agent:
@@ -71,7 +71,7 @@ export default class EnvironmentAgent {
   getMatchingRecords(
     matchStr: string,
     matchType: MatchType,
-  ): { [id: string]: string } {
+  ): {[id: string]: string} {
     function isMatching(id: DataID, record: Record): boolean {
       if (matchType === 'idtype') {
         return (
@@ -174,7 +174,7 @@ export default class EnvironmentAgent {
                 seriesId,
                 operation,
                 variables,
-                response: { isError: true, message: error.message },
+                response: {isError: true, message: error.message},
               }),
           });
         },
@@ -273,7 +273,7 @@ function getSnapshotChanges(store, snapshot, updatedRecordIds) {
     // Always include records in "after", even if they're null.
     snapshotAfter[id] = snapshot[id] = deepCopy(source.get(id));
   }
-  return { snapshotBefore, snapshotAfter };
+  return {snapshotBefore, snapshotAfter};
 }
 
 function monkeyPatch(source, method, patch) {

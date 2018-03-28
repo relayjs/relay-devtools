@@ -18,7 +18,7 @@ const pkg = require('./package.json');
 const argv = process.argv.slice(2);
 
 // notify if there's an update
-updateNotifier({ pkg }).notify({ defer: false });
+updateNotifier({pkg}).notify({defer: false});
 
 const result = spawn.sync(electron, [require.resolve('./main')].concat(argv), {
   stdio: 'ignore',

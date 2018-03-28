@@ -10,7 +10,7 @@
 import React from 'react';
 
 export default function Header(props) {
-  const { keyName, focusHandler, value, summary, isLink = false } = props;
+  const {keyName, focusHandler, value, summary, isLink = false} = props;
 
   const keyClasses =
     'key-desc' +

@@ -12,9 +12,9 @@ import PropTypes from 'prop-types';
 
 export default class Collapsable extends React.Component {
   render() {
-    const { openOrClosePath, isPathOpened } = this.context;
+    const {openOrClosePath, isPathOpened} = this.context;
 
-    const { path, children, header } = this.props;
+    const {path, children, header} = this.props;
     const opened = Boolean(isPathOpened(path));
 
     const flip = e => {

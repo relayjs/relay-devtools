@@ -6,7 +6,7 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-export function loadRecordDescs({ matchType, matchTerm }) {
+export function loadRecordDescs({matchType, matchTerm}) {
   return {
     types: [
       'LOAD_RECORD_DESCS_REQUEST',
@@ -14,6 +14,6 @@ export function loadRecordDescs({ matchType, matchTerm }) {
       'LOAD_RECORD_DESCS_FAILURE',
     ],
     callAPI: (API, environment) =>
-      API.getRecords({ environment, matchType, matchTerm }),
+      API.getRecords({environment, matchType, matchTerm}),
   };
 }

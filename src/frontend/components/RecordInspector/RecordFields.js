@@ -12,14 +12,14 @@ import PropTypes from 'prop-types';
 import AnimateOnChange from 'react-animate-on-change';
 import Header from './Header';
 import Collapsable from './Collapsable';
-import { shallowArraysEqual } from '../../util/objCompare';
+import {shallowArraysEqual} from '../../util/objCompare';
 
 export const NON_EXISTENT = {};
 
 export default class RecordFields extends React.PureComponent {
   loadFromSnapshot() {
-    const { path, snapshot, otherSnapshot } = this.props;
-    const { id } = path[path.length - 1];
+    const {path, snapshot, otherSnapshot} = this.props;
+    const {id} = path[path.length - 1];
 
     if (!snapshot) {
       return {
@@ -55,11 +55,11 @@ export default class RecordFields extends React.PureComponent {
   }
 
   makeFocusButtonHandler(id, name) {
-    const { path } = this.props;
-    const { navigateToPath } = this.context;
+    const {path} = this.props;
+    const {navigateToPath} = this.context;
     return e => {
       e.stopPropagation();
-      navigateToPath([...path, { id, name }]);
+      navigateToPath([...path, {id, name}]);
     };
   }
 
@@ -87,7 +87,7 @@ export default class RecordFields extends React.PureComponent {
   }
 
   renderArray(array, prev, key) {
-    const { path } = this.props;
+    const {path} = this.props;
 
     const different = !shallowArraysEqual(array, prev);
     const animate = this.shouldAnimate() && different;
@@ -100,26 +100,24 @@ export default class RecordFields extends React.PureComponent {
         <Header keyName={key} summary={`${array.length} elements`} />
       </AnimateOnChange>
     );
-    const newPath = [...path, { id: key }];
+    const newPath = [...path, {id: key}];
 
     return (
       <li key={key}>
         <Collapsable header={header} path={newPath}>
-          <ul>
-            {array.map((el, i) => this.renderChild(el, prev[i], i))}
-          </ul>
+          <ul>{array.map((el, i) => this.renderChild(el, prev[i], i))}</ul>
         </Collapsable>
       </li>
     );
   }
 
   renderRefs(refs, prev, key) {
-    const { getType } = this.context;
-    const { path, snapshot, otherSnapshot, pathOpened } = this.props;
+    const {getType} = this.context;
+    const {path, snapshot, otherSnapshot, pathOpened} = this.props;
 
     const children = refs.map((ref, i) => {
       const name = `${key}[${i}]`;
-      const newPath = [...path, { id: ref, name }];
+      const newPath = [...path, {id: ref, name}];
       const clickHandler = this.makeFocusButtonHandler(ref, name);
       const summary = ref.startsWith('client:') ? null : ref;
 
@@ -168,24 +166,22 @@ export default class RecordFields extends React.PureComponent {
         <Header keyName={key} summary={`${refs.length} elements`} />
       </AnimateOnChange>
     );
-    const newPath = [...path, { id: key, name: key }];
+    const newPath = [...path, {id: key, name: key}];
 
     return (
       <li key={key}>
         <Collapsable header={header} path={newPath}>
-          <ul>
-            {children}
-          </ul>
+          <ul>{children}</ul>
         </Collapsable>
       </li>
     );
   }
 
   renderRef(ref, prev, key) {
-    const { getType } = this.context;
-    const { path, snapshot, otherSnapshot, pathOpened } = this.props;
+    const {getType} = this.context;
+    const {path, snapshot, otherSnapshot, pathOpened} = this.props;
 
-    const newPath = [...path, { id: ref, name: key }];
+    const newPath = [...path, {id: ref, name: key}];
     const clickHandler = this.makeFocusButtonHandler(ref, key);
     const summary = ref.startsWith('client:') ? null : ref;
 
@@ -272,9 +268,7 @@ export default class RecordFields extends React.PureComponent {
       return (
         <li key={key}>
           <Header keyName={key} />
-          <ul>
-            {this.renderObject(child, prev)}
-          </ul>
+          <ul>{this.renderObject(child, prev)}</ul>
         </li>
       );
     }
@@ -283,17 +277,13 @@ export default class RecordFields extends React.PureComponent {
   }
 
   render() {
-    const { record, previousRecord } = this.loadFromSnapshot();
+    const {record, previousRecord} = this.loadFromSnapshot();
 
     if (!record) {
       return null;
     }
 
-    return (
-      <ul>
-        {this.renderObject(record, previousRecord)}
-      </ul>
-    );
+    return <ul>{this.renderObject(record, previousRecord)}</ul>;
   }
 }
 

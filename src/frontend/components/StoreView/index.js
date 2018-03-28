@@ -14,4 +14,4 @@ export default StoreView;
 import LatestStoreView from './LatestStoreView';
 import SnapshotStoreView from './SnapshotStoreView';
 
-export { LatestStoreView, SnapshotStoreView };
+export {LatestStoreView, SnapshotStoreView};

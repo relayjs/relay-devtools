@@ -11,7 +11,7 @@
 
 'use strict';
 
-import type { BridgeTransport } from './Bridge';
+import type {BridgeTransport} from './Bridge';
 
 /**
  * Creates a PostMessage based BridgeTransport, which can be used to connect to
@@ -65,7 +65,7 @@ export default function createPostMessageBridgeTransport(
     }
 
     function sendMessage(message) {
-      sourceWindow.postMessage({ relayDebuggerMessage: message }, '*');
+      sourceWindow.postMessage({relayDebuggerMessage: message}, '*');
     }
   });
 }

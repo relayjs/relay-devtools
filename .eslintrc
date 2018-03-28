@@ -52,13 +52,7 @@
   },
 
   "rules": {
-    "prettier/prettier": ["error", {
-      "singleQuote": true,
-      "trailingComma": "all",
-      "bracketSpacing": true,
-      "jsxBracketSameLine": true,
-      "parser": "flow"
-    }],
+    "prettier/prettier": ["error"],
     "flowtype/space-after-type-colon": [2, "always"],
     "flowtype/space-before-type-colon": [2, "never"],
     "flowtype/space-before-generic-bracket": [2, "never"],

@@ -18,8 +18,8 @@ export default class SnapshotStoreView extends StoreView {
   };
 
   renderTableRecord(id, type) {
-    const { selectedRecord } = this.state;
-    const { snapshotBefore, snapshotAfter } = this.props;
+    const {selectedRecord} = this.state;
+    const {snapshotBefore, snapshotAfter} = this.props;
     const onClick = () => this.selectRecord(id);
     let className = selectedRecord === id ? 'selected' : '';
 
@@ -45,8 +45,8 @@ export default class SnapshotStoreView extends StoreView {
   }
 
   renderDetails() {
-    const { selectedRecord } = this.state;
-    const { snapshotBefore, snapshotAfter } = this.props;
+    const {selectedRecord} = this.state;
+    const {snapshotBefore, snapshotAfter} = this.props;
     const recordBefore = snapshotBefore[selectedRecord];
     const recordAfter = snapshotAfter[selectedRecord];
 

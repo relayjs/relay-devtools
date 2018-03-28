@@ -52,8 +52,8 @@ module.exports = {
   },
   plugins: [
     new CopyWebpackPlugin([
-      { from: path.join(__dirname, 'manifest.json') },
-      { from: path.join(__dirname, 'imgs'), to: './imgs' },
+      {from: path.join(__dirname, 'manifest.json')},
+      {from: path.join(__dirname, 'imgs'), to: './imgs'},
     ]),
     new HtmlWebpackPlugin({
       template: path.join(__dirname, './devtoolsPanel.html'),

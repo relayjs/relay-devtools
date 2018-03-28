@@ -6,14 +6,14 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-import { loadRecordDescs } from '../fetch-actions/storeExplorer';
-import { loadUpdates } from '../fetch-actions/updatesViewActions';
+import {loadRecordDescs} from '../fetch-actions/storeExplorer';
+import {loadUpdates} from '../fetch-actions/updatesViewActions';
 import {
   loadRecord,
   loadTypeMapping,
 } from '../fetch-actions/recordInspectorActions';
 
-export default function({ storeExplorer, recordInspector }) {
+export default function({storeExplorer, recordInspector}) {
   const actions = [];
 
   // storeExplorer

@@ -11,11 +11,11 @@ import React from 'react';
 
 import '../css/global.css';
 
-import { Provider } from 'react-redux';
+import {Provider} from 'react-redux';
 import EnvironmentChooser from '../containers/EnvironmentChooser';
 import Tools from '../containers/Tools';
 
-export default function App({ store }) {
+export default function App({store}) {
   return (
     <Provider store={store}>
       <div className="relay-devtools">

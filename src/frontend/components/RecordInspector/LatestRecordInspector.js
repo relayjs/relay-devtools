@@ -22,7 +22,7 @@ export default class LatestRecordInspector extends RecordInspector {
   }
 
   renderRecordFields(path) {
-    const { pathOpened } = this.props;
+    const {pathOpened} = this.props;
     return <LatestRecordFields path={path} pathOpened={pathOpened} />;
   }
 }

@@ -7,10 +7,10 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import EnvironmentChooser from '../components/EnvironmentChooser';
 
-const mapStateToProps = ({ environments }) => environments;
+const mapStateToProps = ({environments}) => environments;
 const mapDispatchToProps = dispatch => ({
   onChange: environment => {
     dispatch({

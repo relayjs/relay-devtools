@@ -15,13 +15,13 @@ import InlineDiffRecordFields from './InlineDiffRecordFields';
 
 export default class SnapshotRecordInspector extends RecordInspector {
   renderToolbar() {
-    const { tag } = this.props;
+    const {tag} = this.props;
 
     if (tag !== 'Changed') {
       return super.renderToolbar();
     }
 
-    const { diffMode, switchDiffMode } = this.props;
+    const {diffMode, switchDiffMode} = this.props;
     const toolbarEl = super.renderToolbar();
     const onClick = mode => () => switchDiffMode(mode);
     const viewModeButtons = (
@@ -44,8 +44,8 @@ export default class SnapshotRecordInspector extends RecordInspector {
   }
 
   renderRecordFields(path) {
-    const { snapshotBefore, snapshotAfter, diffMode, pathOpened } = this.props;
-    const { id } = path[path.length - 1];
+    const {snapshotBefore, snapshotAfter, diffMode, pathOpened} = this.props;
+    const {id} = path[path.length - 1];
 
     if (diffMode !== 'inline' || !snapshotAfter[id]) {
       return (
@@ -81,12 +81,12 @@ export default class SnapshotRecordInspector extends RecordInspector {
   }
 
   getType = id => {
-    const { snapshotBefore, snapshotAfter } = this.props;
+    const {snapshotBefore, snapshotAfter} = this.props;
     const record = snapshotBefore[id] || snapshotAfter[id];
     if (record) {
       return record.__typename;
     }
-    const { typeMapping } = this.props;
+    const {typeMapping} = this.props;
     return typeMapping[id];
   };
 }

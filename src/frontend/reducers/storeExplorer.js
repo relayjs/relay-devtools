@@ -13,12 +13,12 @@ export default function(
       back: [],
       forward: [],
     },
-    latest: { matchTerm: '', matchType: 'idtype' },
+    latest: {matchTerm: '', matchType: 'idtype'},
     recordDescs: null,
   },
   action,
 ) {
-  const { history } = state;
+  const {history} = state;
   let newMatch;
 
   switch (action.type) {

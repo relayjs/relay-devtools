@@ -25,14 +25,14 @@ script.parentNode.removeChild(script);
  * Proxy messages between the browser window's postMessage API and the
  * ContentScript's chrome runtime messaging API.
  */
-const port = chrome.runtime.connect({ name: 'relayDevtoolsBackend' });
+const port = chrome.runtime.connect({name: 'relayDevtoolsBackend'});
 
 port.onMessage.addListener(sendMessageToBackend);
 port.onDisconnect.addListener(handleDisconnect);
 window.addEventListener('message', handleMessageFromBackend);
 
 function sendMessageToBackend(message) {
-  window.postMessage({ source: 'relayDevtoolsFrontend', message }, '*');
+  window.postMessage({source: 'relayDevtoolsFrontend', message}, '*');
 }
 
 function handleMessageFromBackend(evt) {
@@ -47,5 +47,5 @@ function handleMessageFromBackend(evt) {
 
 function handleDisconnect() {
   window.removeEventListener('message', sendMessageToBackend);
-  sendMessageToBackend({ type: 'event', name: 'disconnect' });
+  sendMessageToBackend({type: 'event', name: 'disconnect'});
 }

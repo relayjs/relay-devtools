@@ -11,7 +11,7 @@
 
 'use strict';
 
-import { installGlobalHook } from '../../../backend/GlobalHook';
+import {installGlobalHook} from '../../../backend/GlobalHook';
 import createChromeBackendTransport from '../transport/createChromeBackendTransport';
 
 /**
@@ -30,7 +30,7 @@ if (installGlobalHook(window)) {
   function detectedRelayEnvironment() {
     if (!foundEnvironment) {
       foundEnvironment = true;
-      transport.send({ type: 'event', name: 'detectedRelayEnvironment' });
+      transport.send({type: 'event', name: 'detectedRelayEnvironment'});
     }
   }
 

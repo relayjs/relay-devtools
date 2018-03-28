@@ -6,11 +6,11 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-import { connect } from 'react-redux';
-import { loadUpdates } from '../fetch-actions/updatesViewActions';
+import {connect} from 'react-redux';
+import {loadUpdates} from '../fetch-actions/updatesViewActions';
 import UpdatesView from '../components/UpdatesView';
 
-const mapStateToProps = ({ updatesView }) => updatesView;
+const mapStateToProps = ({updatesView}) => updatesView;
 const mapDispatchToProps = dispatch => ({
   refetchEvents() {
     dispatch(loadUpdates());

@@ -17,7 +17,7 @@ export default class DevelMockAPI {
     ];
   }
 
-  async getRecord({ id }) {
+  async getRecord({id}) {
     if (!id) {
       return null;
     }
@@ -36,7 +36,7 @@ export default class DevelMockAPI {
       id,
       __id: id,
       __typename: 'User',
-      bestFriend: { __ref: 'client:id200' },
+      bestFriend: {__ref: 'client:id200'},
       friends: {
         __refs: ['client:id100', 'client:id101', 'client:id102'],
       },
@@ -53,17 +53,17 @@ export default class DevelMockAPI {
 
   async getAllRecordDescriptions() {
     return [
-      { id: 'id100', type: 'User' },
-      { id: 'id200', type: 'User' },
-      { id: 'id300', type: 'User' },
-      { id: 'id110', type: 'User' },
-      { id: 'id111', type: 'User' },
-      { id: 'id112', type: 'User' },
-      { id: 'id113', type: 'User' },
-      { id: 'client:id100', type: 'User' },
-      { id: 'client:id101', type: 'User' },
-      { id: 'client:id102', type: 'User' },
-      { id: 'client:id200', type: 'User' },
+      {id: 'id100', type: 'User'},
+      {id: 'id200', type: 'User'},
+      {id: 'id300', type: 'User'},
+      {id: 'id110', type: 'User'},
+      {id: 'id111', type: 'User'},
+      {id: 'id112', type: 'User'},
+      {id: 'id113', type: 'User'},
+      {id: 'client:id100', type: 'User'},
+      {id: 'client:id101', type: 'User'},
+      {id: 'client:id102', type: 'User'},
+      {id: 'client:id200', type: 'User'},
     ];
   }
 
@@ -84,7 +84,7 @@ export default class DevelMockAPI {
     ];
   }
 
-  onChange({ callback }) {
+  onChange({callback}) {
     const interval = setInterval(callback, 3000);
     intervals.push(interval);
   }
@@ -106,7 +106,7 @@ export default class DevelMockAPI {
       'client:id102',
       'client:id101',
     ].forEach(async id => {
-      snapshotBefore[id] = await this.getRecord({ id });
+      snapshotBefore[id] = await this.getRecord({id});
     });
     [
       'id200',
@@ -117,7 +117,7 @@ export default class DevelMockAPI {
       'client:id102',
       'client:id101',
     ].forEach(async id => {
-      snapshotAfter[id] = await this.getRecord({ id });
+      snapshotAfter[id] = await this.getRecord({id});
       if (id === 'id200') {
         snapshotAfter[id].name = 'Jane Doe';
       }
@@ -130,15 +130,15 @@ export default class DevelMockAPI {
 
     const mutation = {
       name: 'ChangeTodoStatusMutation',
-      query: { operation: 'mutation' },
+      query: {operation: 'mutation'},
       text: mutationText,
     };
 
-    const variables = { input: { complete: true, id: 'VG9kbzox' } };
+    const variables = {input: {complete: true, id: 'VG9kbzox'}};
 
     const query = {
       name: 'GetTodoQuery',
-      query: { operation: 'query' },
+      query: {operation: 'query'},
       text: 'query GetTodoQuery { todos }',
     };
 

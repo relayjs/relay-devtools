@@ -14,7 +14,7 @@
 import connectBackend from '../../../backend/connectBackend';
 import createChromeBackendTransport from '../transport/createChromeBackendTransport';
 import Bridge from '../../../transport/Bridge';
-import { getGlobalHook } from '../../../backend/GlobalHook';
+import {getGlobalHook} from '../../../backend/GlobalHook';
 
 /**
  * This script is loaded into the document and is responsible for creating

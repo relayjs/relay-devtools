@@ -11,7 +11,7 @@
 
 'use strict';
 
-import type { BridgeTransport } from '../../../transport/Bridge';
+import type {BridgeTransport} from '../../../transport/Bridge';
 
 import * as WebSocket from 'ws';
 
@@ -36,7 +36,7 @@ export default function wsServerTransport(
     function startServer() {
       try {
         const httpServer = require('http').createServer();
-        const wsServer = new WebSocket.Server({ server: httpServer });
+        const wsServer = new WebSocket.Server({server: httpServer});
         wsServer.on('connection', handleConnection);
         wsServer.on('error', handleServerError);
         httpServer.on('error', handleServerError);
@@ -110,7 +110,7 @@ export default function wsServerTransport(
 
     function sendMessage(message) {
       if (connection && connection.readyState === WebSocket.OPEN) {
-        connection.send(JSON.stringify({ relayDevTools: message }));
+        connection.send(JSON.stringify({relayDevTools: message}));
       }
     }
   });

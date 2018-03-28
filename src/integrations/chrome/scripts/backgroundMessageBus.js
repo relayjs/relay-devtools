@@ -60,8 +60,8 @@ function doublePipe(one, two) {
   }
   one.onDisconnect.addListener(shutdown);
   two.onDisconnect.addListener(shutdown);
-  one.postMessage({ type: 'event', name: 'connect' });
-  two.postMessage({ type: 'event', name: 'connect' });
+  one.postMessage({type: 'event', name: 'connect'});
+  two.postMessage({type: 'event', name: 'connect'});
 }
 
 /**
@@ -73,10 +73,10 @@ function connectDevtoolsCommand(port) {
   port.onDisconnect.addListener(() =>
     port.onMessage.removeListener(handleDevtoolsCommand),
   );
-  function handleDevtoolsCommand({ command, args }) {
+  function handleDevtoolsCommand({command, args}) {
     if (command === 'executeScript') {
-      const { tabId, file } = args;
-      chrome.tabs.executeScript(tabId, { file });
+      const {tabId, file} = args;
+      chrome.tabs.executeScript(tabId, {file});
     }
   }
 }

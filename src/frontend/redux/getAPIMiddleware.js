@@ -12,7 +12,7 @@ import refetchActionsReducers from '../refetch-actions-reducers';
 export default function getAPIMiddleware(API) {
   let subscribedEnvironment = null;
 
-  return function callAPIMiddleware({ dispatch, getState }) {
+  return function callAPIMiddleware({dispatch, getState}) {
     return next => action => {
       const {
         type,
@@ -23,7 +23,7 @@ export default function getAPIMiddleware(API) {
       } = action;
 
       if (type === 'ENVIRONMENT_SUBSCRIBE') {
-        const { environment } = action;
+        const {environment} = action;
 
         const callback = () => {
           refetchActionsReducers(getState()).forEach(dispatch);
@@ -34,13 +34,13 @@ export default function getAPIMiddleware(API) {
         }
 
         if (subscribedEnvironment) {
-          API.stopObservingChange({ environment: subscribedEnvironment });
+          API.stopObservingChange({environment: subscribedEnvironment});
           callback();
         }
 
         subscribedEnvironment = environment;
 
-        API.onChange({ environment, callback });
+        API.onChange({environment, callback});
         return;
       }
 

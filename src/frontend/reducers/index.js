@@ -7,7 +7,7 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-import { combineReducers } from 'redux';
+import {combineReducers} from 'redux';
 import tools from './tools';
 import environments from './environments';
 import storeExplorer from './storeExplorer';

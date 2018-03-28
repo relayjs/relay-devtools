@@ -13,8 +13,8 @@ export function loadRecord(id, fresh = false) {
       'LOAD_RECORD_SUCCESS',
       'LOAD_RECORD_FAILURE',
     ],
-    callAPI: (API, environment) => API.getRecord({ environment, id }),
-    shouldCallAPI: ({ recordInspector }) =>
+    callAPI: (API, environment) => API.getRecord({environment, id}),
+    shouldCallAPI: ({recordInspector}) =>
       fresh || !recordInspector.fetchedRecords[id],
     id,
   };
@@ -27,7 +27,6 @@ export function loadTypeMapping() {
       'LOAD_TYPE_MAPPING_SUCCESS',
       'LOAD_TYPE_MAPPING_FAILURE',
     ],
-    callAPI: (API, environment) =>
-      API.getAllRecordDescriptions({ environment }),
+    callAPI: (API, environment) => API.getAllRecordDescriptions({environment}),
   };
 }

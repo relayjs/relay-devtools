@@ -54,11 +54,11 @@ module.exports = {
   externals: ['cross-spawn', 'electron', 'update-notifier', 'ws'],
   plugins: [
     new CopyWebpackPlugin([
-      { from: path.join(__dirname, 'app.html') },
-      { from: path.join(__dirname, 'launchApp.js') },
-      { from: path.join(__dirname, 'imgs'), to: './imgs' },
-      { from: path.join(__dirname, 'package.json') },
-      { from: path.join(__dirname, 'README.md') },
+      {from: path.join(__dirname, 'app.html')},
+      {from: path.join(__dirname, 'launchApp.js')},
+      {from: path.join(__dirname, 'imgs'), to: './imgs'},
+      {from: path.join(__dirname, 'package.json')},
+      {from: path.join(__dirname, 'README.md')},
     ]),
   ],
 };

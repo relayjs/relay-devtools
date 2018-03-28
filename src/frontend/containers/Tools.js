@@ -7,10 +7,10 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import Tools from '../components/Tools';
 
-const mapStateToProps = ({ tools }) => tools;
+const mapStateToProps = ({tools}) => tools;
 const mapDispatchToProps = dispatch => ({
   onSwitch: tool => {
     dispatch({

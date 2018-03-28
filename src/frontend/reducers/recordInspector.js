@@ -7,7 +7,7 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-import { deepObjectEqual } from '../util/objCompare';
+import {deepObjectEqual} from '../util/objCompare';
 
 export default function(
   state = {

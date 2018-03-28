@@ -11,7 +11,7 @@
 
 'use strict';
 
-import type { BridgeTransport } from '../../../transport/Bridge';
+import type {BridgeTransport} from '../../../transport/Bridge';
 
 declare var chrome: any;
 
@@ -22,7 +22,7 @@ declare var chrome: any;
  */
 export default function createChromeFrontendTransport(): BridgeTransport {
   const name = 'relayDevtoolsFrontend:' + chrome.devtools.inspectedWindow.tabId;
-  const port = chrome.runtime.connect({ name });
+  const port = chrome.runtime.connect({name});
 
   const messageListeners = [];
   port.onMessage.addListener(handleMessage);

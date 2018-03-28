@@ -8,8 +8,8 @@
  */
 
 export default function(
-  state = { currentTool: 'store', notifications: {} },
-  { type, tool },
+  state = {currentTool: 'store', notifications: {}},
+  {type, tool},
 ) {
   switch (type) {
     case 'NEW_NOTIFICATION':

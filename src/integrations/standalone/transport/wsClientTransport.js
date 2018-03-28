@@ -11,7 +11,7 @@
 
 'use strict';
 
-import type { BridgeTransport } from '../../../transport/Bridge';
+import type {BridgeTransport} from '../../../transport/Bridge';
 
 /**
  * Creates a WebSocket based BridgeTransport for use on the client, which can
@@ -84,7 +84,7 @@ export default function wsClientTransport(
 
     function sendMessage(message) {
       if (connection && connection.readyState === WebSocket.OPEN) {
-        connection.send(JSON.stringify({ relayDevTools: message }));
+        connection.send(JSON.stringify({relayDevTools: message}));
       }
     }
   });

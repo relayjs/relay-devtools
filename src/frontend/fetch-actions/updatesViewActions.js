@@ -14,6 +14,6 @@ export function loadUpdates() {
       'LOAD_UPDATE_EVENTS_FAILURE',
     ],
     callAPI: (API, environment) =>
-      Promise.resolve(API.getUpdateEvents({ environment })),
+      Promise.resolve(API.getUpdateEvents({environment})),
   };
 }

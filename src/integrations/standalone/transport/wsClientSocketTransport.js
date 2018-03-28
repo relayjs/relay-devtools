@@ -11,7 +11,7 @@
 
 'use strict';
 
-import type { BridgeTransport } from '../../../transport/Bridge';
+import type {BridgeTransport} from '../../../transport/Bridge';
 
 /**
  * Creates a WebSocket based BridgeTransport for use on the client, which can
@@ -20,9 +20,7 @@ import type { BridgeTransport } from '../../../transport/Bridge';
  *
  * The WebSocket passed in must be initially open.
  */
-export default function wsClientSocketTransport(
-  socket,
-): BridgeTransport {
+export default function wsClientSocketTransport(socket): BridgeTransport {
   const messageListeners = [];
 
   socket.onmessage = handleMessage;
@@ -56,7 +54,7 @@ export default function wsClientSocketTransport(
 
   function sendMessage(message) {
     if (socket.readyState === WebSocket.OPEN) {
-      socket.send(JSON.stringify({ relayDevTools: message }));
+      socket.send(JSON.stringify({relayDevTools: message}));
     }
   }
 }

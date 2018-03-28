@@ -6,19 +6,19 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-import { connect } from 'react-redux';
-import { LatestStoreView } from '../components/StoreView';
-import { loadRecordDescs } from '../fetch-actions/storeExplorer';
+import {connect} from 'react-redux';
+import {LatestStoreView} from '../components/StoreView';
+import {loadRecordDescs} from '../fetch-actions/storeExplorer';
 
-const mapStateToProps = ({ storeExplorer }) => ({
+const mapStateToProps = ({storeExplorer}) => ({
   records: storeExplorer.recordDescs,
 });
 
 const mapDispatchToProps = (dispatch, props) => ({
   refetchRecords() {
-    const { matchType, matchTerm } = props;
+    const {matchType, matchTerm} = props;
 
-    dispatch(loadRecordDescs({ matchType, matchTerm }));
+    dispatch(loadRecordDescs({matchType, matchTerm}));
   },
 });
 

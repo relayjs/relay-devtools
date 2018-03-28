@@ -25,7 +25,7 @@ export default class StoreExplorer extends React.Component {
   }
 
   render() {
-    const { matchTerm, matchType } = this.props.latest;
+    const {matchTerm, matchType} = this.props.latest;
 
     return (
       <div className="store-explorer">
@@ -57,9 +57,9 @@ export default class StoreExplorer extends React.Component {
     );
   }
 
-  pushNewSearch = ({ matchTerm, matchType }, resetDOMFields = true) => {
-    this.props.pushNewSearch({ matchTerm, matchType });
-    this.searchRef.setMatch({ matchTerm, matchType }, resetDOMFields);
+  pushNewSearch = ({matchTerm, matchType}, resetDOMFields = true) => {
+    this.props.pushNewSearch({matchTerm, matchType});
+    this.searchRef.setMatch({matchTerm, matchType}, resetDOMFields);
   };
 
   canGoBack = () => {
@@ -71,7 +71,7 @@ export default class StoreExplorer extends React.Component {
   };
 
   goBack = () => {
-    const { history } = this.props;
+    const {history} = this.props;
     const currentSearch = this.searchRef.getMatch();
     const newMatch = history.back[history.back.length - 1];
     this.props.goBack(currentSearch);
@@ -79,7 +79,7 @@ export default class StoreExplorer extends React.Component {
   };
 
   goForward = () => {
-    const { history } = this.props;
+    const {history} = this.props;
     const currentSearch = this.searchRef.getMatch();
     const newMatch = history.forward[history.forward.length - 1];
     this.props.goForward(currentSearch);

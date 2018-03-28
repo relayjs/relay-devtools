@@ -10,21 +10,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import RecordFields, { stringifyPath } from './RecordFields';
+import RecordFields, {stringifyPath} from './RecordFields';
 
 export default class RecordInspector extends React.Component {
   constructor(props, context) {
     super(props, context);
 
-    const { id } = this.props;
+    const {id} = this.props;
 
     this.state = {
-      path: [{ id, name: id }],
+      path: [{id, name: id}],
     };
   }
 
   getType = id => {
-    const { typeMapping } = this.props;
+    const {typeMapping} = this.props;
     return typeMapping[id];
   };
 
@@ -48,22 +48,22 @@ export default class RecordInspector extends React.Component {
     };
   }
 
-  componentWillReceiveProps({ id }) {
+  componentWillReceiveProps({id}) {
     this.setState({
-      path: [{ id, name: id }],
+      path: [{id, name: id}],
     });
   }
 
   // Overridable method
   renderRecordFields(path) {
-    const { pathOpened } = this.state;
+    const {pathOpened} = this.state;
     return <RecordFields path={path} pathOpened={pathOpened} />;
   }
 
   renderNav() {
-    const { path } = this.state;
+    const {path} = this.state;
 
-    const makePathElement = ({ id, name }, i) => {
+    const makePathElement = ({id, name}, i) => {
       const handler = () => {
         this.setState({
           path: path.slice(0, i + 1),
@@ -77,15 +77,11 @@ export default class RecordInspector extends React.Component {
       );
     };
 
-    return (
-      <div className="inspector-nav">
-        {path.map(makePathElement)}
-      </div>
-    );
+    return <div className="inspector-nav">{path.map(makePathElement)}</div>;
   }
 
   renderTag() {
-    const { tag } = this.props;
+    const {tag} = this.props;
     if (!tag) {
       return null;
     }
@@ -102,8 +98,8 @@ export default class RecordInspector extends React.Component {
   }
 
   render() {
-    const { id } = this.props;
-    const { path } = this.state;
+    const {id} = this.props;
+    const {path} = this.state;
 
     if (!id) {
       return <div className="placeholder">Select a record to display</div>;
@@ -114,24 +110,20 @@ export default class RecordInspector extends React.Component {
     };
 
     const ellipsis =
-      path.length > 1
-        ? <div className="ellipsis" onClick={expand}>
-            …
-          </div>
-        : null;
+      path.length > 1 ? (
+        <div className="ellipsis" onClick={expand}>
+          …
+        </div>
+      ) : null;
 
     return (
       <div className="record-inspector">
-        <div className="toolbar">
-          {this.renderToolbar()}
-        </div>
+        <div className="toolbar">{this.renderToolbar()}</div>
         {this.renderNav()}
         <div className="root-header">
           {ellipsis}
           <br />
-          <span className="link-desc">
-            {this.getType(id)}
-          </span>
+          <span className="link-desc">{this.getType(id)}</span>
         </div>
         {this.renderRecordFields(path)}
       </div>

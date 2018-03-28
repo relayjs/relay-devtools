@@ -18,8 +18,8 @@ export default class Nav extends React.Component {
     this.prevNotifications = {};
   }
   render() {
-    const { tools, currentTool, onSwitch, notifications } = this.props;
-    const { prevNotifications } = this;
+    const {tools, currentTool, onSwitch, notifications} = this.props;
+    const {prevNotifications} = this;
     this.prevNotifications = notifications;
 
     const displayNames = {

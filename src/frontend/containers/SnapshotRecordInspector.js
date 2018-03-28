@@ -6,11 +6,11 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-import { connect } from 'react-redux';
-import { SnapshotRecordInspector } from '../components/RecordInspector';
-import { mapDispatchToProps as mapDispatch } from './RecordInspector';
+import {connect} from 'react-redux';
+import {SnapshotRecordInspector} from '../components/RecordInspector';
+import {mapDispatchToProps as mapDispatch} from './RecordInspector';
 
-const mapStateToProps = ({ recordInspector }) => recordInspector;
+const mapStateToProps = ({recordInspector}) => recordInspector;
 
 const mapDispatchToProps = (dispatch, props) => ({
   ...mapDispatch(dispatch, props),

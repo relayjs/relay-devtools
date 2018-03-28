@@ -41,16 +41,10 @@ export default class EnvironmentChooser extends React.PureComponent {
 
     return (
       <div className="environment-chooser">
-        <div className="contained">
-          {children}
-        </div>
+        <div className="contained">{children}</div>
         <div className="footer">
           <select defaultValue={currentEnvironment} onChange={onChange}>
-            {environments.map(env =>
-              <option key={env}>
-                {env}
-              </option>,
-            )}
+            {environments.map(env => <option key={env}>{env}</option>)}
           </select>
         </div>
       </div>

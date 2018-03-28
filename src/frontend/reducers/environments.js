@@ -12,7 +12,7 @@ export default function(
     environments: [],
     currentEnvironment: null,
   },
-  { type, environment, response },
+  {type, environment, response},
 ) {
   switch (type) {
     case 'SWITCH_ENVIRONMENT':

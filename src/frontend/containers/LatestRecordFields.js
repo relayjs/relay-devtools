@@ -6,12 +6,12 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 // eslint-disable-next-line max-len
 import LatestRecordFields from '../components/RecordInspector/LatestRecordFields';
-import { loadRecord } from '../fetch-actions/recordInspectorActions';
+import {loadRecord} from '../fetch-actions/recordInspectorActions';
 
-const mapStateToProps = ({ recordInspector }) => recordInspector;
+const mapStateToProps = ({recordInspector}) => recordInspector;
 
 const mapDispatchToProps = dispatch => ({
   loadRecord(id) {

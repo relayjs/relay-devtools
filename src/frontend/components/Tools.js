@@ -16,7 +16,7 @@ import '../css/Tools.less';
 
 export default class Tools extends React.Component {
   render() {
-    const { currentTool, notifications, onSwitch } = this.props;
+    const {currentTool, notifications, onSwitch} = this.props;
 
     const tools = {
       store: StoreExplorer,
@@ -47,10 +47,10 @@ export default class Tools extends React.Component {
 // Hacky wrapper component to hide components without unmounting them.
 // This is important so components don't lose their state.
 function Hidable(props) {
-  const { hide, children } = props;
+  const {hide, children} = props;
   const style = Object.assign(
-    { height: '100%', width: '100%' },
-    hide ? { display: 'none' } : {},
+    {height: '100%', width: '100%'},
+    hide ? {display: 'none'} : {},
   );
   return (
     <div style={style}>

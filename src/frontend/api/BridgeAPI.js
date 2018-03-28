@@ -9,9 +9,9 @@
  * @flow
  */
 
-import type { Bridge } from '../../transport/Bridge';
+import type {Bridge} from '../../transport/Bridge';
 
-import type { UpdateEvent } from '../../backend/EnvironmentAgent';
+import type {UpdateEvent} from '../../backend/EnvironmentAgent';
 
 /**
  * API:
@@ -23,8 +23,8 @@ import type { UpdateEvent } from '../../backend/EnvironmentAgent';
  */
 export default class BridgeAPI {
   _bridge: Bridge;
-  _changeCallbacks: { [environment: string]: Array<() => void> };
-  _recordSummaryCache: { [environment: string]: { [id: string]: string } };
+  _changeCallbacks: {[environment: string]: Array<() => void>};
+  _recordSummaryCache: {[environment: string]: {[id: string]: string}};
   _updateEvents: Array<UpdateEvent>;
 
   constructor(bridge: Bridge): void {
@@ -58,14 +58,14 @@ export default class BridgeAPI {
     return this._bridge.call('relayDebugger:getEnvironments');
   }
 
-  getRecord({ id, environment }) {
+  getRecord({id, environment}) {
     if (!id) {
       return null;
     }
     return this._bridge.call('relayDebugger:getRecord', environment, id);
   }
 
-  getAllRecordDescriptions({ environment }) {
+  getAllRecordDescriptions({environment}) {
     const recordSummaryCache = this._recordSummaryCache[environment];
     if (recordSummaryCache) {
       return Promise.resolve(recordSummaryCache);
@@ -124,7 +124,7 @@ export default class BridgeAPI {
       });
   }
 
-  onChange({ environment, callback }) {
+  onChange({environment, callback}) {
     if (!this._changeCallbacks[environment]) {
       this._changeCallbacks[environment] = [callback];
     } else {
@@ -132,11 +132,11 @@ export default class BridgeAPI {
     }
   }
 
-  stopObservingChange({ environment }) {
+  stopObservingChange({environment}) {
     delete this._changeCallbacks[environment];
   }
 
-  getUpdateEvents({ environment }) {
+  getUpdateEvents({environment}) {
     // Return a copy to ensure immutability.
     return (this._updateEvents[environment] || []).slice();
   }

@@ -9,7 +9,7 @@
 
 import React from 'react';
 
-import RecordFields, { NON_EXISTENT } from './RecordFields';
+import RecordFields, {NON_EXISTENT} from './RecordFields';
 import Header from './Header';
 
 export default class InlineDiffRecordFields extends RecordFields {
@@ -27,21 +27,13 @@ export default class InlineDiffRecordFields extends RecordFields {
       prev !== NON_EXISTENT ? <Header keyName={key} value={prev} /> : null;
 
     if (!different) {
-      return (
-        <li key={key}>
-          {valueHeader}
-        </li>
-      );
+      return <li key={key}>{valueHeader}</li>;
     }
 
     return (
       <li className="changed" key={key}>
-        <div className="header-before">
-          {prevHeader}
-        </div>
-        <div className="header-after">
-          {valueHeader}
-        </div>
+        <div className="header-before">{prevHeader}</div>
+        <div className="header-after">{valueHeader}</div>
       </li>
     );
   }

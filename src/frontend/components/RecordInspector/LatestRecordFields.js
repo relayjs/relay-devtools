@@ -12,14 +12,14 @@ import ContaineredRecordFields from '../../containers/LatestRecordFields';
 
 export default class LatestRecordFields extends RecordFields {
   componentDidMount() {
-    const { path } = this.props;
-    const { id } = path[path.length - 1];
+    const {path} = this.props;
+    const {id} = path[path.length - 1];
     this.props.loadRecord(id);
   }
 
   componentWillReceiveProps(props) {
-    const { path } = props;
-    const { id } = path[path.length - 1];
+    const {path} = props;
+    const {id} = path[path.length - 1];
     this.previousRecord = this.props.fetchedRecords[id];
     this.props.loadRecord(id);
   }
@@ -30,8 +30,8 @@ export default class LatestRecordFields extends RecordFields {
   // this.previousRecord is overwritten unecessarily.
   // Ideally we track changes on individual field level.
   shouldComponentUpdate(props) {
-    const { path } = props;
-    const { id } = path[path.length - 1];
+    const {path} = props;
+    const {id} = path[path.length - 1];
     const record = props.fetchedRecords[id];
 
     if (!record || record !== this.previousRecord) {
@@ -53,10 +53,10 @@ export default class LatestRecordFields extends RecordFields {
   }
 
   shouldAnimate() {
-    const { path, fetchedRecords } = this.props;
-    const { id } = path[path.length - 1];
+    const {path, fetchedRecords} = this.props;
+    const {id} = path[path.length - 1];
     const record = fetchedRecords[id];
-    const { previousRecord } = this;
+    const {previousRecord} = this;
     return previousRecord ? previousRecord.__id === record.__id : false;
   }
 

@@ -7,10 +7,10 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import StoreExplorer from '../components/StoreExplorer';
 
-const mapStateToProps = ({ storeExplorer }) => storeExplorer;
+const mapStateToProps = ({storeExplorer}) => storeExplorer;
 const mapDispatchToProps = dispatch => ({
   pushNewSearch: newSearch => {
     dispatch({

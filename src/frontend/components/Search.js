@@ -40,15 +40,17 @@ export default class Search extends React.Component {
   }
 
   render() {
-    const saveSearchButton = this.isSearchSaved(this.state)
-      ? <i
-          className="star-button unstar fa fa-fw fa-star"
-          onClick={this.handleUnsaveSearch}
-        />
-      : <i
-          className="star-button fa fa-fw fa-star-o"
-          onClick={this.handleSaveSearch}
-        />;
+    const saveSearchButton = this.isSearchSaved(this.state) ? (
+      <i
+        className="star-button unstar fa fa-fw fa-star"
+        onClick={this.handleUnsaveSearch}
+      />
+    ) : (
+      <i
+        className="star-button fa fa-fw fa-star-o"
+        onClick={this.handleSaveSearch}
+      />
+    );
 
     return (
       <div className="search">
@@ -87,7 +89,7 @@ export default class Search extends React.Component {
     };
   }
 
-  setMatch({ matchTerm, matchType }, resetDOMFields = true) {
+  setMatch({matchTerm, matchType}, resetDOMFields = true) {
     this.setState({
       matchTerm,
       matchType,
@@ -110,15 +112,13 @@ export default class Search extends React.Component {
     });
   };
 
-  makeSavedSearchElement = ({ matchTerm, matchType }) => {
+  makeSavedSearchElement = ({matchTerm, matchType}) => {
     function unsave() {
-      this.unsaveSearch({ matchTerm, matchType });
+      this.unsaveSearch({matchTerm, matchType});
     }
     return (
       <div key={`${matchTerm}|${matchType}`} className="saved-search">
-        <a
-          href="#"
-          onClick={() => this.pushNewSearch({ matchTerm, matchType })}>
+        <a href="#" onClick={() => this.pushNewSearch({matchTerm, matchType})}>
           {matchTerm}
         </a>
         <i
@@ -130,11 +130,8 @@ export default class Search extends React.Component {
   };
 
   handleSaveSearch = () => {
-    const { matchTerm, matchType } = this.state;
-    const savedSearches = [
-      ...this.state.savedSearches,
-      { matchTerm, matchType },
-    ];
+    const {matchTerm, matchType} = this.state;
+    const savedSearches = [...this.state.savedSearches, {matchTerm, matchType}];
     window.localStorage.setItem(
       SAVED_SEARCHES_PERSIST_KEY,
       JSON.stringify(savedSearches),
@@ -149,7 +146,7 @@ export default class Search extends React.Component {
     this.unsaveSearch(this.state);
   };
 
-  unsaveSearch = ({ matchTerm, matchType }) => {
+  unsaveSearch = ({matchTerm, matchType}) => {
     const savedSearches = this.state.savedSearches.filter(
       s => s.matchTerm !== matchTerm && s.matchType === matchType,
     );
@@ -163,7 +160,7 @@ export default class Search extends React.Component {
     });
   };
 
-  isSearchSaved = ({ matchTerm, matchType }) => {
+  isSearchSaved = ({matchTerm, matchType}) => {
     return Boolean(
       this.state.savedSearches.find(
         s => s.matchTerm === matchTerm && s.matchType === matchType,

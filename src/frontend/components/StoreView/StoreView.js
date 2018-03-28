@@ -23,7 +23,7 @@ export default class StoreView extends React.Component {
   };
 
   renderTableRecord(id, type) {
-    const { selectedRecord } = this.state;
+    const {selectedRecord} = this.state;
     const onClick = () => this.selectRecord(id);
     const className = selectedRecord === id ? 'selected' : '';
     return (
@@ -39,7 +39,7 @@ export default class StoreView extends React.Component {
   }
 
   render() {
-    const { records } = this.props;
+    const {records} = this.props;
     if (!records) {
       return <div>Loading</div>;
     }

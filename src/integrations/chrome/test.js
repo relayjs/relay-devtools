@@ -11,4 +11,4 @@ console.log(
   `Opening browser to ${TEST_URL}, assuming you're running relay-examples/todo`,
 );
 
-chromeLaunch(TEST_URL, { args: [`--load-extension=${EXTENSION_PATH}`] });
+chromeLaunch(TEST_URL, {args: [`--load-extension=${EXTENSION_PATH}`]});

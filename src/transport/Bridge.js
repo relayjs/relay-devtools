@@ -114,9 +114,9 @@ export default class Bridge {
   _transport: BridgeTransport;
   _incomingBuffer: Array<BridgeMessage>;
   _outgoingBuffer: Array<BridgeMessage>;
-  _listeners: { [key: string]: Array<(data: mixed) => mixed> };
-  _callers: { [key: string]: AnyFn };
-  _defers: { [key: number]: { resolve: mixed => void, reject: Error => void } };
+  _listeners: {[key: string]: Array<(data: mixed) => mixed>};
+  _callers: {[key: string]: AnyFn};
+  _defers: {[key: number]: {resolve: mixed => void, reject: Error => void}};
   _flushHandle: ?number;
   _paused: boolean;
 
@@ -158,7 +158,7 @@ export default class Bridge {
   }
 
   emit(name: string, data: mixed): void {
-    this._sendMessage({ type: 'event', name, data });
+    this._sendMessage({type: 'event', name, data});
   }
 
   onCall(name: string, handler: (...args: Array<mixed>) => mixed): void {
@@ -171,17 +171,17 @@ export default class Bridge {
   call(name: string, ...args: Array<mixed>): Promise<mixed> {
     return new Promise((resolve, reject) => {
       const nonce = ++nonceCounter;
-      this._defers[nonce] = { resolve, reject };
-      this._sendMessage({ type: 'call', nonce, name, args });
+      this._defers[nonce] = {resolve, reject};
+      this._sendMessage({type: 'call', nonce, name, args});
     });
   }
 
   pause(): void {
-    this._sendMessage({ type: 'pause' });
+    this._sendMessage({type: 'pause'});
   }
 
   resume(): void {
-    this._sendMessage({ type: 'resume' });
+    this._sendMessage({type: 'resume'});
   }
 
   _receiveMessage(message: BridgeMessage): void {
@@ -199,7 +199,7 @@ export default class Bridge {
       const timeout = this._paused ? 5000 : 500;
       this._flushHandle = requestIdle(
         deadline => this._flushWhileIdle(deadline),
-        { timeout },
+        {timeout},
       );
     }
   }
@@ -269,7 +269,7 @@ export default class Bridge {
         resolve(fn(...message.args));
       }).then(
         value =>
-          this._sendMessage({ type: 'resolve', nonce: message.nonce, value }),
+          this._sendMessage({type: 'resolve', nonce: message.nonce, value}),
         error =>
           this._sendMessage({
             type: 'reject',
@@ -317,7 +317,7 @@ export default class Bridge {
     if (messages.length === 1) {
       this._transport.send(messages[0]);
     } else {
-      this._transport.send({ type: 'batch', messages });
+      this._transport.send({type: 'batch', messages});
     }
   }
 }

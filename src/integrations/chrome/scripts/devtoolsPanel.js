@@ -10,7 +10,7 @@
 'use strict';
 
 import React from 'react';
-import { render } from 'react-dom';
+import {render} from 'react-dom';
 import 'font-awesome-webpack';
 import 'babel-polyfill';
 

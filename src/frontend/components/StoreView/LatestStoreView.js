@@ -18,7 +18,7 @@ export default class LatestStoreView extends StoreView {
   }
 
   renderDetails() {
-    const { selectedRecord } = this.state;
+    const {selectedRecord} = this.state;
     return <LatestRecordInspector id={selectedRecord} />;
   }
 }

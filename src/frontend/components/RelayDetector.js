@@ -20,11 +20,11 @@ export default class RelayDetector extends React.Component {
     };
 
     props.API.onRegister(() => {
-      this.setState({ isRelayPresent: true });
+      this.setState({isRelayPresent: true});
     });
 
     props.API.hasDetectedRelay().then(isRelayPresent => {
-      this.setState({ isRelayPresent });
+      this.setState({isRelayPresent});
     });
   }
 

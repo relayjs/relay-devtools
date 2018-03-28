@@ -7,12 +7,12 @@
  */
 
 import React from 'react';
-import { GraphqlCodeBlock } from 'graphql-syntax-highlighter-react';
+import {GraphqlCodeBlock} from 'graphql-syntax-highlighter-react';
 import 'graphql-syntax-highlighter-react/dist/style.css';
 
-import { deepObjectEqual } from '../util/objCompare';
-import { ObjectFields } from './RecordInspector';
-import { SnapshotStoreView } from './StoreView';
+import {deepObjectEqual} from '../util/objCompare';
+import {ObjectFields} from './RecordInspector';
+import {SnapshotStoreView} from './StoreView';
 
 export default class UpdateInspector extends React.Component {
   constructor(props) {
@@ -21,14 +21,14 @@ export default class UpdateInspector extends React.Component {
     const event = props.event;
     const currentTab = event ? Object.keys(getTabs(event))[0] : 'query';
 
-    this.state = { currentTab };
+    this.state = {currentTab};
 
     this.switchToTab = this.switchToTab.bind(this);
   }
 
   componentWillReceiveProps(props) {
-    const { event } = props;
-    const { currentTab } = this.state;
+    const {event} = props;
+    const {currentTab} = this.state;
     if (event) {
       const tabs = getTabs(event);
       if (!tabs[currentTab]) {
@@ -38,18 +38,18 @@ export default class UpdateInspector extends React.Component {
   }
 
   switchToTab(tab) {
-    this.setState({ currentTab: tab });
+    this.setState({currentTab: tab});
   }
 
   render() {
-    const { event, onClose, onLayoutChange } = this.props;
-    const { currentTab } = this.state;
+    const {event, onClose, onLayoutChange} = this.props;
+    const {currentTab} = this.state;
 
     if (!event) {
       return null;
     }
 
-    const { response } = event;
+    const {response} = event;
 
     const tabs = getTabs(event);
 
@@ -74,7 +74,7 @@ export default class UpdateInspector extends React.Component {
         </div>
       );
     } else if (currentTab === 'storeDiff') {
-      const { snapshotBefore, snapshotAfter } = event;
+      const {snapshotBefore, snapshotAfter} = event;
       const records = changedRecords(snapshotBefore, snapshotAfter);
 
       tabContent = (
@@ -185,5 +185,5 @@ function changedRecords(snapshotBefore, snapshotAfter) {
     }
   });
 
-  return { ...added, ...removed, ...changed };
+  return {...added, ...removed, ...changed};
 }

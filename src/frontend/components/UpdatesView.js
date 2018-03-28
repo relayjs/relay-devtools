@@ -21,7 +21,7 @@ export default class UpdatesView extends React.Component {
   constructor(props, context) {
     super(props, context);
 
-    const { refetchEvents } = this.props;
+    const {refetchEvents} = this.props;
     refetchEvents();
   }
 
@@ -33,7 +33,7 @@ export default class UpdatesView extends React.Component {
   };
 
   _renderEvents() {
-    const { events, selectedEvent, selectEvent } = this.props;
+    const {events, selectedEvent, selectEvent} = this.props;
     const selectedSeries = selectedEvent && selectedEvent.seriesId;
     const selectedEventName = selectedEvent && selectedEvent.eventName;
 
@@ -48,12 +48,12 @@ export default class UpdatesView extends React.Component {
     const eventsByRequest = {};
 
     events.forEach((event, i) => {
-      const { seriesId } = event;
+      const {seriesId} = event;
       if (!eventsByRequest[seriesId]) {
         eventsByRequest[seriesId] = [];
       }
 
-      const extendedEvent = Object.assign({ order: i }, event);
+      const extendedEvent = Object.assign({order: i}, event);
       eventsByRequest[seriesId].push(extendedEvent);
     });
 
@@ -65,7 +65,7 @@ export default class UpdatesView extends React.Component {
       orderedEvents.forEach((event, j) => {
         if (lastOrdered === null) {
           eventsEls.push(
-            <li key={`${i}-offset`} style={{ width: event.order * 40 }} />,
+            <li key={`${i}-offset`} style={{width: event.order * 40}} />,
           );
         } else {
           for (let k = 0; k < event.order - lastOrdered - 1; k++) {
@@ -79,7 +79,7 @@ export default class UpdatesView extends React.Component {
         }
 
         const key = `${i}-${j}`;
-        const { eventName } = event;
+        const {eventName} = event;
         const classNames = [];
         if (event.eventName.match(/error/i)) {
           classNames.push('error');
@@ -104,12 +104,10 @@ export default class UpdatesView extends React.Component {
 
       return (
         <div className={updatesClass} key={seriesId}>
-          <span className="description" style={{ left: firstEvent.order * 40 }}>
-            {firstEvent.operation ? (
-              firstEvent.operation.name
-            ) : (
-              firstEvent.eventName
-            )}
+          <span className="description" style={{left: firstEvent.order * 40}}>
+            {firstEvent.operation
+              ? firstEvent.operation.name
+              : firstEvent.eventName}
           </span>
           <ul>{eventsEls}</ul>
         </div>
@@ -120,12 +118,12 @@ export default class UpdatesView extends React.Component {
   }
 
   render() {
-    const { selectedEvent, splitType, selectEvent, clearEvents } = this.props;
+    const {selectedEvent, splitType, selectEvent, clearEvents} = this.props;
     const clearSelection = () => selectEvent(null);
     const pane1Style = selectedEvent
       ? {}
-      : { minWidth: '100%', minHeight: '100%' };
-    const pane2Style = selectedEvent ? {} : { display: 'none' };
+      : {minWidth: '100%', minHeight: '100%'};
+    const pane2Style = selectedEvent ? {} : {display: 'none'};
 
     return (
       <div className="updates-view">

@@ -10,7 +10,7 @@
 import React from 'react';
 import Header from './Header';
 
-export default function ObjectFields({ value }) {
+export default function ObjectFields({value}) {
   if (value === null || typeof value !== 'object') {
     return <Header value={value} />;
   }

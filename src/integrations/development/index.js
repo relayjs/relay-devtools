@@ -7,7 +7,7 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 import React from 'react';
-import { render } from 'react-dom';
+import {render} from 'react-dom';
 import 'font-awesome-webpack';
 
 import '../../frontend/css/reset.css';
