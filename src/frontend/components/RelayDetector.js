@@ -5,6 +5,8 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree. An additional grant
  * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ * @format
  */
 
 import React from 'react';
@@ -12,18 +14,15 @@ import React from 'react';
 import '../css/RelayDetector.less';
 
 export default class RelayDetector extends React.Component {
-  constructor(props) {
-    super(props);
+  state = {
+    isRelayPresent: false,
+  };
 
-    this.state = {
-      isRelayPresent: false,
-    };
-
-    props.API.onRegister(() => {
+  componentDidMount() {
+    this.props.API.onRegister(() => {
       this.setState({isRelayPresent: true});
     });
-
-    props.API.hasDetectedRelay().then(isRelayPresent => {
+    this.props.API.hasDetectedRelay().then(isRelayPresent => {
       this.setState({isRelayPresent});
     });
   }

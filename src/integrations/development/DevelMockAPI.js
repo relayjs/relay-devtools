@@ -5,6 +5,8 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree. An additional grant
  * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ * @format
  */
 let intervals = [];
 export default class DevelMockAPI {
@@ -52,36 +54,27 @@ export default class DevelMockAPI {
   }
 
   async getAllRecordDescriptions() {
-    return [
-      {id: 'id100', type: 'User'},
-      {id: 'id200', type: 'User'},
-      {id: 'id300', type: 'User'},
-      {id: 'id110', type: 'User'},
-      {id: 'id111', type: 'User'},
-      {id: 'id112', type: 'User'},
-      {id: 'id113', type: 'User'},
-      {id: 'client:id100', type: 'User'},
-      {id: 'client:id101', type: 'User'},
-      {id: 'client:id102', type: 'User'},
-      {id: 'client:id200', type: 'User'},
-    ];
+    return {
+      id100: 'User',
+      id200: 'User',
+      id300: 'User',
+      id110: 'User',
+      id111: 'User',
+      id112: 'User',
+      id113: 'User',
+      'client:id100': 'User',
+      'client:id101': 'User',
+      'client:id102': 'User',
+      'client:id200': 'User',
+    };
   }
 
   async getRecords() {
-    return [
-      {
-        id: 'id100',
-        type: 'User',
-      },
-      {
-        id: 'id200',
-        type: 'User',
-      },
-      {
-        id: 'id300',
-        type: 'User',
-      },
-    ];
+    return {
+      id100: 'User',
+      id200: 'User',
+      id300: 'User',
+    };
   }
 
   onChange({callback}) {
@@ -123,10 +116,21 @@ export default class DevelMockAPI {
       }
     });
 
-    /* eslint-disable max-len */
-    const mutationText =
-      'mutation ChangeTodoStatusMutation(\n  $input: ChangeTodoStatusInput!\n) {\n  changeTodoStatus(input: $input) {\n    todo {\n      id\n      complete\n    }\n    viewer {\n      id\n      completedCount\n    }\n  }\n}\n';
-    /* eslint-enable max-len */
+    const mutationText = `
+mutation ChangeTodoStatusMutation(
+  $input: ChangeTodoStatusInput!
+) {
+  changeTodoStatus(input: $input) {
+    todo {
+      id
+      complete
+    }
+    viewer {
+      id
+      completedCount
+    }
+  }
+}`.trim();
 
     const mutation = {
       name: 'ChangeTodoStatusMutation',
