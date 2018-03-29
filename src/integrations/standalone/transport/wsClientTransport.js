@@ -7,6 +7,7 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  *
  * @flow
+ * @format
  */
 
 'use strict';
@@ -69,10 +70,17 @@ export default function wsClientTransport(
     function handleMessage(evt) {
       let data;
       try {
-        data = JSON.parse(evt.data);
+        data = JSON.parse(
+          // $FlowFixMe
+          evt.data,
+        );
       } catch (error) {
         // eslint-disable-next-line no-console
-        console.error('Relay DevTools: Failed to parse message: ' + evt.data);
+        console.error(
+          'Relay DevTools: Failed to parse message: ' +
+            // $FlowFixMe
+            evt.data,
+        );
       }
       if (data) {
         const message = data.relayDevTools;

@@ -7,13 +7,15 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  *
  * @flow
+ * @format
  */
 
 'use strict';
 
 import EnvironmentAgent from './EnvironmentAgent';
 
-import type {Environment} from 'RelayRuntime';
+// import type {Environment} from 'RelayRuntime';
+type Environment = $FlowFixMe;
 import type {GlobalHook} from './GlobalHook';
 import type Bridge from '../transport/Bridge';
 
@@ -32,6 +34,7 @@ export default function connectBackend(hook: GlobalHook, bridge: Bridge): void {
       function emit(name, data) {
         bridge.emit(name, {...data, environment: id});
       }
+      // $FlowFixMe
       const agent = new EnvironmentAgent(environment, id, emit);
       agents.push(agent);
       bridge.emit('register');
@@ -47,14 +50,17 @@ export default function connectBackend(hook: GlobalHook, bridge: Bridge): void {
   hook.onEnvironment(connectAgent);
 
   bridge.onCall('relayDebugger:getEnvironments', () => {
+    // $FlowFixMe
     return Object.keys(agents);
   });
 
   bridge.onCall('relayDebugger:getRecord', (env, id) => {
+    // $FlowFixMe
     return agents[env].getRecord(id);
   });
 
   bridge.onCall('relayDebugger:getMatchingRecords', (env, search, type) => {
+    // $FlowFixMe
     return agents[env].getMatchingRecords(search, type);
   });
 

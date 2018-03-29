@@ -7,9 +7,10 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  *
  * @flow
+ * @format
  */
 
-import type {Bridge} from '../../transport/Bridge';
+import type Bridge from '../../transport/Bridge';
 
 import type {UpdateEvent} from '../../backend/EnvironmentAgent';
 
@@ -30,18 +31,23 @@ export default class BridgeAPI {
   constructor(bridge: Bridge): void {
     this._bridge = bridge;
     this._changeCallbacks = {};
+    // $FlowFixMe
     this._onRegisterListeners = [];
     this._recordSummaryCache = {};
+    // $FlowFixMe
     this._updateEvents = {};
 
     this._bridge.on('register', () => {
+      // $FlowFixMe
       this._onRegisterListeners.forEach(cb => cb());
     });
 
-    this._bridge.on('update', event => {
+    this._bridge.on('update', (event: $FlowFixMe) => {
       if (!this._updateEvents[event.environment]) {
+        // $FlowFixMe
         this._updateEvents[event.environment] = [event];
       } else {
+        // $FlowFixMe
         this._updateEvents[event.environment].push(event);
       }
       if (event.snapshotAfter) {
@@ -58,27 +64,29 @@ export default class BridgeAPI {
     return this._bridge.call('relayDebugger:getEnvironments');
   }
 
-  getRecord({id, environment}) {
+  getRecord({id, environment}: $FlowFixMe) {
     if (!id) {
       return null;
     }
     return this._bridge.call('relayDebugger:getRecord', environment, id);
   }
 
-  getAllRecordDescriptions({environment}) {
+  getAllRecordDescriptions({environment}: $FlowFixMe) {
     const recordSummaryCache = this._recordSummaryCache[environment];
     if (recordSummaryCache) {
+      // $FlowFixMe
       return Promise.resolve(recordSummaryCache);
     }
     return this._getAllRecordDescriptions(environment).then(result => {
       if (!this._recordSummaryCache[environment]) {
+        // $FlowFixMe
         this._recordSummaryCache[environment] = result;
       }
       return result;
     });
   }
 
-  _getAllRecordDescriptions(environment) {
+  _getAllRecordDescriptions(environment: $FlowFixMe) {
     return this._bridge.call(
       'relayDebugger:getMatchingRecords',
       environment,
@@ -87,7 +95,7 @@ export default class BridgeAPI {
     );
   }
 
-  _updateRecordSummary(environment, snapshot) {
+  _updateRecordSummary(environment: $FlowFixMe, snapshot: $FlowFixMe) {
     const recordSummaryCache = this._recordSummaryCache[environment];
     if (!recordSummaryCache) {
       return;
@@ -105,7 +113,7 @@ export default class BridgeAPI {
     });
   }
 
-  getRecords({matchTerm, matchType, environment}) {
+  getRecords({matchTerm, matchType, environment}: $FlowFixMe) {
     return this._bridge
       .call(
         'relayDebugger:getMatchingRecords',
@@ -114,8 +122,10 @@ export default class BridgeAPI {
         matchType,
       )
       .then(records => {
+        // $FlowFixMe
         Object.keys(records).forEach(id => {
           if (id.startsWith('client:') && id !== 'client:root') {
+            // $FlowFixMe
             delete records[id];
           }
         });
@@ -124,7 +134,7 @@ export default class BridgeAPI {
       });
   }
 
-  onChange({environment, callback}) {
+  onChange({environment, callback}: $FlowFixMe) {
     if (!this._changeCallbacks[environment]) {
       this._changeCallbacks[environment] = [callback];
     } else {
@@ -132,12 +142,13 @@ export default class BridgeAPI {
     }
   }
 
-  stopObservingChange({environment}) {
+  stopObservingChange({environment}: $FlowFixMe) {
     delete this._changeCallbacks[environment];
   }
 
-  getUpdateEvents({environment}) {
+  getUpdateEvents({environment}: $FlowFixMe) {
     // Return a copy to ensure immutability.
+    // $FlowFixMe
     return (this._updateEvents[environment] || []).slice();
   }
 
@@ -145,7 +156,8 @@ export default class BridgeAPI {
     return this._bridge.call('hasDetectedRelay');
   }
 
-  onRegister(callback) {
+  onRegister(callback: $FlowFixMe) {
+    // $FlowFixMe
     this._onRegisterListeners.push(callback);
   }
 }

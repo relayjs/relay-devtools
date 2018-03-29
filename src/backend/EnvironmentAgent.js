@@ -7,17 +7,23 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  *
  * @flow
+ * @format
  */
 
 'use strict';
 
 import deepCopy from './deepCopy';
 
-import type {Record} from 'RelayCombinedEnvironmentTypes';
-import type {ConcreteBatch} from 'RelayConcreteNode';
-import type {DataID} from 'RelayInternalTypes';
-import type {Environment} from 'RelayStoreTypes';
-import type {Variables} from 'RelayTypes';
+// import type {Record} from 'RelayCombinedEnvironmentTypes';
+// import type {ConcreteBatch} from 'RelayConcreteNode';
+// import type {DataID} from 'RelayInternalTypes';
+// import type {Environment} from 'RelayStoreTypes';
+// import type {Variables} from 'RelayTypes';
+type Record = $FlowFixMe;
+type ConcreteBatch = $FlowFixMe;
+type DataID = $FlowFixMe;
+type Environment = $FlowFixMe;
+type Variables = $FlowFixMe;
 
 type MatchType = 'idtype' | 'id' | 'type';
 
@@ -45,7 +51,7 @@ export default class EnvironmentAgent {
   _emit: EmitFn;
   _snapshot: any;
   _lastNetworkEvent: ?UpdateEvent;
-  _flushLastNetworkEventTimer: number;
+  _flushLastNetworkEventTimer: ?number;
 
   constructor(environment: Environment, id: string, emit: EmitFn): void {
     this._environment = environment;
@@ -127,7 +133,7 @@ export default class EnvironmentAgent {
   // events. To account for this, we monkey-patch environment's execute() and
   // executeMutation() methods for their "unsubscribe" events, which do in fact
   // occur *before* the corresponding publish.
-  _monkeyPatchExecuteUnsubscribe(execute) {
+  _monkeyPatchExecuteUnsubscribe(execute: $FlowFixMe) {
     const agent = this;
     return function() {
       const observable = execute.apply(this, arguments);
@@ -152,6 +158,7 @@ export default class EnvironmentAgent {
       execute =>
         function(operation, variables) {
           const seriesId = nextSeriesId();
+          // $FlowFixMe
           agent._networkEvent({
             eventName: 'Request',
             seriesId,
@@ -161,6 +168,7 @@ export default class EnvironmentAgent {
           const observable = execute.apply(this, arguments);
           return observable.do({
             next: payload =>
+              // $FlowFixMe
               agent._networkEvent({
                 eventName: 'Response',
                 seriesId,
@@ -169,6 +177,7 @@ export default class EnvironmentAgent {
                 response: payload.response || payload,
               }),
             error: error =>
+              // $FlowFixMe
               agent._networkEvent({
                 eventName: 'Request Error',
                 seriesId,
@@ -199,18 +208,22 @@ export default class EnvironmentAgent {
       this._flushLastNetworkEvent();
     }
     this._lastNetworkEvent = partialEvent;
+    // $FlowFixMe
     this._flushLastNetworkEventTimer = setTimeout(() =>
       this._flushLastNetworkEvent(),
     );
   }
 
   _flushLastNetworkEvent() {
+    // $FlowFixMe
     const data: UpdateEvent = this._lastNetworkEvent;
     this._clearLastNetworkEvent();
+    // $FlowFixMe
     this._emit('update', data);
   }
 
   _clearLastNetworkEvent() {
+    // $FlowFixMe
     clearTimeout(this._flushLastNetworkEventTimer);
     this._lastNetworkEvent = null;
     this._flushLastNetworkEventTimer = null;

@@ -102,6 +102,7 @@ export default function wsServerTransport(
         // eslint-disable-next-line no-console
         console.error('WebSocketTransport: failed to parse: ' + rawMessage);
       }
+      // $FlowFixMe
       const message = data.relayDevTools;
       if (message) {
         messageListeners.forEach(fn => fn(message));

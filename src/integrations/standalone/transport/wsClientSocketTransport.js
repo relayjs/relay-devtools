@@ -7,6 +7,7 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  *
  * @flow
+ * @format
  */
 
 'use strict';
@@ -20,7 +21,9 @@ import type {BridgeTransport} from '../../../transport/Bridge';
  *
  * The WebSocket passed in must be initially open.
  */
-export default function wsClientSocketTransport(socket): BridgeTransport {
+export default function wsClientSocketTransport(
+  socket: $FlowFixMe,
+): BridgeTransport {
   const messageListeners = [];
 
   socket.onmessage = handleMessage;

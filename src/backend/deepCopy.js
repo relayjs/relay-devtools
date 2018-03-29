@@ -26,6 +26,7 @@ export default function deepCopy<T>(value: T): T {
         copy[prop] = deepCopy(value[prop]);
       }
     }
+    // $FlowFixMe
     return copy;
   }
   return value;

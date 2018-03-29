@@ -21,7 +21,9 @@ import type {BridgeTransport} from '../../../transport/Bridge';
  *
  * The WebSocket passed in must be initially open.
  */
-export default function wsServerSocketTransport(socket): BridgeTransport {
+export default function wsServerSocketTransport(
+  socket: $FlowFixMe,
+): BridgeTransport {
   const messageListeners = [];
 
   socket.onclose = handleClose;
@@ -56,6 +58,7 @@ export default function wsServerSocketTransport(socket): BridgeTransport {
       // eslint-disable-next-line no-console
       console.error('WebSocketTransport: failed to parse: ' + rawMessage);
     }
+    // $FlowFixMe
     const message = data.relayDevTools;
     if (message) {
       messageListeners.forEach(fn => fn(message));

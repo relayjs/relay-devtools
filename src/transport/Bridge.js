@@ -7,6 +7,7 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  *
  * @flow
+ * @format
  */
 
 'use strict';
@@ -115,7 +116,7 @@ export default class Bridge {
   _incomingBuffer: Array<BridgeMessage>;
   _outgoingBuffer: Array<BridgeMessage>;
   _listeners: {[key: string]: Array<(data: mixed) => mixed>};
-  _callers: {[key: string]: AnyFn};
+  _callers: {[key: string]: () => any};
   _defers: {[key: number]: {resolve: mixed => void, reject: Error => void}};
   _flushHandle: ?number;
   _paused: boolean;
@@ -197,8 +198,13 @@ export default class Bridge {
   _scheduleFlush(): void {
     if (!this._flushHandle && this._hasBufferedMessages()) {
       const timeout = this._paused ? 5000 : 500;
+      // $FlowFixMe
       this._flushHandle = requestIdle(
-        deadline => this._flushWhileIdle(deadline),
+        deadline =>
+          this._flushWhileIdle(
+            // $FlowFixMe
+            deadline,
+          ),
         {timeout},
       );
     }
@@ -206,7 +212,10 @@ export default class Bridge {
 
   _cancelFlush(): void {
     if (this._flushHandle) {
-      cancelIdle(this._flushHandle);
+      cancelIdle(
+        // $FlowFixMe
+        this._flushHandle,
+      );
       this._flushHandle = null;
     }
   }
@@ -252,65 +261,89 @@ export default class Bridge {
   }
 
   _handleIncomingMessage(message: BridgeMessage): void {
-    if (message.type === 'event') {
-      const listeners = this._listeners[message.name];
-      if (listeners) {
-        listeners.forEach(listener => listener(message.data));
+    switch (message.type) {
+      case 'event':
+        this._handleIncomingEventMessage(message);
+        return;
+      case 'call':
+        this._handleIncomingCallMessage(message);
+        return;
+      case 'resolve':
+        this._handleIncomingResolveMessage(message);
+        return;
+      case 'reject':
+        this._handleIncomingRejectMessage(message);
+        return;
+      case 'pause':
+        this._handleIncomingPauseMessage(message);
+        return;
+      case 'resume':
+        this._handleIncomingResumeMessage(message);
+        return;
+      case 'batch':
+        this._handleIncomingBatchMessage(message);
+        return;
+      default:
+        // eslint-disable-next-line no-unused-expressions
+        (message.type: empty);
+        throw new Error(`Unexpected message: ${message}`);
+    }
+  }
+
+  _handleIncomingEventMessage(message: EventMessage): void {
+    const listeners = this._listeners[message.name];
+    if (listeners) {
+      listeners.forEach(listener => listener(message.data));
+    }
+  }
+
+  _handleIncomingCallMessage(message: CallMessage): void {
+    new Promise(resolve => {
+      const fn = this._callers[message.name];
+      if (!fn) {
+        throw new Error(`unknown call: "${message.name}"`);
       }
-      return;
-    }
+      resolve(fn(...message.args));
+    }).then(
+      value =>
+        this._sendMessage({type: 'resolve', nonce: message.nonce, value}),
+      error =>
+        this._sendMessage({
+          type: 'reject',
+          nonce: message.nonce,
+          error: `${error.message}\n${error.stack}`,
+        }),
+    );
+  }
 
-    if (message.type === 'call') {
-      new Promise(resolve => {
-        const fn = this._callers[message.name];
-        if (!fn) {
-          throw new Error(`unknown call: "${message.name}"`);
-        }
-        resolve(fn(...message.args));
-      }).then(
-        value =>
-          this._sendMessage({type: 'resolve', nonce: message.nonce, value}),
-        error =>
-          this._sendMessage({
-            type: 'reject',
-            nonce: message.nonce,
-            error: `${error.message}\n${error.stack}`,
-          }),
-      );
-      return;
-    }
+  _handleIncomingResolveMessage(message: ResolveMessage): void {
+    const deferred = this._defers[message.nonce];
+    delete this._defers[message.nonce];
+    deferred.resolve(message.value);
+  }
 
-    if (message.type === 'resolve') {
-      const deferred = this._defers[message.nonce];
-      delete this._defers[message.nonce];
-      deferred.resolve(message.value);
-      return;
-    }
+  _handleIncomingRejectMessage(message: RejectMessage): void {
+    const deferred = this._defers[message.nonce];
+    delete this._defers[message.nonce];
+    deferred.reject(new Error(message.error));
+  }
 
-    if (message.type === 'reject') {
-      const deferred = this._defers[message.nonce];
-      delete this._defers[message.nonce];
-      deferred.reject(new Error(message.error));
-      return;
-    }
+  // eslint-disable-next-line no-unused-vars
+  _handleIncomingPauseMessage(message: PauseMessage): void {
+    this._paused = true;
+    this._cancelFlush();
+  }
 
-    if (message.type === 'pause') {
-      this._paused = true;
-      this._cancelFlush();
-      return;
-    }
+  // eslint-disable-next-line no-unused-vars
+  _handleIncomingResumeMessage(message: ResumeMessage): void {
+    this._paused = false;
+    this._scheduleFlush();
+  }
 
-    if (message.type === 'resume') {
-      this._paused = false;
-      this._scheduleFlush();
-      return;
-    }
-
-    if (message.type === 'batch') {
-      message.messages.forEach(batchedMessage => {
-        this._handleIncomingMessage(batchedMessage);
-      });
-    }
+  _handleIncomingBatchMessage(message: BatchMessage): void {
+    message.messages.forEach(batchedMessage => {
+      this._handleIncomingMessage(batchedMessage);
+    });
   }
 
   _flushOutgoingMessages(messages: Array<BridgeMessage>): void {

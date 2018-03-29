@@ -7,6 +7,7 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  *
  * @flow
+ * @format
  */
 
 'use strict';
@@ -30,6 +31,7 @@ if (installGlobalHook(window)) {
   function detectedRelayEnvironment() {
     if (!foundEnvironment) {
       foundEnvironment = true;
+      // $FlowFixMe
       transport.send({type: 'event', name: 'detectedRelayEnvironment'});
     }
   }

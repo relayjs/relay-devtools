@@ -61,7 +61,7 @@ export function installRelayDevTools(
   }
 }
 
-export function connectToBackendWithSocket(socket) {
+export function connectToBackendWithSocket(socket: $FlowFixMe) {
   const hook = GlobalHook.getGlobalHook(global);
   if (hook) {
     const transport = wsClientSocketTransport(socket);

@@ -7,11 +7,13 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  *
  * @flow
+ * @format
  */
 
 'use strict';
 
-import type {Environment} from 'RelayRuntime';
+// import type {Environment} from 'RelayRuntime';
+type Environment = $FlowFixMe;
 
 export type GlobalHook = {
   /**
