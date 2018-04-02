@@ -21,22 +21,18 @@ import type {Tool} from '../reducers/types';
 
 type Props = {|
   +currentTool: Tool,
-  +notifications: {
-    store: number,
-    updates: number,
-  },
+  +newUpdateNotification: boolean,
   +onSwitch: () => void,
 |};
 
 export default class Tools extends React.Component<Props> {
   render() {
-    const {currentTool, notifications, onSwitch} = this.props;
+    const {currentTool, newUpdateNotification, onSwitch} = this.props;
 
     const tools = {
       store: StoreExplorer,
       updates: UpdatesView,
     };
-
     return (
       <div className="tools">
         {Object.keys(tools).map(key => {
@@ -50,7 +46,9 @@ export default class Tools extends React.Component<Props> {
         <Nav
           onSwitch={onSwitch}
           tools={Object.keys(tools)}
-          notifications={notifications}
+          notifications={{
+            updates: newUpdateNotification ? 1 : 0,
+          }}
           currentTool={currentTool}
         />
       </div>

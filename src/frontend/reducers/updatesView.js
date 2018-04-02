@@ -40,6 +40,14 @@ export default function(
       }
       return state;
 
+    case 'SWITCH_TOOL':
+      return action.tool === 'updates'
+        ? {
+            ...state,
+            newNotifications: false,
+          }
+        : state;
+
     case 'UPDATES_VIEW_CLEAR_EVENTS':
       return {
         ...state,

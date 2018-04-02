@@ -42,11 +42,6 @@ type LoadRecordSuccessAction = {|
   +response: Record,
 |};
 
-type NewNotificationAction = {|
-  +type: 'NEW_NOTIFICATION',
-  +tool: Tool,
-|};
-
 type SwitchToolAction = {|
   +type: 'SWITCH_TOOL',
   +tool: Tool,
@@ -106,7 +101,6 @@ export type Action =
   | RecordInspectorOpenOrClosePathAction
   | LoadTypeMappingSuccessAction
   | LoadRecordSuccessAction
-  | NewNotificationAction
   | SwitchToolAction
   | LoadUpdateEventsSuccessAction
   | UpdatesViewClearEventsAction
