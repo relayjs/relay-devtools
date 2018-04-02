@@ -5,6 +5,9 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree. An additional grant
  * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ * @flow
+ * @format
  */
 
 import React from 'react';
@@ -14,7 +17,18 @@ import Nav from './Nav';
 
 import '../css/Tools.less';
 
-export default class Tools extends React.Component {
+import type {Tool} from '../reducers/types';
+
+type Props = {|
+  +currentTool: Tool,
+  +notifications: {
+    store: number,
+    updates: number,
+  },
+  +onSwitch: () => void,
+|};
+
+export default class Tools extends React.Component<Props> {
   render() {
     const {currentTool, notifications, onSwitch} = this.props;
 
@@ -47,15 +61,10 @@ export default class Tools extends React.Component {
 // Hacky wrapper component to hide components without unmounting them.
 // This is important so components don't lose their state.
 function Hidable(props) {
-  const {hide, children} = props;
-  const style = Object.assign(
-    {height: '100%', width: '100%'},
-    hide ? {display: 'none'} : {},
-  );
-  return (
-    <div style={style}>
-      {// pass through all props
-      React.Children.map(children, child => React.cloneElement(child, props))}
-    </div>
-  );
+  const style = {
+    height: '100%',
+    width: '100%',
+    display: props.hide ? 'none' : 'block',
+  };
+  return <div style={style}>{props.children}</div>;
 }

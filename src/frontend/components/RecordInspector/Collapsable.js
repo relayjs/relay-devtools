@@ -5,36 +5,48 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree. An additional grant
  * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ * @flow
+ * @format
  */
 
 import React from 'react';
 import PropTypes from 'prop-types';
 
-export default class Collapsable extends React.Component {
+import type {Path} from './RecordFields';
+
+type Props = {|
+  path: Path,
+  header: React$Node,
+  children: React$Node,
+|};
+
+export default class Collapsable extends React.Component<Props> {
+  static contextTypes = {
+    isPathOpened: PropTypes.func,
+    openOrClosePath: PropTypes.func,
+  };
+
   render() {
-    const {openOrClosePath, isPathOpened} = this.context;
-
     const {path, children, header} = this.props;
-    const opened = Boolean(isPathOpened(path));
-
-    const flip = e => {
-      openOrClosePath(path);
-      e.stopPropagation();
-    };
+    const opened = Boolean(this.context.isPathOpened(path));
 
     const childrenElements = opened ? children : null;
     return (
       <div className="collapsable">
-        <span className="collapse-button" data-opened={opened} onClick={flip}>
+        <span
+          className="collapse-button"
+          data-opened={opened}
+          onClick={this._toggle}>
           {header}
         </span>
         {childrenElements}
       </div>
     );
   }
-}
 
-Collapsable.contextTypes = {
-  isPathOpened: PropTypes.func,
-  openOrClosePath: PropTypes.func,
-};
+  _toggle = e => {
+    this.context.openOrClosePath(this.props.path);
+    e.stopPropagation();
+  };
+}

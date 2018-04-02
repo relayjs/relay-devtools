@@ -5,6 +5,9 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree. An additional grant
  * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ * @format
+ * @flow
  */
 
 import React from 'react';
@@ -14,9 +17,18 @@ import Header from './Header';
 import Collapsable from './Collapsable';
 import {shallowArraysEqual} from '../../util/objCompare';
 
+type PathItem = {|
+  +id: string,
+  +name: string,
+|};
+
+export type Path = $ReadOnlyArray<PathItem>;
+
 export const NON_EXISTENT = {};
 
-export default class RecordFields extends React.Component {
+export default class RecordFields extends React.Component<$FlowFixMe> {
+  previousRecord: $FlowFixMe;
+
   loadFromSnapshot() {
     const {path, snapshot, otherSnapshot} = this.props;
     const {id} = path[path.length - 1];
@@ -44,7 +56,7 @@ export default class RecordFields extends React.Component {
     return RecordFields;
   }
 
-  isPathOpened = path => {
+  isPathOpened = (path: $FlowFixMe) => {
     return this.props.pathOpened[stringifyPath(path)];
   };
 
@@ -54,16 +66,16 @@ export default class RecordFields extends React.Component {
     };
   }
 
-  makeFocusButtonHandler(id, name) {
+  makeFocusButtonHandler(id: $FlowFixMe, name: $FlowFixMe) {
     const {path} = this.props;
     const {navigateToPath} = this.context;
-    return e => {
+    return (e: $FlowFixMe) => {
       e.stopPropagation();
       navigateToPath([...path, {id, name}]);
     };
   }
 
-  renderObject(object, prevObject) {
+  renderObject(object: $FlowFixMe, prevObject: $FlowFixMe) {
     const rendered = [];
     const deemphasized = [];
 
@@ -86,7 +98,7 @@ export default class RecordFields extends React.Component {
     return [...rendered, ...deemphasized];
   }
 
-  renderArray(array, prev, key) {
+  renderArray(array: $FlowFixMe, prev: $FlowFixMe, key: $FlowFixMe) {
     const {path} = this.props;
 
     const different = !shallowArraysEqual(array, prev);
@@ -111,7 +123,7 @@ export default class RecordFields extends React.Component {
     );
   }
 
-  renderRefs(refs, prev, key) {
+  renderRefs(refs: $FlowFixMe, prev: $FlowFixMe, key: $FlowFixMe) {
     const {getType} = this.context;
     const {path, snapshot, otherSnapshot, pathOpened} = this.props;
 
@@ -177,7 +189,7 @@ export default class RecordFields extends React.Component {
     );
   }
 
-  renderRef(ref, prev, key) {
+  renderRef(ref: $FlowFixMe, prev: $FlowFixMe, key: $FlowFixMe) {
     const {getType} = this.context;
     const {path, snapshot, otherSnapshot, pathOpened} = this.props;
 
@@ -220,7 +232,7 @@ export default class RecordFields extends React.Component {
   }
 
   // Overridable method
-  renderScalar(value, prev, key) {
+  renderScalar(value: $FlowFixMe, prev: $FlowFixMe, key: $FlowFixMe) {
     const different = value !== prev;
     const animate = this.shouldAnimate() && different;
     const additionalClasses = different ? 'diff' : '';
@@ -237,7 +249,7 @@ export default class RecordFields extends React.Component {
     );
   }
 
-  renderChild(child, prev, key) {
+  renderChild(child: $FlowFixMe, prev: $FlowFixMe, key: $FlowFixMe) {
     if (Array.isArray(child)) {
       const prevExists = prev !== NON_EXISTENT && Array.isArray(prev);
       const prevArray = prevExists ? prev : NON_EXISTENT;
@@ -296,6 +308,6 @@ RecordFields.childContextTypes = {
   isPathOpened: PropTypes.func,
 };
 
-export function stringifyPath(path) {
+export function stringifyPath(path: Path) {
   return path.map(e => e.id).join('/');
 }
