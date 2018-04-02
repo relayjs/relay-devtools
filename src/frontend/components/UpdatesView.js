@@ -99,7 +99,7 @@ export default class UpdatesView extends React.Component {
       });
 
       const firstEvent = orderedEvents[0];
-      const type = firstEvent.operation && firstEvent.operation.query.operation;
+      const type = firstEvent.operation && firstEvent.operation.operationKind;
       const updatesClass = ['update-events', type].filter(x => x).join(' ');
 
       return (
