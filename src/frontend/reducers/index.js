@@ -5,6 +5,9 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree. An additional grant
  * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ * @flow
+ * @format
  */
 
 import {combineReducers} from 'redux';
@@ -14,6 +17,8 @@ import storeExplorer from './storeExplorer';
 import updatesView from './updatesView';
 import recordInspector from './recordInspector';
 
+import type {Action} from './actions';
+
 const combinedReducers = combineReducers({
   tools,
   environments,
@@ -22,7 +27,9 @@ const combinedReducers = combineReducers({
   recordInspector,
 });
 
-export default function(state, action) {
+type State = $FlowFixMe;
+
+export default function(state: State, action: Action): State {
   const newState = combinedReducers(state, action);
 
   // A hack to propagate new notifications from one part of state to another in

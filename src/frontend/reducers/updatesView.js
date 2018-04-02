@@ -5,16 +5,29 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree. An additional grant
  * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ * @flow
+ * @format
  */
 
+import type {Action} from './actions';
+import type {SplitType} from './types';
+
+type State = {
+  +events: $ReadOnlyArray<Event>,
+  +selectedEvent: ?Event,
+  +splitType: SplitType,
+  +newNotifications: boolean,
+};
+
 export default function(
-  state = {
+  state: State = {
     events: [],
     selectedEvent: null,
     splitType: 'vertical',
     newNotifications: false,
   },
-  action,
+  action: Action,
 ) {
   switch (action.type) {
     case 'LOAD_UPDATE_EVENTS_SUCCESS':
