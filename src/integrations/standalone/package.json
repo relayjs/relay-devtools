@@ -2,6 +2,7 @@
   "name": "relay-devtools",
   "version": "1.4.0",
   "description": "Connect Relay DevTools to a Relay app.",
+  "license": "MIT",
   "productName": "Relay DevTools",
   "bin": {
     "relay-devtools": "./launchApp.js"
