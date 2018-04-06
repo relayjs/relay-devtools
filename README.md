@@ -81,3 +81,7 @@ This app is distributed as `relay-devtools` on npm. [npmjs link][1].
 yarn build:standalone
 yarn test:standalone
 ```
+
+### License
+
+Relay Devtools is [MIT licensed](./LICENSE).
