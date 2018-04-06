@@ -1,0 +1,16 @@
+[ignore]
+
+[include]
+
+[libs]
+
+[lints]
+
+[options]
+munge_underscores=true
+module.name_mapper='^\(.*\)\.less$' -> '<PROJECT_ROOT>/StyleStub.js'
+
+[strict]
+
+[version]
+^0.69.0
