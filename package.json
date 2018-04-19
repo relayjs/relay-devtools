@@ -64,7 +64,7 @@
     "html-webpack-plugin": "^2.28.0",
     "less": "^2.7.2",
     "less-loader": "^4.0.4",
-    "prettier": "^1.11.1",
+    "prettier": "1.12.1",
     "style-loader": "^0.19.0",
     "url-loader": "^0.5.9",
     "webpack": "^2.6.1",
