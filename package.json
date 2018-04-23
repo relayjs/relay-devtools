@@ -3,6 +3,10 @@
   "version": "0.0.8",
   "description": "Relay Modern Devtools",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/relayjs/relay-devtools"
+  },
   "scripts": {
     "build": "yarn run build:chrome && yarn run build:standalone",
     "build:chrome": "rm -rf lib/chrome && cross-env NODE_ENV=production webpack --config ./src/integrations/chrome/webpack.config.js",
