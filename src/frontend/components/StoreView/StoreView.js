@@ -10,8 +10,13 @@
 
 import React from 'react';
 
+import type {Element} from 'react';
+
 type Props = {|
   records: {[id: string]: string},
+  refetchRecords: () => void,
+  matchTerm: string,
+  matchType: string,
 |};
 
 type State = {|
@@ -39,11 +44,11 @@ export default class StoreView extends React.Component<Props, State> {
     );
   }
 
-  renderDetails() {
+  renderDetails(): ?Element<any> {
     return null;
   }
 
-  render() {
+  render(): Element<any> {
     const {records} = this.props;
     if (!records) {
       return <div>Loading</div>;
