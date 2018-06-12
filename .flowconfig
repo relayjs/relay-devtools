@@ -13,4 +13,4 @@ module.name_mapper='^\(.*\)\.less$' -> '<PROJECT_ROOT>/StyleStub.js'
 [strict]
 
 [version]
-^0.69.0
+^0.74.0
