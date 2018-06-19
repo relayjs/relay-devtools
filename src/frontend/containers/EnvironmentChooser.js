@@ -10,7 +10,7 @@ import EnvironmentChooser from '../components/EnvironmentChooser';
 
 const mapStateToProps = ({environments}) => environments;
 const mapDispatchToProps = dispatch => ({
-  onChange: environment => {
+  onChange: (environment: string) => {
     dispatch({
       type: 'SWITCH_ENVIRONMENT',
       environment,
@@ -34,4 +34,7 @@ const mapDispatchToProps = dispatch => ({
   },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(EnvironmentChooser);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(EnvironmentChooser);

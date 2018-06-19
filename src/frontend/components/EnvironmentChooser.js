@@ -36,12 +36,12 @@ export default class EnvironmentChooser extends React.PureComponent {
     }
 
     subscribeEnvironment(currentEnvironment);
-
+    const handleChange = (e: SyntheticEvent<>) => onChange(e.target.value);
     return (
       <div className="environment-chooser">
         <div className="contained">{children}</div>
         <div className="footer">
-          <select defaultValue={currentEnvironment} onChange={onChange}>
+          <select defaultValue={currentEnvironment} onChange={handleChange}>
             {environments.map(env => <option key={env}>{env}</option>)}
           </select>
         </div>
