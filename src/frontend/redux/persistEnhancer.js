@@ -23,7 +23,7 @@ export default function persistEnhancer(paths, key) {
 
     try {
       persistedState = JSON.parse(localStorage.getItem(key));
-      hydratedState = merge(initialState, persistedState);
+      hydratedState = merge(initialState, persistedState || {});
     } catch (e) {
       /* eslint-disable no-console */
       console.warn('Failed to retrieve initialize state from localStorage:', e);
