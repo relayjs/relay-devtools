@@ -9,25 +9,40 @@ import React from 'react';
 
 import '../css/EnvironmentChooser.less';
 
-export default class EnvironmentChooser extends React.PureComponent {
+export default class EnvironmentChooser extends React.Component {
   componentDidMount() {
-    this.props.loadEnvironments();
+    if (!this.props.environments || this.props.environments.length <= 0) {
+      this.props.loadEnvironments();
+    }
   }
+
+  componentDidUpdate(prevProps: ContainerProps, prevState: ContainerState) {
+    if (
+      (!prevProps.environments || prevProps.environments.length <= 0) &&
+      (!prevProps.currentEnvironment && this.props.currentEnvironment)
+    ) {
+      this.props.subscribeEnvironment(this.props.currentEnvironment);
+    }
+  }
+
+  handleChange = (e: SyntheticEvent<>) => {
+    this.props.onChange(e.target.value);
+  };
 
   render() {
     const {
       environments,
+      environmentList,
       currentEnvironment,
       onChange,
-      subscribeEnvironment,
       children,
     } = this.props;
 
     if (!currentEnvironment) {
-      return <div className="placeholder">Loading</div>;
+      return null;
     }
 
-    if (!environments.length) {
+    if (!environments || environments.length <= 0) {
       return (
         <div className="placeholder">
           No Relay Modern Environments found on the page
@@ -35,17 +50,41 @@ export default class EnvironmentChooser extends React.PureComponent {
       );
     }
 
-    subscribeEnvironment(currentEnvironment);
-    const handleChange = (e: SyntheticEvent<>) => onChange(e.target.value);
+    let content = environments.map(env => {
+      let title = `${children} ${env}`;
+      console.log(environments, this.props, children);
+      if (
+        environmentList &&
+        environmentList[env] &&
+        environmentList[env]._environment &&
+        environmentList[env]._environment.configName
+      ) {
+        title = environmentList[env]._environment.configName;
+      }
+      return (
+        <option value={env} key={env}>
+          {title}
+        </option>
+      );
+    });
+
     return (
-      <div className="environment-chooser">
-        <div className="contained">{children}</div>
-        <div className="footer">
-          <select defaultValue={currentEnvironment} onChange={handleChange}>
-            {environments.map(env => <option key={env}>{env}</option>)}
-          </select>
-        </div>
-      </div>
+      <select
+        style={{
+          background: 'rgba(0, 0, 0, 0)',
+
+          borderRadius: 0,
+          border: 0,
+          outline: 'none',
+          color: 'black',
+          appearance: 'none',
+          WebkitAppearance: 'none',
+          fontSize: '14px',
+        }}
+        defaultValue={currentEnvironment}
+        onChange={this.handleChange}>
+        {content}
+      </select>
     );
   }
 }

@@ -52,9 +52,21 @@ export default function connectBackend(hook: GlobalHook, bridge: Bridge): void {
     return Object.keys(agents);
   });
 
+  bridge.onCall('relayDebugger:getEnvironment', () => {
+    // $FlowFixMe
+    console.info('[CLIENT] relayDebugger:getEnvironment');
+    return JSON.stringify(agents);
+  });
+
   bridge.onCall('relayDebugger:getRecord', (env, id) => {
     // $FlowFixMe
     return agents[env].getRecord(id);
+  });
+
+  bridge.onCall('relayDebugger:getGCData', env => {
+    // $FlowFixMe
+    console.info('[CLIENT] relayDebugger:getGCData');
+    return agents[env].getGCData();
   });
 
   bridge.onCall('relayDebugger:getMatchingRecords', (env, search, type) => {

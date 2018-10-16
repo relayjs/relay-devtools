@@ -6,14 +6,27 @@
  */
 
 import {connect} from 'react-redux';
-import StoreExplorer from '../components/StoreExplorer';
+import Filter from '../components/Filter';
 
 const mapStateToProps = ({storeExplorer}) => storeExplorer;
 const mapDispatchToProps = dispatch => ({
-  pushNewSearch: newSearch => {
+  handleFilter: e => {
+    console.log(e.target.value);
+
+    dispatch({
+      type: 'UPDATE_FILTER',
+      filter: e.target.value,
+    });
+  },
+  pushNewSearch: e => {
+    console.log(e.target.value);
+
     dispatch({
       type: 'NEW_SEARCH',
-      newSearch,
+      newSearch: {
+        matchTerm: e.target.value,
+        matchType: 'id',
+      },
     });
   },
   goBack: currentSearch => {
@@ -33,4 +46,4 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(StoreExplorer);
+)(Filter);

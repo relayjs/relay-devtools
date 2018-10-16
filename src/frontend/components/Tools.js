@@ -10,6 +10,7 @@
 
 import React from 'react';
 import StoreExplorer from '../containers/StoreExplorer';
+import EnvironmentChooser from '../containers/EnvironmentChooser';
 import UpdatesView from '../containers/UpdatesView';
 import Nav from './Nav';
 
@@ -28,6 +29,7 @@ export default class Tools extends React.Component<Props> {
     const {currentTool, newUpdateNotification, onSwitch} = this.props;
 
     const tools = {
+      environment: EnvironmentChooser,
       store: StoreExplorer,
       updates: UpdatesView,
     };

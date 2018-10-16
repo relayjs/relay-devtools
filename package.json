@@ -1,11 +1,14 @@
 {
   "name": "relay-devtools-core",
-  "version": "0.0.8",
+  "version": "0.0.1",
   "description": "Relay Modern Devtools",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/relayjs/relay-devtools"
+  },
+  "engines": {
+    "node": ">=8.10"
   },
   "scripts": {
     "build": "yarn run build:chrome && yarn run build:standalone",
@@ -20,6 +23,7 @@
     "bundle:chrome": "yarn build:chrome && cd lib && zip -r relay-devtools-v`node -p \"require('./chrome/manifest').version\"`.chrome.zip chrome"
   },
   "dependencies": {
+    "chrome-launcher": "^0.10.5",
     "cross-spawn": "^6.0.5",
     "debounce": "^1.1.0",
     "electron": "~1.6.11",
@@ -69,6 +73,7 @@
     "less": "^2.7.2",
     "less-loader": "^4.0.4",
     "prettier": "1.13.6",
+    "react-hot-loader": "^4.3.11",
     "style-loader": "^0.19.0",
     "url-loader": "^0.5.9",
     "webpack": "^2.6.1",

@@ -73,6 +73,12 @@ export default function(
         recordDescs: action.response,
       };
 
+    case 'LOAD_GC_DATA_SUCCESS':
+      return {
+        ...state,
+        gcData: action.response,
+      };
+
     default:
       return state;
   }

@@ -7,7 +7,7 @@
 
 import React from 'react';
 import {GraphqlCodeBlock} from 'graphql-syntax-highlighter-react';
-import 'graphql-syntax-highlighter-react/dist/style.css';
+import '../css/graphql-syntax-highlighter-react.css';
 
 import {deepObjectEqual} from '../util/objCompare';
 import {ObjectFields} from './RecordInspector';
@@ -134,14 +134,14 @@ function getTabs(event) {
     tabs.variables = 'Variables';
   }
 
-  // Only include response tab if it is present on the event.
-  if (event.response) {
-    tabs.response = 'Response';
-  }
-
   // Only include storeDiff tab if it is present on the event.
   if (event.snapshotAfter) {
     tabs.storeDiff = 'Store Update';
+  }
+
+  // Only include response tab if it is present on the event.
+  if (event.response) {
+    tabs.response = 'Response';
   }
 
   return tabs;

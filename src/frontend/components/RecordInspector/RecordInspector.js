@@ -85,7 +85,10 @@ export default class RecordInspector extends React.Component {
     }
 
     return (
-      <div className="tag" key="tag">
+      <div
+        className="tag"
+        key="tag"
+        style={{background: 'white', padding: '4px', marginRight: '20px'}}>
         {tag}
       </div>
     );
@@ -115,8 +118,17 @@ export default class RecordInspector extends React.Component {
       ) : null;
 
     return (
-      <div className="record-inspector">
-        <div className="toolbar">{this.renderToolbar()}</div>
+      <div className="record-inspector" style={{paddingTop: 0, width: '100%'}}>
+        <div
+          className="toolbar"
+          style={{
+            background: 'rgb(245, 245, 245)',
+            height: '35px',
+            alignItems: 'center',
+            width: '100%',
+          }}>
+          {this.renderToolbar()}
+        </div>
         {this.renderNav()}
         <div className="root-header">
           {ellipsis}

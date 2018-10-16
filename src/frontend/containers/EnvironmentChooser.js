@@ -8,7 +8,13 @@
 import {connect} from 'react-redux';
 import EnvironmentChooser from '../components/EnvironmentChooser';
 
-const mapStateToProps = ({environments}) => environments;
+const mapStateToProps = ({environments}) => {
+  return {
+    environments: environments.environments,
+    currentEnvironment: environments.currentEnvironment,
+    environmentList: environments.environmentList,
+  };
+};
 const mapDispatchToProps = dispatch => ({
   onChange: (environment: string) => {
     dispatch({

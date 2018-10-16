@@ -24,6 +24,7 @@ export default function(
     selectedEvent: null,
     splitType: 'vertical',
     newNotifications: false,
+    filter: '',
   },
   action: Action,
 ) {
@@ -63,6 +64,11 @@ export default function(
       return {
         ...state,
         splitType: action.splitType,
+      };
+    case 'UPDATE_FILTER':
+      return {
+        ...state,
+        filter: action.filter,
       };
 
     default:

@@ -9,7 +9,8 @@ import {connect} from 'react-redux';
 import {LatestStoreView} from '../components/StoreView';
 import {loadRecordDescs} from '../fetch-actions/storeExplorer';
 
-const mapStateToProps = ({storeExplorer}) => ({
+const mapStateToProps = ({storeExplorer, environments}) => ({
+  currentEnvironment: environments.currentEnvironment,
   records: storeExplorer.recordDescs,
 });
 
@@ -21,4 +22,7 @@ const mapDispatchToProps = (dispatch, props) => ({
   },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(LatestStoreView);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(LatestStoreView);

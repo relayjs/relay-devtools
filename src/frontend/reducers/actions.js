@@ -94,6 +94,24 @@ type LoadEnvironmentsSuccessAction = {|
   +response: $ReadOnlyArray<Environment>,
 |};
 
+type LoadGCDataSuccessAction = {|
+  +type: 'LOAD_GC_DATA_SUCCESS',
+  +response: {
+    _gcEnabled: boolean,
+    _hasScheduledGC: boolean,
+  },
+|};
+
+type LoadEnvironmentSuccessAction = {|
+  +type: 'LOAD_ENVIRONMENT_SUCCESS',
+  +response: $ReadOnlyArray<Environment>,
+|};
+
+type HandleFilterAction = {|
+  +type: 'UPDATE_FILTER',
+  +filter: String,
+|};
+
 export type Action =
   | RecordInspectorChangeDiffModeAction
   | RecordInspectorOpenOrClosePathAction
@@ -109,4 +127,7 @@ export type Action =
   | SearchGoForwardAction
   | LoadRecordDescsSuccessAction
   | SwitchEnvironmentAction
-  | LoadEnvironmentsSuccessAction;
+  | LoadEnvironmentsSuccessAction
+  | LoadEnvironmentSuccessAction
+  | LoadGCDataSuccessAction
+  | HandleFilterAction;

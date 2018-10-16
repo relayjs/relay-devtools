@@ -25,7 +25,9 @@ export default function Header(props) {
   const displayValue =
     typeof value === 'string'
       ? value
-      : typeof value === 'undefined' ? 'undefined' : JSON.stringify(value);
+      : typeof value === 'undefined'
+        ? 'undefined'
+        : JSON.stringify(value);
   const valueSpan =
     'value' in props ? (
       <span className={valueSpanClass} key="value">

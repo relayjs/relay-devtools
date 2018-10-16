@@ -22,6 +22,7 @@ const mapDispatchToProps = (dispatch, props) => ({
   },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(
-  SnapshotRecordInspector,
-);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(SnapshotRecordInspector);

@@ -16,3 +16,14 @@ export function loadRecordDescs({matchType, matchTerm}) {
       API.getRecords({environment, matchType, matchTerm}),
   };
 }
+
+export function loadGCData() {
+  return {
+    types: [
+      'LOAD_GC_DATA_REQUEST',
+      'LOAD_GC_DATA_SUCCESS',
+      'LOAD_GC_DATA_FAILURE',
+    ],
+    callAPI: (API, environment) => API.getGCData({environment}),
+  };
+}
