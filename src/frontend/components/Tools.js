@@ -8,12 +8,12 @@
  * @format
  */
 
+import '../css/Tools.less';
+
 import React from 'react';
 import StoreExplorer from '../containers/StoreExplorer';
 import UpdatesView from '../containers/UpdatesView';
 import Nav from './Nav';
-
-import '../css/Tools.less';
 
 import type {Tool} from '../reducers/types';
 

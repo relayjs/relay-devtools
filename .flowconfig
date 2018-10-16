@@ -1,16 +1,8 @@
-[ignore]
-
-[include]
-
 [libs]
-
-[lints]
+flow
 
 [options]
-munge_underscores=true
-module.name_mapper='^\(.*\)\.less$' -> '<PROJECT_ROOT>/StyleStub.js'
-
-[strict]
+module.name_mapper.extension='less' -> '<PROJECT_ROOT>/StyleStub.js.flow'
 
 [version]
-^0.74.0
+0.83.0

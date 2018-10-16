@@ -1,11 +1,15 @@
 {
   "name": "relay-devtools-core",
-  "version": "0.0.8",
+  "private": true,
+  "version": "0.0.1",
   "description": "Relay Modern Devtools",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/relayjs/relay-devtools"
+  },
+  "engines": {
+    "node": ">=8.10"
   },
   "scripts": {
     "build": "yarn run build:chrome && yarn run build:standalone",
@@ -17,12 +21,12 @@
     "prepublishOnly": "yarn install && yarn build",
     "test:chrome": "./src/integrations/chrome/test.js",
     "test:standalone": "node ./lib/standalone/launchApp.js",
-    "bundle:chrome": "yarn build:chrome && cd lib && zip -r relay-devtools-v`node -p \"require('./chrome/manifest').version\"`.chrome.zip chrome"
+    "bundle:chrome": "yarn build:chrome && cd lib && zip -r relay-devtools-v`node -p \"require('./chrome/manifest').version\"`.chrome.zip chrome",
+    "typecheck": "flow check"
   },
   "dependencies": {
     "cross-spawn": "^6.0.5",
     "debounce": "^1.1.0",
-    "electron": "~1.6.11",
     "font-awesome": "^4.7.0",
     "font-awesome-webpack": "^0.0.5-beta.2",
     "graphql-syntax-highlighter-react": "^0.3.5",
@@ -41,7 +45,7 @@
   "devDependencies": {
     "babel-cli": "^6.24.1",
     "babel-core": "^6.25.0",
-    "babel-eslint": "^7.1.1",
+    "babel-eslint": "9.0.0",
     "babel-loader": "^7.0.0",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-object-rest-spread": "^6.23.0",
@@ -53,31 +57,38 @@
     "babel-preset-flow": "^6.23.0",
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-0": "^6.24.1",
-    "chrome-launch": "^1.1.4",
+    "chrome-launcher": "^0.10.5",
     "copy-webpack-plugin": "^4.0.1",
     "cross-env": "^5.1.1",
     "css-loader": "^0.28.4",
     "eslint": "^4.1.1",
     "eslint-config-prettier": "^2.3.0",
-    "eslint-plugin-babel": "^4.1.1",
-    "eslint-plugin-flowtype": "^2.30.0",
-    "eslint-plugin-prettier": "^2.6.0",
-    "eslint-plugin-react": "^7.1.0",
+    "eslint-plugin-babel": "5.1.0",
+    "eslint-plugin-flowtype": "2.43.0",
+    "eslint-plugin-prettier": "2.6.0",
+    "eslint-plugin-react": "7.8.2",
     "file-loader": "^0.11.2",
-    "flow-bin": "^0.74.0",
+    "flow-bin": "^0.83.0",
     "html-webpack-plugin": "^2.28.0",
+    "lerna": "^2.8.0",
     "less": "^2.7.2",
     "less-loader": "^4.0.4",
     "prettier": "1.13.6",
+    "react-hot-loader": "^4.3.11",
     "style-loader": "^0.19.0",
     "url-loader": "^0.5.9",
     "webpack": "^2.6.1",
     "webpack-dev-server": "^2.4.5"
   },
   "prettier": {
+    "requirePragma": true,
     "singleQuote": true,
     "trailingComma": "all",
     "bracketSpacing": false,
-    "jsxBracketSameLine": true
-  }
+    "jsxBracketSameLine": true,
+    "parser": "flow"
+  },
+  "workspaces": [
+    "src/integrations/*"
+  ]
 }
