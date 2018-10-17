@@ -1,4 +1,15 @@
 #!/usr/bin/env node
+/**
+ * Copyright (c) 2013-present, Facebook, Inc.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ * @flow
+ * @format
+ */
+
+'use strict';
 
 const chromeLauncher = require('chrome-launcher');
 const path = require('path');
@@ -26,4 +37,7 @@ chromeLauncher
     );
     // eslint-disable-next-line no-console
     console.log(`Chrome debugging port running on http://localhost:${chrome.port}/`);
+
+    chromeFlags: [`--load-extension=${EXTENSION_PATH}`],
+    logLevel: 'verbose',
   });

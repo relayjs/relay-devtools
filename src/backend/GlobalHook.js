@@ -6,12 +6,17 @@
  *
  * @flow
  * @format
+ *
+ * Hook:
+ *
+ * Responsible for installing itself as a global variable which Relay
+ * Environment instances will look for to register themselves, and which
+ * connectBackend will use to find environments.
  */
 
 'use strict';
 
-// import type {Environment} from 'RelayRuntime';
-type Environment = $FlowFixMe;
+import type {Environment} from 'relay-runtime';
 
 export type GlobalHook = {
   /**
@@ -32,13 +37,6 @@ export type GlobalHook = {
   onEnvironment(listener: (Environment) => mixed): void,
 };
 
-/**
- * Hook:
- *
- * Responsible for installing itself as a global variable which Relay
- * Environment instances will look for to register themselves, and which
- * connectBackend will use to find environments.
- */
 export function installGlobalHook(window: any): boolean {
   if (!window || window.__RELAY_DEVTOOLS_HOOK__) {
     return false;
@@ -47,6 +45,7 @@ export function installGlobalHook(window: any): boolean {
   const listeners = [];
 
   const hook: GlobalHook = {
+
     registerEnvironment(environment) {
       environments.push(environment);
       listeners.forEach(listener => listener(environment));

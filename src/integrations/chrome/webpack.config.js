@@ -3,24 +3,33 @@
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
+ * @format
  */
+
 const path = require('path');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ChromeExtensionReloader = require('webpack-chrome-extension-reloader');
+const webpack = require('webpack');
+const NotifierPlugin = require('friendly-errors-webpack-plugin');
+const notifier = require('node-notifier');
+
+const ICON = path.join(__dirname, './imgs/logo.png');
+
+const __DEV__ = process.env.NODE_ENV !== 'production';
 
 module.exports = {
+  devtool: __DEV__ ? '#cheap-module-eval-source-map' : false,
   entry: {
-    backendAgent: [path.join(__dirname, './scripts/backendAgent.js')],
-    backgroundMessageBus: [
-      path.join(__dirname, './scripts/backgroundMessageBus.js'),
+    hook: [path.join(__dirname, './scripts/hook.js')],
+    devtools: [path.join(__dirname, './scripts/devtools.js')],
+    background: [path.join(__dirname, './scripts/background.js')],
+    'devtools-background': [
+      path.join(__dirname, './scripts/devtools-background.js'),
     ],
-    devtoolsMain: [path.join(__dirname, './scripts/devtoolsMain.js')],
-    devtoolsPanel: [path.join(__dirname, './scripts/devtoolsPanel.js')],
-    globalHook: [path.join(__dirname, './scripts/globalHook.js')],
-    injectBackendAgent: [
-      path.join(__dirname, './scripts/injectBackendAgent.js'),
-    ],
-    injectGlobalHook: [path.join(__dirname, './scripts/injectGlobalHook.js')],
+    backend: [path.join(__dirname, './scripts/backend.js')],
+    proxy: [path.join(__dirname, './scripts/proxy.js')],
+    detector: [path.join(__dirname, './scripts/detector.js')],
   },
   output: {
     filename: '[name].js',
@@ -48,21 +57,43 @@ module.exports = {
       },
     ],
   },
+  devServer: {
+    port: process.env.PORT
+  },
   plugins: [
+    new NotifierPlugin({
+      onErrors: (severity, errors) => {
+        if (severity !== 'error') {
+          return;
+        }
+        const error = errors[0];
+        notifier.notify({
+          title: "Webpack error",
+          message: severity + ': ' + error.name,
+          subtitle: error.file || '',
+          icon: ICON
+        });
+      }
+    }),
     new CopyWebpackPlugin([
-      {from: path.join(__dirname, 'manifest.json')},
+      {
+        from: path.join(__dirname, 'manifest.json'),
+        to: path.join(__dirname, '../../../lib/chrome'),
+      },
       {from: path.join(__dirname, 'imgs'), to: './imgs'},
     ]),
     new HtmlWebpackPlugin({
-      template: path.join(__dirname, './devtoolsPanel.html'),
-      filename: 'devtoolsPanel.html',
-      inject: 'body',
-      chunks: ['devtoolsPanel'],
+      template: path.join(__dirname, 'devtools-background.html'),
+      filename: 'devtools-background.html',
+      inject: false,
     }),
     new HtmlWebpackPlugin({
-      filename: 'devtoolsMain.html',
-      inject: 'body',
-      chunks: ['devtoolsMain'],
+      template: path.join(__dirname, 'devtools.html'),
+      filename: 'devtools.html',
+      inject: false,
     }),
-  ],
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify('development'),
+    }),
+  ]
 };

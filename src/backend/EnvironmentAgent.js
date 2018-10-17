@@ -6,6 +6,11 @@
  *
  * @flow
  * @format
+ *
+ * Agent:
+ *
+ * Responsible for listening to events on and exposing an inspection API for
+ * a Relay Environment.
  */
 
 'use strict';
@@ -37,12 +42,13 @@ export type UpdateEvent = {
 
 type EmitFn = (name: string, data: {[key: string]: mixed}) => void;
 
-/**
- * Agent:
- *
- * Responsible for listening to events on and exposing an inspection API for
- * a Relay Environment.
- */
+export default class EnvironmentAgent {
+  _environment: Environment;
+  _id: string;
+  _emit: EmitFn;
+  _snapshot: any;
+  _lastNetworkEvent: ?UpdateEvent;
+  _flushLastNetworkEventTimer: ?number;
 
  function getSnapshotChanges(store, snapshot, updatedRecordIds) {
   console.info('[CLIENT] EnvironmentAgent.getSnapshotChanges');

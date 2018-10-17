@@ -47,7 +47,7 @@ export default class Collapsable extends React.Component<Props> {
     );
   }
 
-  _toggle = e => {
+  _toggle = (e: SyntheticEvent<EventTarget>) => {
     this.context.openOrClosePath(this.props.path);
     e.stopPropagation();
   };

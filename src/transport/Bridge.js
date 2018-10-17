@@ -6,6 +6,14 @@
  *
  * @flow
  * @format
+ *
+ * Bridge:
+ *
+ * Responsible for serializing and sending messages between the Agent
+ * (browser-side) and Frontend (console-side).
+ *
+ * It must be constructed with a BridgeTransport which can send serializable
+ * data to the Bridge on the other side.
  */
 
 'use strict';
@@ -63,7 +71,6 @@ type BatchMessage = {|
   type: 'batch',
   messages: Array<BridgeMessage>,
 |};
-
 // https://developer.mozilla.org/en-US/docs/Web/API/IdleDeadline
 type IdleDeadline = {|
   didTimeout: boolean,
@@ -72,7 +79,6 @@ type IdleDeadline = {|
 
 // Ensure every call can be associated with call resolution using a nonce.
 let nonceCounter = 0;
-
 // Polyfill requestIdleCallback
 let lastRunTime = 50;
 const performanceNow =
@@ -100,16 +106,7 @@ const requestIdle =
         }, Math.min(500, 3 * lastRunTime));
       };
 
-/**
- * Bridge:
- *
- * Responsible for serializing and sending messages between the Agent
- * (browser-side) and Frontend (console-side).
- *
- * It must be constructed with a BridgeTransport which can send serializable
- * data to the Bridge on the other side.
- */
-export default class Bridge {
+ export default class Bridge {
   _transport: BridgeTransport;
   _incomingBuffer: Array<BridgeMessage>;
   _outgoingBuffer: Array<BridgeMessage>;

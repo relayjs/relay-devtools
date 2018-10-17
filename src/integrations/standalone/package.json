@@ -1,9 +1,9 @@
 {
-  "name": "relay-devtools",
-  "version": "1.4.0",
+  "name": "relay-devtools-standalone",
+  "version": "0.0.1",
   "description": "Connect Relay DevTools to a Relay app.",
   "license": "MIT",
-  "productName": "Relay DevTools",
+  "productName": "Relay Devtools Standalone",
   "bin": {
     "relay-devtools": "./launchApp.js"
   },
@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "cross-spawn": "^5.1.0",
-    "electron": "^1.6.11",
+    "electron": "^1.8.7",
     "update-notifier": "^2.2.0",
     "ws": "^3.1.0"
   }
