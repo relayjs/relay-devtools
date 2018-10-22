@@ -62,16 +62,6 @@ export default class BridgeAPI {
     return this._bridge.call('relayDebugger:getEnvironments');
   }
 
-  getEnvironment() {
-    console.info('[DEVTOOLS] BridgeAPI.getEnvironment');
-    return this._bridge.call('relayDebugger:getEnvironment');
-  }
-
-  getGCData({environment}) {
-    console.info('[DEVTOOLS] BridgeAPI.getGCData');
-    return this._bridge.call('relayDebugger:getGCData', environment);
-  }
-
   getRecord({id, environment}: $FlowFixMe) {
     if (!id) {
       return null;

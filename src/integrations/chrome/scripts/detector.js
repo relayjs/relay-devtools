@@ -1,71 +1,52 @@
-// import { installToast } from 'src/backend/toast'
-// import { isFirefox } from 'src/devtools/env'
+/**
+ * Copyright (c) 2013-present, Facebook, Inc.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ * @flow
+ * @format
+ */
+
+declare var chrome: any;
 
 window.addEventListener('message', e => {
   if (e.source === window && e.data.relayDetected) {
-    chrome.runtime.sendMessage({message: e.data})
+    chrome.runtime.sendMessage({message: e.data});
   }
-})
+});
 
-function detect (win) {
+function detect(win) {
   setTimeout(() => {
     // Method 1: Check Relay
-    const relayDetected = Boolean(window.__RELAY_DEVTOOLS_HOOK__)
-
+    const relayDetected = Boolean(window.__RELAY_DEVTOOLS_HOOK__);
     if (relayDetected) {
-      let Relay
+      win.postMessage(
+        {
+          devtoolsEnabled: true,
 
-      // if (window.$nuxt) {
-      //   Vue = window.$nuxt.$root.constructor
-      // }
+          relayDetected: true,
+        },
+        '*',
+      );
 
-      win.postMessage({
-        devtoolsEnabled: true,
-
-        relayDetected: true
-      }, '*')
-
-      return
+      return false;
     }
-
-    // Method 2: Scan all elements inside document
-    // const all = document.querySelectorAll('*')
-    // let el
-    // for (let i = 0; i < all.length; i++) {
-    //   if (all[i].__vue__) {
-    //     el = all[i]
-    //     break
-    //   }
-    // }
-    // if (el) {
-    //   let Vue = Object.getPrototypeOf(el.__vue__).constructor
-    //   while (Vue.super) {
-    //     Vue = Vue.super
-    //   }
-    //   win.postMessage({
-    //     devtoolsEnabled: Vue.config.devtools,
-    //     vueDetected: true
-    //   }, '*')
-    // }
-  }, 100)
+  }, 100);
 }
 
 // inject the hook
+// $FlowFixMe
 if (document instanceof HTMLDocument) {
-  installScript(detect)
-  // installScript(installToast)
+  installScript(detect);
 }
 
-function installScript (fn) {
-  const source = ';(' + fn.toString() + ')(window)'
-
-  // if (isFirefox) {
-    // eslint-disable-next-line no-eval
-    // window.eval(source) // in Firefox, this evaluates on the content window
-  // } else {
-    const script = document.createElement('script')
-    script.textContent = source
-    document.documentElement.appendChild(script)
-    script.parentNode.removeChild(script)
-  }
-// }
+function installScript(fn) {
+  const source = ';(' + fn.toString() + ')(window)';
+  const script = document.createElement('script');
+  script.textContent = source;
+  // $FlowFixMe
+  document.documentElement.appendChild(script);
+  // $FlowFixMe
+  script.parentNode.removeChild(script);
+}

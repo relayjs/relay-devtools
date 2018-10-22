@@ -18,6 +18,7 @@ import throwOnAsyncErrorMiddleware from './throwOnAsyncErrorMiddleware';
 import persistEnhancer from './persistEnhancer';
 
 const composeEnhancers = composeWithDevTools({realtime: true});
+// $FlowFixMe
 export default function setupRedux(API) {
   const callAPIMiddleware = getAPIMiddleware(API);
   return createStore(

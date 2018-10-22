@@ -19,7 +19,6 @@ type State = {|
 
 export default function(
   state: State = {
-    environmentList: [],
     environments: [],
     currentEnvironment: null,
   },
@@ -30,7 +29,6 @@ export default function(
       return {
         environments: state.environments,
         currentEnvironment: action.environment,
-        environmentList: state.environmentList,
       };
 
     case 'LOAD_ENVIRONMENTS_SUCCESS':
@@ -38,13 +36,6 @@ export default function(
       return {
         environments,
         currentEnvironment: environments[0],
-      };
-    case 'LOAD_ENVIRONMENT_SUCCESS':
-      const environmentList = action.response;
-      return {
-        environments: state.environments,
-        currentEnvironment: state.currentEnvironment,
-        environmentList: JSON.parse(environmentList),
       };
 
     default:

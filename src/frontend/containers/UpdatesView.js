@@ -9,7 +9,7 @@ import {connect} from 'react-redux';
 import {loadUpdates} from '../fetch-actions/updatesViewActions';
 import UpdatesView from '../components/UpdatesView';
 
-const mapStateToProps = ({updatesView, environments}) => ({...updatesView, currentEnvironment: environments.currentEnvironment});
+const mapStateToProps = ({updatesView}) => updatesView;
 const mapDispatchToProps = dispatch => ({
   refetchEvents() {
     dispatch(loadUpdates());
@@ -36,7 +36,4 @@ const mapDispatchToProps = dispatch => ({
   },
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(UpdatesView);
+export default connect(mapStateToProps, mapDispatchToProps)(UpdatesView);

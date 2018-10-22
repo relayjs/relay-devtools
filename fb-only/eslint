@@ -1,0 +1,11 @@
+#!/bin/bash
+set -e
+
+# This script is used by `arc lint`.
+
+THIS_DIR=$(cd -P "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+ROOT_DIR=$(cd "$THIS_DIR/../../../.." && pwd)
+
+cd "$ROOT_DIR/xplat/relay/debugger"
+"$ROOT_DIR/xplat/third-party/yarn/install-node-modules.sh"
+exec "$ROOT_DIR/xplat/third-party/node/bin/node" node_modules/.bin/eslint "$@"

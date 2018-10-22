@@ -7,7 +7,7 @@
 
 import React from 'react';
 import {GraphqlCodeBlock} from 'graphql-syntax-highlighter-react';
-import '../css/graphql-syntax-highlighter-react.css';
+import 'graphql-syntax-highlighter-react/dist/style.css';
 
 import {deepObjectEqual} from '../util/objCompare';
 import {ObjectFields} from './RecordInspector';
@@ -63,21 +63,16 @@ export default class UpdateInspector extends React.Component {
           />
         );
       } else if (node && node.name) {
-        tabContent = (
-
-            <div className="query name">{node.name}</div>
-          );
+        tabContent = <div className="query name">{node.name}</div>;
       }
-    }
-    else if (currentTab === 'variables') {
-      const variables = {...event.variables};
+    } else if (currentTab === 'variables') {
+      const variables = event.variables;
       tabContent = (
         <div className="variables">
           <ObjectFields value={variables} />
         </div>
       );
-    }
-    else if (currentTab === 'storeDiff') {
+    } else if (currentTab === 'storeDiff') {
       const {snapshotBefore, snapshotAfter} = event;
       const records = changedRecords(snapshotBefore, snapshotAfter);
 
@@ -104,11 +99,6 @@ export default class UpdateInspector extends React.Component {
     return (
       <div className="update-inspector">
         <div className="tab-panel">
-          <span className="left-buttons">
-          <a className="close" onClick={onClose}>
-            &times;
-          </a>
-          </span>
           {Object.keys(tabs).map(tabId => {
             const onClick = () => this.switchToTab(tabId);
             const classes = 'tab' + (currentTab === tabId ? ' active' : '');
@@ -120,14 +110,14 @@ export default class UpdateInspector extends React.Component {
               </a>
             );
           })}
-          {/* <span className="right-buttons">
+          <span className="right-buttons">
             <a className="change-layout" onClick={onLayoutChange}>
               <i className="fa fa-columns" />
             </a>
             <a className="close" onClick={onClose}>
               &times;
             </a>
-          </span> */}
+          </span>
         </div>
         <div className="tab-content">{tabContent}</div>
       </div>
@@ -144,14 +134,14 @@ function getTabs(event) {
     tabs.variables = 'Variables';
   }
 
-  // Only include storeDiff tab if it is present on the event.
-  if (event.snapshotAfter) {
-    tabs.storeDiff = 'Store Update';
-  }
-
   // Only include response tab if it is present on the event.
   if (event.response) {
     tabs.response = 'Response';
+  }
+
+  // Only include storeDiff tab if it is present on the event.
+  if (event.snapshotAfter) {
+    tabs.storeDiff = 'Store Update';
   }
 
   return tabs;

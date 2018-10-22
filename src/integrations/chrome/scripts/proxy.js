@@ -16,11 +16,13 @@
 
 'use strict';
 
-// declare var chrome: any;
 /**
  * Proxy messages between the browser window's postMessage API and the
  * ContentScript's chrome runtime messaging API.
  */
+
+declare var chrome: any;
+
 const port = chrome.runtime.connect({name: 'content-script'});
 
 port.onMessage.addListener(sendMessageToBackend);
@@ -30,10 +32,13 @@ port.onDisconnect.addListener(handleDisconnect);
 sendMessageToBackend('init');
 
 function sendMessageToBackend(payload) {
-  window.postMessage({
-    source: 'relay-devtools-proxy',
-    payload
-  },'*');
+  window.postMessage(
+    {
+      source: 'relay-devtools-proxy',
+      payload,
+    },
+    '*',
+  );
 }
 
 function sendMessageToDevtools(event) {

@@ -6,66 +6,21 @@
  */
 
 import React from 'react';
-import {hot} from 'react-hot-loader';
 
 import '../css/global.css';
 
 import {Provider} from 'react-redux';
-
-import Search from './Search';
-import Filter from '../containers/Filter';
-import Nav from '../containers/Nav';
-import Tools from '../containers/Tools';
-import StoreExplorer from '../containers/StoreExplorer';
-import UpdatesView from '../containers/UpdatesView';
-import RecordInspector from './RecordInspector';
 import EnvironmentChooser from '../containers/EnvironmentChooser';
+import Tools from '../containers/Tools';
 
-function handleChange(e) {
-  console.log('e', e.target.value);
-}
-
-function App({store}) {
+export default function App({store}) {
   return (
     <Provider store={store}>
       <div className="relay-devtools">
-        <div
-          style={{
-          //   position: 'relative',
-          //   height: '25px',
-          //   flexDirection: 'row-reverse',
-          //   background: '#f5f5f5',
-          //   border: 'solid 1px #ddd',
-          //   padding: '3px',
-            // borderTop: '1px solid black',
-            // borderBottom: '1px solid black',
-            // display: 'flex',
-          }}
-          >
-            <EnvironmentChooser>Environment</EnvironmentChooser>
-          {/* <Nav
-            renderEnvironmentChooser={() => (
-              <EnvironmentChooser>Environment</EnvironmentChooser>
-            )}
-          /> */}
-        </div>
-
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            height: '100%',
-          }}>
-          <UpdatesView>
-            <Filter onChange={handleChange} />
-          </UpdatesView>
-
-        </div>
-
-
+        <EnvironmentChooser>
+          <Tools />
+        </EnvironmentChooser>
       </div>
     </Provider>
   );
 }
-
-export default hot(module)(App);

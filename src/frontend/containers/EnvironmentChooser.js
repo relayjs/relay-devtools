@@ -8,13 +8,7 @@
 import {connect} from 'react-redux';
 import EnvironmentChooser from '../components/EnvironmentChooser';
 
-const mapStateToProps = ({environments}) => {
-  return {
-    environments: environments.environments,
-    currentEnvironment: environments.currentEnvironment,
-    environmentList: environments.environmentList,
-  };
-};
+const mapStateToProps = ({environments}) => environments;
 const mapDispatchToProps = dispatch => ({
   onChange: (environment: string) => {
     dispatch({
@@ -36,16 +30,6 @@ const mapDispatchToProps = dispatch => ({
     dispatch({
       type: 'ENVIRONMENT_SUBSCRIBE',
       environment,
-    });
-  },
-  loadEnvironment: () => {
-    dispatch({
-      types: [
-        'LOAD_ENVIRONMENT_REQUEST',
-        'LOAD_ENVIRONMENT_SUCCESS',
-        'LOAD_ENVIRONMENT_FAILURE',
-      ],
-      callAPI: API => API.getEnvironment(),
     });
   },
 });

@@ -16,39 +16,18 @@ export default class Nav extends React.Component {
     this.prevNotifications = {};
   }
   render() {
-    const {
-      tools,
-      currentTool,
-      onSwitch,
-      newUpdateNotification: notifications,
-      gcData,
-      renderEnvironmentChooser,
-    } = this.props;
+    const {tools, currentTool, onSwitch, notifications} = this.props;
     const {prevNotifications} = this;
     this.prevNotifications = notifications;
 
     const displayNames = {
-      store: 'Store',
+      store: 'Store Explorer',
       updates: 'Updates',
-      // environment: 'Environment',
     };
 
     return (
-      <div className="nav" style={{flex: 1}}>
-        {gcData && (
-          <span>GC {gcData._gcEnabled ? `Enabled ` : `Disabled `}</span>
-        )}
-        {gcData && (
-          <span style={{flex: 1}}>
-            &nbsp; {` and`}{' '}
-            {gcData._hasScheduled ? 'Scheduled' : 'not Scheduled'}
-          </span>
-        )}
-        <span className="nav-item">
-          {renderEnvironmentChooser && renderEnvironmentChooser()}
-        </span>
-
-        {Object.keys(displayNames).map(tool => {
+      <div className="nav">
+        {tools.map(tool => {
           const current = notifications[tool];
           const previous = prevNotifications[tool];
           const selected = tool === currentTool;

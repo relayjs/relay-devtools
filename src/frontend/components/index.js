@@ -24,29 +24,14 @@ import setupRedux from '../redux/setupRedux';
 import App from '../components/App';
 import RelayDetector from '../components/RelayDetector.js';
 
-
-export const isChrome = typeof chrome !== 'undefined' && !!chrome.devtools;
-let panelShown = !isChrome;
-let pendingAction = null;
-let container;
-
-if (isChrome) {
-  chrome.runtime.onMessage.addListener(request => {
-    if (request === 'relay-panel-shown') {
-      onPanelShown();
-    } else if (request === 'relay-panel-hidden') {
-      onPanelHidden();
-    }
-  });
-}
-
-let app = null;
+const isChrome = typeof chrome !== 'undefined' && Boolean(chrome.devtools);
+let app;
 
 export default function createDevtools(shell: ShellType) {
   initApp(shell);
   shell.onReload(() => {
-    console.log('onReload');
     if (app) {
+      // unsure about this logic
       // const elem = document.getElementById(app);
       // if (elem && elem.parentNode) {
       // elem.parentNode.removeChild(elem);
@@ -67,46 +52,17 @@ function initApp(shell: ShellType) {
       }
     });
 
+    const CONTAINER = document.getElementById('devtools-root');
+    app = 'devtools-root';
+    const api = new API(bridge);
+    const store = setupRedux(api);
 
-
-    // if (element) {
-
-
-
-      if (!container) {
-        container = document.getElementById('devtools-root');
-        app = 'devtools-root';
-        const api = new API(bridge);
-        const store = setupRedux(api);
-
-        ReactDOM.render(
-          <RelayDetector API={api}>
-            <App store={store} />
-          </RelayDetector>,
-          container,
-        );
-      }
-
-    // }
+    ReactDOM.render(
+      <RelayDetector API={api}>
+        <App store={store} />
+      </RelayDetector>,
+      // $FlowFixMe
+      CONTAINER,
+    );
   });
-}
-
-function ensurePaneShown (cb) {
-  if (panelShown) {
-    cb()
-  } else {
-    pendingAction = cb
-  }
-}
-
-function onPanelShown () {
-  panelShown = true
-  if (pendingAction) {
-    pendingAction()
-    pendingAction = null
-  }
-}
-
-function onPanelHidden () {
-  panelShown = false
 }

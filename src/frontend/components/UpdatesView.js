@@ -8,10 +8,10 @@
 import React from 'react';
 
 import SplitPane from 'react-split-pane';
+import '../css/Resizer.less';
 
 import UpdateInspector from './UpdateInspector';
 
-import '../css/Resizer.less';
 import '../css/Tooltip.less';
 import '../css/panels.less';
 import '../css/UpdatesView.less';
@@ -21,14 +21,7 @@ export default class UpdatesView extends React.Component {
     super(props, context);
 
     const {refetchEvents} = this.props;
-
-    if (
-      this.props.updatesView &&
-      this.props.updatesView.events &&
-      this.props.updatesView.events.length <= 0
-    ) {
-      refetchEvents();
-    }
+    refetchEvents();
   }
 
   changeSplitType = () => {
@@ -37,48 +30,6 @@ export default class UpdatesView extends React.Component {
 
     this.props.changeSplitType(splitType);
   };
-
-  _renderEventsTimeline() {
-    const {events, selectedEvent, selectEvent, filter, currentEnvironment} = this.props;
-
-    const filterEvents = events.filter(event => {
-        if (filter === '') {
-          return event.environment.toString() === currentEnvironment;
-        }
-        const name = event.operation ? event.operation.name : event.eventName;
-        return name.toLowerCase().indexOf(filter.toLowerCase()) >= 0;
-      });
-
-    if (filterEvents.length === 0) {
-      return <div>No search results</div>;
-    }
-
-    return filterEvents.map((event, index) => {
-      // if (event && event.operation && event.operation.name) {
-      if (event && event.eventName) {
-        return (
-          <div
-            style={{
-              cursor: 'pointer',
-              padding: '6px 0px 4px 6px',
-              borderBottom: '#f5f5f5 solid 2px',
-              color: selectedEvent === event ? '#2196f3' : 'black',
-            }}
-            key={index}
-            onClick={() => selectEvent(event)}>
-            {/* <div>{event.operation.name}</div> */}
-            <div>
-              {event.operation ? event.operation.name : event.eventName}
-            </div>
-            <div style={{opacity: 0.8, fontSize: '13px'}}>
-              {event.operation ? event.eventName : ''}
-            </div>
-          </div>
-        );
-      }
-      return null;
-    });
-  }
 
   _renderEvents() {
     const {events, selectedEvent, selectEvent} = this.props;
@@ -168,49 +119,28 @@ export default class UpdatesView extends React.Component {
   render() {
     const {selectedEvent, splitType, selectEvent, clearEvents} = this.props;
     const clearSelection = () => selectEvent(null);
-    const pane1Style = {};
-
+    const pane1Style = selectedEvent
+      ? {}
+      : {minWidth: '100%', minHeight: '100%'};
     const pane2Style = selectedEvent ? {} : {display: 'none'};
 
     return (
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          position: 'relative',
-          height: '100%',
-        }}>
-        {/* <div className="panel">
+      <div className="updates-view">
+        <div className="panel">
           <div className="left-panel">
             <button className="fa fa-ban" onClick={clearEvents} />
           </div>
           <div className="center-panel" />
           <div className="right-panel" />
-        </div> */}
-
-        <div className="updates-view views">
+        </div>
+        <div className="views">
           <SplitPane
             split={splitType}
-            minSize={300}
+            minSize={200}
             defaultSize={400}
             pane2Style={pane2Style}
             pane1Style={pane1Style}>
-            <React.Fragment>
-              <div
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  flex: 1,
-                  height: '100%',
-                }}>
-                {this.props.children}
-                <div style={{overflowY: 'scroll', marginBottom: '33px', borderBottom: '1px solid rgb(221, 221, 221)'}}>
-                  {this._renderEventsTimeline()}
-                  {/* {this._renderEvents()} */}
-                </div>
-              </div>
-            </React.Fragment>
-
+            {this._renderEvents()}
             <UpdateInspector
               event={selectedEvent}
               onClose={clearSelection}

@@ -27,11 +27,7 @@ export default class Collapsable extends React.Component<Props> {
 
   render() {
     const {path, children, header} = this.props;
-    // if (this.context)
-    const opened =
-      this.context &&
-      this.context.isPathOpened &&
-      Boolean(this.context.isPathOpened(path));
+    const opened = Boolean(this.context.isPathOpened(path));
 
     const childrenElements = opened ? children : null;
     return (

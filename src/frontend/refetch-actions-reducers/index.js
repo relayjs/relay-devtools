@@ -5,22 +5,18 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import {loadRecordDescs, loadGCData} from '../fetch-actions/storeExplorer';
+import {loadRecordDescs} from '../fetch-actions/storeExplorer';
 import {loadUpdates} from '../fetch-actions/updatesViewActions';
 import {
   loadRecord,
   loadTypeMapping,
 } from '../fetch-actions/recordInspectorActions';
 
-export default function refetchActionsReducers({
-  storeExplorer,
-  recordInspector,
-  // environments,
-}) {
+export default function({storeExplorer, recordInspector}) {
   const actions = [];
+
   // storeExplorer
   actions.push(loadRecordDescs(storeExplorer.latest));
-  // actions.push(loadGCData(environments.currentEnvironment));
 
   // updatesView
   actions.push(loadUpdates());

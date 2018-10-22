@@ -12,8 +12,6 @@
  * which is connected to the Devtools frontend.
  */
 
-// BACKEND CONTENT SCRIPT
-
 'use strict';
 
 import connectBackend from '../../../backend/connectBackend';
@@ -37,10 +35,13 @@ function handshake(e) {
         listeners.push(listener);
       },
       send(data) {
-        window.postMessage({
-          source: 'relay-devtools-backend',
-          payload: data,
-        }, '*');
+        window.postMessage(
+          {
+            source: 'relay-devtools-backend',
+            payload: data,
+          },
+          '*',
+        );
       },
     });
 

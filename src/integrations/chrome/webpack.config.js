@@ -5,7 +5,6 @@
  * LICENSE file in the root directory of this source tree.
  * @format
  */
-
 const path = require('path');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -15,8 +14,26 @@ const NotifierPlugin = require('friendly-errors-webpack-plugin');
 const notifier = require('node-notifier');
 
 const ICON = path.join(__dirname, './imgs/logo.png');
-
 const __DEV__ = process.env.NODE_ENV !== 'production';
+const devPlugins = __DEV__
+  ? [
+      new ChromeExtensionReloader(),
+      new NotifierPlugin({
+        onErrors: (severity, errors) => {
+          if (severity !== 'error') {
+            return;
+          }
+          const error = errors[0];
+          notifier.notify({
+            title: 'Webpack error',
+            message: severity + ': ' + error.name,
+            subtitle: error.file || '',
+            icon: ICON,
+          });
+        },
+      }),
+    ]
+  : [];
 
 module.exports = {
   devtool: __DEV__ ? '#cheap-module-eval-source-map' : false,
@@ -57,25 +74,8 @@ module.exports = {
       },
     ],
   },
-  // devServer: {
-  //   port: process.env.PORT
-  // },
   plugins: [
-    new ChromeExtensionReloader(),
-    new NotifierPlugin({
-      onErrors: (severity, errors) => {
-        if (severity !== 'error') {
-          return;
-        }
-        const error = errors[0];
-        notifier.notify({
-          title: "Webpack error",
-          message: severity + ': ' + error.name,
-          subtitle: error.file || '',
-          icon: ICON
-        });
-      }
-    }),
+    ...devPlugins,
     new CopyWebpackPlugin([
       {
         from: path.join(__dirname, 'manifest.json'),
@@ -96,5 +96,5 @@ module.exports = {
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify('development'),
     }),
-  ]
+  ],
 };

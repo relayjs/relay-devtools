@@ -18,7 +18,4 @@ const mapDispatchToProps = dispatch => ({
   },
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(LatestRecordFields);
+export default connect(mapStateToProps, mapDispatchToProps)(LatestRecordFields);

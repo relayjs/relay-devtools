@@ -12,13 +12,13 @@
 
 'use strict';
 
-let panelLoaded = false
-let panelShown = false
-let pendingAction
-let created = false
-let checkCount = 0
+let panelLoaded = false;
+let panelShown = false;
+let pendingAction;
+let created = false;
+let checkCount = 0;
 
-// declare var chrome: any;
+declare var chrome: any;
 
 chrome.devtools.network.onNavigated.addListener(createPanelIfHasRelay);
 
@@ -32,7 +32,9 @@ function createPanelIfHasRelay() {
   }
   panelLoaded = false;
   panelShown = false;
-  chrome.devtools.inspectedWindow.eval('!!(window.__RELAY_DEVTOOLS_HOOK__)', function(hasRelay) {
+  chrome.devtools.inspectedWindow.eval(
+    '!!(window.__RELAY_DEVTOOLS_HOOK__)',
+    function(hasRelay) {
       if (!hasRelay || created) {
         return;
       }
@@ -56,9 +58,9 @@ function createPanelIfHasRelay() {
 //   if (request === 'relay-panel-load') {
 //     onPanelLoad();
 //   }
-  // else if (request.relayContextMenu) {
-  //   onContextMenu(request.relayContextMenu)
-  // }
+// else if (request.relayContextMenu) {
+//   onContextMenu(request.relayContextMenu)
+// }
 // });
 
 // function onContextMenu ({ id }) {
@@ -81,11 +83,11 @@ function createPanelIfHasRelay() {
 //   }
 // }
 
-function panelAction (cb, message = null) {
+function panelAction(cb, message = null) {
   if (created && panelLoaded && panelShown) {
-    cb()
+    cb();
   } else {
-    pendingAction = cb
+    pendingAction = cb;
     // message && toast(message)
   }
 }
@@ -95,18 +97,18 @@ function executePendingAction() {
   pendingAction = null;
 }
 
-function onPanelLoad () {
-  executePendingAction()
-  panelLoaded = true
+function onPanelLoad() {
+  executePendingAction();
+  panelLoaded = true;
 }
 
-function onPanelShown () {
+function onPanelShown() {
   chrome.runtime.sendMessage({message: 'relay-panel-shown'});
   panelShown = true;
-  panelLoaded && executePendingAction()
+  panelLoaded && executePendingAction();
 }
 
-function onPanelHidden () {
-  chrome.runtime.sendMessage({message: 'relay-panel-hidden'})
+function onPanelHidden() {
+  chrome.runtime.sendMessage({message: 'relay-panel-hidden'});
   panelShown = false;
 }

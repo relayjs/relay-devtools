@@ -11,7 +11,6 @@ export default function getAPIMiddleware(API) {
   let subscribedEnvironment = null;
 
   return function callAPIMiddleware({dispatch, getState}) {
-    console.info('[DEVTOOLS] callAPIMiddleware');
     return next => action => {
       const {
         type,
@@ -28,9 +27,7 @@ export default function getAPIMiddleware(API) {
           refetchActionsReducers(getState()).forEach(dispatch);
         };
 
-        if (action.environment && !subscribedEnvironment) {
-          subscribedEnvironment = environment;
-        } else if (subscribedEnvironment === environment) {
+        if (subscribedEnvironment === environment) {
           return;
         }
 

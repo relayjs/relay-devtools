@@ -45,6 +45,7 @@ export function installRelayDevTools(
         const hook = GlobalHook.getGlobalHook(global);
         if (hook) {
           const bridge = new Bridge(transport);
+          // $FlowFixMe
           connectBackend(hook, bridge);
         }
       },
@@ -64,6 +65,7 @@ export function connectToBackendWithSocket(socket: $FlowFixMe) {
   if (hook) {
     const transport = wsClientSocketTransport(socket);
     const bridge = new Bridge(transport);
+    // $FlowFixMe
     connectBackend(hook, bridge);
   }
 }

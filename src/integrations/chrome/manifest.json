@@ -9,7 +9,6 @@
     "48": "imgs/logo.png",
     "128": "imgs/logo.png"
   },
-
   "web_accessible_resources": [
       "devtools.html",
       "devtools-background.html",
@@ -26,8 +25,7 @@
     "permissions": [
       "http://*/*",
       "https://*/*",
-      "file:///*",
-      "contextMenus"
+      "file:///*"
     ],
     "content_scripts": [
       {
@@ -48,5 +46,5 @@
       ],
       "run_at": "document_idle"
     }
-    ]
+  ]
 }

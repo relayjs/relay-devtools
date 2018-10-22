@@ -2,7 +2,6 @@
 flow
 
 [options]
-module.system=haste
 module.name_mapper.extension='less' -> '<PROJECT_ROOT>/StyleStub.js.flow'
 
 [version]

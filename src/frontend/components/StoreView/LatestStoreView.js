@@ -20,9 +20,7 @@ export type Props = {
 // StoreView connected to the API fetching the latest records
 export default class LatestStoreView extends StoreView {
   componentDidMount() {
-    if (this.props.currentEnvironment) {
-      this.props.refetchRecords();
-    }
+    this.props.refetchRecords();
   }
 
   componentDidUpdate(prevProps: Props): void {
