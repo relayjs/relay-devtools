@@ -57,10 +57,11 @@ module.exports = {
       },
     ],
   },
-  devServer: {
-    port: process.env.PORT
-  },
+  // devServer: {
+  //   port: process.env.PORT
+  // },
   plugins: [
+    new ChromeExtensionReloader(),
     new NotifierPlugin({
       onErrors: (severity, errors) => {
         if (severity !== 'error') {

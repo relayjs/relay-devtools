@@ -5903,6 +5903,12 @@ react-style-proptype@^3.0.0:
   dependencies:
     prop-types "^15.5.4"
 
+react-treeview@^0.4.7:
+  version "0.4.7"
+  resolved "https://registry.yarnpkg.com/react-treeview/-/react-treeview-0.4.7.tgz#f647e04f70496eb11fb0912c35187e80eb60d458"
+  dependencies:
+    prop-types "^15.5.8"
+
 react@^16.3.0:
   version "16.5.2"
   resolved "https://registry.yarnpkg.com/react/-/react-16.5.2.tgz#19f6b444ed139baa45609eee6dc3d318b3895d42"
@@ -6028,10 +6034,6 @@ reduce-function-call@^1.0.1:
   resolved "https://registry.yarnpkg.com/reduce-function-call/-/reduce-function-call-1.0.2.tgz#5a200bf92e0e37751752fe45b0ab330fd4b6be99"
   dependencies:
     balanced-match "^0.4.2"
-
-redux-devtools-extension@^2.13.2:
-  version "2.13.5"
-  resolved "https://registry.yarnpkg.com/redux-devtools-extension/-/redux-devtools-extension-2.13.5.tgz#3ff34f7227acfeef3964194f5f7fc2765e5c5a39"
 
 redux-devtools-instrument@^1.9.0:
   version "1.9.0"

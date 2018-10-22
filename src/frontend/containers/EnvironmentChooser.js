@@ -38,6 +38,16 @@ const mapDispatchToProps = dispatch => ({
       environment,
     });
   },
+  loadEnvironment: () => {
+    dispatch({
+      types: [
+        'LOAD_ENVIRONMENT_REQUEST',
+        'LOAD_ENVIRONMENT_SUCCESS',
+        'LOAD_ENVIRONMENT_FAILURE',
+      ],
+      callAPI: API => API.getEnvironment(),
+    });
+  },
 });
 
 export default connect(

@@ -30,6 +30,7 @@ export default function(
       return {
         environments: state.environments,
         currentEnvironment: action.environment,
+        environmentList: state.environmentList,
       };
 
     case 'LOAD_ENVIRONMENTS_SUCCESS':

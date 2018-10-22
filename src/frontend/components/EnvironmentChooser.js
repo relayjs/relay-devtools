@@ -13,6 +13,7 @@ export default class EnvironmentChooser extends React.Component {
   componentDidMount() {
     if (!this.props.environments || this.props.environments.length <= 0) {
       this.props.loadEnvironments();
+      this.props.loadEnvironment();
     }
   }
 
@@ -50,8 +51,8 @@ export default class EnvironmentChooser extends React.Component {
       );
     }
 
-    let content = environments.map(env => {
-      let title = `${children} ${env}`;
+    let content = environments.map((env, idx) => {
+      let title = `${children} ${idx + 1}`;
       console.log(environments, this.props, children);
       if (
         environmentList &&
@@ -67,24 +68,24 @@ export default class EnvironmentChooser extends React.Component {
         </option>
       );
     });
-
-    return (
-      <select
-        style={{
-          background: 'rgba(0, 0, 0, 0)',
-
-          borderRadius: 0,
-          border: 0,
-          outline: 'none',
-          color: 'black',
-          appearance: 'none',
-          WebkitAppearance: 'none',
-          fontSize: '14px',
-        }}
-        defaultValue={currentEnvironment}
-        onChange={this.handleChange}>
-        {content}
-      </select>
-    );
+    return <span />
+    // return (
+    //   <select
+    //     style={{
+    //       background: 'rgba(0, 0, 0, 0)',
+    //
+    //       borderRadius: 0,
+    //       border: 0,
+    //       outline: 'none',
+    //       color: 'black',
+    //       appearance: 'none',
+    //       WebkitAppearance: 'none',
+    //       // fontSize: '14px',
+    //     }}
+    //     defaultValue={currentEnvironment}
+    //     onChange={this.handleChange}>
+    //     {content}
+    //   </select>
+    // );
   }
 }

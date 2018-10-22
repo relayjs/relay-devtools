@@ -42,11 +42,11 @@ export default function connectBackend(bridge: BridgeType): void {
   //
   //
 
-  const agents = [];
-
+const agents = [];
+const id = agents.length;
 function connectAgent(environment: Environment): void {
   try {
-    const id = agents.length;
+
     function emit(name, data) {
       bridge.emit(name, {...data, environment: id});
     }

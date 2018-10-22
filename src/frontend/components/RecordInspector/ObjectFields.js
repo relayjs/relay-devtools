@@ -5,10 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React from 'react';
+ import React from 'react';
 import Header from './Header';
-import Collapsable from './Collapsable';
-import AnimateOnChange from 'react-animate-on-change';
 
 export default function ObjectFields({value}) {
   if (value === null || typeof value !== 'object') {
@@ -26,25 +24,13 @@ export default function ObjectFields({value}) {
           header = <Header value={subValue} keyName={key} />;
           body = null;
         } else {
-          console.log('subValue', subValue);
-          // header = <Header keyName={key} />;
+          header = <Header keyName={key} />;
           body = <ObjectFields value={subValue} />;
-          const header = (
-            <AnimateOnChange
-              baseClassName={'header-container '}
-              animationClassName="header-container--updated"
-              animate={true}>
-              <Header keyName={key} />
-              {/* <Header keyName={key} summary={`${array.length} elements`} /> */}
-            </AnimateOnChange>
-          );
         }
         return (
           <li key={key}>
-            <Collapsable header={header}>
-              {header}
-              {body}
-            </Collapsable>
+            {header}
+            {body}
           </li>
         );
       })}

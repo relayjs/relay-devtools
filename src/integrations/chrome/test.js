@@ -37,7 +37,4 @@ chromeLauncher
     );
     // eslint-disable-next-line no-console
     console.log(`Chrome debugging port running on http://localhost:${chrome.port}/`);
-
-    chromeFlags: [`--load-extension=${EXTENSION_PATH}`],
-    logLevel: 'verbose',
   });

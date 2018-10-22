@@ -42,16 +42,8 @@ export type UpdateEvent = {
 
 type EmitFn = (name: string, data: {[key: string]: mixed}) => void;
 
-export default class EnvironmentAgent {
-  _environment: Environment;
-  _id: string;
-  _emit: EmitFn;
-  _snapshot: any;
-  _lastNetworkEvent: ?UpdateEvent;
-  _flushLastNetworkEventTimer: ?number;
-
  function getSnapshotChanges(store, snapshot, updatedRecordIds) {
-  console.info('[CLIENT] EnvironmentAgent.getSnapshotChanges');
+  // console.info('[CLIENT] EnvironmentAgent.getSnapshotChanges');
   const snapshotBefore = {};
   const snapshotAfter = {};
   const source = store.getSource();
@@ -74,16 +66,16 @@ const seriesIdPrefix = Math.random()
   .slice(-5);
 
 function getNextSeriesID() {
-  console.info('[CLIENT] EnvironmentAgent.nextSeriesId');
+  // console.info('[CLIENT] EnvironmentAgent.nextSeriesId');
   return seriesIdPrefix + seriesIdCounter++;
 }
  function monkeyPatch(source, method, patch) {
-  console.info('[CLIENT] EnvironmentAgent.monkeyPatch');
+  // console.info('[CLIENT] EnvironmentAgent.monkeyPatch');
   source[method] = patch(source[method]);
 }
 
  function getInitialSnapshot(store) {
-  console.info('[CLIENT] EnvironmentAgent.getInitialSnapshot');
+  // console.info('[CLIENT] EnvironmentAgent.getInitialSnapshot');
   const snapshot = {};
   const source = store.getSource();
   const ids = source.getRecordIDs();
@@ -103,15 +95,15 @@ function getNextSeriesID() {
    _network: any;
 
    constructor(environment: Environment, id: string, emit: EmitFn): void {
-     console.info('[CLIENT] EnvironmentAgent.constructor');
+     // console.info('[CLIENT] EnvironmentAgent.constructor');
      this._environment = environment;
      this._id = id;
      this._emit = emit;
      this._snapshot = getInitialSnapshot(environment.getStore());
-     console.log('this._snapshot', this._snapshot);
+     // console.log('this._snapshot', this._snapshot);
 
      this._network = environment.getNetwork();
-     console.log('this._network', this._network);
+     // console.log('this._network', this._network);
      // Monkey patch methods within Environment to follow various events.
      this._monkeyPatchNetwork();
      this._monkeyPatchExecute();
@@ -120,12 +112,12 @@ function getNextSeriesID() {
    }
 
    getEnvironment(): Environment {
-     console.info('[CLIENT] EnvironmentAgent.getEnvironment');
+     // console.info('[CLIENT] EnvironmentAgent.getEnvironment');
      return this._environment;
    }
 
    getId(): string {
-     console.info('[CLIENT] EnvironmentAgent.getId');
+     // console.info('[CLIENT] EnvironmentAgent.getId');
      return this._id;
    }
 
@@ -133,7 +125,7 @@ function getNextSeriesID() {
      matchStr: string,
      matchType: MatchType,
    ): {[id: string]: string} {
-     console.info('[CLIENT] EnvironmentAgent.getMatchingRecords');
+     // console.info('[CLIENT] EnvironmentAgent.getMatchingRecords');
      function isMatching(id: DataID, record: Record): boolean {
        if (matchType === 'idtype') {
          return (
@@ -164,7 +156,7 @@ function getNextSeriesID() {
    }
 
    getRecord(id: DataID): Record {
-     console.info('[CLIENT] EnvironmentAgent.getRecord');
+     // console.info('[CLIENT] EnvironmentAgent.getRecord');
      return deepCopy(
        this._environment
          .getStore()
@@ -174,7 +166,7 @@ function getNextSeriesID() {
    }
 
    getGCData() {
-     console.info('[CLIENT] EnvironmentAgent.getGCData');
+     // console.info('[CLIENT] EnvironmentAgent.getGCData');
      const store = this._environment.getStore();
      return {
        _gcEnabled: store._gcEnabled,
@@ -183,14 +175,14 @@ function getNextSeriesID() {
    }
 
    _monkeyPatchExecute() {
-     console.info('[CLIENT] EnvironmentAgent._monkeyPatchExecute');
+     // console.info('[CLIENT] EnvironmentAgent._monkeyPatchExecute');
      monkeyPatch(this._environment, 'execute', execute =>
        this._monkeyPatchExecuteUnsubscribe(execute),
      );
    }
 
    _monkeyPatchExecuteMutation() {
-     console.info('[CLIENT] EnvironmentAgent._monkeyPatchExecuteMutation');
+     // console.info('[CLIENT] EnvironmentAgent._monkeyPatchExecuteMutation');
      monkeyPatch(this._environment, 'executeMutation', executeMutation =>
        this._monkeyPatchExecuteUnsubscribe(executeMutation),
      );
@@ -202,10 +194,10 @@ function getNextSeriesID() {
    // executeMutation() methods for their "unsubscribe" events, which do in fact
    // occur *before* the corresponding publish.
    _monkeyPatchExecuteUnsubscribe(execute: $FlowFixMe) {
-     console.info(
-       '[CLIENT] EnvironmentAgent._monkeyPatchExecuteUnsubscribe',
-       JSON.stringify(this),
-     );
+     // console.info(
+     //   '[CLIENT] EnvironmentAgent._monkeyPatchExecuteUnsubscribe',
+     //   JSON.stringify(this),
+     // );
      const agent = this;
 
      return function() {
@@ -228,7 +220,7 @@ function getNextSeriesID() {
    }
 
    _monkeyPatchNetwork() {
-     console.info('[CLIENT nice] EnvironmentAgent._monkeyPatchNetwork');
+     // console.info('[CLIENT nice] EnvironmentAgent._monkeyPatchNetwork');
      const agent = this;
      monkeyPatch(
        this._environment.getNetwork(),
@@ -248,10 +240,10 @@ function getNextSeriesID() {
            return observable.do({
              next: payload => {
                // console.log(payload);
-               console.info(
-                 '[CLIENT] EnvironmentAgent._monkeyPatchNetwork',
-                 operation,
-               );
+               // console.info(
+               //   '[CLIENT] EnvironmentAgent._monkeyPatchNetwork',
+               //   operation,
+               // );
                // $FlowFixMe
                return agent._networkEvent({
                  eventName: 'Response',
@@ -276,7 +268,7 @@ function getNextSeriesID() {
    }
 
    _monkeyPatchStoreNotify() {
-     console.info('[CLIENT] EnvironmentAgent._monkeyPatchStoreNotify');
+     // console.info('[CLIENT] EnvironmentAgent._monkeyPatchStoreNotify');
      const agent = this;
      monkeyPatch(
        this._environment.getStore(),
@@ -290,7 +282,7 @@ function getNextSeriesID() {
    }
 
    _networkEvent(partialEvent: UpdateEvent) {
-     console.info('[CLIENT] EnvironmentAgent._networkEvent', partialEvent);
+     // console.info('[CLIENT] EnvironmentAgent._networkEvent', partialEvent);
      if (this._flushLastNetworkEventTimer) {
        this._flushLastNetworkEvent();
      }
@@ -302,20 +294,20 @@ function getNextSeriesID() {
    }
 
    _flushLastNetworkEvent() {
-     console.info('[CLIENT] EnvironmentAgent._flushLastNetworkEvent');
+     // console.info('[CLIENT] EnvironmentAgent._flushLastNetworkEvent');
      // $FlowFixMe
      const data: UpdateEvent = this._lastNetworkEvent;
-     console.info(
-       '[CLIENT] EnvironmentAgent._flushLastNetworkEvent, ',
-       JSON.stringify(data),
-     );
+     // console.info(
+     //   '[CLIENT] EnvironmentAgent._flushLastNetworkEvent, ',
+     //   JSON.stringify(data),
+     // );
      this._clearLastNetworkEvent();
      // $FlowFixMe
      this._emit('update', data);
    }
 
    _clearLastNetworkEvent() {
-     console.info('[CLIENT] EnvironmentAgent._clearLastNetworkEvent');
+     // console.info('[CLIENT] EnvironmentAgent._clearLastNetworkEvent');
      // $FlowFixMe
      clearTimeout(this._flushLastNetworkEventTimer);
      this._lastNetworkEvent = null;
@@ -323,10 +315,10 @@ function getNextSeriesID() {
    }
 
    _runPublishEvent() {
-     console.info(
-       '[CLIENT] EnvironmentAgent._runPublishEvent, ',
-       JSON.stringify(this),
-     );
+     // console.info(
+     //   '[CLIENT] EnvironmentAgent._runPublishEvent, ',
+     //   JSON.stringify(this),
+     // );
      const store = this._environment.getStore();
      const lastNetworkEvent = this._lastNetworkEvent;
      const networkEventName = lastNetworkEvent && lastNetworkEvent.eventName;

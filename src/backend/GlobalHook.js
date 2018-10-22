@@ -38,7 +38,7 @@ export type GlobalHook = {
 };
 
 export function installGlobalHook(window: any): boolean {
-  if (!window || window.__RELAY_DEVTOOLS_HOOK__) {
+  if (!window || window && window.__RELAY_DEVTOOLS_HOOK__) {
     return false;
   }
   const environments = [];

@@ -1,3 +1,7 @@
+* {
+  box-sizing: border-box;
+}
+
 .relay-devtools {
   font-family: system, -apple-system, 'San Francisco', '.SFNSDisplay-Regular',
     'Segoe UI', Segoe, 'Segoe WP', 'Helvetica Neue', helvetica, 'Lucida Grande',

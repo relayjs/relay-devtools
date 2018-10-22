@@ -63,16 +63,21 @@ export default class UpdateInspector extends React.Component {
           />
         );
       } else if (node && node.name) {
-        tabContent = <div className="query name">{node.name}</div>;
+        tabContent = (
+
+            <div className="query name">{node.name}</div>
+          );
       }
-    } else if (currentTab === 'variables') {
-      const variables = event.variables;
+    }
+    else if (currentTab === 'variables') {
+      const variables = {...event.variables};
       tabContent = (
         <div className="variables">
           <ObjectFields value={variables} />
         </div>
       );
-    } else if (currentTab === 'storeDiff') {
+    }
+    else if (currentTab === 'storeDiff') {
       const {snapshotBefore, snapshotAfter} = event;
       const records = changedRecords(snapshotBefore, snapshotAfter);
 
@@ -99,6 +104,11 @@ export default class UpdateInspector extends React.Component {
     return (
       <div className="update-inspector">
         <div className="tab-panel">
+          <span className="left-buttons">
+          <a className="close" onClick={onClose}>
+            &times;
+          </a>
+          </span>
           {Object.keys(tabs).map(tabId => {
             const onClick = () => this.switchToTab(tabId);
             const classes = 'tab' + (currentTab === tabId ? ' active' : '');
@@ -110,14 +120,14 @@ export default class UpdateInspector extends React.Component {
               </a>
             );
           })}
-          <span className="right-buttons">
+          {/* <span className="right-buttons">
             <a className="change-layout" onClick={onLayoutChange}>
               <i className="fa fa-columns" />
             </a>
             <a className="close" onClick={onClose}>
               &times;
             </a>
-          </span>
+          </span> */}
         </div>
         <div className="tab-content">{tabContent}</div>
       </div>

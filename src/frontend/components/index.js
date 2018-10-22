@@ -10,9 +10,19 @@
 
 'use strict';
 
-import type {ShellType} from '../../integrations/chrome/scripts/devtools';
-// declare var chrome: any;
+declare var chrome: any;
 
+import type {ShellType} from '../../integrations/chrome/scripts/devtools';
+
+import 'babel-polyfill';
+import '../css/reset.css';
+
+import React from 'react';
+import ReactDOM from 'react-dom';
+import API from '../api/BridgeAPI';
+import setupRedux from '../redux/setupRedux';
+import App from '../components/App';
+import RelayDetector from '../components/RelayDetector.js';
 
 
 export const isChrome = typeof chrome !== 'undefined' && !!chrome.devtools;
@@ -100,4 +110,3 @@ function onPanelShown () {
 function onPanelHidden () {
   panelShown = false
 }
->>>>>>> new-content-scripts

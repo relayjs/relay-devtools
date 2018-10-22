@@ -18,16 +18,9 @@ import Nav from '../containers/Nav';
 import Tools from '../containers/Tools';
 import StoreExplorer from '../containers/StoreExplorer';
 import UpdatesView from '../containers/UpdatesView';
-import EditVariables from '../containers/EditVariables';
 import RecordInspector from './RecordInspector';
 import EnvironmentChooser from '../containers/EnvironmentChooser';
-// import SnapshotRecordInspector from '../containers/SnapshotRecordInspector';
 
-// const tools = {
-//   environment: EnvironmentChooser,
-//   store: StoreExplorer,
-//   updates: UpdatesView,
-// };
 function handleChange(e) {
   console.log('e', e.target.value);
 }
@@ -38,21 +31,23 @@ function App({store}) {
       <div className="relay-devtools">
         <div
           style={{
-            position: 'relative',
-            height: '25px',
-            flexDirection: 'row-reverse',
-            background: '#f5f5f5',
-            border: 'solid 1px #ddd',
-            padding: '3px',
+          //   position: 'relative',
+          //   height: '25px',
+          //   flexDirection: 'row-reverse',
+          //   background: '#f5f5f5',
+          //   border: 'solid 1px #ddd',
+          //   padding: '3px',
             // borderTop: '1px solid black',
             // borderBottom: '1px solid black',
-            display: 'flex',
-          }}>
-          <Nav
+            // display: 'flex',
+          }}
+          >
+            <EnvironmentChooser>Environment</EnvironmentChooser>
+          {/* <Nav
             renderEnvironmentChooser={() => (
               <EnvironmentChooser>Environment</EnvironmentChooser>
             )}
-          />
+          /> */}
         </div>
 
         <div
@@ -65,19 +60,9 @@ function App({store}) {
             <Filter onChange={handleChange} />
           </UpdatesView>
 
-          {/* <StoreExplorer />
-          <RecordInspector />
-          <SnapshotRecordInspector /> */}
         </div>
 
-        <div>
-          <EditVariables />
-        </div>
 
-        {/* <Search /> */}
-
-        {/* <Tools />
-        </EnvironmentChooser> */}
       </div>
     </Provider>
   );

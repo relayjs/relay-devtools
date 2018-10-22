@@ -41,7 +41,6 @@
     "react-relay": "^1.6.2",
     "react-split-pane": "^0.1.77",
     "redux": "^3.7.2",
-    "redux-devtools-extension": "^2.13.2",
     "update-notifier": "^2.4.0",
     "ws": "^3.1.0"
   },
@@ -80,6 +79,7 @@
     "node-notifier": "^5.2.1",
     "prettier": "1.13.6",
     "react-hot-loader": "^4.3.11",
+    "react-treeview": "^0.4.7",
     "remote-redux-devtools": "^0.5.13",
     "style-loader": "^0.19.0",
     "url-loader": "^0.5.9",

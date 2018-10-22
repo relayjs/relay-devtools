@@ -39,18 +39,20 @@ export default class UpdatesView extends React.Component {
   };
 
   _renderEventsTimeline() {
-    const {events, selectedEvent, selectEvent, filter} = this.props;
+    const {events, selectedEvent, selectEvent, filter, currentEnvironment} = this.props;
 
-    const filterEvents =
-      events &&
-      events.filter(event => {
-        if (filter === '') return true;
+    const filterEvents = events.filter(event => {
+        if (filter === '') {
+          return event.environment.toString() === currentEnvironment;
+        }
         const name = event.operation ? event.operation.name : event.eventName;
-        // debugger
         return name.toLowerCase().indexOf(filter.toLowerCase()) >= 0;
       });
-    if (filterEvents.length === 0 && filter !== '')
+
+    if (filterEvents.length === 0) {
       return <div>No search results</div>;
+    }
+
     return filterEvents.map((event, index) => {
       // if (event && event.operation && event.operation.name) {
       if (event && event.eventName) {
@@ -202,7 +204,7 @@ export default class UpdatesView extends React.Component {
                   height: '100%',
                 }}>
                 {this.props.children}
-                <div style={{overflowY: 'scroll', marginBottom: '33px'}}>
+                <div style={{overflowY: 'scroll', marginBottom: '33px', borderBottom: '1px solid rgb(221, 221, 221)'}}>
                   {this._renderEventsTimeline()}
                   {/* {this._renderEvents()} */}
                 </div>

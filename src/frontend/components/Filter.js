@@ -61,7 +61,7 @@ export default class Filter extends React.Component {
         <input
           type="text"
           className="prompt"
-          placeholder="Filter hehe"
+          placeholder="Filter"
           style={{
             overflow: 'visible',
             border: 0,

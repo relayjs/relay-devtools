@@ -54,7 +54,6 @@ createDevtools({
           port.onMessage.addListener(fn)
         },
         send (data) {
-          debugger
           if (!disconnected) {
             port.postMessage(data)
           }
