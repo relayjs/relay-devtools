@@ -10,12 +10,12 @@
 import {connect} from 'react-redux';
 import Tools from '../components/Tools';
 
-const mapStateToProps = ({tools, updatesView}) => {
-  return {
-    currentTool: tools.currentTool,
-    newUpdateNotification: updatesView.newNotifications,
-  };
-};
+const mapStateToProps = ({tools, updatesView}) => ({
+  currentTool: tools.currentTool,
+  notifications: {
+    updates: updatesView.newNotifications ? 1 : 0,
+  }
+});
 const mapDispatchToProps = dispatch => ({
   onSwitch: tool => {
     dispatch({

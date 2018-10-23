@@ -11,12 +11,24 @@ import '../css/global.css';
 
 import {Provider} from 'react-redux';
 import EnvironmentChooser from '../containers/EnvironmentChooser';
+import Search from '../containers/Search';
+import Nav from '../containers/Nav';
 import Tools from '../containers/Tools';
 
 export default function App({store}) {
   return (
     <Provider store={store}>
-      <div className="relay-devtools">
+      <div>
+        <Nav
+          // onSwitch={onSwitch}
+          // tools={Object.keys(tools)}
+          // notifications={{
+          //   updates: newUpdateNotification ? 1 : 0,
+          // }}
+          // currentTool={currentTool}
+        />
+        <Search />
+
         <EnvironmentChooser>
           <Tools />
         </EnvironmentChooser>

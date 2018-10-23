@@ -7,12 +7,13 @@
 
 import React from 'react';
 import debounce from 'debounce';
+import onClickOutside from 'react-onclickoutside';
 
 import '../css/Search.less';
 
 const SAVED_SEARCHES_PERSIST_KEY = 'RELAY_DEVTOOLS_SAVED_SEARCHES';
 
-export default class Search extends React.Component {
+class Search extends React.Component {
   constructor(props) {
     super(props);
 
@@ -34,7 +35,7 @@ export default class Search extends React.Component {
     this.typeSelectRef = null;
     this.pushNewSearch = this.props.pushNewSearch;
 
-    this.props.rref(this);
+    // this.props.rref(this);
   }
 
   render() {
@@ -108,6 +109,11 @@ export default class Search extends React.Component {
     this.setState({
       searchDetailsOpen: false,
     });
+  };
+
+  pushNewSearch = ({matchTerm, matchType}, resetDOMFields = true) => {
+    this.props.pushNewSearch({matchTerm, matchType});
+    this.inputRef.setMatch({matchTerm, matchType}, resetDOMFields);
   };
 
   makeSavedSearchElement = ({matchTerm, matchType}) => {
@@ -189,3 +195,5 @@ export default class Search extends React.Component {
     this.hideSearchDetails();
   };
 }
+
+export default onClickOutside(Search)

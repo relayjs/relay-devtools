@@ -27,7 +27,7 @@ export default class RelayDetector extends React.Component {
 
   render() {
     if (this.state.isRelayPresent) {
-      return <div className="relay-detector">{this.props.children}</div>;
+      return <div>{this.props.children}</div>;
     }
 
     return (

@@ -13,19 +13,23 @@ import '../css/Tools.less';
 import React from 'react';
 import StoreExplorer from '../containers/StoreExplorer';
 import UpdatesView from '../containers/UpdatesView';
-import Nav from './Nav';
+import Nav from '../containers/Nav';
 
 import type {Tool} from '../reducers/types';
 
 type Props = {|
   +currentTool: Tool,
-  +newUpdateNotification: boolean,
-  +onSwitch: () => void,
+  // +newUpdateNotification: boolean,
+  // +onSwitch: () => void,
 |};
 
 export default class Tools extends React.Component<Props> {
   render() {
-    const {currentTool, newUpdateNotification, onSwitch} = this.props;
+    const {
+      currentTool,
+      // newUpdateNotification,
+      // onSwitch
+    } = this.props;
 
     const tools = {
       store: StoreExplorer,
@@ -41,14 +45,14 @@ export default class Tools extends React.Component<Props> {
             </Hidable>
           );
         })}
-        <Nav
+        {/* <Nav
           onSwitch={onSwitch}
           tools={Object.keys(tools)}
           notifications={{
             updates: newUpdateNotification ? 1 : 0,
           }}
           currentTool={currentTool}
-        />
+        /> */}
       </div>
     );
   }

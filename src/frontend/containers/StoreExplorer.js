@@ -9,25 +9,28 @@ import {connect} from 'react-redux';
 import StoreExplorer from '../components/StoreExplorer';
 
 const mapStateToProps = ({storeExplorer}) => storeExplorer;
-const mapDispatchToProps = dispatch => ({
-  pushNewSearch: newSearch => {
-    dispatch({
-      type: 'NEW_SEARCH',
-      newSearch,
-    });
-  },
-  goBack: currentSearch => {
-    dispatch({
-      type: 'SEARCH_GO_BACK',
-      currentSearch,
-    });
-  },
-  goForward: currentSearch => {
-    dispatch({
-      type: 'SEARCH_GO_FORWARD',
-      currentSearch,
-    });
-  },
-});
+// const mapDispatchToProps = dispatch => ({
+  // pushNewSearch: newSearch => {
+  //   dispatch({
+  //     type: 'NEW_SEARCH',
+  //     newSearch,
+  //   });
+  // },
+//   goBack: currentSearch => {
+//     dispatch({
+//       type: 'SEARCH_GO_BACK',
+//       currentSearch,
+//     });
+//   },
+//   goForward: currentSearch => {
+//     dispatch({
+//       type: 'SEARCH_GO_FORWARD',
+//       currentSearch,
+//     });
+//   },
+// });
 
-export default connect(mapStateToProps, mapDispatchToProps)(StoreExplorer);
+export default connect(
+  mapStateToProps,
+  // mapDispatchToProps
+)(StoreExplorer);

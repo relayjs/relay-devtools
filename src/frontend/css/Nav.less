@@ -8,7 +8,15 @@
 
   @nav-element-width: 110px;
   @blue: #4fa6ff;
-
+  .select-reset {
+    border: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  -ms-appearance: none;
+  background: none;
+  font-weight: normal;
+  }
   .nav-item {
     text-decoration: none;
     color: #777;
@@ -17,6 +25,8 @@
     text-align: center;
     display: inline-block;
     cursor: pointer;
+    /* -webkit-appearance: none; */
+
   }
 
   hr {
@@ -43,7 +53,7 @@
   }
 
   .current:nth-child(2) ~ hr {
-    margin-left: 50%;
+    margin-left: 33%;
   }
 
   .indicator-container {

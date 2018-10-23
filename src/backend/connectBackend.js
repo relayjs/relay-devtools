@@ -65,5 +65,9 @@ export default function connectBackend(bridge: BridgeType): void {
     return agents.length !== 0;
   });
 
+  bridge.onCall('relayDebugger:getEnvironmentsDetails', () => {
+    return JSON.stringify(agents);
+  });
+
   bridge.emit('ready');
 }

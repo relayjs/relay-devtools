@@ -94,6 +94,11 @@ type LoadEnvironmentsSuccessAction = {|
   +response: $ReadOnlyArray<Environment>,
 |};
 
+type LoadEnvironmentsDetailsSuccessAction = {|
+  +type: 'LOAD_ENVIRONMENTS_DETAILS_SUCCESS',
+  +response: $ReadOnlyArray<Environment>,
+|};
+
 export type Action =
   | RecordInspectorChangeDiffModeAction
   | RecordInspectorOpenOrClosePathAction
@@ -109,4 +114,5 @@ export type Action =
   | SearchGoForwardAction
   | LoadRecordDescsSuccessAction
   | SwitchEnvironmentAction
-  | LoadEnvironmentsSuccessAction;
+  | LoadEnvironmentsSuccessAction
+  | LoadEnvironmentsDetailsSuccessAction;

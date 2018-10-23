@@ -29,6 +29,7 @@ export default function(
       return {
         environments: state.environments,
         currentEnvironment: action.environment,
+        environmentsDetails: state.environmentsDetails,
       };
 
     case 'LOAD_ENVIRONMENTS_SUCCESS':
@@ -36,6 +37,15 @@ export default function(
       return {
         environments,
         currentEnvironment: environments[0],
+        environmentsDetails: state.environmentsDetails,
+      };
+
+    case 'LOAD_ENVIRONMENTS_DETAILS_SUCCESS':
+      const environmentsDetails = JSON.parse(action.response);
+      return {
+        environments: state.environments,
+        currentEnvironment: state.currentEnvironment,
+        environmentsDetails,
       };
 
     default:

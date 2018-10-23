@@ -11,12 +11,29 @@ import '../css/EnvironmentChooser.less';
 
 export default class EnvironmentChooser extends React.PureComponent {
   componentDidMount() {
+    this.props.loadEnvironmentsDetails();
     this.props.loadEnvironments();
+  }
+
+  _getEnvironmentName = (currentEnvironment) => {
+    const {
+      environmentsDetails,
+    } = this.props;
+
+    return (
+      environmentsDetails &&
+      environmentsDetails.length > 0 &&
+      environmentsDetails[currentEnvironment] &&
+      environmentsDetails[currentEnvironment]._environment &&
+      environmentsDetails[currentEnvironment]._environment.configName ||
+      `Environment ${Number(currentEnvironment) + 1}`
+    );
   }
 
   render() {
     const {
       environments,
+      environmentsDetails,
       currentEnvironment,
       onChange,
       subscribeEnvironment,
@@ -35,16 +52,18 @@ export default class EnvironmentChooser extends React.PureComponent {
       );
     }
 
+
     subscribeEnvironment(currentEnvironment);
-    const handleChange = (e: SyntheticEvent<>) => onChange(e.target.value);
+    // const handleChange = (e: SyntheticEvent<>) => onChange(e.target.value);
+
     return (
       <div className="environment-chooser">
         <div className="contained">{children}</div>
-        <div className="footer">
+        {/* <div className="footer">
           <select defaultValue={currentEnvironment} onChange={handleChange}>
-            {environments.map(env => <option key={env}>{env}</option>)}
+            {environments.map(env => <option key={env} value={env}>{this._getEnvironmentName(env)}</option>)}
           </select>
-        </div>
+        </div> */}
       </div>
     );
   }

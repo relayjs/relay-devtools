@@ -10,10 +10,8 @@ import {SnapshotRecordInspector} from '../components/RecordInspector';
 import {mapDispatchToProps as mapDispatch} from './RecordInspector';
 
 const mapStateToProps = ({recordInspector}) => recordInspector;
-
 const mapDispatchToProps = (dispatch, props) => ({
   ...mapDispatch(dispatch, props),
-
   switchDiffMode(diffMode) {
     dispatch({
       type: 'RECORD_INSPECTOR_CHANGE_DIFF_MODE',

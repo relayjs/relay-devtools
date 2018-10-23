@@ -6,28 +6,28 @@
  */
 
 import React from 'react';
-import onClickOutside from 'react-onclickoutside';
+// import onClickOutside from 'react-onclickoutside';
 
 import LatestStoreView from '../containers/LatestStoreView';
-import Search from './Search';
+// import Search from '../containers/Search';
 
-const HidableSearch = onClickOutside(Search);
+// const HidableSearch = onClickOutside(Search);
 
 import '../css/StoreExplorer.less';
 import '../css/panels.less';
 
 export default class StoreExplorer extends React.Component {
-  constructor(props) {
-    super(props);
-    this.searchRef = null;
-  }
+  // constructor(props) {
+  //   super(props);
+  //   this.searchRef = null;
+  // }
 
   render() {
     const {matchTerm, matchType} = this.props.latest;
 
     return (
       <div className="store-explorer">
-        <div className="panel">
+        {/* <div className="panel">
           <div className="left-panel">
             <button
               className="back-button"
@@ -43,44 +43,40 @@ export default class StoreExplorer extends React.Component {
             </button>
           </div>
           <div className="center-panel">
-            <HidableSearch
-              rref={ref => (this.searchRef = ref)}
-              pushNewSearch={this.pushNewSearch}
+            <Search
             />
           </div>
           <div className="right-panel" />
-        </div>
-        <LatestStoreView matchTerm={matchTerm} matchType={matchType} />
+        </div> */}
+        <LatestStoreView
+          matchTerm={matchTerm}
+          matchType={matchType}
+        />
       </div>
     );
   }
 
-  pushNewSearch = ({matchTerm, matchType}, resetDOMFields = true) => {
-    this.props.pushNewSearch({matchTerm, matchType});
-    this.searchRef.setMatch({matchTerm, matchType}, resetDOMFields);
-  };
+  // canGoBack = () => {
+  //   return this.props.history.back.length !== 0;
+  // };
 
-  canGoBack = () => {
-    return this.props.history.back.length !== 0;
-  };
-
-  canGoForward = () => {
-    return this.props.history.forward.length !== 0;
-  };
-
-  goBack = () => {
-    const {history} = this.props;
-    const currentSearch = this.searchRef.getMatch();
-    const newMatch = history.back[history.back.length - 1];
-    this.props.goBack(currentSearch);
-    this.searchRef.setMatch(newMatch);
-  };
-
-  goForward = () => {
-    const {history} = this.props;
-    const currentSearch = this.searchRef.getMatch();
-    const newMatch = history.forward[history.forward.length - 1];
-    this.props.goForward(currentSearch);
-    this.searchRef.setMatch(newMatch);
-  };
+  // canGoForward = () => {
+  //   return this.props.history.forward.length !== 0;
+  // };
+  //
+  // goBack = () => {
+  //   const {history} = this.props;
+  //   const currentSearch = this.searchRef.getMatch();
+  //   const newMatch = history.back[history.back.length - 1];
+  //   this.props.goBack(currentSearch);
+  //   this.searchRef.setMatch(newMatch);
+  // };
+  //
+  // goForward = () => {
+  //   const {history} = this.props;
+  //   const currentSearch = this.searchRef.getMatch();
+  //   const newMatch = history.forward[history.forward.length - 1];
+  //   this.props.goForward(currentSearch);
+  //   this.searchRef.setMatch(newMatch);
+  // };
 }
