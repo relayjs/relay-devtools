@@ -9,26 +9,45 @@
  */
 
 import {createStore, applyMiddleware} from 'redux';
-import {composeWithDevTools} from 'remote-redux-devtools';
+// import {composeWithDevTools} from 'remote-redux-devtools';
+import thunkMiddleware from 'redux-thunk';
+// import {profileActionMiddleware} from 'redux-devtools-profiler-monitor';
+// import stateInvariant from 'redux-immutable-state-invariant';
+// import reduxUnhandledAction from 'redux-unhandled-action';
 
+// import {createLogger} from 'redux-logger';
+//
 import reducer from '../reducers';
 
 import getAPIMiddleware from './getAPIMiddleware';
 import throwOnAsyncErrorMiddleware from './throwOnAsyncErrorMiddleware';
-import persistEnhancer from './persistEnhancer';
+// const composeEnhancers = composeWithDevTools({realtime: true});
+// const loggerMiddleware = createLogger();
+// import persistEnhancer from './persistEnhancer';
+// const callback = action => {
+//   console.error(
+//     `${JSON.stringify(action)}
+// didn't lead to creation of a
+// new state object`,
+//   );
+// };
 
-const composeEnhancers = composeWithDevTools({realtime: true});
-// $FlowFixMe
+// const logger = createLogger({
+//   diff: true,
+// });
+
 export default function setupRedux(API) {
   const callAPIMiddleware = getAPIMiddleware(API);
-  return createStore(
-    reducer,
-    composeEnhancers(
-      applyMiddleware(callAPIMiddleware, throwOnAsyncErrorMiddleware),
-      persistEnhancer(
-        ['updatesView.splitType', 'recordInspector.diffMode'],
-        'RELAY_DEVTOOLS',
-      ),
-    ),
-  );
+  const middlewares = [
+    callAPIMiddleware,
+    throwOnAsyncErrorMiddleware,
+    thunkMiddleware,
+    // loggerMiddleware,
+    // profileActionMiddleware,
+    // stateInvariant,
+    // require('redux-immutable-state-invariant').default(),
+    // reduxUnhandledAction(callback),
+    // logger,
+  ];
+  return createStore(reducer, applyMiddleware(...middlewares));
 }

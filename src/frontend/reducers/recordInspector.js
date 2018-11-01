@@ -17,7 +17,7 @@ type State = {|
   diffMode: DiffMode,
   pathOpened: {+[path: string]: boolean},
   typeMapping: TypeMapping,
-  fetchedRecords: {},
+  // fetchedRecords: {},
 |};
 
 export default function(
@@ -25,54 +25,72 @@ export default function(
     diffMode: 'inline',
     pathOpened: {},
     typeMapping: {},
-    fetchedRecords: {},
+    fetchedRecords: null
   },
   action: Action,
 ): State {
   switch (action.type) {
     case 'RECORD_INSPECTOR_CHANGE_DIFF_MODE':
       return {
+        ...state,
         diffMode: action.diffMode,
-        fetchedRecords: state.fetchedRecords,
-        pathOpened: state.pathOpened,
-        typeMapping: state.typeMapping,
       };
 
     case 'RECORD_INSPECTOR_OPEN_OR_CLOSE_PATH':
       return {
-        diffMode: state.diffMode,
-        fetchedRecords: state.fetchedRecords,
+        ...state,
         pathOpened: {
           ...state.pathOpened,
           [action.path]: action.open,
         },
-        typeMapping: state.typeMapping,
+      };
+
+    case 'LOAD_TYPE_MAPPING_REQUEST':
+      return {
+        ...state,
+        loadingTypeMapping: true,
       };
 
     case 'LOAD_TYPE_MAPPING_SUCCESS':
       const typeMapping = action.response;
       if (deepObjectEqual(state.typeMapping, typeMapping)) {
-        return state;
+        return {
+          ...state,
+          loadingTypeMapping: false,
+        };
       }
       return {
-        diffMode: state.diffMode,
-        fetchedRecords: state.fetchedRecords,
-        pathOpened: state.pathOpened,
-        typeMapping,
+        ...state,
+        typeMapping: {
+          ...state.typeMapping,
+          ...typeMapping,
+        },
+        loadingTypeMapping: false,
       };
 
-    case 'LOAD_RECORD_SUCCESS':
+    case 'LOAD_RECORD_REQUEST':
       return {
-        diffMode: state.diffMode,
-        fetchedRecords: {
-          ...state.fetchedRecords,
-          [action.response.__id]: action.response,
-        },
-        pathOpened: state.pathOpened,
-        typeMapping: state.typeMapping,
+        ...state,
+        loadingRecord: true,
       };
+    case 'LOAD_RECORD_SUCCESS':
+      if (action.response && !state.fetchedRecords?.byId[action?.response?.__id]) {
+        return {
+        ...state,
+        fetchedRecords: {
+          byId:{
+            ...(state?.fetchedRecords?.byId ?? {}),
+            [action.response.__id]: action.response,
+          },
+          allIds: (state?.fetchedRecords?.allIds ?? []).concat(
+            action.response.__id
+          )
+        },
+        loadingRecord: false,
+      }
+    }
 
     default:
       return state;
+    }
   }
-}

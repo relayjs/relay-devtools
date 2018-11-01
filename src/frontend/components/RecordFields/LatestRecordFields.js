@@ -4,56 +4,231 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  *
- * @format
  * @flow
+ * @format
  */
+
+'use strict';
 
 import React from 'react';
 import PropTypes from 'prop-types';
 import AnimateOnChange from 'react-animate-on-change';
+
+import {NON_EXISTENT} from './constants';
 import Header from './Header';
 import Collapsable from './Collapsable';
 import {shallowArraysEqual} from '../../util/objCompare';
+import {stringifyPath} from '../../util/stringifyPath';
+import ContaineredRecordFields from '../../containers/LatestRecordFields';
 
-type PathItem = {|
-  +id: string,
-  +name: string,
-|};
+export default class LatestRecordFields extends React.Component<$FlowFixMe> {
+  // previousRecordId;
+  // previousPath;
+  constructor(props) {
+    super();
+    // const {path} = props;
+    // const {id} = path[path.length - 1];
+    this.state = {
+      externalData: null,
+      // lastId: id,
+    };
+  }
+  previousRecordId;
 
-export type Path = $ReadOnlyArray<PathItem>;
+  // static getDerivedStateFromProps(props, state) {
+  //   // const {path} = props;
+  //   // const {id} = path[path.length - 1];
+  //   if (props.path !== state.prevPath) {
+  //     const {id} = props;
+  //     return {
+  //       externalData: null,
+  //       prevPath: id,
+  //     };
+  //   }
+  //
+  //   // Return null to indicate no change to state.
+  //   return null;
+  // }
 
-export const NON_EXISTENT = {};
+  componentDidMount() {
+    // this.setState({externalData: true}, () => {
+    const {path} = this.props;
+    const {id} = path[path.length - 1];
+    this.previousRecordId = id;
+    this.props.loadRecord(id);
+    // });
+  }
 
-export default class RecordFields extends React.Component<$FlowFixMe> {
-  previousRecord: $FlowFixMe;
+  // componentDidUpdate(prevProps, prevState) {
+  //   if (this.state.externalData === null) {
+  //     const {path} = this.props;
+  //     const {id} = path[path.length - 1];
+
+  //     if (
+  //       this.props.fetchedRecords === null ||
+  //       !this.props.fetchedRecords?.byId[id]
+  //     ) {
+  //       // console.log(this.props.fetchedRecords?.byId[this.props.id]);
+  //       // this.props.loadRecord(id);
+  //       // this.previousRecordId = id;
+  //       this.setState({externalData: true}, () => {
+  //         // const {path} = this.props;
+  //         // const {id} = path[path.length - 1];
+  //         this.previousRecordId = id;
+  //         this.props.loadRecord(id);
+  //       });
+  //     }
+  //   }
+  // }
+
+  // componentDidUpdate(prevProps) {
+  //   if (!this.fetchedRecords) {
+  //     const {path} = this.props;
+  //     const {id} = path[path.length - 1];
+  //     this.props.loadRecord(id);
+  //     this.previousRecordId = id;
+  //   }
+  // }
+
+  // componentWillReceiveProps(props) {
+  //   console.log('componentWillReceiveProps', props);
+  //   const {path} = props;
+  //   const {id} = path[path.length - 1];
+  //   this.previousRecord = props.fetchedRecords.byId[id];
+  //   this.props.loadRecord(id);
+  // }
+
+  // Due to how "changed" animations are built, it is important to only update
+  // this component if something actually changed.
+  // Otherwise we are risking to cancel an animation in flight because
+  // this.previousRecord is overwritten unecessarily.
+  // Ideally we track changes on individual field level.
+  // shouldComponentUpdate(nextProps) {
+  // if (
+  //   nextProps.fetchedRecords.allIds[
+  //     nextProps.fetchedRecords.allIds.length - 1
+  //   ].__id !== this.props.selectedRecordId
+  // ) {
+  //   return true;
+  // }
+  // const {path} = nextProps;
+  // const {id} = path[path.length - 1];
+  // console.log(id, path, nextProps, this.props);
+  // if (nextProps.selectedRecordId !== this.props.selectedRecordId) {
+  //   this.previousRecordId = nextProps.selectedRecordId;
+  // }
+  // if (
+  //   nextProps.selectedRecordId &&
+  //   nextProps.selectedRecordId !== this.props.selectedRecordId &&
+  //   // (!nextProps.fetchedRecords ||
+  //   (nextProps.fetchedRecords &&
+  //     Array.isArray(nextProps.fetchedRecords.allIds) &&
+  //     nextProps.fetchedRecords.allIds.find(
+  //       recordId => recordId === nextProps.selectedRecordId,
+  //     ))
+  // ) {
+  //   console.log(
+  //     'shouldComponentUpdate, selectedRecordId',
+  //     nextProps.selectedRecordId,
+  //   );
+  //   return true;
+  // }
+  // else if (nextProps.typeMapping !== this.props.typeMapping) {
+  //   return true;
+  // } else if (nextProps.pathOpened !== this.props.pathOpened) {
+  //   console.log('shouldComponentUpdate, pathOpened', nextProps.pathOpened);
+  //   return true;
+  // }
+  // else if (nextProps.path !== this.props.path) {
+  //   console.log('shouldComponentUpdate, path', nextProps.pathOpened);
+  //   return true;
+  // }
+
+  // return false;
+  // }
+
+  componentDidUpdate(prevProps, prevState) {
+    const {path} = this.props;
+    const {id} = path[path.length - 1];
+    if (
+      this.props.fetchedRecords === null ||
+      !this.props.fetchedRecords?.byId[id]
+    ) {
+      this.props.loadRecord(id, true);
+      this.previousRecordId = id;
+    }
+  }
+  // if (
+  //   this.previousRecordId !== this.props.selectedRecordId ||
+  //   (prevProps.selectedRecordId !== this.props.selectedRecordId &&
+  //     this.props.fetchedRecords &&
+  //     !this.props.fetchedRecords.byId[this.props.selectedRecordId]) ||
+  //   prevProps.path !== this.props.path
+  // ) {
+
+  // const {path} = this.props;
+  // const {id} = path[path.length - 1];
+  // console.log(id, path, prevProps, this.props);
+  // if (
+  //   this.props.selectedRecordId &&
+  //   this.props.selectedRecordId !== prevProps.selectedRecordId &&
+  //   (!this.props.fetchedRecords ||
+  //     (this.props.fetchedRecords &&
+  //       Array.isArray(this.props.fetchedRecords.allIds) &&
+  //       !this.props.fetchedRecords.allIds.find(recordId => recordId === id)))
+  // ) {
+  //   console.log('selectedRecordId componentDidUpdate updating');
+  //   this.props.loadRecord(id, true);
+  // }
+  // else if (prevProps.typeMapping !== this.props.typeMapping) {
+  //   return true;
+  // }
+  // else if (prevProps.pathOpened !== this.props.pathOpened) {
+  //   return true;
+  // }
+  // else if (prevProps.path !== this.props.path) {
+  //   if (
+  //     this.props.fetchedRecords &&
+  //     Array.isArray(this.props.fetchedRecords.allIds) &&
+  //     this.props.fetchedRecords.allIds.find(recordId => recordId !== id)
+  //   ) {
+  //     console.log('his.props.path componentDidUpdate updating');
+  //     this.props.loadRecord(id, true);
+  //   }
+  // }
+  // }
 
   loadFromSnapshot() {
-    const {path, snapshot, otherSnapshot} = this.props;
+    const {path, snapshot} = this.props;
     const {id} = path[path.length - 1];
 
     if (!snapshot) {
+      const record = this.props?.fetchedRecords?.byId?.[id];
       return {
-        record: this.props.fetchedRecords[id],
-        previousRecord: this.previousRecord,
+        record,
+        previousRecordId: this.previousRecordId,
       };
     }
     const record = snapshot[id];
-    const previousRecord = otherSnapshot[id];
+    const previousRecordId = id;
 
     return {
       record,
-      previousRecord,
+      previousRecordId,
     };
   }
 
   shouldAnimate() {
-    return false;
+    const {path, fetchedRecords} = this.props;
+    const {id} = path[path.length - 1];
+    const record = fetchedRecords.byId[id];
+    const {previousRecordId} = this;
+    return previousRecordId ? previousRecordId === record.__id : false;
   }
 
   getSelfClass() {
-    return RecordFields;
+    return ContaineredRecordFields;
   }
-
   isPathOpened = (path: $FlowFixMe) => {
     return this.props.pathOpened[stringifyPath(path)];
   };
@@ -287,25 +462,21 @@ export default class RecordFields extends React.Component<$FlowFixMe> {
   }
 
   render() {
-    const {record, previousRecord} = this.loadFromSnapshot();
+    const {record, previousRecordId} = this.loadFromSnapshot();
 
     if (!record) {
       return null;
     }
 
-    return <ul>{this.renderObject(record, previousRecord)}</ul>;
+    return <ul>{this.renderObject(record, previousRecordId)}</ul>;
   }
 }
 
-RecordFields.contextTypes = {
+LatestRecordFields.contextTypes = {
   navigateToPath: PropTypes.func,
   getType: PropTypes.func,
 };
 
-RecordFields.childContextTypes = {
+LatestRecordFields.childContextTypes = {
   isPathOpened: PropTypes.func,
 };
-
-export function stringifyPath(path: Path) {
-  return path.map(e => e.id).join('/');
-}

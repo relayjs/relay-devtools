@@ -19,12 +19,36 @@
 
 import {installGlobalHook} from '../../../backend/GlobalHook';
 
+let lastDetectionResult;
+window.addEventListener('message', function(evt) {
+  if (
+    evt.source === window &&
+    evt.data &&
+    evt.data.source === 'relay-environment-detector'
+  ) {
+    lastDetectionResult = {
+      hasDetectedRelay: true,
+      environment: JSON.stringify(evt.data.environment),
+    };
+    chrome.runtime.sendMessage(lastDetectionResult);
+  }
+});
+
 // inject the hook
 // $FlowFixMe
-if (document instanceof HTMLDocument) {
-  const source = ';(' + installGlobalHook.toString() + ')(window)';
-  const script = document.createElement('script');
-  script.textContent = source;
-  document.documentElement.appendChild(script);
-  script.parentNode.removeChild(script);
-}
+// if (document instanceof HTMLDocument) {
+const detectRelayEnvironment = `
+  window.__RELAY_DEVTOOLS_HOOK__.on('hasDetectedReact', function(evt) {
+    window.postMessage({
+      source: 'relay-environment-detector',
+      environment: evt.environment,
+    }, '*');
+  });
+  `;
+const source =
+  ';(' + installGlobalHook.toString() + '(window))' + detectRelayEnvironment;
+const script = document.createElement('script');
+script.textContent = source;
+document.documentElement.appendChild(script);
+script.parentNode.removeChild(script);
+// }

@@ -5,7 +5,10 @@
     "babel",
     "flowtype",
     "react",
-    "prettier"
+    "prettier
+    "relay",
+    "jsx-a11y",
+    "fbjs"
   ],
 
   "extends": [

@@ -15,7 +15,7 @@
 
 'use strict';
 
-import deepCopy from './deepCopy';
+// import deepCopy from './deepCopy';
 
 // import type {Record} from 'RelayCombinedEnvironmentTypes';
 // import type {ConcreteBatch} from 'RelayConcreteNode';
@@ -81,6 +81,23 @@ function getInitialSnapshot(store) {
   return snapshot;
 }
 
+function deepCopy<T>(value: T): T {
+  if (Array.isArray(value)) {
+    return value.map(deepCopy);
+  }
+  if (value && typeof value === 'object') {
+    const copy = {};
+    for (const prop in value) {
+      if (hasOwnProperty.call(value, prop)) {
+        copy[prop] = deepCopy(value[prop]);
+      }
+    }
+    // $FlowFixMe
+    return copy;
+  }
+  return value;
+}
+
 export default class EnvironmentAgent {
   _environment: Environment;
   _id: string;
@@ -95,13 +112,18 @@ export default class EnvironmentAgent {
     this._id = id;
     this._emit = emit;
     this._snapshot = getInitialSnapshot(environment.getStore());
-
     this._network = environment.getNetwork();
+    // this._emit('log', {
+    //   network: JSON.stringify(this._network),
+    //   snapshot: this._snapshot,
+    //   id: this._id,
+    // });
     // Monkey patch methods within Environment to follow various events.
-    this._monkeyPatchNetwork();
-    this._monkeyPatchExecute();
+
     this._monkeyPatchExecuteMutation();
     this._monkeyPatchStoreNotify();
+    this._monkeyPatchNetwork();
+    this._monkeyPatchExecute();
   }
 
   getEnvironment(): Environment {
@@ -162,6 +184,10 @@ export default class EnvironmentAgent {
     };
   }
 
+  setEmitFunction(emit) {
+    this._emit = emit;
+  }
+
   _monkeyPatchExecute() {
     monkeyPatch(this._environment, 'execute', execute =>
       this._monkeyPatchExecuteUnsubscribe(execute),
@@ -189,10 +215,9 @@ export default class EnvironmentAgent {
       return observable.do({
         unsubscribe: () =>
           // Produce a mirrored "Unsubscribe" network event.
-          agent._networkEvent({
-            ...lastNetworkEvent,
+          agent._networkEvent(Object.assign({}, lastNetworkEvent, {
             eventName: 'Unsubscribe',
-          }),
+          })),
       });
     };
   }

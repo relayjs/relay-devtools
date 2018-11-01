@@ -183,6 +183,10 @@ export default class Bridge {
     this._sendMessage({type: 'resume'});
   }
 
+  log(message) {
+    this._transport.send('log', message);
+  }
+
   _receiveMessage(message: BridgeMessage): void {
     this._incomingBuffer.push(message);
     this._scheduleFlush();

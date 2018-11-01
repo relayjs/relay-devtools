@@ -14,7 +14,7 @@ declare var chrome: any;
 
 import type {ShellType} from '../../integrations/chrome/scripts/devtools';
 
-import 'babel-polyfill';
+// import '@babel/polyfill';
 import '../css/reset.css';
 
 import React from 'react';
@@ -24,36 +24,32 @@ import setupRedux from '../redux/setupRedux';
 import App from '../components/App';
 import RelayDetector from '../components/RelayDetector.js';
 
+let disconnect;
+
 const isChrome = typeof chrome !== 'undefined' && Boolean(chrome.devtools);
-let app;
 
 export default function createDevtools(shell: ShellType) {
   initApp(shell);
   shell.onReload(() => {
-    if (app) {
-      // unsure about this logic
-      // const elem = document.getElementById(app);
-      // if (elem && elem.parentNode) {
-      // elem.parentNode.removeChild(elem);
-      // }
+    ReactDOM.unmountComponentAtNode(document.getElementById('devtools-root'));
+    if (typeof disconnect === 'function') {
+      disconnect();
     }
-    // window.bridge.removeAllListeners();
+
     initApp(shell);
   });
 }
 
 function initApp(shell: ShellType) {
-  shell.connect(bridge => {
+  shell.connect((bridge, _disconnect) => {
     window.bridge = bridge;
-
+    disconnect = _disconnect;
     bridge.once('ready', () => {
       if (isChrome) {
-        chrome.runtime.sendMessage({message: 'relay-panel-load'});
+        chrome && chrome.runtime.sendMessage({message: 'relay-panel-load'});
       }
     });
 
-    const CONTAINER = document.getElementById('devtools-root');
-    app = 'devtools-root';
     const api = new API(bridge);
     const store = setupRedux(api);
 
@@ -62,7 +58,7 @@ function initApp(shell: ShellType) {
         <App store={store} />
       </RelayDetector>,
       // $FlowFixMe
-      CONTAINER,
+      document.getElementById('devtools-root'),
     );
   });
 }

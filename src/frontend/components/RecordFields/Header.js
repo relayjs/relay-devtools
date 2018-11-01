@@ -3,7 +3,12 @@
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
+ *
+ * @flow
+ * @format
  */
+
+'use strict';
 
 import React from 'react';
 
@@ -25,7 +30,9 @@ export default function Header(props) {
   const displayValue =
     typeof value === 'string'
       ? value
-      : typeof value === 'undefined' ? 'undefined' : JSON.stringify(value);
+      : typeof value === 'undefined'
+        ? 'undefined'
+        : JSON.stringify(value);
   const valueSpan =
     'value' in props ? (
       <span className={valueSpanClass} key="value">

@@ -3,7 +3,12 @@
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
+ *
+ * @flow
+ * @format
  */
+
+'use strict';
 
 import {connect} from 'react-redux';
 import Search from '../components/Search';
@@ -18,4 +23,7 @@ const mapDispatchToProps = dispatch => ({
   },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Search);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Search);

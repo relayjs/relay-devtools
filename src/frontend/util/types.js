@@ -10,12 +10,9 @@
 
 'use strict';
 
-export const mapDispatchToProps = dispatch => ({
-  openOrClosePath(path, open) {
-    dispatch({
-      type: 'RECORD_INSPECTOR_OPEN_OR_CLOSE_PATH',
-      path,
-      open,
-    });
-  },
-});
+type PathItem = {|
+  +id: string,
+  +name: string,
+|};
+
+export type Path = $ReadOnlyArray<PathItem>;

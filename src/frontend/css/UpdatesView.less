@@ -9,7 +9,7 @@
   }
 
   .events-map {
-    padding: 2em 5em;
+    padding: 2em 0;
     overflow-x: auto;
     overflow-y: auto;
     height: 100%;
@@ -73,6 +73,7 @@
           margin-left: @event-margin;
           width: @event-width;
           position: relative;
+          cursor: pointer;
 
           &:last-child {
             margin-right: 6em;
@@ -136,7 +137,7 @@
 
   .update-inspector {
     background: white;
-    border-left: solid 1px #ddd;
+    // border-left: solid 1px #ddd;
     width: 100%;
     min-width: 0;
     height: 100%;
@@ -152,6 +153,7 @@
     .tab-panel {
       display: block;
       border: solid 1px #ddd;
+      border-top: none;
       padding: 3px 5px 0px 5px;
       background: #f5f5f5;
 
@@ -175,6 +177,17 @@
           border: solid 1px #ccc;
           border-bottom: 0;
           background: white;
+        }
+      }
+
+      .left-buttons {
+        float: left;
+        color: #777;
+        cursor: pointer;
+        margin-right: 5px;
+
+        & > a:hover {
+          color: #333;
         }
       }
 
@@ -216,7 +229,7 @@
     .payload {
       font-family: Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New',
         monospace;
-      font-size: 14px;
+      // font-size: 14px;
     }
 
     .query {

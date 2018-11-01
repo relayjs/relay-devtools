@@ -10,12 +10,8 @@
 
 'use strict';
 
-export const mapDispatchToProps = dispatch => ({
-  openOrClosePath(path, open) {
-    dispatch({
-      type: 'RECORD_INSPECTOR_OPEN_OR_CLOSE_PATH',
-      path,
-      open,
-    });
-  },
-});
+import type {Path} from './types';
+
+export function stringifyPath(path: Path) {
+  return path.map(e => e.id).join('/');
+}

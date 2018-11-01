@@ -3,36 +3,37 @@
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
+ *
+ * @flow
+ * @format
  */
 
+'use strict';
+
 import React from 'react';
-
-import '../css/global.css';
-
 import {Provider} from 'react-redux';
+
 import EnvironmentChooser from '../containers/EnvironmentChooser';
-import Search from '../containers/Search';
 import Nav from '../containers/Nav';
-import Tools from '../containers/Tools';
+import StoreExplorer from '../containers/StoreExplorer';
+import UpdatesView from '../containers/UpdatesView';
 
 export default function App({store}) {
   return (
     <Provider store={store}>
-      <div>
-        <Nav
-          // onSwitch={onSwitch}
-          // tools={Object.keys(tools)}
-          // notifications={{
-          //   updates: newUpdateNotification ? 1 : 0,
-          // }}
-          // currentTool={currentTool}
-        />
-        <Search />
-
+      <div style={containerStyle}>
         <EnvironmentChooser>
-          <Tools />
+          <Nav />
+          <StoreExplorer />
+          <UpdatesView />
         </EnvironmentChooser>
       </div>
     </Provider>
   );
 }
+
+const containerStyle = {
+  height: '100%',
+  display: 'flex',
+  flexDirection: 'column',
+};

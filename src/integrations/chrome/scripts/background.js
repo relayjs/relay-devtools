@@ -27,7 +27,7 @@ chrome.runtime.onConnect.addListener(port => {
   if (isNumeric(port.name)) {
     tab = port.name;
     name = 'devtools';
-    installProxy(+port.name);
+    installProxy(Number(port.name));
   } else {
     tab = port.sender.tab.id;
     name = 'backend';
@@ -47,7 +47,7 @@ chrome.runtime.onConnect.addListener(port => {
 });
 
 function isNumeric(str) {
-  return +str + '' === str;
+  return String(Number(str)) === str;
 }
 
 /**
@@ -112,4 +112,44 @@ function doublePipe(id, one, two) {
   two.onDisconnect.addListener(shutdown);
   /* eslint-disable no-console */
   console.log('tab ' + id + ' connected.');
+  setIconAndPopup('relayBuildType', id);
+}
+
+chrome.runtime.onMessage.addListener((req, sender) => {
+  // This is sent from the hook content script.
+  // It tells us a renderer has attached.
+  // console.log('eq, sender', req, sender);
+
+  if (req.hasDetectedRelay && sender.tab) {
+    // We use browserAction instead of pageAction because this lets us
+    // display a custom default popup when React is *not* detected.
+    // It is specified in the manifest.
+    // let reactBuildType = req.reactBuildType;
+    // if (sender.url.indexOf('facebook.github.io/react') !== -1) {
+    // Cheat: We use the development version on the website because
+    // it is better for interactive examples. However we're going
+    // to get misguided bug reports if the extension highlights it
+    // as using the dev version. We're just going to special case
+    // our own documentation and cheat. It is acceptable to use dev
+    // version of React in React docs, but not in any other case.
+    // reactBuildType = 'production';
+    // }
+    // setIconAndPopup('relayBuildType', sender.tab.id);
+  }
+});
+
+function setIconAndPopup(reactBuildType, tabId) {
+  chrome.browserAction.setIcon({
+    tabId,
+    path: {
+      '16': 'imgs/logo.png',
+      '32': 'imgs/logo.png',
+      '48': 'imgs/logo.png',
+      '128': 'imgs/logo.png',
+    },
+  });
+  chrome.browserAction.setPopup({
+    tabId,
+    popup: 'disabled.html',
+  });
 }

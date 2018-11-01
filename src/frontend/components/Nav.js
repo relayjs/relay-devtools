@@ -3,114 +3,189 @@
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
+ * @flow
+ * @format
  */
 
+'use strict';
+
 import React from 'react';
-import AnimateOnChange from 'react-animate-on-change';
 
-import '../css/Nav.less';
+import Hoverable from './Hoverable';
 
-export default class Nav extends React.Component {
-  constructor() {
-    super();
-    this.prevNotifications = {};
-  }
+const DISPLAY_NAMES = {
+  store: 'Store Explorer',
+  updates: 'Updates',
+};
 
-  _getEnvironmentName = (currentEnvironment) => {
-    const {
-      environmentsDetails,
-    } = this.props;
-
-    return (
-      environmentsDetails &&
-      environmentsDetails.length > 0 &&
-      environmentsDetails[currentEnvironment] &&
-      environmentsDetails[currentEnvironment]._environment &&
-      environmentsDetails[currentEnvironment]._environment.configName ||
-      `Environment ${Number(currentEnvironment) + 1}`
+export default class Nav extends React.Component<$FlowFixMe> {
+  _handleSwitch = selectedType => {
+    this.setState(
+      {
+        selectedType,
+      },
+      () => {
+        this.props.onSwitch(selectedType);
+      },
     );
-  }
+  };
 
   render() {
     const {
-      // tools,
       currentTool,
-      onSwitch,
       notifications,
       environmentsDetails,
-      environments,
       currentEnvironment,
-      onChange
+      onChange,
+      onChangeUpdateView,
     } = this.props;
-    const {prevNotifications} = this;
-    this.prevNotifications = notifications;
-
-    const displayNames = {
-      store: 'Store Explorer',
-      updates: 'Updates',
-    };
 
     const handleChange = (e: SyntheticEvent<>) => onChange(e.target.value);
+    const handleChangeUpdateView = (e: SyntheticEvent<>) =>
+      onChangeUpdateView(e.target.value);
     return (
-      <div
-        style={{
-          border: '2px solid green',
-          /* flex: 1; */
-          display: 'flex',
-          boxSizing: 'border-box',
-          alignItems: 'center',
-          width: '100%',
-          padding: '8px'
-        }}>
-        <span style={{
-          flex: 1,
-          paddingLeft: '0 5px 0 0'
-        }}>
-          Environment Select
-          {/* <select defaultValue={currentEnvironment} onChange={handleChange} style={{
+      <div style={containerStyle}>
+        <div style={{flex: 1, display: 'flex'}}>
+          <span style={environmentSelectContainerStyle}>
+            <select
+              defaultValue={currentEnvironment}
+              onChange={handleChange}
+              style={environmentSelectStyle}>
+              {environmentsDetails &&
+                Object.keys(environmentsDetails).map(key => (
+                  <option key={key} value={key}>
+                    {environmentsDetails[key]}
+                  </option>
+                ))}
+            </select>
+            <span style={optionSelectArrow} />
+          </span>
 
-            'border': 'none',
-            '-webkit-appearance': 'none',
-            '-moz-appearance': 'none',
-            'appearance': 'none',
-            '-ms-appearance': 'none',
-            'background': 'none',
-            'font-weight': 'normal',
-
-          }}>
-            {environments.map(env => <option key={env} value={env}>{this._getEnvironmentName(env)}</option>)}
-          </select> */}
-        </span>
-        {Object.keys(displayNames).map(tool => {
-          const current = notifications[tool];
-          const previous = prevNotifications[tool];
-          const selected = tool === currentTool;
-          const animated = current !== previous;
-          const showIndicator = Boolean(current) && !selected;
-          return (
-            <span
-              // className={`nav-item ${selected ? 'current' : ''}`}
-              style={{
-                padding: '0 8px',
-                display: 'flex',
-                alignItems: 'center'
-              }}
-              key={tool}
-              onClick={() => onSwitch(tool)}>
-              {displayNames[tool]}
-              {/* <AnimateOnChange
-                baseClassName="indicator-container"
-                animationClassName="indicator-container--updated"
-                animate={animated}> */}
-                {/* <span
-                  // className={'indicator' + (showIndicator ? '' : ' disabled')}
-                // /> */}
-              {/* </AnimateOnChange> */}
+          {currentTool === 'updates' && (
+            <span style={viewSelectContainerStyle}>
+              <select
+                defaultValue={'list'}
+                onChange={handleChangeUpdateView}
+                style={viewSelectStyle}>
+                {['list', 'chart'].map(key => (
+                  <option key={key} value={key}>
+                    {key.charAt(0).toUpperCase() + key.slice(1)}
+                  </option>
+                ))}
+              </select>
+              <span style={optionSelectArrow} />
             </span>
+          )}
+        </div>
+        {Object.keys(DISPLAY_NAMES).map((tool, key) => {
+          const isSelected = tool === currentTool;
+          const hrStyle = getHrStyle(isSelected);
+          return (
+            <div style={navItemContainerStyle} key={key}>
+              <NavItem
+                onClick={() => this._handleSwitch(tool)}
+                notifications={notifications}
+                isSelected={isSelected}>
+                {DISPLAY_NAMES[tool]}
+              </NavItem>
+              <hr style={hrStyle} />
+            </div>
           );
         })}
-        <hr />
       </div>
     );
   }
 }
+
+const containerStyle = {
+  borderBottom: '1px solid #ddd',
+  display: 'flex',
+  boxSizing: 'border-box',
+  alignItems: 'center',
+  width: '100%',
+  padding: '0 16px',
+};
+
+const environmentSelectContainerStyle = {
+  padding: '0 5px 0 5px',
+  display: 'flex',
+  alignItems: 'center',
+};
+
+const viewSelectContainerStyle = {
+  marginLeft: '10px',
+  padding: '0 5px 0 5px',
+  display: 'flex',
+  alignItems: 'center',
+};
+
+const environmentSelectStyle = {
+  border: 'none',
+  marginRight: '5px',
+  WebkitAppearance: 'none',
+  MozAppearance: 'none',
+  appearance: 'none',
+  msAppearance: 'none',
+  background: 'none',
+  fontWeight: 'normal',
+  color: '#777',
+};
+const viewSelectStyle = {
+  border: 'none',
+  WebkitAppearance: 'none',
+  MozAppearance: 'none',
+  appearance: 'none',
+  msAppearance: 'none',
+  background: 'none',
+  fontWeight: 'normal',
+  color: '#777',
+};
+
+const optionSelectArrow = {
+  float: 'right',
+  width: 0,
+  height: 0,
+  // marginLeft: '5px',
+  borderTop: '6px solid #777',
+  borderLeft: '3px solid transparent',
+  borderRight: '3px solid transparent',
+  color: '#777',
+};
+
+const navItemContainerStyle = {
+  display: 'flex',
+  flexDirection: 'column',
+  width: '100px',
+  cursor: 'pointer',
+};
+
+const getNavItemStyle = (isHovered: boolean, isSelected: boolean) => ({
+  display: 'flex',
+  padding: '8px',
+  border: 'none',
+  outline: 'none',
+  color: isHovered && !isSelected ? 'inherit' : '#777',
+  background: isHovered && !isSelected ? 'rgba(119, 119, 119, 0.2)' : 'none',
+  justifyContent: 'center',
+  cursor: 'pointer',
+  boxSizing: 'border-box',
+});
+
+const getHrStyle = (isSelected: boolean) => ({
+  borderBottom: `2px solid ${isSelected ? 'rgb(33, 150, 243)' : 'transparent'}`,
+  margin: 0,
+  borderTop: 'none',
+  cursor: 'pointer',
+});
+
+const NavItem = Hoverable(
+  ({isHovered, isSelected, onClick, onMouseEnter, onMouseLeave, children}) => (
+    <button
+      onClick={onClick}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+      style={getNavItemStyle(isHovered, isSelected)}>
+      {children}
+    </button>
+  ),
+);

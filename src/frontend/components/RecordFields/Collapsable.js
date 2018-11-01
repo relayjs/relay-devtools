@@ -8,10 +8,12 @@
  * @format
  */
 
+'use strict';
+
+import type {Path} from './types';
+
 import React from 'react';
 import PropTypes from 'prop-types';
-
-import type {Path} from './RecordFields';
 
 type Props = {|
   path: Path,

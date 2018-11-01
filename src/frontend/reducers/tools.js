@@ -22,6 +22,7 @@ export default function(
   switch (action.type) {
     case 'SWITCH_TOOL':
       return {
+        ...state,
         currentTool: action.tool,
       };
 

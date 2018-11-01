@@ -3,17 +3,22 @@
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
+ * @flow
+ * @format
  */
+
+'use strict';
+
+import '../../css/UpdatesView.less';
 
 import React from 'react';
 import {GraphqlCodeBlock} from 'graphql-syntax-highlighter-react';
-import 'graphql-syntax-highlighter-react/dist/style.css';
 
-import {deepObjectEqual} from '../util/objCompare';
-import {ObjectFields} from './RecordInspector';
-import {SnapshotStoreView} from './StoreView';
+import {deepObjectEqual} from '../../util/objCompare';
+import ObjectFields from '../RecordFields/ObjectFields';
+import SnapshotStoreView from '../../containers/SnapshotStoreView';
 
-export default class UpdateInspector extends React.Component {
+export default class UpdateInspector extends React.Component<$FlowFixMe> {
   constructor(props) {
     super(props);
 
@@ -41,10 +46,10 @@ export default class UpdateInspector extends React.Component {
   }
 
   render() {
-    const {event, onClose, onLayoutChange} = this.props;
+    const {currentEnvironment, event, onClose, onLayoutChange} = this.props;
     const {currentTab} = this.state;
 
-    if (!event) {
+    if (!event || event.environment.toString() !== currentEnvironment) {
       return null;
     }
 
@@ -97,29 +102,36 @@ export default class UpdateInspector extends React.Component {
     }
 
     return (
-      <div className="update-inspector">
-        <div className="tab-panel">
-          {Object.keys(tabs).map(tabId => {
-            const onClick = () => this.switchToTab(tabId);
-            const classes = 'tab' + (currentTab === tabId ? ' active' : '');
-            const tabName =
-              tabId === 'response' && response.isError ? 'Error' : tabs[tabId];
-            return (
-              <a key={tabId} className={classes} onClick={onClick}>
-                {tabName}
+      <div className="updates-view">
+        <div className="update-inspector">
+          <div className="tab-panel">
+            <span className="left-buttons">
+              <a className="close" onClick={onClose}>
+                &times;
               </a>
-            );
-          })}
-          <span className="right-buttons">
-            <a className="change-layout" onClick={onLayoutChange}>
-              <i className="fa fa-columns" />
-            </a>
-            <a className="close" onClick={onClose}>
-              &times;
-            </a>
-          </span>
+            </span>
+            {Object.keys(tabs).map(tabId => {
+              const onClick = () => this.switchToTab(tabId);
+              const classes = 'tab' + (currentTab === tabId ? ' active' : '');
+              const tabName =
+                tabId === 'response' && response.isError
+                  ? 'Error'
+                  : tabs[tabId];
+              return (
+                <a key={tabId} className={classes} onClick={onClick}>
+                  {tabName}
+                </a>
+              );
+            })}
+
+            <span className="right-buttons">
+              <a className="change-layout" onClick={onLayoutChange}>
+                <i className="fa fa-columns" />
+              </a>
+            </span>
+          </div>
+          <div className="tab-content">{tabContent}</div>
         </div>
-        <div className="tab-content">{tabContent}</div>
       </div>
     );
   }
@@ -134,14 +146,14 @@ function getTabs(event) {
     tabs.variables = 'Variables';
   }
 
-  // Only include response tab if it is present on the event.
-  if (event.response) {
-    tabs.response = 'Response';
-  }
-
   // Only include storeDiff tab if it is present on the event.
   if (event.snapshotAfter) {
     tabs.storeDiff = 'Store Update';
+  }
+
+  // Only include response tab if it is present on the event.
+  if (event.response) {
+    tabs.response = 'Response';
   }
 
   return tabs;

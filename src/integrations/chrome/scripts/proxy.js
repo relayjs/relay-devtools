@@ -26,8 +26,8 @@ declare var chrome: any;
 const port = chrome.runtime.connect({name: 'content-script'});
 
 port.onMessage.addListener(sendMessageToBackend);
-window.addEventListener('message', sendMessageToDevtools);
 port.onDisconnect.addListener(handleDisconnect);
+window.addEventListener('message', sendMessageToDevtools);
 
 sendMessageToBackend('init');
 
@@ -48,6 +48,6 @@ function sendMessageToDevtools(event) {
 }
 
 function handleDisconnect() {
-  sendMessageToBackend({type: 'event', name: 'shutdown'});
   window.removeEventListener('message', sendMessageToDevtools);
+  sendMessageToBackend({type: 'event', name: 'shutdown'});
 }

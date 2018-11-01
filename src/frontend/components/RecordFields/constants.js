@@ -10,12 +10,4 @@
 
 'use strict';
 
-export const mapDispatchToProps = dispatch => ({
-  openOrClosePath(path, open) {
-    dispatch({
-      type: 'RECORD_INSPECTOR_OPEN_OR_CLOSE_PATH',
-      path,
-      open,
-    });
-  },
-});
+export const NON_EXISTENT = {};

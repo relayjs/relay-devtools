@@ -19,33 +19,44 @@ type State = {|
 
 export default function(
   state: State = {
-    environments: [],
+    environments: null,
     currentEnvironment: null,
+    environmentsDetails: null,
   },
   action: Action,
 ): State {
   switch (action.type) {
     case 'SWITCH_ENVIRONMENT':
       return {
-        environments: state.environments,
+        ...state,
         currentEnvironment: action.environment,
-        environmentsDetails: state.environmentsDetails,
+      };
+
+    case 'LOAD_ENVIRONMENTS_REQUEST':
+      return {
+        ...state,
+        environmentsLoading: true,
       };
 
     case 'LOAD_ENVIRONMENTS_SUCCESS':
       const environments = action.response;
       return {
+        ...state,
         environments,
         currentEnvironment: environments[0],
-        environmentsDetails: state.environmentsDetails,
+        environmentsLoading: false,
       };
 
-    case 'LOAD_ENVIRONMENTS_DETAILS_SUCCESS':
-      const environmentsDetails = JSON.parse(action.response);
+    case 'LOAD_ENVIRONMENTS_DETAILS_REQUEST':
       return {
-        environments: state.environments,
-        currentEnvironment: state.currentEnvironment,
-        environmentsDetails,
+        ...state,
+        environmentsDetailsLoading: true,
+      };
+    case 'LOAD_ENVIRONMENTS_DETAILS_SUCCESS':
+      return {
+        ...state,
+        environmentsDetails: action.response,
+        environmentsDetailsLoading: false,
       };
 
     default:

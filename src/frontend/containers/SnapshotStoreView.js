@@ -11,31 +11,27 @@
 'use strict';
 
 import {connect} from 'react-redux';
-import StoreExplorer from '../components/StoreView';
+
+import SnapshotStoreView from '../components/StoreView/SnapshotStoreView';
 import {loadRecordDescs} from '../fetch-actions/storeExplorer';
 
-const mapStateToProps = ({storeExplorer, tools, environments}) => ({
-  selectedRecordId: storeExplorer.selectedRecordId,
-  records: storeExplorer.recordDescs,
-  currentTool: tools.currentTool,
+// import { createSelector } from 'reselect'
+// const getLatest = (state) => state.latest;
+// const getMatchTerm = (state) => state.matchTerm;
+// const getMatchType = (state) => state.matchType;
+
+const mapStateToProps = ({storeExplorer}) => ({
   matchTerm: storeExplorer.latest.matchTerm,
   matchType: storeExplorer.latest.matchType,
-  currentEnvironment: environments.currentEnvironment,
 });
 
 const mapDispatchToProps = dispatch => ({
   refetchRecords(matchTerm, matchType) {
     dispatch(loadRecordDescs({matchType, matchTerm}));
   },
-  selectRecordId(id) {
-    dispatch({
-      type: 'SELECT_RECORD',
-      id,
-    });
-  },
 });
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(StoreExplorer);
+)(SnapshotStoreView);

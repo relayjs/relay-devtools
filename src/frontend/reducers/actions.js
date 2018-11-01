@@ -98,6 +98,10 @@ type LoadEnvironmentsDetailsSuccessAction = {|
   +type: 'LOAD_ENVIRONMENTS_DETAILS_SUCCESS',
   +response: $ReadOnlyArray<Environment>,
 |};
+type SelectRecordAction = {|
+  +type: 'SELECT_RECORD',
+  +id: String,
+|};
 
 export type Action =
   | RecordInspectorChangeDiffModeAction
@@ -115,4 +119,5 @@ export type Action =
   | LoadRecordDescsSuccessAction
   | SwitchEnvironmentAction
   | LoadEnvironmentsSuccessAction
-  | LoadEnvironmentsDetailsSuccessAction;
+  | LoadEnvironmentsDetailsSuccessAction
+  | SelectRecordAction;
