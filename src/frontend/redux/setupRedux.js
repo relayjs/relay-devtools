@@ -9,7 +9,7 @@
  */
 
 import {createStore, applyMiddleware} from 'redux';
-// import {composeWithDevTools} from 'remote-redux-devtools';
+import {composeWithDevTools} from 'remote-redux-devtools';
 import thunkMiddleware from 'redux-thunk';
 // import {profileActionMiddleware} from 'redux-devtools-profiler-monitor';
 // import stateInvariant from 'redux-immutable-state-invariant';
@@ -21,7 +21,7 @@ import reducer from '../reducers';
 
 import getAPIMiddleware from './getAPIMiddleware';
 import throwOnAsyncErrorMiddleware from './throwOnAsyncErrorMiddleware';
-// const composeEnhancers = composeWithDevTools({realtime: true});
+const composeEnhancers = composeWithDevTools({realtime: true});
 // const loggerMiddleware = createLogger();
 // import persistEnhancer from './persistEnhancer';
 // const callback = action => {
@@ -49,5 +49,8 @@ export default function setupRedux(API) {
     // reduxUnhandledAction(callback),
     // logger,
   ];
-  return createStore(reducer, applyMiddleware(...middlewares));
+  return createStore(
+    reducer,
+    composeEnhancers(applyMiddleware(...middlewares)),
+  );
 }

@@ -64,7 +64,7 @@ export default class Nav extends React.Component<$FlowFixMe> {
           {currentTool === 'updates' && (
             <span style={viewSelectContainerStyle}>
               <select
-                defaultValue={'list'}
+                defaultValue={currentTool}
                 onChange={handleChangeUpdateView}
                 style={viewSelectStyle}>
                 {['list', 'chart'].map(key => (

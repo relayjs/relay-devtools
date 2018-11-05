@@ -112,7 +112,6 @@ function doublePipe(id, one, two) {
   two.onDisconnect.addListener(shutdown);
   /* eslint-disable no-console */
   console.log('tab ' + id + ' connected.');
-  setIconAndPopup('relayBuildType', id);
 }
 
 chrome.runtime.onMessage.addListener((req, sender) => {
@@ -134,22 +133,24 @@ chrome.runtime.onMessage.addListener((req, sender) => {
     // version of React in React docs, but not in any other case.
     // reactBuildType = 'production';
     // }
-    // setIconAndPopup('relayBuildType', sender.tab.id);
+    setIconAndPopup('relayBuildType', sender.tab.id);
   }
 });
 
 function setIconAndPopup(reactBuildType, tabId) {
-  chrome.browserAction.setIcon({
-    tabId,
-    path: {
-      '16': 'imgs/logo.png',
-      '32': 'imgs/logo.png',
-      '48': 'imgs/logo.png',
-      '128': 'imgs/logo.png',
+  console.log('setIconAndPopup', tabId);
+  chrome.browserAction.setIcon(
+    {
+      tabId,
+      path: 'imgs/logo-icon.png',
     },
-  });
+    function() {
+      console.log('browserAction called');
+      console.log(chrome.runtime.lastError);
+    },
+  );
   chrome.browserAction.setPopup({
     tabId,
-    popup: 'disabled.html',
+    popup: 'popups/development.html',
   });
 }

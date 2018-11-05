@@ -35,13 +35,19 @@ export type GlobalHook = {
    * Environments, in case Devtools initializes before Relay.
    */
   onEnvironment(listener: (Environment) => mixed): void,
+  _environments: Set<Environment>,
+  _replayBuffer(): void,
 };
 
 export function installGlobalHook(target: any): boolean {
+  console.log('[GlobalHook.js] installGlobalHook invoked');
   if (target.hasOwnProperty('__RELAY_DEVTOOLS_HOOK__')) {
+    console.log(
+      '[GlobalHook.js] installGlobalHook __RELAY_DEVTOOLS_HOOK__ already exists',
+    );
     return false;
   }
-  // const environments = new Set();
+
   let listeners = {};
 
   const hook: GlobalHook = {
@@ -50,6 +56,9 @@ export function installGlobalHook(target: any): boolean {
     _listeners: {},
     _pending: new Set(),
     registerEnvironment(environment) {
+      console.log(
+        '[GlobalHook.js] installGlobalHook registerEnvironment invoked',
+      );
       window.__RELAY_DEVTOOLS_HOOK__.emit('hasDetectedReact', {
         environment: 'test',
       });
@@ -59,10 +68,6 @@ export function installGlobalHook(target: any): boolean {
         hook.emit(name, Object.assign({}, data, {environment: id}));
       };
 
-      const agent = new EnvironmentAgent(environment, id, emit);
-      hook._agents.set(id, agent);
-
-      // ****************************************************
       function EnvironmentAgent(
         environment: Environment,
         id: string,
@@ -79,13 +84,13 @@ export function installGlobalHook(target: any): boolean {
           const source = store.getSource();
           const ids = Object.keys(updatedRecordIds);
           for (let ii = 0; ii < ids.length; ii++) {
-            const id = ids[ii];
-            const beforeRecord = snapshot[id];
+            const idx = ids[ii];
+            const beforeRecord = snapshot[idx];
             if (beforeRecord !== undefined) {
-              snapshotBefore[id] = beforeRecord;
+              snapshotBefore[idx] = beforeRecord;
             }
             // Always include records in "after", even if they're null.
-            snapshotAfter[id] = snapshot[id] = deepCopy(source.get(id));
+            snapshotAfter[idx] = snapshot[idx] = deepCopy(source.get(idx));
           }
           return {snapshotBefore, snapshotAfter};
         }
@@ -353,6 +358,11 @@ export function installGlobalHook(target: any): boolean {
         this._monkeyPatchNetwork();
         this._monkeyPatchExecute();
       }
+
+      const agent = new EnvironmentAgent(environment, id, emit);
+      hook._agents.set(id, agent);
+
+      // ****************************************************
       // ****************************************************
       // hook.emit('registerEnvironment', {
       //   // hook._environments.size - 1
@@ -371,9 +381,9 @@ export function installGlobalHook(target: any): boolean {
       return Array.from(hook._environments);
     },
 
-    // onEnvironment(listener) {
-    //   listeners.push(listener);
-    // },
+    onEnvironment(listener) {
+      listeners.push(listener);
+    },
 
     _buffer: [],
 
@@ -383,10 +393,13 @@ export function installGlobalHook(target: any): boolean {
 
       for (let i = 0, l = buffer.length; i < l; i++) {
         const allArgs = buffer[i];
-        allArgs[0] === event
-          ? this.emit.apply(this, allArgs)
-          : this._buffer.push(allArgs);
+        if (allArgs[0] === event) {
+          return this.emit.apply(this, allArgs);
+        }
+        return this._buffer.push(allArgs);
       }
+
+      return this._buffer;
     },
 
     on(event, fn) {
@@ -407,8 +420,8 @@ export function installGlobalHook(target: any): boolean {
       this.on(event, on);
     },
 
-    off(event, fn) {
-      event = '$' + event;
+    off(_event, fn) {
+      const event = '$' + _event;
       if (!arguments.length) {
         listeners = {};
       } else {
@@ -444,7 +457,7 @@ export function installGlobalHook(target: any): boolean {
       }
     },
   };
-
+  console.log('[GlobalHook.js] adding __RELAY_DEVTOOLS_HOOK__ to page');
   Object.defineProperty(window, '__RELAY_DEVTOOLS_HOOK__', {
     value: hook,
   });

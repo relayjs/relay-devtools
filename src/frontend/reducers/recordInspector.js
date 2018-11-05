@@ -17,19 +17,30 @@ type State = {|
   diffMode: DiffMode,
   pathOpened: {+[path: string]: boolean},
   typeMapping: TypeMapping,
-  // fetchedRecords: {},
+  loadingTypeMapping: boolean,
+  loadingRecord: boolean,
+  fetchedRecords: ?{
+    byId: ?{+[path: string]: {}},
+    allIds: ?[string],
+  },
 |};
 
-export default function(
-  state: State = {
-    diffMode: 'inline',
-    pathOpened: {},
-    typeMapping: {},
-    fetchedRecords: null
-  },
+const initialState = {
+  diffMode: 'inline',
+  pathOpened: {},
+  typeMapping: {},
+  fetchedRecords: null,
+  loadingRecord: false,
+  loadingTypeMapping: false,
+};
+
+export default function recordsByEnvironment(
+  state: State = initialState,
   action: Action,
 ): State {
   switch (action.type) {
+    case 'SWITCH_ENVIRONMENT':
+      return initialState;
     case 'RECORD_INSPECTOR_CHANGE_DIFF_MODE':
       return {
         ...state,
@@ -73,24 +84,31 @@ export default function(
         ...state,
         loadingRecord: true,
       };
+
     case 'LOAD_RECORD_SUCCESS':
-      if (action.response && !state.fetchedRecords?.byId[action?.response?.__id]) {
+      if (
+        action?.response?.__id &&
+        action.response &&
+        !state.fetchedRecords?.byId[action?.response?.__id]
+      ) {
         return {
-        ...state,
-        fetchedRecords: {
-          byId:{
-            ...(state?.fetchedRecords?.byId ?? {}),
-            [action.response.__id]: action.response,
+          ...state,
+          fetchedRecords: {
+            byId: {
+              ...(state?.fetchedRecords?.byId ?? {}),
+              [action.response.__id]: action.response,
+            },
+            allIds: [
+              ...(state?.fetchedRecords?.allIds ?? []),
+              action.response.__id,
+            ],
           },
-          allIds: (state?.fetchedRecords?.allIds ?? []).concat(
-            action.response.__id
-          )
-        },
-        loadingRecord: false,
+          loadingRecord: false,
+        };
       }
-    }
+      return state;
 
     default:
       return state;
-    }
   }
+}

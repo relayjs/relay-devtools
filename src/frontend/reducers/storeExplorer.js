@@ -18,23 +18,26 @@ type State = {
   },
   latest: SearchState,
   recordDescs: ?$ReadOnlyArray<RecordDesc>,
+  recordDescsLoading: boolean,
 };
 
-export default function(
-  state: State = {
-    history: {
-      back: [],
-      forward: [],
-    },
-    latest: {matchTerm: '', matchType: 'idtype'},
-    recordDescs: null,
-    selectedRecordId: null,
+const initialState = {
+  history: {
+    back: [],
+    forward: [],
   },
-  action: Action,
-): State {
+  latest: {matchTerm: '', matchType: 'idtype'},
+  recordDescs: null,
+  selectedRecordId: null,
+  recordDescsLoading: false,
+};
+
+export default function(state: State = initialState, action: Action): State {
   const {history} = state;
 
   switch (action.type) {
+    case 'SWITCH_ENVIRONMENT':
+      return initialState;
     case 'NEW_SEARCH':
       return {
         ...state,

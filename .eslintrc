@@ -1,28 +1,21 @@
 {
   "parser": "babel-eslint",
-
   "plugins": [
     "babel",
     "flowtype",
     "react",
-    "prettier
+    "prettier",
     "relay",
-    "jsx-a11y",
+    "jsx-a11y"
+  ],
+  "extends": [
     "fbjs"
   ],
-
-  "extends": [
-    "prettier",
-    "prettier/flowtype",
-    "prettier/react"
-  ],
-
   "env": {
     "es6": true,
     "node": true,
     "browser": true
   },
-
   "parserOptions": {
     "ecmaVersion": 6,
     "sourceType": "module",
@@ -53,7 +46,6 @@
       "unicodeCodePointEscapes": true
     }
   },
-
   "rules": {
     "prettier/prettier": ["error"],
     "flowtype/space-after-type-colon": [2, "always"],

@@ -19,17 +19,18 @@ type State = {
   +newNotifications: boolean,
 };
 
-export default function(
-  state: State = {
-    events: null,
-    selectedEvent: null,
-    splitType: 'vertical',
-    viewType: 'list',
-    newNotifications: false,
-  },
-  action: Action,
-) {
+const initialState = {
+  events: null,
+  selectedEvent: null,
+  splitType: 'vertical',
+  viewType: 'list',
+  newNotifications: false,
+};
+
+export default function(state: State = initialState, action: Action) {
   switch (action.type) {
+    case 'SWITCH_ENVIRONMENT':
+      return initialState;
     case 'LOAD_UPDATE_EVENTS_REQUEST':
       return {
         ...state,

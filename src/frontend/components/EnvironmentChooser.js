@@ -38,7 +38,7 @@ export default class EnvironmentChooser extends React.Component<$FlowFixMe> {
 
     if (!environments.length) {
       return (
-        <div style={placeholderStyle}>
+        <div style={relayDetectorStyle}>
           No Relay Modern Environments found on the page
         </div>
       );

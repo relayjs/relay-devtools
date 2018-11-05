@@ -13,8 +13,11 @@ import type {Action} from './actions';
 import type {Environment} from './types';
 
 type State = {|
-  +environments: $ReadOnlyArray<Environment>,
+  +environments: ?$ReadOnlyArray<Environment>,
   +currentEnvironment: ?Environment,
+  +environmentsDetails: ?$ReadOnlyArray<string>,
+  +environmentsLoading: boolean,
+  +environmentsDetailsLoading: boolean,
 |};
 
 export default function(
@@ -22,6 +25,8 @@ export default function(
     environments: null,
     currentEnvironment: null,
     environmentsDetails: null,
+    environmentsLoading: false,
+    environmentsDetailsLoading: false,
   },
   action: Action,
 ): State {
@@ -52,6 +57,7 @@ export default function(
         ...state,
         environmentsDetailsLoading: true,
       };
+
     case 'LOAD_ENVIRONMENTS_DETAILS_SUCCESS':
       return {
         ...state,

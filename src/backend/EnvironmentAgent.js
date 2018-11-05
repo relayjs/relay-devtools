@@ -215,9 +215,11 @@ export default class EnvironmentAgent {
       return observable.do({
         unsubscribe: () =>
           // Produce a mirrored "Unsubscribe" network event.
-          agent._networkEvent(Object.assign({}, lastNetworkEvent, {
-            eventName: 'Unsubscribe',
-          })),
+          agent._networkEvent(
+            Object.assign({}, lastNetworkEvent, {
+              eventName: 'Unsubscribe',
+            }),
+          ),
       });
     };
   }

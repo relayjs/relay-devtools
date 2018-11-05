@@ -25,6 +25,7 @@ const hook = getGlobalHook(window);
 // let bridge;
 
 export default function connectBackend(bridge: BridgeType): void {
+  console.log('connectBackend called');
   // bridge = _bridge;
 
   // const agents = new Map();

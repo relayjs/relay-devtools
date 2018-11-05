@@ -102,6 +102,14 @@ type SelectRecordAction = {|
   +type: 'SELECT_RECORD',
   +id: String,
 |};
+type loadTypeMappingRequestAction = {|
+  +type: 'LOAD_TYPE_MAPPING_REQUEST',
+  +loadingTypeMapping: Boolean,
+|};
+type loadRecordRequestAction = {|
+  +type: 'LOAD_RECORD_REQUEST',
+  +loadingRecord: Boolean,
+|};
 
 export type Action =
   | RecordInspectorChangeDiffModeAction
@@ -120,4 +128,6 @@ export type Action =
   | SwitchEnvironmentAction
   | LoadEnvironmentsSuccessAction
   | LoadEnvironmentsDetailsSuccessAction
+  | loadTypeMappingRequestAction
+  | loadRecordRequestAction
   | SelectRecordAction;

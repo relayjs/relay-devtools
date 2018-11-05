@@ -3,6 +3,8 @@ flow
 
 [options]
 module.name_mapper.extension='less' -> '<PROJECT_ROOT>/StyleStub.js.flow'
+esproposal.optional_chaining=enable
 
 [version]
 0.83.0
+

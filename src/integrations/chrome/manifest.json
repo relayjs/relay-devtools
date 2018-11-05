@@ -12,7 +12,8 @@
       "32": "imgs/disabled.png",
       "48": "imgs/disabled.png",
       "128": "imgs/disabled.png"
-    }
+    },
+    "default_popup": "popups/disabled.html"
 
   },
 
