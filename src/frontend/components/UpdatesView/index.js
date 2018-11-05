@@ -38,67 +38,11 @@ export default class UpdatesView extends React.Component<$FlowFixMe> {
   constructor(props, context) {
     super(props, context);
 
-    // const {refetchEvents} = this.props;
-    // refetchEvents();
   }
 
   componentDidMount() {
-    const {refetchEvents} = this.props;
-    refetchEvents();
+    this.props.refetchEvents();
   }
-
-  // static getDerivedStateFromProps(props) {
-  //   if (props.events && Array.isArray(props.events) && !props.selectedEvent) {
-  //     return {
-  //       // selectedRecord: Object.keys(props.records)[0],
-  //       data: props.events && Array.isArray(props.events) ? props.events : [],
-  //     };
-  //   }
-  //   return null;
-  // }
-  // componentDidMount() {
-  //   if (
-  //     this.props.events &&
-  //     Array.isArray(this.props.events) &&
-  //     !this.props.selectedEvent
-  //   ) {
-  //     this.setState({
-  //       data:
-  //         this.props.events && Array.isArray(this.props.events)
-  //           ? this.props.events
-  //           : [],
-  //     });
-  //   }
-  // }
-
-  // componentDidUpdate(prevProps: Props): void {
-  //   if (
-  //     this.props.viewType === 'list' &&
-  //     prevProps.events &&
-  //     this.props.events &&
-  //     prevProps.events !== this.props.events
-  //   ) {
-  //     const difference = this.props.events.filter(
-  //       x => !prevProps.events.includes(x),
-  //     );
-  //
-  //     if (difference.length) {
-  //       this.listRef.current.scrollToItem(this.props.events.length);
-  //     }
-  //   }
-  //   if (
-  //     prevProps.events &&
-  //     this.props.events &&
-  //     prevProps.events !== this.props.events
-  //   ) {
-  //     this.setState({
-  //       data:
-  //         this.props.events && Array.isArray(this.props.events)
-  //           ? this.props.events
-  //           : [],
-  //     });
-  //   }
-  // }
 
   changeSplitType = () => {
     const splitType =
@@ -249,42 +193,14 @@ export default class UpdatesView extends React.Component<$FlowFixMe> {
       return null;
     });
   }
-  // handleChange = value => {
-  //   const data = this.props.events.filter(event => {
-  //     const name = event.operation ? event.operation.name : event.eventName;
-  //     const operation = event.operation && event.eventName;
-  //     return (
-  //       (value !== '' &&
-  //         name.toLowerCase().indexOf(value.toLowerCase()) !== -1) ||
-  //       (operation &&
-  //         operation.toLowerCase().indexOf(value.toLowerCase()) !== -1) ||
-  //       value === ''
-  //     );
-  //   });
-  //
-  //   this.setState({data, filter: value.toLowerCase()});
-  // };
+
   handleChange = value => {
-    // const ids = Object.keys(this.props.records);
-
-    // const data = ids.filter(id => {
-    //   return (
-    //     (value !== '' &&
-    //       id.toLowerCase().indexOf(value.toLowerCase()) !== -1) ||
-    //     this.props.records[id].toLowerCase().indexOf(value.toLowerCase()) !==
-    //       -1 ||
-    //     value === ''
-    //   );
-    // });
-
     this.setState({filter: value.toLowerCase()}, () => {
       this.props.viewType === 'list' && this.listRef.current.resetAfterIndex(0);
     });
-
-    // this.setState({filter: value.toLowerCase()});
   };
+
   getFilteredEvents = event => {
-    // const value = this.props.events.byId[key];
     const name =
       event && event.operation ? event.operation.name : event.eventName;
     const operation = event.operation ? event.eventName : '';

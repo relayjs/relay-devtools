@@ -12,7 +12,7 @@ const webpack = require('webpack');
 const merge = require('webpack-merge');
 const NotifierPlugin = require('friendly-errors-webpack-plugin');
 const NodeNotifier = require('node-notifier');
-// const ChromeExtensionReloader = require('webpack-chrome-extension-reloader');
+const ChromeExtensionReloader = require('webpack-chrome-extension-reloader');
 const DuplicatePlugin = require('duplicate-package-checker-webpack-plugin');
 const path = require('path');
 
@@ -38,7 +38,6 @@ module.exports = merge(common, {
         });
       },
     }),
-    new webpack.HotModuleReplacementPlugin(),
-    // new ChromeExtensionReloader(),
+    new ChromeExtensionReloader(),
   ],
 });

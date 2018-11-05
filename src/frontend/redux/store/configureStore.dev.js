@@ -11,10 +11,11 @@
 import {createStore, applyMiddleware} from 'redux';
 import {composeWithDevTools} from 'remote-redux-devtools';
 import thunkMiddleware from 'redux-thunk';
+import {enableBatching, batchDispatchMiddleware} from 'redux-batched-actions';
 import reduxUnhandledAction from 'redux-unhandled-action';
 import {createLogger} from 'redux-logger';
 
-import rootReducer from '../../reducers';
+import reducer from '../../reducers';
 import getAPIMiddleware from '../getAPIMiddleware';
 import throwOnAsyncErrorMiddleware from '../throwOnAsyncErrorMiddleware';
 // import persistEnhancer from './persistEnhancer';
@@ -37,24 +38,17 @@ export default function configureStore(API) {
   const callAPIMiddleware = getAPIMiddleware(API);
   const middleware = [
     thunkMiddleware,
+    batchDispatchMiddleware,
     callAPIMiddleware,
     throwOnAsyncErrorMiddleware,
     require('redux-immutable-state-invariant').default(),
     reduxUnhandledAction(callback),
-    logger,
+    // logger,
   ];
   const store = createStore(
-    rootReducer,
+    enableBatching(reducer),
     composeEnhancers(applyMiddleware(...middleware)),
   );
-
-  if (module.hot) {
-    console.log('module.hot');
-    // Enable Webpack hot module replacement for reducers
-    module.hot.accept('../../reducers', () => {
-      store.replaceReducer(rootReducer);
-    });
-  }
 
   return store;
 }

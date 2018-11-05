@@ -60,22 +60,6 @@ export default class RecordInspector extends React.Component<$FlowFixMe> {
     });
   }
 
-  // static getDerivedStateFromProps(props, state) {
-  //   const {id} = props;
-  //   const currentPath = [{id, name: id}];
-  //
-  //   if (currentPath !== state.path) {
-  //     const {id} = props;
-  //     return {
-  //       path: currentPath,
-  //       // lastId: props.id,
-  //     };
-  //   }
-  //
-  //   // Return null to indicate no change to state.
-  //   return null;
-  // }
-
   renderRecordFields(path) {
     const {pathOpened} = this.state;
     return <RecordFields path={path} pathOpened={pathOpened} />;

@@ -10,6 +10,7 @@
 
 import {createStore, applyMiddleware} from 'redux';
 import thunkMiddleware from 'redux-thunk';
+import {enableBatching, batchDispatchMiddleware} from 'redux-batched-actions';
 
 import getAPIMiddleware from '../getAPIMiddleware';
 import throwOnAsyncErrorMiddleware from '../throwOnAsyncErrorMiddleware';
@@ -17,10 +18,11 @@ import reducer from '../../reducers';
 
 export default function configureStore(API) {
   const callAPIMiddleware = getAPIMiddleware(API);
-  const middlewares = [
+  const middleware = [
     callAPIMiddleware,
     throwOnAsyncErrorMiddleware,
     thunkMiddleware,
+    batchDispatchMiddleware,
   ];
-  return createStore(reducer, applyMiddleware(...middlewares));
+  return createStore(enableBatching(reducer), applyMiddleware(...middleware));
 }

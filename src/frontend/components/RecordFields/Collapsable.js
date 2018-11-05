@@ -10,7 +10,7 @@
 
 'use strict';
 
-import type {Path} from './types';
+import type {Path} from '../../util/types';
 
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -35,6 +35,7 @@ export default class Collapsable extends React.Component<Props> {
     return (
       <div className="collapsable">
         <span
+          role="button"
           className="collapse-button"
           data-opened={opened}
           onClick={this._toggle}>

@@ -19,7 +19,6 @@ module.exports = {
     ],
     backend: [path.join(__dirname, './scripts/backend.js')],
     proxy: [path.join(__dirname, './scripts/proxy.js')],
-    detector: [path.join(__dirname, './scripts/detector.js')],
   },
   output: {
     filename: '[name].js',

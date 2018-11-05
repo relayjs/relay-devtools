@@ -37,7 +37,6 @@ export default class StoreExplorer extends React.Component<Props, State> {
   state = {
     filter: '',
     selectedRecordId: null,
-    // data: this.props.records ? Object.keys(this.props.records) : [],
     isTooltipActive: false,
     staleEnvId: null,
     stale: null,
@@ -45,91 +44,15 @@ export default class StoreExplorer extends React.Component<Props, State> {
   listRef = React.createRef();
   itemSize = () => 40;
 
-  // static getDerivedStateFromProps(props, state) {
-  //   if (props.records && props.selectedRecordId === null) {
-  //     return {
-  //       selectedRecordId: Object.keys(props.records)[0],
-  //       data: props.records ? Object.keys(props.records) : [],
-  //     };
-  //   }
-  //   return null;
-  //   if (props.currentEnvironment !== state.prevEnv) {
-  //     return {
-  //       stale: null,
-  //       prevEnv: props.currentEnvironment,
-  //     };
-  //   }
-  //   return null;
-  // }
-
   componentDidMount() {
     const {matchTerm, matchType} = this.props;
     this.props.refetchRecords(matchTerm, matchType);
-    //
-    //   if (this.props.records && this.props.selectedRecordId === null) {
-    //     this.setState({
-    //       selectedRecordId: Object.keys(this.props.records)[0],
-    //       data: this.props.records ? Object.keys(this.props.records) : [],
-    //     });
-    //   }
   }
 
-  // shouldComponentUpdate(nextProps) {
-  //   return nextProps.currentEnvironment !== this.props.currentEnvironment;
-  // }
-
-  // componentDidUpdate(prevProps: Props): void {
-  // if (
-  //   prevProps.matchTerm !== this.props.matchTerm ||
-  //   prevProps.matchType !== this.props.matchType
-  // ) {
-  //   const {matchTerm, matchType} = this.props;
-  //   this.props.refetchRecords(matchTerm, matchType);
-  // }
-  // if (
-  //   this.props.currentTool === 'store' &&
-  //   prevProps.records &&
-  //   this.props.records &&
-  //   prevProps.records !== this.props.records
-  // ) {
-  //   const difference = Object.keys(this.props.records).filter(
-  //     x => !Object.keys(prevProps.records).includes(x),
-  //   );
-  //
-  //   if (difference.length) {
-  //     this.listRef.current.scrollToItem(
-  //       Object.keys(this.props.records).length,
-  //     );
-  //   }
-  // }
-  // }
-  // componentDidUpdate() {
-  //   if (this.state.stale === null) {
-  //     this.setState({stale: '-1'}, () => {
-  //       const {matchTerm, matchType} = this.props;
-  //       this.props.refetchRecords(matchTerm, matchType);
-  //     });
-  //   }
-  // }
-
   handleChange = value => {
-    // const ids = Object.keys(this.props.records);
-
-    // const data = ids.filter(id => {
-    //   return (
-    //     (value !== '' &&
-    //       id.toLowerCase().indexOf(value.toLowerCase()) !== -1) ||
-    //     this.props.records[id].toLowerCase().indexOf(value.toLowerCase()) !==
-    //       -1 ||
-    //     value === ''
-    //   );
-    // });
-
     this.setState({filter: value.toLowerCase()}, () => {
       this.listRef.current.resetAfterIndex(0);
     });
-
-    // this.setState({filter: value.toLowerCase()});
   };
   getFilteredRecords = key => {
     const value = this.props.records.byId[key];
@@ -160,10 +83,7 @@ export default class StoreExplorer extends React.Component<Props, State> {
     if (!records) {
       return <div />;
     }
-    // const {itemData} = this.state;
-    // if (this.state.stale === null) {
-    //   return <div />;
-    // }
+
     const containerStyle = getContainerStyle(currentTool === 'store');
     const itemData = this.getItemData();
     const itemKey = index => itemData.recordIds[index];

@@ -21,7 +21,7 @@ export type ShellType = {
   onReload: (callback: () => void) => void,
 };
 
-import createDevtools from '../../../frontend/components';
+import createDevtools from '../../../frontend';
 import Bridge from '../../../transport/Bridge';
 
 createDevtools({

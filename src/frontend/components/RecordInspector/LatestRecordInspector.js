@@ -32,59 +32,9 @@ export default class LatestRecordInspector extends React.Component<$FlowFixMe> {
     };
   }
 
-  // static getDerivedStateFromProps(props, state) {
-  //   if (props.records && props.selectedRecordId === null) {
-  //     return {
-  //       selectedRecordId: Object.keys(props.records)[0],
-  //       data: props.records ? Object.keys(props.records) : [],
-  //     };
-  //   }
-  //   return null;
-  //   if (props.currentEnvironment !== state.prevEnv) {
-  //     return {
-  //       stale: null,
-  //       prevEnv: props.currentEnvironment,
-  //     };
-  //   }
-  //   return null;
-  // }
-
   componentDidMount() {
     this.props.loadTypeMapping();
   }
-
-  // static getDerivedStateFromProps(props, state) {
-  //   const {id} = props;
-  //   const currentPath = [{id, name: id}];
-  //
-  //   if (currentPath !== state.path) {
-  //     const {id} = props;
-  //     return {
-  //       path: currentPath,
-  //       // lastId: props.id,
-  //     };
-  //   }
-  //
-  //   // Return null to indicate no change to state.
-  //   return null;
-  // }
-
-  // componentDidUpdate(prevProps, prevState) {
-  //   if (
-  //     this.props.id !== this.state.path[0].id &&
-  //     this.props.id !== this.state.path[0].name
-  //   ) {
-  //     const {id} = this.props;
-  //     this.setState({
-  //       path: [{id, name: id}],
-  //     });
-  //   }
-  // }
-  //   if (this.state.stale === null) {
-  //     this.props.loadTypeMapping();
-  //     this.setState({stale: '-1'}, () => {})
-  //   }
-  // }
 
   getType = id => {
     const {typeMapping} = this.props;

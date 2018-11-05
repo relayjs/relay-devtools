@@ -12,9 +12,13 @@
 
 import React from 'react';
 
-export default function Header(props) {
-  const {keyName, focusHandler, value, summary, isLink = false} = props;
-
+export default function Header({
+  keyName,
+  focusHandler,
+  value,
+  summary,
+  isLink = false,
+}) {
   const keyClasses =
     'key-desc' +
     (typeof keyName === 'string' && keyName.startsWith('__')
@@ -34,7 +38,7 @@ export default function Header(props) {
         ? 'undefined'
         : JSON.stringify(value);
   const valueSpan =
-    'value' in props ? (
+    typeof value !== 'undefined' ? (
       <span className={valueSpanClass} key="value">
         {displayValue}
       </span>

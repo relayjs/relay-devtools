@@ -20,7 +20,6 @@ export default class EnvironmentChooser extends React.Component<$FlowFixMe> {
 
   componentDidUpdate(prevProps) {
     if (
-      // !prevProps.currentEnvironment ||
       this.props.currentEnvironment &&
       prevProps.currentEnvironment !== this.props.currentEnvironment
     ) {

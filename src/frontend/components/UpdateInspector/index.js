@@ -14,7 +14,8 @@ import '../../css/UpdatesView.less';
 import React from 'react';
 import {GraphqlCodeBlock} from 'graphql-syntax-highlighter-react';
 
-import {deepObjectEqual} from '../../util/objCompare';
+import changedRecords from '../../util/changedRecords';
+import getTabs from '../../util/getTabs';
 import ObjectFields from '../RecordFields/ObjectFields';
 import SnapshotStoreView from '../../containers/SnapshotStoreView';
 
@@ -26,8 +27,6 @@ export default class UpdateInspector extends React.Component<$FlowFixMe> {
     const currentTab = event ? Object.keys(getTabs(event))[0] : 'query';
 
     this.state = {currentTab};
-
-    this.switchToTab = this.switchToTab.bind(this);
   }
 
   componentWillReceiveProps(props) {
@@ -41,9 +40,9 @@ export default class UpdateInspector extends React.Component<$FlowFixMe> {
     }
   }
 
-  switchToTab(tab) {
+  switchToTab = tab => {
     this.setState({currentTab: tab});
-  }
+  };
 
   render() {
     const {currentEnvironment, event, onClose, onLayoutChange} = this.props;
@@ -114,7 +113,7 @@ export default class UpdateInspector extends React.Component<$FlowFixMe> {
         <div className="update-inspector">
           <div className="tab-panel">
             <span className="left-buttons">
-              <a className="close" onClick={onClose}>
+              <a role="button" className="close" onClick={onClose}>
                 &times;
               </a>
             </span>
@@ -143,66 +142,4 @@ export default class UpdateInspector extends React.Component<$FlowFixMe> {
       </div>
     );
   }
-}
-
-function getTabs(event) {
-  const tabs = {};
-
-  // Only include query & variables tabs for a network operation.
-  if (event.operation) {
-    tabs.query = 'Query';
-    tabs.variables = 'Variables';
-  }
-
-  // Only include storeDiff tab if it is present on the event.
-  if (event.snapshotAfter) {
-    tabs.storeDiff = 'Store Update';
-  }
-
-  // Only include response tab if it is present on the event.
-  if (event.response) {
-    tabs.response = 'Response';
-  }
-
-  return tabs;
-}
-
-// Return only records affected by the change in the following order:
-// - added records
-// - removed records
-// - changed records
-function changedRecords(snapshotBefore, snapshotAfter) {
-  const added = {};
-  const removed = {};
-  const changed = {};
-
-  Object.keys(snapshotBefore).forEach(key => {
-    if (key.startsWith('client:')) {
-      return;
-    }
-
-    const record = snapshotBefore[key];
-    if (record) {
-      if (!snapshotAfter[key]) {
-        removed[record.__id] = record.__typename;
-      } else if (!deepObjectEqual(record, snapshotAfter[key])) {
-        changed[record.__id] = record.__typename;
-      }
-    }
-  });
-
-  Object.keys(snapshotAfter).forEach(key => {
-    if (key.startsWith('client:')) {
-      return;
-    }
-
-    const record = snapshotAfter[key];
-    if (record) {
-      if (!snapshotBefore[key]) {
-        added[record.__id] = record.__typename;
-      }
-    }
-  });
-
-  return {...added, ...removed, ...changed};
 }

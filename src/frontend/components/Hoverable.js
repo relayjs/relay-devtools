@@ -12,6 +12,8 @@
 
 import React from 'react';
 
+type Props = {};
+
 type State = {
   isHovered: boolean,
   isPressed: boolean,

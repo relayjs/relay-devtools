@@ -18,7 +18,6 @@ import React from 'react';
 import SplitPane from 'react-split-pane';
 import {FixedSizeList as List} from 'react-window';
 
-// import Search from '../../containers/Search';
 import SnapshotRecordInspector from '../../containers/SnapshotRecordInspector';
 
 type Props = {|
@@ -41,16 +40,6 @@ export default class SnapshotStoreView extends React.Component<Props, State> {
     const {matchTerm, matchType} = this.props;
     this.props.refetchRecords(matchTerm, matchType);
   }
-
-  // componentDidUpdate(prevProps: Props): void {
-  //   if (
-  //     prevProps.matchTerm !== this.props.matchTerm ||
-  //     prevProps.matchType !== this.props.matchType
-  //   ) {
-  //     const {matchTerm, matchType} = this.props;
-  // this.props.refetchRecords(matchTerm, matchType);
-  // }
-  // }
 
   getPlaceholderText = () => {
     return 'No changes';
@@ -81,11 +70,6 @@ export default class SnapshotStoreView extends React.Component<Props, State> {
         <div>{type}</div>
       </div>
     );
-
-    // {/* <div style={{overflowY: 'scroll',
-    //   paddingBottom: '16px', flex: 1}}>
-    //   {ids.map(id => this.renderTableRecord(id, records[id]))}
-    // </div> */}
   }
 
   renderDetails() {
@@ -143,7 +127,6 @@ export default class SnapshotStoreView extends React.Component<Props, State> {
           paneStyle={panelStyle}
           style={panelStyle}>
           <div style={storeViewColumnStyle}>
-            {/* <Search />*/}
             <List
               height={500}
               itemSize={40}
@@ -166,7 +149,6 @@ export default class SnapshotStoreView extends React.Component<Props, State> {
               }}
             </List>
             <div style={recordsFooterStyle}>
-              {/* this.state.filter && `${itemData.recordIds.length} / `*/}
               {ids.length}
               {ids.length === 1 ? ' Update' : ' Updates'}
             </div>
