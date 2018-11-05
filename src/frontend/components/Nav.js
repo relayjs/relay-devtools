@@ -14,7 +14,7 @@ import React from 'react';
 import Hoverable from './Hoverable';
 
 const DISPLAY_NAMES = {
-  store: 'Store Explorer',
+  store: 'Stores Explorer',
   updates: 'Updates',
 };
 
@@ -38,6 +38,7 @@ export default class Nav extends React.Component<$FlowFixMe> {
       currentEnvironment,
       onChange,
       onChangeUpdateView,
+      viewType,
     } = this.props;
 
     const handleChange = (e: SyntheticEvent<>) => onChange(e.target.value);
@@ -64,7 +65,7 @@ export default class Nav extends React.Component<$FlowFixMe> {
           {currentTool === 'updates' && (
             <span style={viewSelectContainerStyle}>
               <select
-                defaultValue={currentTool}
+                defaultValue={viewType}
                 onChange={handleChangeUpdateView}
                 style={viewSelectStyle}>
                 {['list', 'chart'].map(key => (
@@ -77,6 +78,7 @@ export default class Nav extends React.Component<$FlowFixMe> {
             </span>
           )}
         </div>
+
         {Object.keys(DISPLAY_NAMES).map((tool, key) => {
           const isSelected = tool === currentTool;
           const hrStyle = getHrStyle(isSelected);

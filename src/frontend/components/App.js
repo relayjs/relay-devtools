@@ -12,13 +12,14 @@
 
 import React from 'react';
 import {Provider} from 'react-redux';
+import {hot} from 'react-hot-loader';
 
 import EnvironmentChooser from '../containers/EnvironmentChooser';
 import Nav from '../containers/Nav';
 import StoreExplorer from '../containers/StoreExplorer';
 import UpdatesView from '../containers/UpdatesView';
 
-export default function App({store}) {
+function App({store}) {
   return (
     <Provider store={store}>
       <div style={containerStyle}>
@@ -31,6 +32,8 @@ export default function App({store}) {
     </Provider>
   );
 }
+
+export default hot(module)(App);
 
 const containerStyle = {
   height: '100%',

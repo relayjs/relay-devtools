@@ -14,7 +14,7 @@ import thunkMiddleware from 'redux-thunk';
 import reduxUnhandledAction from 'redux-unhandled-action';
 import {createLogger} from 'redux-logger';
 
-import reducer from '../../reducers';
+import rootReducer from '../../reducers';
 import getAPIMiddleware from '../getAPIMiddleware';
 import throwOnAsyncErrorMiddleware from '../throwOnAsyncErrorMiddleware';
 // import persistEnhancer from './persistEnhancer';
@@ -35,16 +35,26 @@ const logger = createLogger({
 
 export default function configureStore(API) {
   const callAPIMiddleware = getAPIMiddleware(API);
-  const middlewares = [
+  const middleware = [
+    thunkMiddleware,
     callAPIMiddleware,
     throwOnAsyncErrorMiddleware,
-    thunkMiddleware,
     require('redux-immutable-state-invariant').default(),
     reduxUnhandledAction(callback),
     logger,
   ];
-  return createStore(
-    reducer,
-    composeEnhancers(applyMiddleware(...middlewares)),
+  const store = createStore(
+    rootReducer,
+    composeEnhancers(applyMiddleware(...middleware)),
   );
+
+  if (module.hot) {
+    console.log('module.hot');
+    // Enable Webpack hot module replacement for reducers
+    module.hot.accept('../../reducers', () => {
+      store.replaceReducer(rootReducer);
+    });
+  }
+
+  return store;
 }

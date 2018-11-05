@@ -10,11 +10,12 @@ import {connect} from 'react-redux';
 import LatestRecordInspector from '../components/RecordInspector/LatestRecordInspector';
 import {loadTypeMapping} from '../fetch-actions/recordInspectorActions';
 
-const mapStateToProps = ({recordInspector, storeExplorer, environments}) => ({
+const mapStateToProps = ({recordInspector, storeExplorer, environments, updatesView}) => ({
   currentEnvironment: environments.currentEnvironment,
   id: storeExplorer.selectedRecordId,
   typeMapping: recordInspector.typeMapping,
-  pathOpened: recordInspector.pathOpened
+  pathOpened: recordInspector.pathOpened,
+  events: updatesView.events
 });
 
 const mapDispatchToProps = dispatch => ({

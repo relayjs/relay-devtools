@@ -72,11 +72,19 @@ export default class UpdateInspector extends React.Component<$FlowFixMe> {
       }
     } else if (currentTab === 'variables') {
       const variables = event.variables;
-      tabContent = (
-        <div className="variables">
-          <ObjectFields value={variables} />
-        </div>
-      );
+
+      if (
+        Object.keys(variables).length === 0 &&
+        variables.constructor === Object
+      ) {
+        tabContent = <div className="variables">No Variables</div>;
+      } else {
+        tabContent = (
+          <div className="variables">
+            <ObjectFields value={variables} />
+          </div>
+        );
+      }
     } else if (currentTab === 'storeDiff') {
       const {snapshotBefore, snapshotAfter} = event;
       const records = changedRecords(snapshotBefore, snapshotAfter);

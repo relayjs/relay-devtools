@@ -40,7 +40,6 @@ module.exports = {
       },
       {
         test: /\.js$/,
-        include: path.join(__dirname, '../../'),
         exclude: /(node_modules)/,
         use: {
           loader: 'babel-loader',
@@ -51,6 +50,7 @@ module.exports = {
               '@babel/preset-react',
             ],
             plugins: [
+              'react-hot-loader/babel',
               '@babel/plugin-proposal-class-properties',
               '@babel/plugin-syntax-object-rest-spread',
               '@babel/plugin-proposal-optional-chaining',
@@ -69,8 +69,8 @@ module.exports = {
   plugins: [
     new CopyWebpackPlugin([
       {
-        from: path.join(__dirname, 'manifest.json'),
-        to: path.join(__dirname, '../../../lib/chrome'),
+        from: path.join(__dirname, './manifest.json'),
+        to: path.join(__dirname, '../../../lib/chrome/manifest.json'),
       },
       {from: path.join(__dirname, 'imgs'), to: './imgs'},
       {
