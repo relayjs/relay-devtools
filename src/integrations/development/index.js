@@ -10,13 +10,13 @@ import 'font-awesome-webpack';
 
 import '../../frontend/css/reset.css';
 
-import setupRedux from '../../frontend/redux/setupRedux';
+import configureStore from '../../frontend/redux/configureStore';
 import App from '../../frontend/components/App.js';
 import RelayDetector from '../../frontend/components/RelayDetector.js';
 import DevelMockAPI from './DevelMockAPI.js';
 
 const api = new DevelMockAPI();
-const store = setupRedux(api);
+const store = configureStore(api);
 
 render(
   <RelayDetector API={api}>

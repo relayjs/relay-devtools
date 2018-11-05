@@ -20,7 +20,7 @@ import wsServerSocketTransport from './transport/wsServerSocketTransport';
 import Bridge from '../../transport/Bridge';
 
 import API from '../../frontend/api/BridgeAPI';
-import setupRedux from '../../frontend/redux/setupRedux';
+import configureStore from '../../frontend/redux/configureStore';
 import App from '../../frontend/components/App';
 import RelayDetector from '../../frontend/components/RelayDetector.js';
 
@@ -29,7 +29,7 @@ export function startServer(port) {
   return wsServerTransport(port).then(transport => {
     const bridge = new Bridge(transport);
     const api = new API(bridge);
-    const store = setupRedux(api);
+    const store = configureStore(api);
 
     ReactDOM.render(
       <RelayDetector API={api}>
@@ -48,7 +48,7 @@ export function connectToSocket(socket) {
   const transport = wsServerSocketTransport(socket);
   const bridge = new Bridge(transport);
   const api = new API(bridge);
-  const store = setupRedux(api);
+  const store = configureStore(api);
 
   ReactDOM.render(
     <RelayDetector API={api}>

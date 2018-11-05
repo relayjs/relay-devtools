@@ -36,7 +36,7 @@ const composeEnhancers = composeWithDevTools({realtime: true});
 //   diff: true,
 // });
 
-export default function setupRedux(API) {
+export default function configureStore(API) {
   const callAPIMiddleware = getAPIMiddleware(API);
   const middlewares = [
     callAPIMiddleware,

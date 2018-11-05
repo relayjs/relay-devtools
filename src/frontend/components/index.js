@@ -20,7 +20,7 @@ import '../css/reset.css';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import API from '../api/BridgeAPI';
-import setupRedux from '../redux/setupRedux';
+import configureStore from '../redux/store/configureStore';
 import App from '../components/App';
 import RelayDetector from '../components/RelayDetector.js';
 
@@ -51,7 +51,7 @@ function initApp(shell: ShellType) {
     });
 
     const api = new API(bridge);
-    const store = setupRedux(api);
+    const store = configureStore(api);
 
     ReactDOM.render(
       <RelayDetector API={api}>
