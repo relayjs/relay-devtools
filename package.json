@@ -100,12 +100,10 @@
     "why-did-you-update": "^1.0.2"
   },
   "prettier": {
-    "requirePragma": true,
     "singleQuote": true,
     "trailingComma": "all",
     "bracketSpacing": false,
-    "jsxBracketSameLine": true,
-    "parser": "flow"
+    "jsxBracketSameLine": true
   },
   "workspaces": [
     "src/integrations/*"

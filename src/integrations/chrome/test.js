@@ -25,7 +25,7 @@ chromeLauncher
   .then(chrome => {
     console.log(
       `Opening browser to ${TEST_URL}, ` +
-      'assuming you\'re running relay-examples/todo'
+        "assuming you're running relay-examples/todo",
     );
     console.log(`Chrome debugging port running on localhost:${chrome.port}`);
   });

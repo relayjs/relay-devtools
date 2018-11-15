@@ -10,12 +10,17 @@ import {connect} from 'react-redux';
 import LatestRecordInspector from '../components/RecordInspector/LatestRecordInspector';
 import {loadTypeMapping} from '../fetch-actions/recordInspectorActions';
 
-const mapStateToProps = ({recordInspector, storeExplorer, environments, updatesView}) => ({
+const mapStateToProps = ({
+  recordInspector,
+  storeExplorer,
+  environments,
+  updatesView,
+}) => ({
   currentEnvironment: environments.currentEnvironment,
   id: storeExplorer.selectedRecordId,
   typeMapping: recordInspector.typeMapping,
   pathOpened: recordInspector.pathOpened,
-  events: updatesView.events
+  events: updatesView.events,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -31,6 +36,7 @@ const mapDispatchToProps = dispatch => ({
   },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(
-  LatestRecordInspector,
-);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(LatestRecordInspector);

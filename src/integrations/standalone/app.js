@@ -7,7 +7,7 @@
 
 'use strict';
 
-import "@babel/polyfill";
+import '@babel/polyfill';
 
 import * as DevtoolsUI from './DevtoolsUI';
 

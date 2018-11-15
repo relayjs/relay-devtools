@@ -26,13 +26,9 @@ export default function getAPIMiddleware(API) {
           return;
         }
 
-
-
         const callback = () => {
           refetchActionsReducers(getState()).forEach(dispatch);
         };
-
-
 
         if (subscribedEnvironment) {
           API.stopObservingChange({environment: subscribedEnvironment});
