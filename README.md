@@ -42,12 +42,12 @@ relay-devtools
 You can inspect the current state of Relay Store by viewing records from the
 store and expanding their connections.
 
-![Store Explorer](./images/store-explorer.png)
+![Store Explorer](./images/store-explorer-updated.png)
 
 In addition to that, you can record all update events happenning to the store
 and inspect how they changed the store.
 
-![Updates View](./images/updates-view.png)
+![Updates View](./images/mutations-view-updated.png)
 
 ## Development
 
@@ -58,30 +58,14 @@ Then navigate to `localhost:3000`.
 yarn start
 ```
 
-### Extension
+## Chrome Extension
 
-Build a Chrome Extension build. The extension output will be placed to the
-extension folder.
+See Integrations Chrome readme
 
-```
-yarn build:chrome
-yarn test:chrome
-```
+## Electron
 
-### Electron
+See Integrations standalone readme
 
-Build an Electron App build. Compile the app into a single importable file and
-then build the shell.
-This app is distributed as `relay-devtools` on npm. [npmjs link][1].
-
-[2]: https://www.npmjs.com/package/relay-devtools
-
+```nice
 
 ```
-yarn build:standalone
-yarn test:standalone
-```
-
-### License
-
-Relay Devtools is [MIT licensed](./LICENSE).
