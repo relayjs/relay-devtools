@@ -15,7 +15,7 @@ yarn build:chrome -- --watch
 To test the local version of the Chrome Plugin in your browser:
 
 ```sh
-yarn test:chrome
+yarn start:chrome
 ```
 
 To update the Chrome Plugin to refect changes you've made, reload it from the
