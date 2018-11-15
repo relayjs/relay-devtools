@@ -35,8 +35,8 @@ export default function Header({
     typeof value === 'string'
       ? value
       : typeof value === 'undefined'
-        ? 'undefined'
-        : JSON.stringify(value);
+      ? 'undefined'
+      : JSON.stringify(value);
   const valueSpan =
     typeof value !== 'undefined' ? (
       <span className={valueSpanClass} key="value">

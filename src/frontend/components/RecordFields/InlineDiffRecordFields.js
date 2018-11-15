@@ -19,9 +19,7 @@ import Collapsable from './Collapsable';
 import {shallowArraysEqual} from '../../util/objCompare';
 import {stringifyPath} from '../../util/stringifyPath';
 
-export default class InlineDiffRecordFields extends React.Component<
-  $FlowFixMe,
-> {
+export default class InlineDiffRecordFields extends React.Component<$FlowFixMe> {
   previousRecord: $FlowFixMe;
 
   loadFromSnapshot() {

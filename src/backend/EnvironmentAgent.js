@@ -312,10 +312,10 @@ export default class EnvironmentAgent {
       networkEventName === 'Request'
         ? 'Optimistic Update'
         : networkEventName === 'Unsubscribe'
-          ? 'Revert Optimistic Update'
-          : networkEventName
-            ? networkEventName
-            : 'Local Update';
+        ? 'Revert Optimistic Update'
+        : networkEventName
+        ? networkEventName
+        : 'Local Update';
     const seriesId = lastNetworkEvent
       ? lastNetworkEvent.seriesId
       : getNextSeriesID();

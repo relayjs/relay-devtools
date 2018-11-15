@@ -19,9 +19,7 @@ import RecordFields from '../RecordFields';
 import {stringifyPath} from '../../util/stringifyPath';
 import InlineDiffRecordFields from '../RecordFields/InlineDiffRecordFields';
 
-export default class SnapshotRecordInspector extends React.Component<
-  $FlowFixMe,
-> {
+export default class SnapshotRecordInspector extends React.Component<$FlowFixMe> {
   constructor(props, context) {
     super(props, context);
 

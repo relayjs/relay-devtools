@@ -37,7 +37,6 @@ export default class UpdatesView extends React.Component<$FlowFixMe> {
   itemKey = index => index;
   constructor(props, context) {
     super(props, context);
-
   }
 
   componentDidMount() {
@@ -293,15 +292,14 @@ export default class UpdatesView extends React.Component<$FlowFixMe> {
           </div>
           {this.props.selectedEvent ? (
             <div style={recordInspector}>
-              {this.props.events &&
-                this.props.events.length > 0 && (
-                  <UpdateInspector
-                    event={selectedEvent}
-                    onClose={clearSelection}
-                    onLayoutChange={this.changeSplitType}
-                    currentEnvironment={currentEnvironment}
-                  />
-                )}
+              {this.props.events && this.props.events.length > 0 && (
+                <UpdateInspector
+                  event={selectedEvent}
+                  onClose={clearSelection}
+                  onLayoutChange={this.changeSplitType}
+                  currentEnvironment={currentEnvironment}
+                />
+              )}
             </div>
           ) : (
             <div />

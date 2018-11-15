@@ -34,10 +34,14 @@ function createPanelIfHasRelay() {
         'devtools.html',
         function(panel) {
           panel.onShown.addListener(function(window) {
-            console.log('[devtools-background.js] panel.onShown.addListener invoked')
+            console.log(
+              '[devtools-background.js] panel.onShown.addListener invoked',
+            );
           });
           panel.onHidden.addListener(function() {
-            console.log('[devtools-background.js] panel.onShown.onHidden invoked')
+            console.log(
+              '[devtools-background.js] panel.onShown.onHidden invoked',
+            );
           });
         },
       );
@@ -46,7 +50,11 @@ function createPanelIfHasRelay() {
 }
 
 chrome.runtime.onMessage.addListener(request => {
-  console.log(`[devtools-background] chrome.runtime.onMessage.addListener ${JSON.stringify(request)}`)
+  console.log(
+    `[devtools-background] chrome.runtime.onMessage.addListener ${JSON.stringify(
+      request,
+    )}`,
+  );
 });
 
 chrome.devtools.network.onNavigated.addListener(createPanelIfHasRelay);
@@ -54,4 +62,4 @@ chrome.devtools.network.onNavigated.addListener(createPanelIfHasRelay);
 const checkRelayInterval = setInterval(createPanelIfHasRelay, 1000);
 
 createPanelIfHasRelay();
-console.log('nice')
+console.log('nice');

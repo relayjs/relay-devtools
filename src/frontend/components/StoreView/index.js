@@ -129,10 +129,9 @@ export default class StoreExplorer extends React.Component<Props, State> {
           </div>
           <div style={storeViewColumnStyle}>
             <div style={storeViewColumnStyle}>
-              {this.props.records &&
-                this.props.records.allIds.length > 0 && (
-                  <LatestRecordInspector />
-                )}
+              {this.props.records && this.props.records.allIds.length > 0 && (
+                <LatestRecordInspector />
+              )}
             </div>
             <div style={recordsFooterStyle}>{this.props.selectedRecordId}</div>
           </div>
