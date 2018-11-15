@@ -17,60 +17,96 @@ type State = {|
   diffMode: DiffMode,
   pathOpened: {+[path: string]: boolean},
   typeMapping: TypeMapping,
-  fetchedRecords: {},
+  loadingTypeMapping: boolean,
+  loadingRecord: boolean,
+  fetchedRecords: ?{
+    byId: ?{+[path: string]: {}},
+    allIds: ?[string],
+  },
 |};
 
-export default function(
-  state: State = {
-    diffMode: 'inline',
-    pathOpened: {},
-    typeMapping: {},
-    fetchedRecords: {},
-  },
+const initialState = {
+  diffMode: 'inline',
+  pathOpened: {},
+  typeMapping: {},
+  fetchedRecords: null,
+  loadingRecord: false,
+  loadingTypeMapping: false,
+};
+
+export default function recordsByEnvironment(
+  state: State = initialState,
   action: Action,
 ): State {
   switch (action.type) {
+    case 'SWITCH_ENVIRONMENT':
+      return initialState;
     case 'RECORD_INSPECTOR_CHANGE_DIFF_MODE':
       return {
+        ...state,
         diffMode: action.diffMode,
-        fetchedRecords: state.fetchedRecords,
-        pathOpened: state.pathOpened,
-        typeMapping: state.typeMapping,
       };
 
     case 'RECORD_INSPECTOR_OPEN_OR_CLOSE_PATH':
       return {
-        diffMode: state.diffMode,
-        fetchedRecords: state.fetchedRecords,
+        ...state,
         pathOpened: {
           ...state.pathOpened,
           [action.path]: action.open,
         },
-        typeMapping: state.typeMapping,
+      };
+
+    case 'LOAD_TYPE_MAPPING_REQUEST':
+      return {
+        ...state,
+        loadingTypeMapping: true,
       };
 
     case 'LOAD_TYPE_MAPPING_SUCCESS':
       const typeMapping = action.response;
       if (deepObjectEqual(state.typeMapping, typeMapping)) {
-        return state;
+        return {
+          ...state,
+          loadingTypeMapping: false,
+        };
       }
       return {
-        diffMode: state.diffMode,
-        fetchedRecords: state.fetchedRecords,
-        pathOpened: state.pathOpened,
-        typeMapping,
+        ...state,
+        typeMapping: {
+          ...state.typeMapping,
+          ...typeMapping,
+        },
+        loadingTypeMapping: false,
+      };
+
+    case 'LOAD_RECORD_REQUEST':
+      return {
+        ...state,
+        loadingRecord: true,
       };
 
     case 'LOAD_RECORD_SUCCESS':
-      return {
-        diffMode: state.diffMode,
-        fetchedRecords: {
-          ...state.fetchedRecords,
-          [action.response.__id]: action.response,
-        },
-        pathOpened: state.pathOpened,
-        typeMapping: state.typeMapping,
-      };
+      if (
+        action?.response?.__id &&
+        action.response &&
+        !state.fetchedRecords?.byId[action?.response?.__id]
+      ) {
+        return {
+          ...state,
+          fetchedRecords: {
+            byId: {
+              ...(state?.fetchedRecords?.byId ?? {}),
+              [action.response.__id]: action.response,
+            },
+            allIds: [
+              ...(state?.fetchedRecords?.allIds ?? []),
+              action.response.__id,
+            ],
+          },
+          loadingRecord: false,
+        };
+      }
+      return state;
 
     default:
       return state;

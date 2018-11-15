@@ -10,7 +10,7 @@
 
 export type DiffMode = 'inline';
 
-export type Environment = $FlowFixMe;
+export type Environment = String;
 
 export type Record = {|
   +__id: string,

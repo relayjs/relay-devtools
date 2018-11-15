@@ -6,13 +6,12 @@
  *
  * @flow
  * @format
+ *
+ * A helper to create a deep clone of a plain value, Object, or Array.
  */
 
 'use strict';
 
-/**
- * A helper to create a deep clone of a plain value, Object, or Array.
- */
 export default function deepCopy<T>(value: T): T {
   if (Array.isArray(value)) {
     return value.map(deepCopy);

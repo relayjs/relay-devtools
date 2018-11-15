@@ -3,16 +3,17 @@
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
+ * @flow
+ * @format
  */
 
-import React from 'react';
-import debounce from 'debounce';
+'use strict';
 
-import '../css/Search.less';
+import React from 'react';
 
 const SAVED_SEARCHES_PERSIST_KEY = 'RELAY_DEVTOOLS_SAVED_SEARCHES';
 
-export default class Search extends React.Component {
+export default class Search extends React.Component<$FlowFixMe> {
   constructor(props) {
     super(props);
 
@@ -33,51 +34,6 @@ export default class Search extends React.Component {
     this.inputRef = null;
     this.typeSelectRef = null;
     this.pushNewSearch = this.props.pushNewSearch;
-
-    this.props.rref(this);
-  }
-
-  render() {
-    const saveSearchButton = this.isSearchSaved(this.state) ? (
-      <i
-        className="star-button unstar fa fa-fw fa-star"
-        onClick={this.handleUnsaveSearch}
-      />
-    ) : (
-      <i
-        className="star-button fa fa-fw fa-star-o"
-        onClick={this.handleSaveSearch}
-      />
-    );
-
-    return (
-      <div className="search">
-        <input
-          type="text"
-          className="prompt"
-          placeholder="Search records…"
-          onFocus={this.showSearchDetails}
-          onChange={debounce(this.handleSearchChange, 200)}
-          ref={input => (this.inputRef = input)}
-        />
-        <i className="search-icon fa fa-fw fa-search" />
-        {saveSearchButton}
-        <div className="search-details" hidden={!this.state.searchDetailsOpen}>
-          {this.state.savedSearches.map(this.makeSavedSearchElement)}
-          <div className="search-config">
-            <label>Search by </label>
-            <select
-              defaultValue="ID & Type"
-              ref={select => (this.typeSelectRef = select)}
-              onChange={this.handleSearchChange}>
-              <option data-option-name="idtype">ID & Type</option>
-              <option data-option-name="id">ID</option>
-              <option data-option-name="type">Type</option>
-            </select>
-          </div>
-        </div>
-      </div>
-    );
   }
 
   getMatch() {
@@ -108,6 +64,11 @@ export default class Search extends React.Component {
     this.setState({
       searchDetailsOpen: false,
     });
+  };
+
+  pushNewSearch = ({matchTerm, matchType}, resetDOMFields = true) => {
+    this.props.pushNewSearch({matchTerm, matchType});
+    this.inputRef.setMatch({matchTerm, matchType}, resetDOMFields);
   };
 
   makeSavedSearchElement = ({matchTerm, matchType}) => {
@@ -170,9 +131,10 @@ export default class Search extends React.Component {
     this.pushNewSearch(
       {
         matchTerm: this.inputRef.value,
-        matchType: this.typeSelectRef.options[
-          this.typeSelectRef.selectedIndex
-        ].getAttribute('data-option-name'),
+        matchType: 'idtype',
+        // this.typeSelectRef.options[
+        //   this.typeSelectRef.selectedIndex
+        // ].getAttribute('data-option-name'),
       },
       false,
     );
@@ -188,4 +150,33 @@ export default class Search extends React.Component {
   handleClickOutside = () => {
     this.hideSearchDetails();
   };
+
+  render() {
+    return (
+      <div style={containerStyle}>
+        <input
+          type="text"
+          style={inputStyle}
+          placeholder="Filter records..."
+          onFocus={this.showSearchDetails}
+          onChange={this.handleSearchChange}
+          ref={input => (this.inputRef = input)}
+        />
+      </div>
+    );
+  }
 }
+
+const containerStyle = {
+  padding: '4px',
+  border: 'solid 1px #ddd',
+  borderRight: 'none',
+  borderTop: 'none',
+};
+
+const inputStyle = {
+  overflow: 'visible',
+  border: 0,
+  width: '100%',
+  outline: 'none',
+};

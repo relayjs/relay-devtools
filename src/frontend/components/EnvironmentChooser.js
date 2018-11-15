@@ -3,49 +3,55 @@
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
+ *
+ * @flow
+ * @format
  */
+
+'use strict';
 
 import React from 'react';
 
-import '../css/EnvironmentChooser.less';
-
-export default class EnvironmentChooser extends React.PureComponent {
+export default class EnvironmentChooser extends React.Component<$FlowFixMe> {
   componentDidMount() {
+    this.props.loadEnvironmentsDetails();
     this.props.loadEnvironments();
   }
 
+  componentDidUpdate(prevProps) {
+    if (
+      this.props.currentEnvironment &&
+      prevProps.currentEnvironment !== this.props.currentEnvironment
+    ) {
+      this.props.subscribeEnvironment(this.props.currentEnvironment);
+    }
+  }
+
   render() {
-    const {
-      environments,
-      currentEnvironment,
-      onChange,
-      subscribeEnvironment,
-      children,
-    } = this.props;
+    const {environments, currentEnvironment, children} = this.props;
 
     if (!currentEnvironment) {
-      return <div className="placeholder">Loading</div>;
+      // possible loading state here
+      return <div style={relayDetectorStyle}>Connecting to Relay...</div>;
     }
 
     if (!environments.length) {
       return (
-        <div className="placeholder">
+        <div style={relayDetectorStyle}>
           No Relay Modern Environments found on the page
         </div>
       );
     }
 
-    subscribeEnvironment(currentEnvironment);
-    const handleChange = (e: SyntheticEvent<>) => onChange(e.target.value);
-    return (
-      <div className="environment-chooser">
-        <div className="contained">{children}</div>
-        <div className="footer">
-          <select defaultValue={currentEnvironment} onChange={handleChange}>
-            {environments.map(env => <option key={env}>{env}</option>)}
-          </select>
-        </div>
-      </div>
-    );
+    return children;
   }
 }
+
+const relayDetectorStyle = {
+  display: 'flex',
+  height: '100%',
+  color: '#ccc',
+  justifyContent: 'center',
+  fontSize: '30px',
+  marginTop: '50px',
+};

@@ -6,11 +6,16 @@
  *
  * @flow
  * @format
+ *
+ * Agent:
+ *
+ * Responsible for listening to events on and exposing an inspection API for
+ * a Relay Environment.
  */
 
 'use strict';
 
-import deepCopy from './deepCopy';
+// import deepCopy from './deepCopy';
 
 // import type {Record} from 'RelayCombinedEnvironmentTypes';
 // import type {ConcreteBatch} from 'RelayConcreteNode';
@@ -37,12 +42,62 @@ export type UpdateEvent = {
 
 type EmitFn = (name: string, data: {[key: string]: mixed}) => void;
 
-/**
- * Agent:
- *
- * Responsible for listening to events on and exposing an inspection API for
- * a Relay Environment.
- */
+function getSnapshotChanges(store, snapshot, updatedRecordIds) {
+  const snapshotBefore = {};
+  const snapshotAfter = {};
+  const source = store.getSource();
+  const ids = Object.keys(updatedRecordIds);
+  for (let ii = 0; ii < ids.length; ii++) {
+    const id = ids[ii];
+    const beforeRecord = snapshot[id];
+    if (beforeRecord !== undefined) {
+      snapshotBefore[id] = beforeRecord;
+    }
+    // Always include records in "after", even if they're null.
+    snapshotAfter[id] = snapshot[id] = deepCopy(source.get(id));
+  }
+  return {snapshotBefore, snapshotAfter};
+}
+
+let seriesIdCounter = 0;
+const seriesIdPrefix = Math.random()
+  .toString(16)
+  .slice(-5);
+
+function getNextSeriesID() {
+  return seriesIdPrefix + seriesIdCounter++;
+}
+function monkeyPatch(source, method, patch) {
+  source[method] = patch(source[method]);
+}
+
+function getInitialSnapshot(store) {
+  const snapshot = {};
+  const source = store.getSource();
+  const ids = source.getRecordIDs();
+  ids.forEach(id => {
+    snapshot[id] = deepCopy(source.get(id));
+  });
+  return snapshot;
+}
+
+function deepCopy<T>(value: T): T {
+  if (Array.isArray(value)) {
+    return value.map(deepCopy);
+  }
+  if (value && typeof value === 'object') {
+    const copy = {};
+    for (const prop in value) {
+      if (hasOwnProperty.call(value, prop)) {
+        copy[prop] = deepCopy(value[prop]);
+      }
+    }
+    // $FlowFixMe
+    return copy;
+  }
+  return value;
+}
+
 export default class EnvironmentAgent {
   _environment: Environment;
   _id: string;
@@ -50,18 +105,25 @@ export default class EnvironmentAgent {
   _snapshot: any;
   _lastNetworkEvent: ?UpdateEvent;
   _flushLastNetworkEventTimer: ?number;
+  _network: any;
 
   constructor(environment: Environment, id: string, emit: EmitFn): void {
     this._environment = environment;
     this._id = id;
     this._emit = emit;
     this._snapshot = getInitialSnapshot(environment.getStore());
-
+    this._network = environment.getNetwork();
+    // this._emit('log', {
+    //   network: JSON.stringify(this._network),
+    //   snapshot: this._snapshot,
+    //   id: this._id,
+    // });
     // Monkey patch methods within Environment to follow various events.
-    this._monkeyPatchExecute();
+
     this._monkeyPatchExecuteMutation();
-    this._monkeyPatchNetwork();
     this._monkeyPatchStoreNotify();
+    this._monkeyPatchNetwork();
+    this._monkeyPatchExecute();
   }
 
   getEnvironment(): Environment {
@@ -114,6 +176,18 @@ export default class EnvironmentAgent {
     );
   }
 
+  getGCData() {
+    const store = this._environment.getStore();
+    return {
+      _gcEnabled: store._gcEnabled,
+      _hasScheduledGC: store._hasScheduledGC,
+    };
+  }
+
+  setEmitFunction(emit) {
+    this._emit = emit;
+  }
+
   _monkeyPatchExecute() {
     monkeyPatch(this._environment, 'execute', execute =>
       this._monkeyPatchExecuteUnsubscribe(execute),
@@ -133,6 +207,7 @@ export default class EnvironmentAgent {
   // occur *before* the corresponding publish.
   _monkeyPatchExecuteUnsubscribe(execute: $FlowFixMe) {
     const agent = this;
+
     return function() {
       const observable = execute.apply(this, arguments);
       // Get the network event corresponding to the "Request" start.
@@ -140,10 +215,11 @@ export default class EnvironmentAgent {
       return observable.do({
         unsubscribe: () =>
           // Produce a mirrored "Unsubscribe" network event.
-          agent._networkEvent({
-            ...lastNetworkEvent,
-            eventName: 'Unsubscribe',
-          }),
+          agent._networkEvent(
+            Object.assign({}, lastNetworkEvent, {
+              eventName: 'Unsubscribe',
+            }),
+          ),
       });
     };
   }
@@ -155,7 +231,7 @@ export default class EnvironmentAgent {
       'execute',
       execute =>
         function(operation, variables) {
-          const seriesId = nextSeriesId();
+          const seriesId = getNextSeriesID();
           // $FlowFixMe
           agent._networkEvent({
             eventName: 'Request',
@@ -165,15 +241,16 @@ export default class EnvironmentAgent {
           });
           const observable = execute.apply(this, arguments);
           return observable.do({
-            next: payload =>
+            next: payload => {
               // $FlowFixMe
-              agent._networkEvent({
+              return agent._networkEvent({
                 eventName: 'Response',
                 seriesId,
                 operation,
                 variables,
                 response: payload.response || payload,
-              }),
+              });
+            },
             error: error =>
               // $FlowFixMe
               agent._networkEvent({
@@ -241,7 +318,7 @@ export default class EnvironmentAgent {
             : 'Local Update';
     const seriesId = lastNetworkEvent
       ? lastNetworkEvent.seriesId
-      : nextSeriesId();
+      : getNextSeriesID();
     const snapshotChanges = getSnapshotChanges(
       store,
       this._snapshot,
@@ -256,47 +333,4 @@ export default class EnvironmentAgent {
     this._clearLastNetworkEvent();
     this._emit('update', data);
   }
-}
-
-// Create an in-memory copy of the store which can be used to derive diffs
-// on each publish event.
-function getInitialSnapshot(store) {
-  const snapshot = {};
-  const source = store.getSource();
-  const ids = source.getRecordIDs();
-  ids.forEach(id => {
-    snapshot[id] = deepCopy(source.get(id));
-  });
-  return snapshot;
-}
-
-// From a publish event, update the store snapshot with the latest data
-// while returning a before/after of any updated records to visualize.
-function getSnapshotChanges(store, snapshot, updatedRecordIds) {
-  const snapshotBefore = {};
-  const snapshotAfter = {};
-  const source = store.getSource();
-  const ids = Object.keys(updatedRecordIds);
-  for (let ii = 0; ii < ids.length; ii++) {
-    const id = ids[ii];
-    const beforeRecord = snapshot[id];
-    if (beforeRecord !== undefined) {
-      snapshotBefore[id] = beforeRecord;
-    }
-    // Always include records in "after", even if they're null.
-    snapshotAfter[id] = snapshot[id] = deepCopy(source.get(id));
-  }
-  return {snapshotBefore, snapshotAfter};
-}
-
-function monkeyPatch(source, method, patch) {
-  source[method] = patch(source[method]);
-}
-
-let seriesIdCounter = 0;
-const seriesIdPrefix = Math.random()
-  .toString(16)
-  .slice(-5);
-function nextSeriesId() {
-  return seriesIdPrefix + seriesIdCounter++;
 }

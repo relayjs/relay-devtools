@@ -13,9 +13,7 @@ export function loadRecord(id, fresh = false) {
       'LOAD_RECORD_FAILURE',
     ],
     callAPI: (API, environment) => API.getRecord({environment, id}),
-    shouldCallAPI: ({recordInspector}) =>
-      fresh || !recordInspector.fetchedRecords[id],
-    id,
+    shouldCallAPI: () => true,
   };
 }
 

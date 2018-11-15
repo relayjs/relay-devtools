@@ -3,15 +3,15 @@
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
- *
+ * @flow
  * @format
  */
 
+'use strict';
+
 import React from 'react';
 
-import '../css/RelayDetector.less';
-
-export default class RelayDetector extends React.Component {
+export default class RelayDetector extends React.Component<$FlowFixMe> {
   state = {
     isRelayPresent: false,
   };
@@ -27,11 +27,18 @@ export default class RelayDetector extends React.Component {
 
   render() {
     if (this.state.isRelayPresent) {
-      return <div className="relay-detector">{this.props.children}</div>;
+      return <div>{this.props.children}</div>;
     }
 
-    return (
-      <div className="relay-detector placeholder">Looking for Relay...</div>
-    );
+    return <div style={relayDetectorStyle}>Connecting to Relay...</div>;
   }
 }
+
+const relayDetectorStyle = {
+  display: 'flex',
+  height: '100%',
+  color: '#ccc',
+  justifyContent: 'center',
+  fontSize: '30px',
+  marginTop: '50px',
+};

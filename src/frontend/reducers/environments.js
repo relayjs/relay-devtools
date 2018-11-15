@@ -13,29 +13,56 @@ import type {Action} from './actions';
 import type {Environment} from './types';
 
 type State = {|
-  +environments: $ReadOnlyArray<Environment>,
+  +environments: ?$ReadOnlyArray<Environment>,
   +currentEnvironment: ?Environment,
+  +environmentsDetails: ?$ReadOnlyArray<string>,
+  +environmentsLoading: boolean,
+  +environmentsDetailsLoading: boolean,
 |};
 
 export default function(
   state: State = {
-    environments: [],
+    environments: null,
     currentEnvironment: null,
+    environmentsDetails: null,
+    environmentsLoading: false,
+    environmentsDetailsLoading: false,
   },
   action: Action,
 ): State {
   switch (action.type) {
     case 'SWITCH_ENVIRONMENT':
       return {
-        environments: state.environments,
+        ...state,
         currentEnvironment: action.environment,
+      };
+
+    case 'LOAD_ENVIRONMENTS_REQUEST':
+      return {
+        ...state,
+        environmentsLoading: true,
       };
 
     case 'LOAD_ENVIRONMENTS_SUCCESS':
       const environments = action.response;
       return {
+        ...state,
         environments,
         currentEnvironment: environments[0],
+        environmentsLoading: false,
+      };
+
+    case 'LOAD_ENVIRONMENTS_DETAILS_REQUEST':
+      return {
+        ...state,
+        environmentsDetailsLoading: true,
+      };
+
+    case 'LOAD_ENVIRONMENTS_DETAILS_SUCCESS':
+      return {
+        ...state,
+        environmentsDetails: action.response,
+        environmentsDetailsLoading: false,
       };
 
     default:

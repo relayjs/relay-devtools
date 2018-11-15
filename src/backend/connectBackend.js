@@ -6,63 +6,90 @@
  *
  * @flow
  * @format
- */
-
-'use strict';
-
-import EnvironmentAgent from './EnvironmentAgent';
-
-// import type {Environment} from 'RelayRuntime';
-type Environment = $FlowFixMe;
-import type {GlobalHook} from './GlobalHook';
-import type Bridge from '../transport/Bridge';
-
-/**
+ *
  * connectBackend:
  *
  * Given a Hook and a Bridge, create Agents for every Relay Environment found,
  * and attach Bridge callbacks to Agent methods.
  */
-export default function connectBackend(hook: GlobalHook, bridge: Bridge): void {
-  const agents = [];
 
-  function connectAgent(environment: Environment): void {
-    try {
-      const id = agents.length;
-      function emit(name, data) {
-        bridge.emit(name, {...data, environment: id});
-      }
-      // $FlowFixMe
-      const agent = new EnvironmentAgent(environment, id, emit);
-      agents.push(agent);
-      bridge.emit('register');
-    } catch (error) {
-      /* eslint-disable no-console */
-      console.error('Relay DevTools: Failed to connect agent');
-      console.error(error);
-      /* eslint-enable no-console */
-    }
-  }
+'use strict';
 
-  hook.getEnvironments().forEach(connectAgent);
-  hook.onEnvironment(connectAgent);
+// import type {Environment} from 'relay-runtime';
+import type {default as BridgeType} from '../transport/Bridge';
+
+// import EnvironmentAgent from './EnvironmentAgent';
+import {getGlobalHook} from './GlobalHook';
+
+const hook = getGlobalHook(window);
+// let bridge;
+
+export default function connectBackend(bridge: BridgeType): void {
+  console.log('connectBackend called');
+  // bridge = _bridge;
+
+  // const agents = new Map();
+  // function connectAgent(environment: Environment, id): void {
+  //   if (hook._agents.has(id)) {
+  //     return;
+  //   }
+  //   try {
+  //     function emit(name, data) {
+  //       bridge.emit(name, {...data, environment: id});
+  //     }
+  //     // $FlowFixMe
+  //     const agent = new EnvironmentAgent(environment, id, emit);
+  //     hook._agents.set(id, agent);
+  //     bridge.emit('register');
+  //   } catch (error) {
+  //     /* eslint-disable no-console */
+  //     console.error('Relay DevTools: Failed to connect agent');
+  //     console.error(error);
+  //     /* eslint-enable no-console */
+  //   }
+  // }
+
+  hook._pending.forEach(({event, data}) => {
+    bridge.emit(event, data);
+  });
+
+  hook._pending.clear();
+
+  hook._agents.forEach(agent => {
+    bridge.emit('register');
+
+    agent.setEmitFunction(function emit(name, data) {
+      bridge.emit(name, {...data, environment: agent.getId()});
+    });
+  });
 
   bridge.onCall('relayDebugger:getEnvironments', () => {
     // $FlowFixMe
-    return Object.keys(agents);
+    return Array.from(hook._agents.keys(), key => key.toString());
   });
 
   bridge.onCall('relayDebugger:getRecord', (env, id) => {
     // $FlowFixMe
-    return agents[env].getRecord(id);
+    return hook._agents.get(Number(env)).getRecord(id);
   });
 
   bridge.onCall('relayDebugger:getMatchingRecords', (env, search, type) => {
     // $FlowFixMe
-    return agents[env].getMatchingRecords(search, type);
+    return hook._agents.get(Number(env)).getMatchingRecords(search, type);
   });
 
   bridge.onCall('hasDetectedRelay', () => {
-    return agents.length !== 0;
+    return hook._agents.size !== 0;
   });
+
+  bridge.onCall('relayDebugger:getEnvironmentsDetails', () => {
+    return Array.from(hook._agents.values()).reduce((acc, currentValue) => {
+      acc[currentValue._id] =
+        currentValue._environment.configName ||
+        `Environment ${Number(currentValue._id) + 1}`;
+      return acc;
+    }, {});
+  });
+
+  bridge.emit('ready');
 }

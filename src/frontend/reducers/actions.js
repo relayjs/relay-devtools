@@ -94,6 +94,23 @@ type LoadEnvironmentsSuccessAction = {|
   +response: $ReadOnlyArray<Environment>,
 |};
 
+type LoadEnvironmentsDetailsSuccessAction = {|
+  +type: 'LOAD_ENVIRONMENTS_DETAILS_SUCCESS',
+  +response: $ReadOnlyArray<Environment>,
+|};
+type SelectRecordAction = {|
+  +type: 'SELECT_RECORD',
+  +id: String,
+|};
+type loadTypeMappingRequestAction = {|
+  +type: 'LOAD_TYPE_MAPPING_REQUEST',
+  +loadingTypeMapping: Boolean,
+|};
+type loadRecordRequestAction = {|
+  +type: 'LOAD_RECORD_REQUEST',
+  +loadingRecord: Boolean,
+|};
+
 export type Action =
   | RecordInspectorChangeDiffModeAction
   | RecordInspectorOpenOrClosePathAction
@@ -109,4 +126,8 @@ export type Action =
   | SearchGoForwardAction
   | LoadRecordDescsSuccessAction
   | SwitchEnvironmentAction
-  | LoadEnvironmentsSuccessAction;
+  | LoadEnvironmentsSuccessAction
+  | LoadEnvironmentsDetailsSuccessAction
+  | loadTypeMappingRequestAction
+  | loadRecordRequestAction
+  | SelectRecordAction;

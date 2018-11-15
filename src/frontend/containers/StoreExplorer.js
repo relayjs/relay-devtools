@@ -3,31 +3,39 @@
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
+ *
+ * @flow
+ * @format
  */
 
-import {connect} from 'react-redux';
-import StoreExplorer from '../components/StoreExplorer';
+'use strict';
 
-const mapStateToProps = ({storeExplorer}) => storeExplorer;
+import {connect} from 'react-redux';
+import StoreExplorer from '../components/StoreView';
+import {loadRecordDescs} from '../fetch-actions/storeExplorer';
+
+const mapStateToProps = ({storeExplorer, tools, environments}) => ({
+  selectedRecordId: storeExplorer.selectedRecordId,
+  records: storeExplorer.recordDescs,
+  currentTool: tools.currentTool,
+  matchTerm: storeExplorer.latest.matchTerm,
+  matchType: storeExplorer.latest.matchType,
+  currentEnvironment: environments.currentEnvironment,
+});
+
 const mapDispatchToProps = dispatch => ({
-  pushNewSearch: newSearch => {
-    dispatch({
-      type: 'NEW_SEARCH',
-      newSearch,
-    });
+  refetchRecords(matchTerm, matchType) {
+    dispatch(loadRecordDescs({matchType, matchTerm}));
   },
-  goBack: currentSearch => {
+  selectRecordId(id) {
     dispatch({
-      type: 'SEARCH_GO_BACK',
-      currentSearch,
-    });
-  },
-  goForward: currentSearch => {
-    dispatch({
-      type: 'SEARCH_GO_FORWARD',
-      currentSearch,
+      type: 'SELECT_RECORD',
+      id,
     });
   },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(StoreExplorer);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(StoreExplorer);

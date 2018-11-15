@@ -6,13 +6,7 @@
  *
  * @flow
  * @format
- */
-
-import type Bridge from '../../transport/Bridge';
-
-import type {UpdateEvent} from '../../backend/EnvironmentAgent';
-
-/**
+ *
  * API:
  *
  * Provides the frontend with a high-level API for interacting with the
@@ -20,6 +14,12 @@ import type {UpdateEvent} from '../../backend/EnvironmentAgent';
  *
  * Constructed with a Bridge as a means of communicating with the browser-side.
  */
+
+'use strict';
+
+import type Bridge from '../../transport/Bridge';
+import type {UpdateEvent} from '../../backend/EnvironmentAgent';
+
 export default class BridgeAPI {
   _bridge: Bridge;
   _changeCallbacks: {[environment: string]: Array<() => void>};
@@ -39,6 +39,10 @@ export default class BridgeAPI {
       // $FlowFixMe
       this._onRegisterListeners.forEach(cb => cb());
     });
+
+    // this._bridge.on('log', (event, name, data) => {
+
+    // });
 
     this._bridge.on('update', (event: $FlowFixMe) => {
       if (!this._updateEvents[event.environment]) {
@@ -62,6 +66,10 @@ export default class BridgeAPI {
     return this._bridge.call('relayDebugger:getEnvironments');
   }
 
+  getEnvironmentsDetails() {
+    return this._bridge.call('relayDebugger:getEnvironmentsDetails');
+  }
+
   getRecord({id, environment}: $FlowFixMe) {
     if (!id) {
       return null;
@@ -72,7 +80,6 @@ export default class BridgeAPI {
   getAllRecordDescriptions({environment}: $FlowFixMe) {
     const recordSummaryCache = this._recordSummaryCache[environment];
     if (recordSummaryCache) {
-      // $FlowFixMe
       return Promise.resolve(recordSummaryCache);
     }
     return this._getAllRecordDescriptions(environment).then(result => {

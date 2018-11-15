@@ -22,14 +22,17 @@ export default function getAPIMiddleware(API) {
 
       if (type === 'ENVIRONMENT_SUBSCRIBE') {
         const {environment} = action;
+        if (subscribedEnvironment === environment) {
+          return;
+        }
+
+
 
         const callback = () => {
           refetchActionsReducers(getState()).forEach(dispatch);
         };
 
-        if (subscribedEnvironment === environment) {
-          return;
-        }
+
 
         if (subscribedEnvironment) {
           API.stopObservingChange({environment: subscribedEnvironment});

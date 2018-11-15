@@ -3,14 +3,23 @@
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
+ *
+ * @flow
+ * @format
  */
 
+'use strict';
+
 import {connect} from 'react-redux';
-// eslint-disable-next-line max-len
-import LatestRecordFields from '../components/RecordInspector/LatestRecordFields';
+import LatestRecordFields from '../components/RecordFields/LatestRecordFields';
 import {loadRecord} from '../fetch-actions/recordInspectorActions';
 
-const mapStateToProps = ({recordInspector}) => recordInspector;
+const mapStateToProps = ({recordInspector, storeExplorer}) => ({
+  selectedRecordId: storeExplorer.selectedRecordId,
+  fetchedRecords: recordInspector.fetchedRecords,
+  typeMapping: recordInspector.typeMapping,
+  pathOpened: recordInspector.pathOpened,
+});
 
 const mapDispatchToProps = dispatch => ({
   loadRecord(id) {
@@ -18,4 +27,7 @@ const mapDispatchToProps = dispatch => ({
   },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(LatestRecordFields);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(LatestRecordFields);

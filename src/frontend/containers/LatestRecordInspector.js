@@ -6,15 +6,26 @@
  */
 
 import {connect} from 'react-redux';
-import {LatestRecordInspector} from '../components/RecordInspector';
-import {mapDispatchToProps as mapDispatch} from './RecordInspector';
+// eslint-disable-next-line max-len
+import LatestRecordInspector from '../components/RecordInspector/LatestRecordInspector';
 import {loadTypeMapping} from '../fetch-actions/recordInspectorActions';
 
-const mapStateToProps = ({recordInspector}) => recordInspector;
+const mapStateToProps = ({recordInspector, storeExplorer, environments, updatesView}) => ({
+  currentEnvironment: environments.currentEnvironment,
+  id: storeExplorer.selectedRecordId,
+  typeMapping: recordInspector.typeMapping,
+  pathOpened: recordInspector.pathOpened,
+  events: updatesView.events
+});
 
-const mapDispatchToProps = (dispatch, props) => ({
-  ...mapDispatch(dispatch, props),
-
+const mapDispatchToProps = dispatch => ({
+  openOrClosePath(path, open) {
+    dispatch({
+      type: 'RECORD_INSPECTOR_OPEN_OR_CLOSE_PATH',
+      path,
+      open,
+    });
+  },
   loadTypeMapping() {
     dispatch(loadTypeMapping());
   },
