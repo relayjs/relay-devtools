@@ -1,5 +1,4 @@
-Relay DevTools (Standalone)
----------------------------
+## Relay DevTools (Standalone)
 
 The Relay DevTools requires use of Relay (`relay-runtime`) v1.4.0 or greater.
 
@@ -29,3 +28,20 @@ to your running Relay application.
 ```bash
 relay-devtools
 ```
+
+## Electron
+
+Build an Electron App build. Compile the app into a single importable file and
+then build the shell.
+This app is distributed as `relay-devtools` on npm. [npmjs link][1].
+
+[2]: https://www.npmjs.com/package/relay-devtools
+
+```
+yarn build:standalone
+yarn test:standalone
+```
+
+### License
+
+Relay Devtools is [MIT licensed](./LICENSE).
