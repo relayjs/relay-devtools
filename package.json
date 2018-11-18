@@ -19,6 +19,7 @@
     "start:standalone": "webpack --config ./src/integrations/standalone/webpack.config.js --watch",
     "start:chrome": "rm -rf lib/ && cross-env NODE_ENV=development webpack --config ./src/integrations/chrome/webpack.dev.js --watch",
     "prettier": "find src -name '*.js' -or -name '*.css' -or -name '*.less' | xargs prettier --write",
+    "prettier:check": "find src -name '*.js' -or -name '*.css' -or -name '*.less' | xargs prettier --list-different",
     "prepublishOnly": "yarn install && yarn build",
     "test:chrome": "./src/integrations/chrome/test.js",
     "test:standalone": "node ./lib/standalone/launchApp.js",
