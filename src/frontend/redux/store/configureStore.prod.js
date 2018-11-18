@@ -16,6 +16,7 @@ import getAPIMiddleware from '../getAPIMiddleware';
 import throwOnAsyncErrorMiddleware from '../throwOnAsyncErrorMiddleware';
 import reducer from '../../reducers';
 
+// $FlowFixMe
 export default function configureStore(API) {
   const callAPIMiddleware = getAPIMiddleware(API);
   const middleware = [

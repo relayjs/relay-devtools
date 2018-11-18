@@ -37,6 +37,7 @@ export default function(
         currentEnvironment: action.environment,
       };
 
+    // $FlowFixMe
     case 'LOAD_ENVIRONMENTS_REQUEST':
       return {
         ...state,
@@ -52,6 +53,7 @@ export default function(
         environmentsLoading: false,
       };
 
+    // $FlowFixMe
     case 'LOAD_ENVIRONMENTS_DETAILS_REQUEST':
       return {
         ...state,
@@ -61,6 +63,7 @@ export default function(
     case 'LOAD_ENVIRONMENTS_DETAILS_SUCCESS':
       return {
         ...state,
+        // $FlowFixMe
         environmentsDetails: action.response,
         environmentsDetailsLoading: false,
       };

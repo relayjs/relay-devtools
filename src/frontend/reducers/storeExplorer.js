@@ -53,6 +53,7 @@ export default function(state: State = initialState, action: Action): State {
         selectedRecordId: action.id,
       };
 
+    // $FlowFixMe
     case 'LOAD_RECORD_DESCS_REQUEST':
       return {
         ...state,
@@ -61,10 +62,13 @@ export default function(state: State = initialState, action: Action): State {
     case 'LOAD_RECORD_DESCS_SUCCESS':
       return {
         ...state,
+        // $FlowFixMe
         recordDescs: {
+          // $FlowFixMe
           byId: {
             ...action.response,
           },
+          // $FlowFixMe
           allIds: Object.keys(action.response),
         },
         recordDescsLoading: false,

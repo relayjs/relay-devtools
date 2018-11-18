@@ -10,7 +10,9 @@
 
 'use strict';
 
+// $FlowFixMe
 export const mapDispatchToProps = dispatch => ({
+  // $FlowFixMe
   openOrClosePath(path, open) {
     dispatch({
       type: 'RECORD_INSPECTOR_OPEN_OR_CLOSE_PATH',

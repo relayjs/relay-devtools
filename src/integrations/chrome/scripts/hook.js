@@ -30,6 +30,7 @@ window.addEventListener('message', function(evt) {
       hasDetectedRelay: true,
       environment: JSON.stringify(evt.data.environment),
     };
+    // $FlowFixMe
     chrome.runtime.sendMessage(lastDetectionResult);
   }
 });
@@ -49,6 +50,8 @@ const source =
   ';(' + installGlobalHook.toString() + '(window))' + detectRelayEnvironment;
 const script = document.createElement('script');
 script.textContent = source;
+// $FlowFixMe
 document.documentElement.appendChild(script);
+// $FlowFixMe
 script.parentNode.removeChild(script);
 // }

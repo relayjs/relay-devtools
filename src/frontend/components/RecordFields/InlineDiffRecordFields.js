@@ -224,6 +224,7 @@ export default class InlineDiffRecordFields extends React.Component<$FlowFixMe> 
     );
   }
 
+  // $FlowFixMe
   renderScalar(value, prev, key) {
     const different = value !== prev;
 

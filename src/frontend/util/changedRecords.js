@@ -16,6 +16,7 @@ import {deepObjectEqual} from './objCompare';
 // - added records
 // - removed records
 // - changed records
+// $FlowFixMe
 export default function changedRecords(snapshotBefore, snapshotAfter) {
   const added = {};
   const removed = {};

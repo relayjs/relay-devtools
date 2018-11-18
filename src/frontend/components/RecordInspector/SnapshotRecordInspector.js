@@ -20,17 +20,20 @@ import {stringifyPath} from '../../util/stringifyPath';
 import InlineDiffRecordFields from '../RecordFields/InlineDiffRecordFields';
 
 export default class SnapshotRecordInspector extends React.Component<$FlowFixMe> {
+  // $FlowFixMe
   constructor(props, context) {
     super(props, context);
 
     const {id} = this.props;
 
+    // $FlowFixMe
     this.state = {
       path: [{id, name: id}],
       lastId: id,
     };
   }
 
+  // $FlowFixMe
   getType = id => {
     const {snapshotBefore, snapshotAfter} = this.props;
     const record = snapshotBefore[id] || snapshotAfter[id];
@@ -41,13 +44,16 @@ export default class SnapshotRecordInspector extends React.Component<$FlowFixMe>
     return typeMapping[id];
   };
 
+  // $FlowFixMe
   openOrClosePath = path => {
     const stringified = stringifyPath(path);
     const opened = this.props.pathOpened[stringified];
     this.props.openOrClosePath(stringified, !opened);
   };
 
+  // $FlowFixMe
   navigateToPath = path => {
+    // $FlowFixMe
     this.setState({
       path,
     });
@@ -61,11 +67,14 @@ export default class SnapshotRecordInspector extends React.Component<$FlowFixMe>
     };
   }
 
+  // $FlowFixMe
   componentWillReceiveProps({id}) {
+    // $FlowFixMe
     this.setState({
       path: [{id, name: id}],
     });
   }
+  // $FlowFixMe
   static getDerivedStateFromProps(props, state) {
     const {id} = props;
     const currentPath = [{id, name: id}];
@@ -82,6 +91,7 @@ export default class SnapshotRecordInspector extends React.Component<$FlowFixMe>
     return null;
   }
 
+  // $FlowFixMe
   renderRecordFields(path) {
     const {snapshotBefore, snapshotAfter, diffMode, pathOpened} = this.props;
     const {id} = path[path.length - 1];
@@ -120,10 +130,12 @@ export default class SnapshotRecordInspector extends React.Component<$FlowFixMe>
   }
 
   renderNav() {
+    // $FlowFixMe
     const {path} = this.state;
 
     const makePathElement = ({id, name}, i) => {
       const handler = () => {
+        // $FlowFixMe
         this.setState({
           path: path.slice(0, i + 1),
         });
@@ -186,6 +198,7 @@ export default class SnapshotRecordInspector extends React.Component<$FlowFixMe>
 
   render() {
     const {id} = this.props;
+    // $FlowFixMe
     const {path} = this.state;
 
     if (!id) {

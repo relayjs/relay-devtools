@@ -184,7 +184,7 @@ export default class EnvironmentAgent {
     };
   }
 
-  setEmitFunction(emit) {
+  setEmitFunction(emit: EmitFn) {
     this._emit = emit;
   }
 

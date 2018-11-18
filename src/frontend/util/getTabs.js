@@ -10,6 +10,7 @@
 
 'use strict';
 
+// $FlowFixMe
 export default function getTabs(event) {
   const tabs = {};
 
