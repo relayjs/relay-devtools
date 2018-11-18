@@ -23,64 +23,57 @@ import Filter from '../Filter';
 import LatestRecordInspector from '../../containers/LatestRecordInspector';
 
 type Props = {|
-  records: {[id: string]: string},
-  refetchRecords: () => void,
+  records: {|
+    allIds: $ReadOnlyArray<string>,
+    byId: {[id: string]: string},
+  |},
+  refetchRecords: (matchTerm: string, matchType: string) => void,
   matchTerm: string,
   matchType: string,
 |};
 
 type State = {|
+  filter: string,
   selectedRecordId: ?string,
 |};
 
-// $FlowFixMe
 export default class StoreExplorer extends React.Component<Props, State> {
   state = {
     filter: '',
     selectedRecordId: null,
-    isTooltipActive: false,
-    staleEnvId: null,
-    stale: null,
   };
   listRef = React.createRef();
   itemSize = () => 40;
 
   componentDidMount() {
     const {matchTerm, matchType} = this.props;
-    // $FlowFixMe
     this.props.refetchRecords(matchTerm, matchType);
   }
 
-  // $FlowFixMe
-  handleChange = value => {
-    // $FlowFixMe
+  handleChange = (value: string) => {
     this.setState({filter: value.toLowerCase()}, () => {
-      // $FlowFixMe
-      this.listRef.current.resetAfterIndex(0);
+      if (this.listRef.current) {
+        this.listRef.current.resetAfterIndex(0);
+      }
     });
   };
-  // $FlowFixMe
-  getFilteredRecords = key => {
+
+  getFilteredRecords = (key: string): boolean => {
     const value = this.props.records.byId[key];
     return (
       (this.state.filter !== '' &&
-        // $FlowFixMe
         key.toLowerCase().indexOf(this.state.filter.toLowerCase()) !== -1) ||
-      // $FlowFixMe
       value.toLowerCase().indexOf(this.state.filter.toLowerCase()) !== -1 ||
-      // $FlowFixMe
       this.state.filter === ''
     );
   };
 
   getItemData() {
-    // $FlowFixMe
-    const filteredRecords = this.props.records.allIds.filter(
+    const filteredRecords: Array<string> = this.props.records.allIds.filter(
       this.getFilteredRecords,
     );
 
     return {
-      // $FlowFixMe
       filter: this.state.filter,
       // $FlowFixMe
       selectedRecordId: this.props.selectedRecordId,
