@@ -125,7 +125,6 @@ export function installGlobalHook(target: any): boolean {
                 copy[prop] = deepCopy(value[prop]);
               }
             }
-            // $FlowFixMe
             return copy;
           }
           return value;
@@ -251,7 +250,6 @@ export function installGlobalHook(target: any): boolean {
             execute =>
               function(operation, variables) {
                 const seriesId = getNextSeriesID();
-                // $FlowFixMe
                 agent._networkEvent({
                   eventName: 'Request',
                   seriesId,
@@ -261,7 +259,6 @@ export function installGlobalHook(target: any): boolean {
                 const observable = execute.apply(this, arguments);
                 return observable.do({
                   next: payload => {
-                    // $FlowFixMe
                     return agent._networkEvent({
                       eventName: 'Response',
                       seriesId,
@@ -271,7 +268,6 @@ export function installGlobalHook(target: any): boolean {
                     });
                   },
                   error: error =>
-                    // $FlowFixMe
                     agent._networkEvent({
                       eventName: 'Request Error',
                       seriesId,
@@ -303,17 +299,14 @@ export function installGlobalHook(target: any): boolean {
             this._flushLastNetworkEvent();
           }
           this._lastNetworkEvent = partialEvent;
-          // $FlowFixMe
           this._flushLastNetworkEventTimer = setTimeout(() =>
             this._flushLastNetworkEvent(),
           );
         };
 
         this._flushLastNetworkEvent = function() {
-          // $FlowFixMe
           const data: UpdateEvent = this._lastNetworkEvent;
           this._clearLastNetworkEvent();
-          // $FlowFixMe
           this._emit('update', data);
         };
 

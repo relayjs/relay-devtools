@@ -36,7 +36,6 @@ window.addEventListener('message', function(evt) {
 });
 
 // inject the hook
-// $FlowFixMe
 // if (document instanceof HTMLDocument) {
 const detectRelayEnvironment = `
   window.__RELAY_DEVTOOLS_HOOK__.on('hasDetectedReact', function(evt) {

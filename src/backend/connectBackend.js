@@ -37,7 +37,6 @@ export default function connectBackend(bridge: BridgeType): void {
   //     function emit(name, data) {
   //       bridge.emit(name, {...data, environment: id});
   //     }
-  //     // $FlowFixMe
   //     const agent = new EnvironmentAgent(environment, id, emit);
   //     hook._agents.set(id, agent);
   //     bridge.emit('register');
