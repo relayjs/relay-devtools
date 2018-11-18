@@ -24,15 +24,18 @@ import ContaineredRecordFields from '../../containers/LatestRecordFields';
 export default class LatestRecordFields extends React.Component<$FlowFixMe> {
   // previousRecordId;
   // previousPath;
+  // $FlowFixMe
   constructor(props) {
     super();
     // const {path} = props;
     // const {id} = path[path.length - 1];
+    // $FlowFixMe
     this.state = {
       externalData: null,
       // lastId: id,
     };
   }
+  // $FlowFixMe
   previousRecordId;
 
   // static getDerivedStateFromProps(props, state) {
@@ -147,6 +150,7 @@ export default class LatestRecordFields extends React.Component<$FlowFixMe> {
   // return false;
   // }
 
+  // $FlowFixMe
   componentDidUpdate(prevProps, prevState) {
     const {path} = this.props;
     const {id} = path[path.length - 1];

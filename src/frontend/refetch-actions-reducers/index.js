@@ -14,6 +14,7 @@ import {
   loadTypeMapping,
 } from '../fetch-actions/recordInspectorActions';
 
+// $FlowFixMe
 export default function({storeExplorer, recordInspector}) {
   const actions = [];
 

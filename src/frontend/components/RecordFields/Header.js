@@ -12,6 +12,7 @@
 
 import React from 'react';
 
+// $FlowFixMe
 export default function Header({
   keyName,
   focusHandler,

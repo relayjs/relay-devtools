@@ -49,12 +49,15 @@ export default function connectBackend(bridge: BridgeType): void {
   //   }
   // }
 
+  // $FlowFixMe
   hook._pending.forEach(({event, data}) => {
     bridge.emit(event, data);
   });
 
+  // $FlowFixMe
   hook._pending.clear();
 
+  // $FlowFixMe
   hook._agents.forEach(agent => {
     bridge.emit('register');
 
@@ -79,10 +82,12 @@ export default function connectBackend(bridge: BridgeType): void {
   });
 
   bridge.onCall('hasDetectedRelay', () => {
+    // $FlowFixMe
     return hook._agents.size !== 0;
   });
 
   bridge.onCall('relayDebugger:getEnvironmentsDetails', () => {
+    // $FlowFixMe
     return Array.from(hook._agents.values()).reduce((acc, currentValue) => {
       acc[currentValue._id] =
         currentValue._environment.configName ||

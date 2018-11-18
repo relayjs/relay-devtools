@@ -89,6 +89,7 @@ export default function recordsByEnvironment(
       if (
         action?.response?.__id &&
         action.response &&
+        // $FlowFixMe
         !state.fetchedRecords?.byId[action?.response?.__id]
       ) {
         return {
@@ -98,6 +99,7 @@ export default function recordsByEnvironment(
               ...(state?.fetchedRecords?.byId ?? {}),
               [action.response.__id]: action.response,
             },
+            // $FlowFixMe
             allIds: [
               ...(state?.fetchedRecords?.allIds ?? []),
               action.response.__id,

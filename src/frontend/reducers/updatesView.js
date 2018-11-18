@@ -31,6 +31,7 @@ export default function(state: State = initialState, action: Action) {
   switch (action.type) {
     case 'SWITCH_ENVIRONMENT':
       return initialState;
+    // $FlowFixMe
     case 'LOAD_UPDATE_EVENTS_REQUEST':
       return {
         ...state,
@@ -58,6 +59,7 @@ export default function(state: State = initialState, action: Action) {
             newNotifications: false,
           }
         : state;
+    // $FlowFixMe
     case 'SWITCH_UPDATE_VIEW':
       return {
         ...state,

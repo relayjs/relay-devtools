@@ -47,6 +47,7 @@ createDevtools({
         },
       });
 
+      // $FlowFixMe
       cb(bridge, () => port && port.disconnect());
     });
   },

@@ -38,6 +38,7 @@ export default class SnapshotStoreView extends React.Component<Props, State> {
 
   componentDidMount() {
     const {matchTerm, matchType} = this.props;
+    // $FlowFixMe
     this.props.refetchRecords(matchTerm, matchType);
   }
 
@@ -45,8 +46,10 @@ export default class SnapshotStoreView extends React.Component<Props, State> {
     return 'No changes';
   };
 
+  // $FlowFixMe
   renderTableRecord(id, type) {
     const {selectedRecord} = this.state;
+    // $FlowFixMe
     const {snapshotBefore, snapshotAfter} = this.props;
     const onClick = () => this.selectRecord(id);
     let className = selectedRecord === id ? 'selected' : '';
@@ -74,6 +77,7 @@ export default class SnapshotStoreView extends React.Component<Props, State> {
 
   renderDetails() {
     const {selectedRecord} = this.state;
+    // $FlowFixMe
     const {snapshotBefore, snapshotAfter} = this.props;
     const recordBefore = snapshotBefore[selectedRecord];
     const recordAfter = snapshotAfter[selectedRecord];
@@ -127,11 +131,13 @@ export default class SnapshotStoreView extends React.Component<Props, State> {
           paneStyle={panelStyle}
           style={panelStyle}>
           <div style={storeViewColumnStyle}>
+            {/* $FlowFixMe */}
             <List
               height={500}
               itemSize={40}
               itemCount={ids.length}
               style={storeViewColumnStyle}
+              // $FlowFixMe
               ref={this.listRef}>
               {({index, style}) => {
                 const onClick = () => this.selectRecord(ids[index]);
@@ -143,6 +149,7 @@ export default class SnapshotStoreView extends React.Component<Props, State> {
                     style={{...tableRecordStyle, ...style}}
                     onClick={onClick}>
                     <div style={idStyle}>{ids[index]}</div>
+                    {/* $FlowFixMe */}
                     <div style={typeStyle}>{types[index]}</div>
                   </div>
                 );

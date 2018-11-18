@@ -33,6 +33,7 @@ type State = {|
   selectedRecordId: ?string,
 |};
 
+// $FlowFixMe
 export default class StoreExplorer extends React.Component<Props, State> {
   state = {
     filter: '',
@@ -46,39 +47,52 @@ export default class StoreExplorer extends React.Component<Props, State> {
 
   componentDidMount() {
     const {matchTerm, matchType} = this.props;
+    // $FlowFixMe
     this.props.refetchRecords(matchTerm, matchType);
   }
 
+  // $FlowFixMe
   handleChange = value => {
+    // $FlowFixMe
     this.setState({filter: value.toLowerCase()}, () => {
+      // $FlowFixMe
       this.listRef.current.resetAfterIndex(0);
     });
   };
+  // $FlowFixMe
   getFilteredRecords = key => {
     const value = this.props.records.byId[key];
     return (
       (this.state.filter !== '' &&
+        // $FlowFixMe
         key.toLowerCase().indexOf(this.state.filter.toLowerCase()) !== -1) ||
+      // $FlowFixMe
       value.toLowerCase().indexOf(this.state.filter.toLowerCase()) !== -1 ||
+      // $FlowFixMe
       this.state.filter === ''
     );
   };
 
   getItemData() {
+    // $FlowFixMe
     const filteredRecords = this.props.records.allIds.filter(
       this.getFilteredRecords,
     );
 
     return {
+      // $FlowFixMe
       filter: this.state.filter,
+      // $FlowFixMe
       selectedRecordId: this.props.selectedRecordId,
       records: this.props.records,
       recordIds: filteredRecords,
+      // $FlowFixMe
       selectRecordId: this.props.selectRecordId,
     };
   }
 
   render(): Element<any> {
+    // $FlowFixMe
     const {currentTool, records} = this.props;
     if (!records) {
       return <div />;
@@ -110,6 +124,7 @@ export default class StoreExplorer extends React.Component<Props, State> {
               </div>
             )}
             <div style={storeViewColumnStyle}>
+              {/* $FlowFixMe */}
               <List
                 height={1000}
                 itemSize={this.itemSize}
@@ -117,6 +132,7 @@ export default class StoreExplorer extends React.Component<Props, State> {
                 itemData={itemData}
                 style={storeViewColumnStyle}
                 itemKey={itemKey}
+                // $FlowFixMe
                 ref={this.listRef}>
                 {ListItem}
               </List>
@@ -133,6 +149,7 @@ export default class StoreExplorer extends React.Component<Props, State> {
                 <LatestRecordInspector />
               )}
             </div>
+            {/* $FlowFixMe */}
             <div style={recordsFooterStyle}>{this.props.selectedRecordId}</div>
           </div>
         </SplitPane>

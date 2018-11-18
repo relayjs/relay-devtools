@@ -34,6 +34,7 @@ const logger = createLogger({
   diff: true,
 });
 
+// $FlowFixMe
 export default function configureStore(API) {
   const callAPIMiddleware = getAPIMiddleware(API);
   const middleware = [

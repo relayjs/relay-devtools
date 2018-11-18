@@ -13,6 +13,7 @@
 import React from 'react';
 import Header from './Header';
 
+// $FlowFixMe
 export default function ObjectFields({value}) {
   if (value === null || typeof value !== 'object') {
     return <Header value={value} />;

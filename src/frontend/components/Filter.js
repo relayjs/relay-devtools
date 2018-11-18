@@ -14,6 +14,7 @@ import React from 'react';
 const SAVED_SEARCHES_PERSIST_KEY = 'RELAY_DEVTOOLS_SAVED_SEARCHES';
 
 export default class Filter extends React.Component<$FlowFixMe> {
+  // $FlowFixMe
   constructor(props) {
     super(props);
 
@@ -24,6 +25,7 @@ export default class Filter extends React.Component<$FlowFixMe> {
       ? JSON.parse(persistedSearches)
       : [];
 
+    // $FlowFixMe
     this.state = {
       matchTerm: '',
       matchType: 'idtype',
@@ -31,19 +33,25 @@ export default class Filter extends React.Component<$FlowFixMe> {
       searchDetailsOpen: false,
     };
 
+    // $FlowFixMe
     this.inputRef = null;
+    // $FlowFixMe
     this.typeSelectRef = null;
     this.pushNewSearch = this.props.pushNewSearch;
   }
 
   getMatch() {
     return {
+      // $FlowFixMe
       matchType: this.state.matchType,
+      // $FlowFixMe
       matchTerm: this.state.matchTerm,
     };
   }
 
+  // $FlowFixMe
   setMatch({matchTerm, matchType}, resetDOMFields = true) {
+    // $FlowFixMe
     this.setState({
       matchTerm,
       matchType,
@@ -55,22 +63,27 @@ export default class Filter extends React.Component<$FlowFixMe> {
   }
 
   showSearchDetails = () => {
+    // $FlowFixMe
     this.setState({
       searchDetailsOpen: true,
     });
   };
 
   hideSearchDetails = () => {
+    // $FlowFixMe
     this.setState({
       searchDetailsOpen: false,
     });
   };
 
+  // $FlowFixMe
   pushNewSearch = ({matchTerm, matchType}, resetDOMFields = true) => {
     this.props.pushNewSearch({matchTerm, matchType});
+    // $FlowFixMe
     this.inputRef.setMatch({matchTerm, matchType}, resetDOMFields);
   };
 
+  // $FlowFixMe
   makeSavedSearchElement = ({matchTerm, matchType}) => {
     function unsave() {
       this.unsaveSearch({matchTerm, matchType});
@@ -89,23 +102,29 @@ export default class Filter extends React.Component<$FlowFixMe> {
   };
 
   handleSaveSearch = () => {
+    // $FlowFixMe
     const {matchTerm, matchType} = this.state;
+    // $FlowFixMe
     const savedSearches = [...this.state.savedSearches, {matchTerm, matchType}];
     window.localStorage.setItem(
       SAVED_SEARCHES_PERSIST_KEY,
       JSON.stringify(savedSearches),
     );
 
+    // $FlowFixMe
     this.setState({
       savedSearches,
     });
   };
 
   handleUnsaveSearch = () => {
+    // $FlowFixMe
     this.unsaveSearch(this.state);
   };
 
+  // $FlowFixMe
   unsaveSearch = ({matchTerm, matchType}) => {
+    // $FlowFixMe
     const savedSearches = this.state.savedSearches.filter(
       s => s.matchTerm !== matchTerm && s.matchType === matchType,
     );
@@ -114,13 +133,16 @@ export default class Filter extends React.Component<$FlowFixMe> {
       JSON.stringify(savedSearches),
     );
 
+    // $FlowFixMe
     this.setState({
       savedSearches,
     });
   };
 
+  // $FlowFixMe
   isSearchSaved = ({matchTerm, matchType}) => {
     return Boolean(
+      // $FlowFixMe
       this.state.savedSearches.find(
         s => s.matchTerm === matchTerm && s.matchType === matchType,
       ),
@@ -138,11 +160,15 @@ export default class Filter extends React.Component<$FlowFixMe> {
     //   },
     //   false,
     // );
+    // $FlowFixMe
     this.props.handleChange(this.inputRef.value);
   };
 
+  // $FlowFixMe
   _setDOMNodes = (matchTerm, matchType) => {
+    // $FlowFixMe
     this.inputRef.value = matchTerm;
+    // $FlowFixMe
     this.typeSelectRef.querySelectorAll(
       `[data-option-name=${matchType}]`,
     )[0].selected = true;
@@ -161,6 +187,7 @@ export default class Filter extends React.Component<$FlowFixMe> {
           placeholder={this.props.placeholder}
           onFocus={this.showSearchDetails}
           onChange={this.handleSearchChange}
+          // $FlowFixMe
           ref={input => (this.inputRef = input)}
         />
       </div>

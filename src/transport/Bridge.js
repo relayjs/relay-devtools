@@ -183,7 +183,9 @@ export default class Bridge {
     this._sendMessage({type: 'resume'});
   }
 
+  // $FlowFixMe
   log(message) {
+    // $FlowFixMe
     this._transport.send('log', message);
   }
 

@@ -39,6 +39,7 @@ export type GlobalHook = {
   _replayBuffer(): void,
 };
 
+// $FlowFixMe
 export function installGlobalHook(target: any): boolean {
   console.log('[GlobalHook.js] installGlobalHook invoked');
   if (target.hasOwnProperty('__RELAY_DEVTOOLS_HOOK__')) {
@@ -65,12 +66,14 @@ export function installGlobalHook(target: any): boolean {
       hook._environments.add(environment);
       const id = hook._environments.size - 1;
       const emit = function(name, data) {
+        // $FlowFixMe
         hook.emit(name, Object.assign({}, data, {environment: id}));
       };
 
       function EnvironmentAgent(
         environment: Environment,
         id: string,
+        // $FlowFixMe
         emit: EmitFn,
       ) {
         let seriesIdCounter = 0;
@@ -153,8 +156,10 @@ export function installGlobalHook(target: any): boolean {
         };
         this.getMatchingRecords = function(
           matchStr: string,
+          // $FlowFixMe
           matchType: MatchType,
         ) {
+          // $FlowFixMe
           function isMatching(dataID: DataID, record: Record): boolean {
             if (matchType === 'idtype') {
               return (
@@ -185,6 +190,7 @@ export function installGlobalHook(target: any): boolean {
           });
           return recordMap;
         };
+        // $FlowFixMe
         this.getRecord = function(dataID: DataID): Record {
           return deepCopy(
             this._environment
@@ -291,6 +297,7 @@ export function installGlobalHook(target: any): boolean {
           );
         };
 
+        // $FlowFixMe
         this._networkEvent = function(partialEvent: UpdateEvent) {
           if (this._flushLastNetworkEventTimer) {
             this._flushLastNetworkEvent();
@@ -359,7 +366,9 @@ export function installGlobalHook(target: any): boolean {
         this._monkeyPatchExecute();
       }
 
+      // $FlowFixMe
       const agent = new EnvironmentAgent(environment, id, emit);
+      // $FlowFixMe
       hook._agents.set(id, agent);
 
       // ****************************************************
@@ -372,6 +381,7 @@ export function installGlobalHook(target: any): boolean {
       //   listener(hook._environments, hook._environments.size - 1),
       // );
 
+      // $FlowFixMe
       hook.on('update', data => {
         this._pending.add({event: 'update', data});
       });
@@ -387,6 +397,7 @@ export function installGlobalHook(target: any): boolean {
 
     _buffer: [],
 
+    // $FlowFixMe
     _replayBuffer(event) {
       const buffer = this._buffer;
       this._buffer = [];

@@ -12,6 +12,7 @@
 
 import {connect} from 'react-redux';
 import '../css/panels.less';
+// $FlowFixMe
 import StoreView from '../components/StoreView/StoreView';
 import {loadRecordDescs} from '../fetch-actions/storeExplorer';
 

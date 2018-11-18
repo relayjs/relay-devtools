@@ -50,6 +50,7 @@ function initApp(shell: ShellType) {
     });
 
     const api = new API(bridge);
+    // $FlowFixMe
     const store = configureStore(api);
     app = 'devtools-root';
     ReactDOM.render(

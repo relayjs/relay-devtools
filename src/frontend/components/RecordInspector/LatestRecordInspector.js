@@ -21,11 +21,13 @@ import LatestRecordFields from '../../containers/LatestRecordFields';
 // import SnapshotStoreView from '../../containers/SnapshotStoreView';
 
 export default class LatestRecordInspector extends React.Component<$FlowFixMe> {
+  // $FlowFixMe
   constructor(props, context) {
     super(props, context);
 
     const {id} = this.props;
 
+    // $FlowFixMe
     this.state = {
       path: [{id, name: id}],
       lastId: props.id,
@@ -36,18 +38,22 @@ export default class LatestRecordInspector extends React.Component<$FlowFixMe> {
     this.props.loadTypeMapping();
   }
 
+  // $FlowFixMe
   getType = id => {
     const {typeMapping} = this.props;
     return typeMapping[id];
   };
 
+  // $FlowFixMe
   openOrClosePath = path => {
     const stringified = stringifyPath(path);
     const opened = this.props.pathOpened[stringified];
     this.props.openOrClosePath(stringified, !opened);
   };
 
+  // $FlowFixMe
   navigateToPath = path => {
+    // $FlowFixMe
     this.setState({
       path,
     });
@@ -61,12 +67,15 @@ export default class LatestRecordInspector extends React.Component<$FlowFixMe> {
     };
   }
 
+  // $FlowFixMe
   componentWillReceiveProps({id}) {
+    // $FlowFixMe
     this.setState({
       path: [{id, name: id}],
     });
   }
 
+  // $FlowFixMe
   renderRecordFields(path) {
     // const {pathOpened} = this.props;
 
@@ -77,10 +86,12 @@ export default class LatestRecordInspector extends React.Component<$FlowFixMe> {
   }
 
   renderNav() {
+    // $FlowFixMe
     const {path} = this.state;
 
     const makePathElement = ({id, name}, i) => {
       const handler = () => {
+        // $FlowFixMe
         this.setState({
           path: path.slice(0, i + 1),
         });
@@ -133,6 +144,7 @@ export default class LatestRecordInspector extends React.Component<$FlowFixMe> {
 
   render() {
     const {id} = this.props;
+    // $FlowFixMe
     const {path} = this.state;
 
     if (!id) {

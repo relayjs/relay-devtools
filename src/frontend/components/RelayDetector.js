@@ -12,20 +12,24 @@
 import React from 'react';
 
 export default class RelayDetector extends React.Component<$FlowFixMe> {
+  // $FlowFixMe
   state = {
     isRelayPresent: false,
   };
 
   componentDidMount() {
     this.props.API.onRegister(() => {
+      // $FlowFixMe
       this.setState({isRelayPresent: true});
     });
     this.props.API.hasDetectedRelay().then(isRelayPresent => {
+      // $FlowFixMe
       this.setState({isRelayPresent});
     });
   }
 
   render() {
+    // $FlowFixMe
     if (this.state.isRelayPresent) {
       return <div>{this.props.children}</div>;
     }

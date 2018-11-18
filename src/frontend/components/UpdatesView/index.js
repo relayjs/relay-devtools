@@ -24,6 +24,7 @@ import Filter from '../Filter';
 import UpdateInspector from '../UpdateInspector';
 
 export default class UpdatesView extends React.Component<$FlowFixMe> {
+  // $FlowFixMe
   state = {
     filter: '',
     idLength: 0,
@@ -34,7 +35,9 @@ export default class UpdatesView extends React.Component<$FlowFixMe> {
   };
   listRef = React.createRef();
   itemSize = () => 40;
+  // $FlowFixMe
   itemKey = index => index;
+  // $FlowFixMe
   constructor(props, context) {
     super(props, context);
   }
@@ -193,20 +196,28 @@ export default class UpdatesView extends React.Component<$FlowFixMe> {
     });
   }
 
+  // $FlowFixMe
   handleChange = value => {
+    // $FlowFixMe
     this.setState({filter: value.toLowerCase()}, () => {
+      // $FlowFixMe
       this.props.viewType === 'list' && this.listRef.current.resetAfterIndex(0);
     });
   };
 
+  // $FlowFixMe
   getFilteredEvents = event => {
     const name =
       event && event.operation ? event.operation.name : event.eventName;
     const operation = event.operation ? event.eventName : '';
     return (
+      // $FlowFixMe
       (this.state.filter !== '' &&
+        // $FlowFixMe
         name.toLowerCase().indexOf(this.state.filter.toLowerCase()) !== -1) ||
+      // $FlowFixMe
       operation.toLowerCase().indexOf(this.state.filter.toLowerCase()) !== -1 ||
+      // $FlowFixMe
       this.state.filter === ''
     );
   };
@@ -214,6 +225,7 @@ export default class UpdatesView extends React.Component<$FlowFixMe> {
     const filteredEvents = this.props.events.filter(this.getFilteredEvents);
 
     return {
+      // $FlowFixMe
       filter: this.state.filter,
       selectEvent: this.props.selectEvent,
       events: this.props.events,
@@ -267,6 +279,7 @@ export default class UpdatesView extends React.Component<$FlowFixMe> {
             )}
             <div style={listContainerStyle}>
               {this.props.viewType === 'list' ? (
+                // $FlowFixMe
                 <List
                   height={1000}
                   itemSize={this.itemSize}
@@ -274,6 +287,7 @@ export default class UpdatesView extends React.Component<$FlowFixMe> {
                   itemData={itemData}
                   style={storeViewColumnStyle}
                   itemKey={itemKey}
+                  // $FlowFixMe
                   ref={this.listRef}>
                   {ListItem}
                 </List>
@@ -285,7 +299,8 @@ export default class UpdatesView extends React.Component<$FlowFixMe> {
             </div>
 
             <div style={recordsFooterStyle}>
-              {this.state.filter && `${itemData.filteredEvents.length} / `}
+              {// $FlowFixMe
+              this.state.filter && `${itemData.filteredEvents.length} / `}
               {this.props.events.length}
               {itemData.filteredEvents.length === 1 ? ' Event' : ' Events'}
             </div>

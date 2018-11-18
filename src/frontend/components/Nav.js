@@ -19,8 +19,10 @@ const DISPLAY_NAMES = {
 };
 
 export default class Nav extends React.Component<$FlowFixMe> {
+  // $FlowFixMe
   _handleSwitch = selectedType => {
     this.setState(
+      // $FlowFixMe
       {
         selectedType,
       },
@@ -41,8 +43,10 @@ export default class Nav extends React.Component<$FlowFixMe> {
       viewType,
     } = this.props;
 
+    // $FlowFixMe
     const handleChange = (e: SyntheticEvent<>) => onChange(e.target.value);
     const handleChangeUpdateView = (e: SyntheticEvent<>) =>
+      // $FlowFixMe
       onChangeUpdateView(e.target.value);
     return (
       <div style={containerStyle}>
