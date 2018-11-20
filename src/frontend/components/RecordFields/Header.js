@@ -12,13 +12,18 @@
 
 import React from 'react';
 
-// $FlowFixMe
 export default function Header({
   keyName,
   focusHandler,
   value,
   summary,
   isLink = false,
+}: {
+  keyName?: string,
+  focusHandler?: () => void,
+  value?: mixed,
+  summary?: ?string,
+  isLink?: boolean,
 }) {
   const keyClasses =
     'key-desc' +
