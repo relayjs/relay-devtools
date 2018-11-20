@@ -1,4 +1,4 @@
-# Relay DevTools
+# Relay DevTools [![CircleCI](https://circleci.com/gh/relayjs/relay-devtools.svg?style=svg)](https://circleci.com/gh/relayjs/relay-devtools)
 
 Tooling to debug your Relay apps on web and React Native during development.
 
