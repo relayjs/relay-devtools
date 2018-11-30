@@ -11,42 +11,40 @@
 
 import React from 'react';
 
-export default class Filter extends React.Component<$FlowFixMe> {
-  // $FlowFixMe
-  constructor(props) {
-    super(props);
+type Props = {|
+  +placeholder: string,
+  +handleChange: string => void,
+|};
 
-    // $FlowFixMe
-    this.state = {
-      matchTerm: '',
-      matchType: 'idtype',
-      searchDetailsOpen: false,
-    };
+type State = {|
+  +matchTerm: string,
+  +matchType: string,
+  +searchDetailsOpen: boolean,
+|};
 
-    // $FlowFixMe
-    this.inputRef = null;
-    // $FlowFixMe
-    this.typeSelectRef = null;
-  }
+export default class Filter extends React.Component<Props, State> {
+  state = {
+    matchTerm: '',
+    matchType: 'idtype',
+    searchDetailsOpen: false,
+  };
+  inputRef: ?HTMLInputElement = null;
+  typeSelectRef = null;
 
   getMatch() {
     return {
-      // $FlowFixMe
       matchType: this.state.matchType,
-      // $FlowFixMe
       matchTerm: this.state.matchTerm,
     };
   }
 
   showSearchDetails = () => {
-    // $FlowFixMe
     this.setState({
       searchDetailsOpen: true,
     });
   };
 
   hideSearchDetails = () => {
-    // $FlowFixMe
     this.setState({
       searchDetailsOpen: false,
     });
@@ -80,7 +78,6 @@ export default class Filter extends React.Component<$FlowFixMe> {
           placeholder={this.props.placeholder}
           onFocus={this.showSearchDetails}
           onChange={this.handleSearchChange}
-          // $FlowFixMe
           ref={input => (this.inputRef = input)}
         />
       </div>
