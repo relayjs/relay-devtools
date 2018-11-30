@@ -11,25 +11,15 @@
 
 import React from 'react';
 
-const SAVED_SEARCHES_PERSIST_KEY = 'RELAY_DEVTOOLS_SAVED_SEARCHES';
-
 export default class Search extends React.Component<$FlowFixMe> {
   // $FlowFixMe
   constructor(props) {
     super(props);
 
-    const persistedSearches = window.localStorage.getItem(
-      SAVED_SEARCHES_PERSIST_KEY,
-    );
-    const savedSearches = persistedSearches
-      ? JSON.parse(persistedSearches)
-      : [];
-
     // $FlowFixMe
     this.state = {
       matchTerm: '',
       matchType: 'idtype',
-      savedSearches,
       searchDetailsOpen: false,
     };
 
