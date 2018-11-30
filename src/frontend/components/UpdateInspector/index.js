@@ -19,22 +19,31 @@ import getTabs from '../../util/getTabs';
 import ObjectFields from '../RecordFields/ObjectFields';
 import SnapshotStoreView from '../../containers/SnapshotStoreView';
 
-export default class UpdateInspector extends React.Component<$FlowFixMe> {
-  // $FlowFixMe
-  constructor(props) {
+type Props = {|
+  +event: $FlowFixMe,
+  +currentEnvironment: $FlowFixMe,
+  +event: $FlowFixMe,
+  +onClose: $FlowFixMe,
+  +onLayoutChange: $FlowFixMe,
+|};
+
+type State = {|
+  +currentTab: string,
+|};
+
+export default class UpdateInspector extends React.Component<Props, State> {
+  constructor(props: Props) {
     super(props);
 
     const event = props.event;
     const currentTab = event ? Object.keys(getTabs(event))[0] : 'query';
 
-    // $FlowFixMe
     this.state = {currentTab};
   }
 
   // $FlowFixMe
   componentWillReceiveProps(props) {
     const {event} = props;
-    // $FlowFixMe
     const {currentTab} = this.state;
     if (event) {
       const tabs = getTabs(event);
@@ -46,13 +55,11 @@ export default class UpdateInspector extends React.Component<$FlowFixMe> {
 
   // $FlowFixMe
   switchToTab = tab => {
-    // $FlowFixMe
     this.setState({currentTab: tab});
   };
 
   render() {
     const {currentEnvironment, event, onClose, onLayoutChange} = this.props;
-    // $FlowFixMe
     const {currentTab} = this.state;
 
     if (!event || event.environment.toString() !== currentEnvironment) {

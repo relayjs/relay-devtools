@@ -23,11 +23,26 @@ import Highlighter from 'react-highlight-words';
 import Filter from '../Filter';
 import UpdateInspector from '../UpdateInspector';
 
-export default class UpdatesView extends React.Component<$FlowFixMe> {
-  // $FlowFixMe
+type Props = {|
+  +currentEnvironment: $FlowFixMe,
+  +events: $ReadOnlyArray<$FlowFixMe>,
+  +selectedEvent: $FlowFixMe,
+  +selectEvent: $FlowFixMe,
+  +viewType: string,
+  +currentTool: $FlowFixMe,
+  +splitType: $FlowFixMe,
+  +refetchEvents: $FlowFixMe,
+  +changeSplitType: $FlowFixMe,
+|};
+
+type State = {|
+  +data: $ReadOnlyArray<$FlowFixMe>,
+  +filter: string,
+|};
+
+export default class UpdatesView extends React.Component<Props, State> {
   state = {
     filter: '',
-    idLength: 0,
     data:
       this.props.events && Array.isArray(this.props.events)
         ? this.props.events
@@ -169,8 +184,8 @@ export default class UpdatesView extends React.Component<$FlowFixMe> {
       return <div>No search results</div>;
     }
 
+    // $FlowFixMe
     return filterEvents.map((event, index) => {
-      // if (event && event.operation && event.operation.name) {
       if (event && event.eventName) {
         return (
           <div
@@ -198,7 +213,6 @@ export default class UpdatesView extends React.Component<$FlowFixMe> {
 
   // $FlowFixMe
   handleChange = value => {
-    // $FlowFixMe
     this.setState({filter: value.toLowerCase()}, () => {
       // $FlowFixMe
       this.props.viewType === 'list' && this.listRef.current.resetAfterIndex(0);
@@ -211,21 +225,17 @@ export default class UpdatesView extends React.Component<$FlowFixMe> {
       event && event.operation ? event.operation.name : event.eventName;
     const operation = event.operation ? event.eventName : '';
     return (
-      // $FlowFixMe
       (this.state.filter !== '' &&
-        // $FlowFixMe
         name.toLowerCase().indexOf(this.state.filter.toLowerCase()) !== -1) ||
-      // $FlowFixMe
       operation.toLowerCase().indexOf(this.state.filter.toLowerCase()) !== -1 ||
-      // $FlowFixMe
       this.state.filter === ''
     );
   };
   getItemData() {
+    // $FlowFixMe
     const filteredEvents = this.props.events.filter(this.getFilteredEvents);
 
     return {
-      // $FlowFixMe
       filter: this.state.filter,
       selectEvent: this.props.selectEvent,
       events: this.props.events,
@@ -298,8 +308,7 @@ export default class UpdatesView extends React.Component<$FlowFixMe> {
             </div>
 
             <div style={recordsFooterStyle}>
-              {// $FlowFixMe
-              this.state.filter && `${itemData.filteredEvents.length} / `}
+              {this.state.filter && `${itemData.filteredEvents.length} / `}
               {this.props.events.length}
               {itemData.filteredEvents.length === 1 ? ' Event' : ' Events'}
             </div>
