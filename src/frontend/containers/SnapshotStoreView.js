@@ -15,11 +15,6 @@ import {connect} from 'react-redux';
 import SnapshotStoreView from '../components/StoreView/SnapshotStoreView';
 import {loadRecordDescs} from '../fetch-actions/storeExplorer';
 
-// import { createSelector } from 'reselect'
-// const getLatest = (state) => state.latest;
-// const getMatchTerm = (state) => state.matchTerm;
-// const getMatchType = (state) => state.matchType;
-
 const mapStateToProps = ({storeExplorer}) => ({
   matchTerm: storeExplorer.latest.matchTerm,
   matchType: storeExplorer.latest.matchType,
