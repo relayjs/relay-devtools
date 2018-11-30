@@ -9,27 +9,34 @@
 
 'use strict';
 
-import React from 'react';
+import * as React from 'react';
 
-export default class RelayDetector extends React.Component<$FlowFixMe> {
-  // $FlowFixMe
+import type BridgeAPI from '../api/BridgeAPI';
+
+type Props = {|
+  API: BridgeAPI,
+  children?: React.Node,
+|};
+
+type State = {|
+  +isRelayPresent: boolean,
+|};
+
+export default class RelayDetector extends React.Component<Props, State> {
   state = {
     isRelayPresent: false,
   };
 
   componentDidMount() {
     this.props.API.onRegister(() => {
-      // $FlowFixMe
       this.setState({isRelayPresent: true});
     });
     this.props.API.hasDetectedRelay().then(isRelayPresent => {
-      // $FlowFixMe
       this.setState({isRelayPresent});
     });
   }
 
   render() {
-    // $FlowFixMe
     if (this.state.isRelayPresent) {
       return <div>{this.props.children}</div>;
     }

@@ -157,7 +157,8 @@ export default class BridgeAPI {
     return (this._updateEvents[environment] || []).slice();
   }
 
-  hasDetectedRelay() {
+  hasDetectedRelay(): Promise<boolean> {
+    // $FlowFixMe
     return this._bridge.call('hasDetectedRelay');
   }
 
