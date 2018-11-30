@@ -21,7 +21,7 @@ type State = {|
   loadingRecord: boolean,
   fetchedRecords: ?{
     byId: ?{+[path: string]: {}},
-    allIds: ?[string],
+    allIds: ?Array<string>,
   },
 |};
 
@@ -89,8 +89,7 @@ export default function recordsByEnvironment(
       if (
         action?.response?.__id &&
         action.response &&
-        // $FlowFixMe
-        !state.fetchedRecords?.byId[action?.response?.__id]
+        !state.fetchedRecords?.byId?.[action?.response?.__id]
       ) {
         return {
           ...state,
@@ -99,7 +98,6 @@ export default function recordsByEnvironment(
               ...(state?.fetchedRecords?.byId ?? {}),
               [action.response.__id]: action.response,
             },
-            // $FlowFixMe
             allIds: [
               ...(state?.fetchedRecords?.allIds ?? []),
               action.response.__id,
