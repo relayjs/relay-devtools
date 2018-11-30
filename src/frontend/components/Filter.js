@@ -27,7 +27,6 @@ export default class Filter extends React.Component<$FlowFixMe> {
     this.inputRef = null;
     // $FlowFixMe
     this.typeSelectRef = null;
-    this.pushNewSearch = this.props.pushNewSearch;
   }
 
   getMatch() {
@@ -37,19 +36,6 @@ export default class Filter extends React.Component<$FlowFixMe> {
       // $FlowFixMe
       matchTerm: this.state.matchTerm,
     };
-  }
-
-  // $FlowFixMe
-  setMatch({matchTerm, matchType}, resetDOMFields = true) {
-    // $FlowFixMe
-    this.setState({
-      matchTerm,
-      matchType,
-    });
-
-    if (resetDOMFields) {
-      this._setDOMNodes(matchTerm, matchType);
-    }
   }
 
   showSearchDetails = () => {
@@ -64,13 +50,6 @@ export default class Filter extends React.Component<$FlowFixMe> {
     this.setState({
       searchDetailsOpen: false,
     });
-  };
-
-  // $FlowFixMe
-  pushNewSearch = ({matchTerm, matchType}, resetDOMFields = true) => {
-    this.props.pushNewSearch({matchTerm, matchType});
-    // $FlowFixMe
-    this.inputRef.setMatch({matchTerm, matchType}, resetDOMFields);
   };
 
   handleSearchChange = () => {
