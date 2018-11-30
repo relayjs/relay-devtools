@@ -42,7 +42,7 @@ export default class StoreExplorer extends React.Component<Props, State> {
     filter: '',
     selectedRecordId: null,
   };
-  listRef = React.createRef();
+  listRef = React.createRef<List<any>>();
   itemSize = () => 40;
 
   componentDidMount() {
@@ -53,6 +53,7 @@ export default class StoreExplorer extends React.Component<Props, State> {
   handleChange = (value: string) => {
     this.setState({filter: value.toLowerCase()}, () => {
       if (this.listRef.current) {
+        // $FlowFixMe
         this.listRef.current.resetAfterIndex(0);
       }
     });
@@ -125,7 +126,6 @@ export default class StoreExplorer extends React.Component<Props, State> {
                 itemData={itemData}
                 style={storeViewColumnStyle}
                 itemKey={itemKey}
-                // $FlowFixMe
                 ref={this.listRef}>
                 {ListItem}
               </List>

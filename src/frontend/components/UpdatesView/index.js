@@ -33,7 +33,7 @@ export default class UpdatesView extends React.Component<$FlowFixMe> {
         ? this.props.events
         : [],
   };
-  listRef = React.createRef();
+  listRef = React.createRef<List<any>>();
   itemSize = () => 40;
   // $FlowFixMe
   itemKey = index => index;
@@ -287,7 +287,6 @@ export default class UpdatesView extends React.Component<$FlowFixMe> {
                   itemData={itemData}
                   style={storeViewColumnStyle}
                   itemKey={itemKey}
-                  // $FlowFixMe
                   ref={this.listRef}>
                   {ListItem}
                 </List>
