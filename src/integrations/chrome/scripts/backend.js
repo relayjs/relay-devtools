@@ -35,13 +35,23 @@ function handshake(e) {
         listeners.push(listener);
       },
       send(data) {
-        window.postMessage(
-          {
-            source: 'relay-devtools-backend',
-            payload: data,
-          },
-          '*',
-        );
+        try {
+          window.postMessage(
+            {
+              source: 'relay-devtools-backend',
+              payload: data,
+            },
+            '*',
+          );
+        } catch (e) {
+          window.postMessage(
+            {
+              source: 'relay-devtools-backend',
+              payload: {},
+            },
+            '*',
+          );
+        }
       },
     });
 
