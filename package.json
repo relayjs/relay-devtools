@@ -1,7 +1,6 @@
 {
   "name": "relay-devtools-core",
   "private": true,
-  "version": "0.0.1",
   "description": "Relay Modern Devtools",
   "license": "MIT",
   "repository": {
