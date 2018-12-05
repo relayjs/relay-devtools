@@ -41,11 +41,7 @@ export type GlobalHook = {
 
 // $FlowFixMe
 export function installGlobalHook(target: any): boolean {
-  console.log('[GlobalHook.js] installGlobalHook invoked');
   if (target.hasOwnProperty('__RELAY_DEVTOOLS_HOOK__')) {
-    console.log(
-      '[GlobalHook.js] installGlobalHook __RELAY_DEVTOOLS_HOOK__ already exists',
-    );
     return false;
   }
 
@@ -57,9 +53,6 @@ export function installGlobalHook(target: any): boolean {
     _listeners: {},
     _pending: new Set(),
     registerEnvironment(environment) {
-      console.log(
-        '[GlobalHook.js] installGlobalHook registerEnvironment invoked',
-      );
       window.__RELAY_DEVTOOLS_HOOK__.emit('hasDetectedReact', {
         environment: 'test',
       });
@@ -461,7 +454,6 @@ export function installGlobalHook(target: any): boolean {
       }
     },
   };
-  console.log('[GlobalHook.js] adding __RELAY_DEVTOOLS_HOOK__ to page');
   Object.defineProperty(window, '__RELAY_DEVTOOLS_HOOK__', {
     value: hook,
   });
