@@ -26,27 +26,6 @@ const hook = getGlobalHook(window);
 
 export default function connectBackend(bridge: BridgeType): void {
   console.log('connectBackend called');
-  // bridge = _bridge;
-
-  // const agents = new Map();
-  // function connectAgent(environment: Environment, id): void {
-  //   if (hook._agents.has(id)) {
-  //     return;
-  //   }
-  //   try {
-  //     function emit(name, data) {
-  //       bridge.emit(name, {...data, environment: id});
-  //     }
-  //     const agent = new EnvironmentAgent(environment, id, emit);
-  //     hook._agents.set(id, agent);
-  //     bridge.emit('register');
-  //   } catch (error) {
-  //     /* eslint-disable no-console */
-  //     console.error('Relay DevTools: Failed to connect agent');
-  //     console.error(error);
-  //     /* eslint-enable no-console */
-  //   }
-  // }
 
   // $FlowFixMe
   hook._pending.forEach(({event, data}) => {

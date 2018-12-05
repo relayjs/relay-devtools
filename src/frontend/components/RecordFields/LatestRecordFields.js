@@ -22,13 +22,9 @@ import {stringifyPath} from '../../util/stringifyPath';
 import ContaineredRecordFields from '../../containers/LatestRecordFields';
 
 export default class LatestRecordFields extends React.Component<$FlowFixMe> {
-  // previousRecordId;
-  // previousPath;
   // $FlowFixMe
   constructor(props) {
     super();
-    // const {path} = props;
-    // const {id} = path[path.length - 1];
     // $FlowFixMe
     this.state = {
       externalData: null,
@@ -38,117 +34,12 @@ export default class LatestRecordFields extends React.Component<$FlowFixMe> {
   // $FlowFixMe
   previousRecordId;
 
-  // static getDerivedStateFromProps(props, state) {
-  //   // const {path} = props;
-  //   // const {id} = path[path.length - 1];
-  //   if (props.path !== state.prevPath) {
-  //     const {id} = props;
-  //     return {
-  //       externalData: null,
-  //       prevPath: id,
-  //     };
-  //   }
-  //
-  //   // Return null to indicate no change to state.
-  //   return null;
-  // }
-
   componentDidMount() {
-    // this.setState({externalData: true}, () => {
     const {path} = this.props;
     const {id} = path[path.length - 1];
     this.previousRecordId = id;
     this.props.loadRecord(id);
-    // });
   }
-
-  // componentDidUpdate(prevProps, prevState) {
-  //   if (this.state.externalData === null) {
-  //     const {path} = this.props;
-  //     const {id} = path[path.length - 1];
-
-  //     if (
-  //       this.props.fetchedRecords === null ||
-  //       !this.props.fetchedRecords?.byId[id]
-  //     ) {
-  //       // console.log(this.props.fetchedRecords?.byId[this.props.id]);
-  //       // this.props.loadRecord(id);
-  //       // this.previousRecordId = id;
-  //       this.setState({externalData: true}, () => {
-  //         // const {path} = this.props;
-  //         // const {id} = path[path.length - 1];
-  //         this.previousRecordId = id;
-  //         this.props.loadRecord(id);
-  //       });
-  //     }
-  //   }
-  // }
-
-  // componentDidUpdate(prevProps) {
-  //   if (!this.fetchedRecords) {
-  //     const {path} = this.props;
-  //     const {id} = path[path.length - 1];
-  //     this.props.loadRecord(id);
-  //     this.previousRecordId = id;
-  //   }
-  // }
-
-  // componentWillReceiveProps(props) {
-  //   console.log('componentWillReceiveProps', props);
-  //   const {path} = props;
-  //   const {id} = path[path.length - 1];
-  //   this.previousRecord = props.fetchedRecords.byId[id];
-  //   this.props.loadRecord(id);
-  // }
-
-  // Due to how "changed" animations are built, it is important to only update
-  // this component if something actually changed.
-  // Otherwise we are risking to cancel an animation in flight because
-  // this.previousRecord is overwritten unecessarily.
-  // Ideally we track changes on individual field level.
-  // shouldComponentUpdate(nextProps) {
-  // if (
-  //   nextProps.fetchedRecords.allIds[
-  //     nextProps.fetchedRecords.allIds.length - 1
-  //   ].__id !== this.props.selectedRecordId
-  // ) {
-  //   return true;
-  // }
-  // const {path} = nextProps;
-  // const {id} = path[path.length - 1];
-  // console.log(id, path, nextProps, this.props);
-  // if (nextProps.selectedRecordId !== this.props.selectedRecordId) {
-  //   this.previousRecordId = nextProps.selectedRecordId;
-  // }
-  // if (
-  //   nextProps.selectedRecordId &&
-  //   nextProps.selectedRecordId !== this.props.selectedRecordId &&
-  //   // (!nextProps.fetchedRecords ||
-  //   (nextProps.fetchedRecords &&
-  //     Array.isArray(nextProps.fetchedRecords.allIds) &&
-  //     nextProps.fetchedRecords.allIds.find(
-  //       recordId => recordId === nextProps.selectedRecordId,
-  //     ))
-  // ) {
-  //   console.log(
-  //     'shouldComponentUpdate, selectedRecordId',
-  //     nextProps.selectedRecordId,
-  //   );
-  //   return true;
-  // }
-  // else if (nextProps.typeMapping !== this.props.typeMapping) {
-  //   return true;
-  // } else if (nextProps.pathOpened !== this.props.pathOpened) {
-  //   console.log('shouldComponentUpdate, pathOpened', nextProps.pathOpened);
-  //   return true;
-  // }
-  // else if (nextProps.path !== this.props.path) {
-  //   console.log('shouldComponentUpdate, path', nextProps.pathOpened);
-  //   return true;
-  // }
-
-  // return false;
-  // }
 
   // $FlowFixMe
   componentDidUpdate(prevProps, prevState) {
@@ -162,45 +53,6 @@ export default class LatestRecordFields extends React.Component<$FlowFixMe> {
       this.previousRecordId = id;
     }
   }
-  // if (
-  //   this.previousRecordId !== this.props.selectedRecordId ||
-  //   (prevProps.selectedRecordId !== this.props.selectedRecordId &&
-  //     this.props.fetchedRecords &&
-  //     !this.props.fetchedRecords.byId[this.props.selectedRecordId]) ||
-  //   prevProps.path !== this.props.path
-  // ) {
-
-  // const {path} = this.props;
-  // const {id} = path[path.length - 1];
-  // console.log(id, path, prevProps, this.props);
-  // if (
-  //   this.props.selectedRecordId &&
-  //   this.props.selectedRecordId !== prevProps.selectedRecordId &&
-  //   (!this.props.fetchedRecords ||
-  //     (this.props.fetchedRecords &&
-  //       Array.isArray(this.props.fetchedRecords.allIds) &&
-  //       !this.props.fetchedRecords.allIds.find(recordId => recordId === id)))
-  // ) {
-  //   console.log('selectedRecordId componentDidUpdate updating');
-  //   this.props.loadRecord(id, true);
-  // }
-  // else if (prevProps.typeMapping !== this.props.typeMapping) {
-  //   return true;
-  // }
-  // else if (prevProps.pathOpened !== this.props.pathOpened) {
-  //   return true;
-  // }
-  // else if (prevProps.path !== this.props.path) {
-  //   if (
-  //     this.props.fetchedRecords &&
-  //     Array.isArray(this.props.fetchedRecords.allIds) &&
-  //     this.props.fetchedRecords.allIds.find(recordId => recordId !== id)
-  //   ) {
-  //     console.log('his.props.path componentDidUpdate updating');
-  //     this.props.loadRecord(id, true);
-  //   }
-  // }
-  // }
 
   loadFromSnapshot() {
     const {path, snapshot} = this.props;

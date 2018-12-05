@@ -77,8 +77,6 @@ export default class LatestRecordInspector extends React.Component<$FlowFixMe> {
 
   // $FlowFixMe
   renderRecordFields(path) {
-    // const {pathOpened} = this.props;
-
     if (!path) {
       return <div />;
     }
@@ -126,21 +124,6 @@ export default class LatestRecordInspector extends React.Component<$FlowFixMe> {
   renderToolbar() {
     return null;
   }
-
-  // getEvents(event) {
-  //   const {snapshotBefore, snapshotAfter} = event;
-  //   const records = changedRecords(snapshotBefore, snapshotAfter);
-
-  //   return (
-  //     <div className="store-diff">
-  //       <SnapshotStoreView
-  //         records={records}
-  //         snapshotBefore={snapshotBefore}
-  //         snapshotAfter={snapshotAfter}
-  //       />
-  //     </div>
-  //   );
-  // }
 
   render() {
     const {id} = this.props;
@@ -197,9 +180,6 @@ export default class LatestRecordInspector extends React.Component<$FlowFixMe> {
           <span className="link-desc">{this.getType(id)}</span>
         </div>
         {this.renderRecordFields(path)}
-        {/* this.props.events &&
-          this.props.events.length > 0 &&
-        this.getEvents(this.props.events[0]) */}
       </div>
     );
   }

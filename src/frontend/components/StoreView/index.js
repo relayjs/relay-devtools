@@ -231,12 +231,6 @@ const idStyle = {
   minWidth: '200px',
 };
 
-// const recordInspector = {
-//   overflowY: 'auto',
-//   flex: '2 0 70%',
-//   padding: '5px',
-// };
-
 const recordsFooterStyle = {
   borderTop: '2px solid rgb(245, 245, 245)',
   padding: '8px 4px',
