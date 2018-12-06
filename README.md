@@ -8,7 +8,7 @@ For Google Chrome, install the [extension from WebStore][0].
 After installation "Relay" tab will be available in the Chrome developer tools
 apps using Relay are inspected.
 
-[0]: https://chrome.google.com/webstore/detail/relay-devtools/oppikflppfjfdpjimpdadhelffjpciba
+[0]: https://chrome.google.com/webstore/detail/relay-developer-tools/ncedobpgnmkhcmnnkcimnobpfepidadl
 
 ## Usage
 
