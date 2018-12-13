@@ -25,8 +25,6 @@ const hook = getGlobalHook(window);
 // let bridge;
 
 export default function connectBackend(bridge: BridgeType): void {
-  console.log('connectBackend called');
-
   // $FlowFixMe
   hook._pending.forEach(({event, data}) => {
     bridge.emit(event, data);

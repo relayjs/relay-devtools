@@ -79,28 +79,16 @@ function installProxy(tabId) {
 function doublePipe(id, one, two) {
   one.onMessage.addListener(lOne);
   function lOne(message) {
-    if (message.event === 'log') {
-      /* eslint-disable no-console */
-      return console.log('tab ' + id, message.payload);
-    }
-    /* eslint-disable no-console */
-    console.log('devtools -> backend', message);
+    // if (message.event === 'log') {}
     two.postMessage(message);
   }
   two.onMessage.addListener(lTwo);
   function lTwo(message) {
-    if (message.event === 'log') {
-      /* eslint-disable no-console */
-      return console.log('tab ' + id, message.payload);
-    }
-    /* eslint-disable no-console */
-    console.log('backend -> devtools', message);
+    // if (message.event === 'log') {}
     one.postMessage(message);
   }
 
   function shutdown() {
-    /* eslint-disable no-console */
-    console.log('tab ' + id + ' disconnected.');
     one.onMessage.removeListener(lOne);
     two.onMessage.removeListener(lTwo);
     one.disconnect();
@@ -110,14 +98,11 @@ function doublePipe(id, one, two) {
   }
   one.onDisconnect.addListener(shutdown);
   two.onDisconnect.addListener(shutdown);
-  /* eslint-disable no-console */
-  console.log('tab ' + id + ' connected.');
 }
 
 chrome.runtime.onMessage.addListener((req, sender) => {
   // This is sent from the hook content script.
   // It tells us a renderer has attached.
-  // console.log('eq, sender', req, sender);
 
   if (req.hasDetectedRelay && sender.tab) {
     // We use browserAction instead of pageAction because this lets us
@@ -138,17 +123,10 @@ chrome.runtime.onMessage.addListener((req, sender) => {
 });
 
 function setIconAndPopup(reactBuildType, tabId) {
-  console.log('setIconAndPopup', tabId);
-  chrome.browserAction.setIcon(
-    {
-      tabId,
-      path: 'imgs/logo-icon.png',
-    },
-    function() {
-      console.log('browserAction called');
-      console.log(chrome.runtime.lastError);
-    },
-  );
+  chrome.browserAction.setIcon({
+    tabId,
+    path: 'imgs/logo-icon.png',
+  });
   chrome.browserAction.setPopup({
     tabId,
     popup: 'popups/development.html',

@@ -28,38 +28,13 @@ function createPanelIfHasRelay() {
       clearInterval(checkRelayInterval);
       created = true;
 
-      chrome.devtools.panels.create(
-        'Relay',
-        'imgs/logo.png',
-        'devtools.html',
-        function(panel) {
-          panel.onShown.addListener(function(window) {
-            console.log(
-              '[devtools-background.js] panel.onShown.addListener invoked',
-            );
-          });
-          panel.onHidden.addListener(function() {
-            console.log(
-              '[devtools-background.js] panel.onShown.onHidden invoked',
-            );
-          });
-        },
-      );
+      chrome.devtools.panels.create('Relay', 'imgs/logo.png', 'devtools.html');
     },
   );
 }
-
-chrome.runtime.onMessage.addListener(request => {
-  console.log(
-    `[devtools-background] chrome.runtime.onMessage.addListener ${JSON.stringify(
-      request,
-    )}`,
-  );
-});
 
 chrome.devtools.network.onNavigated.addListener(createPanelIfHasRelay);
 
 const checkRelayInterval = setInterval(createPanelIfHasRelay, 1000);
 
 createPanelIfHasRelay();
-console.log('nice');

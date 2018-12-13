@@ -72,10 +72,6 @@ function injectScript(scriptName, cb) {
    `;
 
   chrome.devtools.inspectedWindow.eval(src, function(res, err) {
-    if (err) {
-      /* eslint-disable no-console */
-      console.log(err);
-    }
     cb();
   });
 }
