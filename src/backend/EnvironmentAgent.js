@@ -40,7 +40,7 @@ export type UpdateEvent = {
   snapshotAfter: any,
 };
 
-type EmitFn = (name: string, data: {[key: string]: mixed}) => void;
+type EmitFn = (name: string, data: {+[key: string]: mixed}) => void;
 
 function getSnapshotChanges(store, snapshot, updatedRecordIds) {
   const snapshotBefore = {};

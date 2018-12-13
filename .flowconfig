@@ -6,5 +6,5 @@ module.name_mapper.extension='less' -> '<PROJECT_ROOT>/StyleStub.js.flow'
 esproposal.optional_chaining=enable
 
 [version]
-0.87.0
+^0.89.0
 
