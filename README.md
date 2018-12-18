@@ -39,3 +39,7 @@ See Integrations Chrome readme
 ## Electron
 
 See Integrations standalone readme
+
+## License
+
+Relay Developer Tools are [MIT licensed](./LICENSE).
