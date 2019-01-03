@@ -23,7 +23,7 @@ module.exports = {
     path: path.join(__dirname, '../../../lib/development'),
   },
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.css$/,
         loader: 'style-loader!css-loader',

@@ -28,7 +28,7 @@ module.exports = {
   },
   module: {
     // noParse: ['ws'],
-    loaders: [
+    rules: [
       {
         test: /\.css$/,
         loader: `style-loader?hmr=${isDev}!css-loader`,
@@ -40,8 +40,26 @@ module.exports = {
       {
         test: /\.js$/,
         include: path.join(__dirname, '../../'),
-        loader: 'babel-loader',
         exclude: /(node_modules)/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: [
+              '@babel/preset-env',
+              '@babel/preset-flow',
+              '@babel/preset-react',
+            ],
+            plugins: [
+              'react-hot-loader/babel',
+              '@babel/plugin-proposal-class-properties',
+              '@babel/plugin-syntax-object-rest-spread',
+              '@babel/plugin-proposal-optional-chaining',
+              '@babel/plugin-proposal-nullish-coalescing-operator',
+              '@babel/plugin-proposal-export-default-from',
+            ],
+          },
+        },
+
       },
       {
         test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
