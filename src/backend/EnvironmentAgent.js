@@ -139,6 +139,9 @@ export default class EnvironmentAgent {
     matchType: MatchType,
   ): {[id: string]: string} {
     function isMatching(id: DataID, record: Record): boolean {
+      if (!id || !record) {
+        return false;
+      }
       if (matchType === 'idtype') {
         return (
           id.includes(matchStr) ||
