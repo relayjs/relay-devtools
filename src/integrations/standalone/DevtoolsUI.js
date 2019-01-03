@@ -20,7 +20,7 @@ import wsServerSocketTransport from './transport/wsServerSocketTransport';
 import Bridge from '../../transport/Bridge';
 
 import API from '../../frontend/api/BridgeAPI';
-import configureStore from '../../frontend/redux/configureStore';
+import configureStore from '../../frontend/redux/store/configureStore';
 import App from '../../frontend/components/App';
 import RelayDetector from '../../frontend/components/RelayDetector.js';
 

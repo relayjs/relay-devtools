@@ -7,8 +7,6 @@
 
 'use strict';
 
-import '@babel/polyfill';
-
 import * as DevtoolsUI from './DevtoolsUI';
 
 const container = document.getElementById('container');
