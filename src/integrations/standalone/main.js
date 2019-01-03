@@ -22,17 +22,7 @@ if (app.dock) {
 let mainWindow;
 
 // Insist on a single instance of the app, since it runs a ws server.
-const isDupe = app.makeSingleInstance(() => {
-  if (mainWindow) {
-    if (mainWindow.isMinimized()) {
-      mainWindow.restore();
-    }
-    mainWindow.show();
-    mainWindow.focus();
-  }
-});
-
-if (isDupe) {
+if (!app.requestSingleInstanceLock()) {
   app.quit();
 }
 
