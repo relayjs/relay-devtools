@@ -273,7 +273,7 @@ export default class EnvironmentAgent {
       notify =>
         function() {
           agent._runPublishEvent();
-          notify.apply(this, arguments);
+          return notify.apply(this, arguments);
         },
     );
   }
