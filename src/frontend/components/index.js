@@ -9,7 +9,7 @@
 
 'use strict';
 
-import 'babel-polyfill';
+import '@babel/polyfill';
 import '../css/reset.css';
 
 import React from 'react';
