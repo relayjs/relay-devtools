@@ -25,6 +25,7 @@ export default class BridgeAPI {
   _changeCallbacks: {[environment: string]: Array<() => void>};
   _recordSummaryCache: {[environment: string]: {[id: string]: string}};
   _updateEvents: Array<UpdateEvent>;
+  _registered: boolean;
 
   constructor(bridge: Bridge): void {
     this._bridge = bridge;
@@ -34,11 +35,14 @@ export default class BridgeAPI {
     this._recordSummaryCache = {};
     // $FlowFixMe
     this._updateEvents = {};
+    this._registered = false;
 
     this._bridge.on('register', () => {
+      this._registered = true;
       // $FlowFixMe
       this._onRegisterListeners.forEach(cb => cb());
     });
+
 
     // this._bridge.on('log', (event, name, data) => {
 
@@ -165,5 +169,8 @@ export default class BridgeAPI {
   onRegister(callback: $FlowFixMe) {
     // $FlowFixMe
     this._onRegisterListeners.push(callback);
+    if (this._registered) {
+      callback();
+    }
   }
 }

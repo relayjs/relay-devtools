@@ -21,7 +21,7 @@ import ReactDOM from 'react-dom';
 import API from './api/BridgeAPI';
 import configureStore from './redux/store/configureStore';
 import App from './components/App';
-// import RelayDetector from './containers/RelayDetector';
+import RelayDetector from './components/RelayDetector';
 
 let app = null;
 
@@ -54,9 +54,9 @@ function initApp(shell: ShellType) {
     const store = configureStore(api);
     app = 'devtools-root';
     ReactDOM.render(
-      // <RelayDetector API={api}>
-      <App store={store} api={api} />,
-      // </RelayDetector>
+      <RelayDetector API={api}>
+        <App store={store} api={api} />
+      </RelayDetector>,
       // $FlowFixMe
       document.getElementById('devtools-root'),
     );
