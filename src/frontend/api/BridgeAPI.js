@@ -43,7 +43,6 @@ export default class BridgeAPI {
       this._onRegisterListeners.forEach(cb => cb());
     });
 
-
     // this._bridge.on('log', (event, name, data) => {
 
     // });
