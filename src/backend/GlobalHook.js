@@ -227,10 +227,11 @@ export function installGlobalHook(target: any): boolean {
             return observable.do({
               unsubscribe: () =>
                 // Produce a mirrored "Unsubscribe" network event.
-                agent._networkEvent({
-                  ...lastNetworkEvent,
-                  eventName: 'Unsubscribe',
-                }),
+                agent._networkEvent(
+                  Object.assign({}, lastNetworkEvent, {
+                    eventName: 'Unsubscribe',
+                  }),
+                ),
             });
           };
         };
