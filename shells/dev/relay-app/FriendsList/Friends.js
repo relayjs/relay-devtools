@@ -5,20 +5,21 @@ import { graphql, createPaginationContainer } from 'react-relay';
 import { MockPayloadGenerator } from 'relay-test-utils';
 import FriendCard from './FriendCard';
 import styles from './Friends.css';
-import type {Friends_user} from './__generated__/Friends_user.graphql';
-import type {RelayProps} from 'react-relay';
+import type { Friends_user } from './__generated__/Friends_user.graphql';
+import type { RelayProps } from 'react-relay';
 import MockPayload from './MockPayload';
 
 type Props = {|
   +user: Friends_user,
   +relay: RelayProps,
   +mockPayload: MockPayload,
-|}
+|};
 
 export default createPaginationContainer(
   function Friends(props: Props) {
-  
-    const edges = Array.isArray(props.user.friends?.edges) ? props.user.friends?.edges : null;
+    const edges = Array.isArray(props.user.friends?.edges)
+      ? props.user.friends?.edges
+      : null;
     if (edges == null) {
       return null;
     }
@@ -75,9 +76,6 @@ export default createPaginationContainer(
     },
     getVariables(props) {
       return props;
-    },
-    getConnectionFromProps(props) {
-      return props.user.friends;
     },
     query: graphql`
       query FriendsQuery @relay_test_operation {

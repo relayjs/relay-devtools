@@ -31,117 +31,114 @@ export type Friends_user$key = {
 };
 */
 
-
-const node/*: ReaderFragment*/ = {
-  "kind": "Fragment",
-  "name": "Friends_user",
-  "type": "User",
-  "metadata": {
-    "connection": [
+const node /*: ReaderFragment*/ = {
+  kind: 'Fragment',
+  name: 'Friends_user',
+  type: 'User',
+  metadata: {
+    connection: [
       {
-        "count": null,
-        "cursor": null,
-        "direction": "forward",
-        "path": [
-          "friends"
-        ]
-      }
-    ]
+        count: null,
+        cursor: null,
+        direction: 'forward',
+        path: ['friends'],
+      },
+    ],
   },
-  "argumentDefinitions": [],
-  "selections": [
+  argumentDefinitions: [],
+  selections: [
     {
-      "kind": "LinkedField",
-      "alias": "friends",
-      "name": "__User_friends_connection",
-      "storageKey": null,
-      "args": null,
-      "concreteType": "FriendsConnection",
-      "plural": false,
-      "selections": [
+      kind: 'LinkedField',
+      alias: 'friends',
+      name: '__User_friends_connection',
+      storageKey: null,
+      args: null,
+      concreteType: 'FriendsConnection',
+      plural: false,
+      selections: [
         {
-          "kind": "ScalarField",
-          "alias": null,
-          "name": "count",
-          "args": null,
-          "storageKey": null
+          kind: 'ScalarField',
+          alias: null,
+          name: 'count',
+          args: null,
+          storageKey: null,
         },
         {
-          "kind": "LinkedField",
-          "alias": null,
-          "name": "edges",
-          "storageKey": null,
-          "args": null,
-          "concreteType": "FriendsEdge",
-          "plural": true,
-          "selections": [
+          kind: 'LinkedField',
+          alias: null,
+          name: 'edges',
+          storageKey: null,
+          args: null,
+          concreteType: 'FriendsEdge',
+          plural: true,
+          selections: [
             {
-              "kind": "LinkedField",
-              "alias": null,
-              "name": "node",
-              "storageKey": null,
-              "args": null,
-              "concreteType": "User",
-              "plural": false,
-              "selections": [
+              kind: 'LinkedField',
+              alias: null,
+              name: 'node',
+              storageKey: null,
+              args: null,
+              concreteType: 'User',
+              plural: false,
+              selections: [
                 {
-                  "kind": "ScalarField",
-                  "alias": null,
-                  "name": "id",
-                  "args": null,
-                  "storageKey": null
+                  kind: 'ScalarField',
+                  alias: null,
+                  name: 'id',
+                  args: null,
+                  storageKey: null,
                 },
                 {
-                  "kind": "ScalarField",
-                  "alias": null,
-                  "name": "__typename",
-                  "args": null,
-                  "storageKey": null
+                  kind: 'ScalarField',
+                  alias: null,
+                  name: '__typename',
+                  args: null,
+                  storageKey: null,
                 },
                 {
-                  "kind": "FragmentSpread",
-                  "name": "FriendCard_user",
-                  "args": null
-                }
-              ]
+                  kind: 'FragmentSpread',
+                  name: 'FriendCard_user',
+                  args: null,
+                },
+              ],
             },
             {
-              "kind": "ScalarField",
-              "alias": null,
-              "name": "cursor",
-              "args": null,
-              "storageKey": null
-            }
-          ]
+              kind: 'ScalarField',
+              alias: null,
+              name: 'cursor',
+              args: null,
+              storageKey: null,
+            },
+          ],
         },
         {
-          "kind": "LinkedField",
-          "alias": null,
-          "name": "pageInfo",
-          "storageKey": null,
-          "args": null,
-          "concreteType": "PageInfo",
-          "plural": false,
-          "selections": [
+          kind: 'LinkedField',
+          alias: null,
+          name: 'pageInfo',
+          storageKey: null,
+          args: null,
+          concreteType: 'PageInfo',
+          plural: false,
+          selections: [
             {
-              "kind": "ScalarField",
-              "alias": null,
-              "name": "endCursor",
-              "args": null,
-              "storageKey": null
+              kind: 'ScalarField',
+              alias: null,
+              name: 'endCursor',
+              args: null,
+              storageKey: null,
             },
             {
-              "kind": "ScalarField",
-              "alias": null,
-              "name": "hasNextPage",
-              "args": null,
-              "storageKey": null
-            }
-          ]
-        }
-      ]
-    }
-  ]
+              kind: 'ScalarField',
+              alias: null,
+              name: 'hasNextPage',
+              args: null,
+              storageKey: null,
+            },
+          ],
+        },
+      ],
+    },
+  ],
 };
 // prettier-ignore
 (node/*: any*/).hash = '189f23882e143647bb2ae4bfd5723132';

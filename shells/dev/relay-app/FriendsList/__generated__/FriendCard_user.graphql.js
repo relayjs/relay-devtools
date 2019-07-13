@@ -25,40 +25,39 @@ export type FriendCard_user$key = {
 };
 */
 
-
-const node/*: ReaderFragment*/ = {
-  "kind": "Fragment",
-  "name": "FriendCard_user",
-  "type": "User",
-  "metadata": null,
-  "argumentDefinitions": [],
-  "selections": [
+const node /*: ReaderFragment*/ = {
+  kind: 'Fragment',
+  name: 'FriendCard_user',
+  type: 'User',
+  metadata: null,
+  argumentDefinitions: [],
+  selections: [
     {
-      "kind": "ScalarField",
-      "alias": null,
-      "name": "name",
-      "args": null,
-      "storageKey": null
+      kind: 'ScalarField',
+      alias: null,
+      name: 'name',
+      args: null,
+      storageKey: null,
     },
     {
-      "kind": "LinkedField",
-      "alias": null,
-      "name": "profilePicture",
-      "storageKey": null,
-      "args": null,
-      "concreteType": "ProfilePicture",
-      "plural": false,
-      "selections": [
+      kind: 'LinkedField',
+      alias: null,
+      name: 'profilePicture',
+      storageKey: null,
+      args: null,
+      concreteType: 'ProfilePicture',
+      plural: false,
+      selections: [
         {
-          "kind": "ScalarField",
-          "alias": null,
-          "name": "url",
-          "args": null,
-          "storageKey": null
-        }
-      ]
-    }
-  ]
+          kind: 'ScalarField',
+          alias: null,
+          name: 'url',
+          args: null,
+          storageKey: null,
+        },
+      ],
+    },
+  ],
 };
 // prettier-ignore
 (node/*: any*/).hash = 'aa6a813be40074e272758f996347f889';

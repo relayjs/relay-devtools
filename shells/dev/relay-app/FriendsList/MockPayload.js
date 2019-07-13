@@ -1,6 +1,4 @@
 // @flow
-
-import MockPayloadGenerator from 'relay-test-utils';
 import Chance from 'chance';
 
 type User = {|
