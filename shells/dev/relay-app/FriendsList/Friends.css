@@ -1,0 +1,10 @@
+.FriendsList {
+  padding: 0;
+  margin: 0;
+}
+
+.ListRow {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 0.5rem;
+}
