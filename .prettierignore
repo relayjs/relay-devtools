@@ -7,3 +7,5 @@ vendor
 
 package-lock.json
 yarn.lock
+
+__generated__
