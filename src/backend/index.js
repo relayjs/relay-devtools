@@ -4,7 +4,6 @@ import type { DevToolsHook, ReactRenderer, RendererInterface } from './types';
 import Agent from './agent';
 
 import { attach } from './renderer';
-import { attach as attachLegacy } from './legacy/renderer';
 
 export function initBackend(
   hook: DevToolsHook,
@@ -41,12 +40,7 @@ export function initBackend(
 
     // Inject any not-yet-injected renderers (if we didn't reload-and-profile)
     if (!rendererInterface) {
-      if (typeof renderer.findFiberByHostInstance === 'function') {
-        rendererInterface = attach(hook, id, renderer, global);
-      } else {
-        rendererInterface = attachLegacy(hook, id, renderer, global);
-      }
-
+      rendererInterface = attach(hook, id, renderer, global);
       hook.rendererInterfaces.set(id, rendererInterface);
     }
 
