@@ -17,7 +17,7 @@ import { TreeContextController } from './Components/TreeContext';
 import ViewElementSourceContext from './Components/ViewElementSourceContext';
 import { ProfilerContextController } from './Profiler/ProfilerContext';
 import { ModalDialogContextController } from './ModalDialog';
-import ReactLogo from './ReactLogo';
+import RelayLogo from './RelayLogo';
 
 import styles from './DevTools.css';
 
@@ -112,7 +112,7 @@ export default function DevTools({
                   <div className={styles.DevTools}>
                     {showTabBar && (
                       <div className={styles.TabBar}>
-                        <ReactLogo />
+                        <RelayLogo />
                         <span className={styles.DevToolsVersion}>
                           {process.env.DEVTOOLS_VERSION}
                         </span>
