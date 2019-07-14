@@ -1,11 +1,19 @@
 // @flow
 
 import React, { Fragment } from 'react';
+import { Environment, RecordSource, Store } from 'relay-runtime';
 import { graphql, QueryRenderer } from 'react-relay';
-import { createMockEnvironment, MockPayloadGenerator } from 'relay-test-utils';
-
+import network from './InBrowserNetwork';
 import Friends from './Friends';
-import MockPayload from './MockPayload';
+
+const source = new RecordSource();
+const store = new Store(source);
+
+const environment = new Environment({
+  configName: 'Example Environment',
+  network,
+  store,
+});
 
 export type Item = {|
   id: number,
@@ -15,12 +23,6 @@ export type Item = {|
 
 type Props = {||};
 
-const mockPayload = new MockPayload();
-const environment = createMockEnvironment();
-environment.mock.queueOperationResolver(operation =>
-  MockPayloadGenerator.generate(operation, mockPayload.generate())
-);
-
 export default function List(props: Props) {
   return (
     <Fragment>
@@ -28,7 +30,7 @@ export default function List(props: Props) {
       <QueryRenderer
         environment={environment}
         query={graphql`
-          query AppQuery @relay_test_operation {
+          query AppQuery {
             user: node(id: "my-id") {
               ... on User {
                 name
@@ -43,7 +45,7 @@ export default function List(props: Props) {
             return (
               <Fragment>
                 <div>Hello, {props.user.name}!</div>
-                <Friends mockPayload={mockPayload} user={props.user} />
+                <Friends user={props.user} />
               </Fragment>
             );
           }

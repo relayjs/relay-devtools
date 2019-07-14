@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash b44c0190e9940a030182be73d92a7f09
+ * @relayHash 350031a1adaaf07dc1fdf001ad2e5b02
  */
 
 /* eslint-disable */
@@ -97,19 +97,7 @@ v4 = [
     "name": "first",
     "value": 10
   }
-],
-v5 = {
-  "type": "ID",
-  "enumValues": null,
-  "plural": false,
-  "nullable": true
-},
-v6 = {
-  "type": "String",
-  "enumValues": null,
-  "plural": false,
-  "nullable": true
-};
+];
 return {
   "kind": "Request",
   "fragment": {
@@ -278,74 +266,10 @@ return {
     "name": "AppQuery",
     "id": null,
     "text": "query AppQuery {\n  user: node(id: \"my-id\") {\n    __typename\n    ... on User {\n      name\n      ...Friends_user\n    }\n    id\n  }\n}\n\nfragment Friends_user on User {\n  friends(first: 10) {\n    count\n    edges {\n      node {\n        id\n        ...FriendCard_user\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment FriendCard_user on User {\n  name\n  profilePicture {\n    url\n  }\n}\n",
-    "metadata": {
-      "relayTestingSelectionTypeInfo": {
-        "user": {
-          "type": "Node",
-          "enumValues": null,
-          "plural": false,
-          "nullable": true
-        },
-        "user.id": (v5/*: any*/),
-        "user.name": (v6/*: any*/),
-        "user.friends": {
-          "type": "FriendsConnection",
-          "enumValues": null,
-          "plural": false,
-          "nullable": true
-        },
-        "user.friends.count": {
-          "type": "Int",
-          "enumValues": null,
-          "plural": false,
-          "nullable": true
-        },
-        "user.friends.edges": {
-          "type": "FriendsEdge",
-          "enumValues": null,
-          "plural": true,
-          "nullable": true
-        },
-        "user.friends.pageInfo": {
-          "type": "PageInfo",
-          "enumValues": null,
-          "plural": false,
-          "nullable": true
-        },
-        "user.friends.edges.node": {
-          "type": "User",
-          "enumValues": null,
-          "plural": false,
-          "nullable": true
-        },
-        "user.friends.edges.node.id": (v5/*: any*/),
-        "user.friends.edges.cursor": (v6/*: any*/),
-        "user.friends.pageInfo.endCursor": (v6/*: any*/),
-        "user.friends.pageInfo.hasNextPage": {
-          "type": "Boolean",
-          "enumValues": null,
-          "plural": false,
-          "nullable": true
-        },
-        "user.friends.edges.node.name": (v6/*: any*/),
-        "user.friends.edges.node.profilePicture": {
-          "type": "ProfilePicture",
-          "enumValues": null,
-          "plural": false,
-          "nullable": true
-        },
-        "user.friends.edges.node.__typename": {
-          "type": "String",
-          "enumValues": null,
-          "plural": false,
-          "nullable": false
-        },
-        "user.friends.edges.node.profilePicture.url": (v6/*: any*/)
-      }
-    }
+    "metadata": {}
   }
 };
 })();
 // prettier-ignore
-(node/*: any*/).hash = '88a779f43e3d3c409520f3343278bfe4';
+(node/*: any*/).hash = '51c06ddf4a54b2fd3d076ce760522329';
 module.exports = node;

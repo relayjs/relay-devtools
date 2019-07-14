@@ -2,17 +2,14 @@
 
 import React, { Fragment } from 'react';
 import { graphql, createPaginationContainer } from 'react-relay';
-import { MockPayloadGenerator } from 'relay-test-utils';
 import FriendCard from './FriendCard';
 import styles from './Friends.css';
 import type { Friends_user } from './__generated__/Friends_user.graphql';
 import type { RelayProps } from 'react-relay';
-import MockPayload from './MockPayload';
 
 type Props = {|
   +user: Friends_user,
   +relay: RelayProps,
-  +mockPayload: MockPayload,
 |};
 
 export default createPaginationContainer(
@@ -38,12 +35,6 @@ export default createPaginationContainer(
         <button
           disabled={props.relay.isLoading() || !props.relay.hasMore()}
           onClick={() => {
-            props.relay.environment.mock.queueOperationResolver(operation =>
-              MockPayloadGenerator.generate(
-                operation,
-                props.mockPayload.generate()
-              )
-            );
             props.relay.loadMore();
           }}
         >
