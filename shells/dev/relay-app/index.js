@@ -7,16 +7,7 @@ import {
   // $FlowFixMe Flow does not yet know about createRoot()
   unstable_createRoot as createRoot,
 } from 'react-dom';
-import DeeplyNestedComponents from './DeeplyNestedComponents';
-import EditableProps from './EditableProps';
-import ElementTypes from './ElementTypes';
-import Hydration from './Hydration';
-import InspectableElements from './InspectableElements';
-import InteractionTracing from './InteractionTracing';
-import PriorityLevels from './PriorityLevels';
-import ToDoList from './ToDoList';
-import Toggle from './Toggle';
-import SuspenseTree from './SuspenseTree';
+import FriendsList from './FriendsList';
 
 import './styles.css';
 
@@ -34,16 +25,7 @@ function mountHelper(App) {
 }
 
 function mountTestApp() {
-  mountHelper(ToDoList);
-  mountHelper(InteractionTracing);
-  mountHelper(InspectableElements);
-  mountHelper(Hydration);
-  mountHelper(ElementTypes);
-  mountHelper(EditableProps);
-  mountHelper(PriorityLevels);
-  mountHelper(Toggle);
-  mountHelper(SuspenseTree);
-  mountHelper(DeeplyNestedComponents);
+  mountHelper(FriendsList);
 }
 
 function unmountTestApp() {

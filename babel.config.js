@@ -26,6 +26,8 @@ module.exports = api => {
     targets.firefox = minFirefoxVersion.toString();
   }
   const plugins = [
+    ['relay'],
+    ['@babel/plugin-proposal-optional-chaining'],
     ['@babel/plugin-transform-flow-strip-types'],
     ['@babel/plugin-proposal-class-properties', { loose: false }],
   ];

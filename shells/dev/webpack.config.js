@@ -23,7 +23,7 @@ const config = {
   mode: __DEV__ ? 'development' : 'production',
   devtool: false,
   entry: {
-    app: './app/index.js',
+    app: './relay-app/index.js',
     backend: './src/backend.js',
     devtools: './src/devtools.js',
   },
