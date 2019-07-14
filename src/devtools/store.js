@@ -67,7 +67,6 @@ export default class Store extends EventEmitter<{|
   mutated: [[Array<number>, Map<number, number>]],
   recordChangeDescriptions: [],
   roots: [],
-  supportsNativeStyleEditor: [],
   supportsProfiling: [],
   supportsReloadAndProfile: [],
 |}> {
@@ -88,14 +87,9 @@ export default class Store extends EventEmitter<{|
   // The InspectedElementContext also relies on this mutability for its WeakMap usage.
   _idToElement: Map<number, Element> = new Map();
 
-  // Should the React Native style editor panel be shown?
-  _isNativeStyleEditorSupported: boolean = false;
-
   // Can the backend use the Storage API (e.g. localStorage)?
   // If not, features like reload-and-profile will not work correctly and must be disabled.
   _isBackendStorageAPISupported: boolean = false;
-
-  _nativeStyleEditorValidAttributes: $ReadOnlyArray<string> | null = null;
 
   // Map of element (id) to the set of elements (ids) it owns.
   // This map enables getOwnersListForElement() to avoid traversing the entire tree.
@@ -181,10 +175,6 @@ export default class Store extends EventEmitter<{|
     bridge.addListener(
       'isBackendStorageAPISupported',
       this.onBridgeStorageSupported
-    );
-    bridge.addListener(
-      'isNativeStyleEditorSupported',
-      this.onBridgeNativeStyleEditorSupported
     );
 
     this._profilerStore = new ProfilerStore(bridge, this, isProfiling);
@@ -301,10 +291,6 @@ export default class Store extends EventEmitter<{|
     return this._hasOwnerMetadata;
   }
 
-  get nativeStyleEditorValidAttributes(): $ReadOnlyArray<string> | null {
-    return this._nativeStyleEditorValidAttributes;
-  }
-
   get numElements(): number {
     return this._weightAcrossRoots;
   }
@@ -345,10 +331,6 @@ export default class Store extends EventEmitter<{|
 
   get supportsNativeInspection(): boolean {
     return this._supportsNativeInspection;
-  }
-
-  get supportsNativeStyleEditor(): boolean {
-    return this._isNativeStyleEditorSupported;
   }
 
   get supportsProfiling(): boolean {
@@ -694,19 +676,6 @@ export default class Store extends EventEmitter<{|
     if (!isInsideCollapsedSubTree) {
       this._weightAcrossRoots += weightDelta;
     }
-  };
-
-  onBridgeNativeStyleEditorSupported = ({
-    isSupported,
-    validAttributes,
-  }: {|
-    isSupported: boolean,
-    validAttributes: $ReadOnlyArray<string>,
-  |}) => {
-    this._isNativeStyleEditorSupported = isSupported;
-    this._nativeStyleEditorValidAttributes = validAttributes || null;
-
-    this.emit('supportsNativeStyleEditor');
   };
 
   onBridgeOperations = (operations: Array<number>) => {

@@ -5,18 +5,14 @@ import Bridge from 'src/bridge';
 import { installHook } from 'src/hook';
 import { initBackend } from 'src/backend';
 import { __DEBUG__ } from 'src/constants';
-import setupNativeStyleEditor from 'src/backend/NativeStyleEditor/setupNativeStyleEditor';
 import { getDefaultComponentFilters } from 'src/utils';
 
 import type { ComponentFilter } from 'src/types';
 import type { DevToolsHook } from 'src/backend/types';
-import type { ResolveNativeStyle } from 'src/backend/NativeStyleEditor/setupNativeStyleEditor';
 
 type ConnectOptions = {
   host?: string,
-  nativeStyleEditorValidAttributes?: $ReadOnlyArray<string>,
   port?: number,
-  resolveRNStyle?: ResolveNativeStyle,
   isAppActive?: () => boolean,
   websocket?: ?WebSocket,
 };
@@ -41,10 +37,8 @@ function debug(methodName: string, ...args) {
 export function connectToDevTools(options: ?ConnectOptions) {
   const {
     host = 'localhost',
-    nativeStyleEditorValidAttributes,
     port = 8097,
     websocket,
-    resolveRNStyle = null,
     isAppActive = () => true,
   } = options || {};
 
@@ -156,64 +150,6 @@ export function connectToDevTools(options: ?ConnectOptions) {
     });
 
     initBackend(hook, agent, window);
-
-    // Setup React Native style editor if the environment supports it.
-    if (resolveRNStyle != null || hook.resolveRNStyle != null) {
-      setupNativeStyleEditor(
-        bridge,
-        agent,
-        ((resolveRNStyle || hook.resolveRNStyle: any): ResolveNativeStyle),
-        nativeStyleEditorValidAttributes ||
-          hook.nativeStyleEditorValidAttributes ||
-          null
-      );
-    } else {
-      // Otherwise listen to detect if the environment later supports it.
-      // For example, Flipper does not eagerly inject these values.
-      // Instead it relies on the React Native Inspector to lazily inject them.
-      let lazyResolveRNStyle;
-      let lazyNativeStyleEditorValidAttributes;
-
-      const initAfterTick = () => {
-        if (bridge !== null) {
-          setupNativeStyleEditor(
-            bridge,
-            agent,
-            lazyResolveRNStyle,
-            lazyNativeStyleEditorValidAttributes
-          );
-        }
-      };
-
-      Object.defineProperty(
-        hook,
-        'resolveRNStyle',
-        ({
-          enumerable: false,
-          get() {
-            return lazyResolveRNStyle;
-          },
-          set(value) {
-            lazyResolveRNStyle = value;
-            initAfterTick();
-          },
-        }: Object)
-      );
-      Object.defineProperty(
-        hook,
-        'nativeStyleEditorValidAttributes',
-        ({
-          enumerable: false,
-          get() {
-            return lazyNativeStyleEditorValidAttributes;
-          },
-          set(value) {
-            lazyNativeStyleEditorValidAttributes = value;
-            initAfterTick();
-          },
-        }: Object)
-      );
-    }
   };
 
   function handleClose() {
