@@ -12,7 +12,6 @@ import HocBadges from './HocBadges';
 import InspectedElementTree from './InspectedElementTree';
 import { InspectedElementContext } from './InspectedElementContext';
 import ViewElementSourceContext from './ViewElementSourceContext';
-import NativeStyleEditor from './NativeStyleEditor';
 import Toggle from '../Toggle';
 import Badge from './Badge';
 import {
@@ -350,8 +349,6 @@ function InspectedElementView({
           id={id}
         />
       )}
-
-      <NativeStyleEditor />
 
       {ownerID === null && owners !== null && owners.length > 0 && (
         <div className={styles.Owners}>

@@ -9,7 +9,6 @@ import type {
   ProfilingDataBackend,
   RendererID,
 } from 'src/backend/types';
-import type { StyleAndLayout as StyleAndLayoutPayload } from 'src/backend/NativeStyleEditor/types';
 
 const BATCH_DURATION = 100;
 
@@ -47,19 +46,6 @@ type OverrideSuspense = {|
 type InspectElementParams = {|
   ...ElementAndRendererID,
   path?: Array<string | number>,
-|};
-
-type NativeStyleEditor_RenameAttributeParams = {|
-  ...ElementAndRendererID,
-  oldName: string,
-  newName: string,
-  value: string,
-|};
-
-type NativeStyleEditor_SetValueParams = {|
-  ...ElementAndRendererID,
-  name: string,
-  value: string,
 |};
 
 export default class Bridge extends EventEmitter<{|
@@ -100,15 +86,6 @@ export default class Bridge extends EventEmitter<{|
   syncSelectionToNativeElementsPanel: [],
   updateComponentFilters: [Array<ComponentFilter>],
   viewElementSource: [ElementAndRendererID],
-
-  // React Native style editor plug-in.
-  isNativeStyleEditorSupported: [
-    {| isSupported: boolean, validAttributes: $ReadOnlyArray<string> |},
-  ],
-  NativeStyleEditor_measure: [ElementAndRendererID],
-  NativeStyleEditor_renameAttribute: [NativeStyleEditor_RenameAttributeParams],
-  NativeStyleEditor_setValue: [NativeStyleEditor_SetValueParams],
-  NativeStyleEditor_styleAndLayout: [StyleAndLayoutPayload],
 |}> {
   _isShutdown: boolean = false;
   _messageQueue: Array<any> = [];
@@ -164,7 +141,6 @@ export default class Bridge extends EventEmitter<{|
     // Disable the API inherited from EventEmitter that can add more listeners and send more messages.
     // $FlowFixMe This property is not writable.
     this.addListener = function() {};
-    // $FlowFixMe This property is not writable.
     this.emit = function() {};
     // NOTE: There's also EventEmitter API like `on` and `prependListener` that we didn't add to our Flow type of EventEmitter.
 
