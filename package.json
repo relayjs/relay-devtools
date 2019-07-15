@@ -101,7 +101,6 @@
     "cross-env": "^5.2.0",
     "crx": "^5.0.0",
     "css-loader": "^1.0.1",
-    "error-stack-parser": "^2.0.2",
     "es6-symbol": "3.0.2",
     "escape-string-regexp": "^1.0.5",
     "eslint": "^4.19.1",

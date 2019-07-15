@@ -38,7 +38,6 @@ import {
   TREE_OPERATION_REORDER_CHILDREN,
   TREE_OPERATION_UPDATE_TREE_BASE_DURATION,
 } from '../constants';
-import { inspectHooksOfFiber } from './ReactDebugHooks';
 
 import type {
   ChangeDescription,
@@ -2136,9 +2135,7 @@ export function attach(
       // TODO Review sanitization approach for the below inspectable values.
       context,
       events,
-      hooks: usesHooks
-        ? inspectHooksOfFiber(fiber, (renderer.currentDispatcherRef: any))
-        : null,
+      hooks: null,
       props: memoizedProps,
       state: usesHooks ? null : memoizedState,
 
