@@ -23,10 +23,10 @@ export type Item = {|
 
 type Props = {||};
 
-export default function List(props: Props) {
+export default function App(props: Props) {
   return (
     <Fragment>
-      <h1>List</h1>
+      <h1>Example Relay App</h1>
       <QueryRenderer
         environment={environment}
         query={graphql`

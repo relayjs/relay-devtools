@@ -17,7 +17,7 @@ function guid(prefix) {
   return `${prefix}-${nextID++}`;
 }
 
-var schema = buildSchema(`
+const schema = buildSchema(`
   type Query {
     node(id: ID!): Node
   }
@@ -61,6 +61,50 @@ var schema = buildSchema(`
   }
 `);
 
+class User {
+  +__typename: 'User';
+  +id: string;
+  +name: string;
+
+  #gender: 'male' | 'female';
+  #profilePicture: {|
+    +url: string,
+  |};
+  #friends: $ReadOnlyArray<User>;
+
+  constructor(id) {
+    this.__typename = 'User';
+    this.id = id == null ? guid('user') : id;
+    this.#gender = chance.pick(['male', 'female']);
+    this.name = chance.name({
+      gender: this.#gender,
+    });
+  }
+
+  profilePicture() {
+    if (!this.#profilePicture) {
+      this.#profilePicture = {
+        url: `https://randomuser.me/api/portraits/thumb/${
+          this.#gender == 'female' ? 'women' : 'men'
+        }/${Math.floor(Math.random() * 100)}.jpg`,
+      };
+    }
+    return this.#profilePicture;
+  }
+
+  friends() {
+    if (!this.#friends) {
+      this.#friends = [];
+      for (let i = 0; i < 4; i++) {
+        this.#friends = this.#friends.concat([createUser()]);
+      }
+    } else {
+      this.#friends = this.#friends.concat([createUser()]);
+    }
+    return createConnection(this.#friends);
+  }
+}
+
 function mockPageInfo() {
   return {
     hasPreviousPage: true,
@@ -70,48 +114,30 @@ function mockPageInfo() {
   };
 }
 
-function mockFriendsEdge() {
+function createConnection(nodes) {
   return {
-    cursor: 'cursor',
-    node: mockUser,
-  };
-}
-
-function mockProfilePicture() {
-  const id = Math.floor(Math.random() * 100);
-  return {
-    url: `https://randomuser.me/api/portraits/thumb/women/${id}.jpg`,
-  };
-}
-
-function mockFriendsConnection() {
-  return {
-    count: 10,
-    edges: () => [
-      mockFriendsEdge(),
-      mockFriendsEdge(),
-      mockFriendsEdge(),
-      mockFriendsEdge(),
-    ],
+    count: nodes.length + 1,
+    edges: nodes.map((node, index) => ({
+      cursor: index,
+      node,
+    })),
     pageInfo: () => mockPageInfo(),
   };
 }
 
-function mockUser() {
-  const id = guid('user');
-  return {
-    __typename: 'User',
-    id,
-    name: chance.name(),
-    profilePicture: mockProfilePicture,
-    friends: mockFriendsConnection,
-  };
+const userMap = new Map();
+function createUser(id) {
+  const user = new User(id);
+  userMap.set(user.id, user);
+  return user;
 }
 
-// The root provides a resolver function for each API endpoint
-var root = {
-  node: args => {
-    return mockUser();
+const root = {
+  node: ({ id }) => {
+    if (!userMap.has(id)) {
+      return createUser(id);
+    }
+    return userMap.get(id);
   },
 };
 
