@@ -109,7 +109,6 @@ export function useModalDismissSignal(
     };
 
     const handleClick = (event: any) => {
-      // $FlowFixMe
       if (
         modalRef.current !== null &&
         !modalRef.current.contains(event.target)

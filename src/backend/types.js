@@ -1,7 +1,6 @@
 // @flow
 
 import type { ComponentFilter, ElementType } from 'src/types';
-import type { Interaction } from 'src/devtools/views/Profiler/types';
 
 type BundleType =
   | 0 // PROD
@@ -142,24 +141,6 @@ export type CommitDataBackend = {|
   timestamp: number,
 |};
 
-export type ProfilingDataForRootBackend = {|
-  commitData: Array<CommitDataBackend>,
-  displayName: string,
-  // Tuple of Fiber ID and base duration
-  initialTreeBaseDurations: Array<[number, number]>,
-  // Tuple of Interaction ID and commit indices
-  interactionCommits: Array<[number, Array<number>]>,
-  interactions: Array<[number, Interaction]>,
-  rootID: number,
-|};
-
-// Profiling data collected by the renderer interface.
-// This information will be passed to the frontend and combined with info it collects.
-export type ProfilingDataBackend = {|
-  dataForRoots: Array<ProfilingDataForRootBackend>,
-  rendererID: number,
-|};
-
 export type PathFrame = {|
   key: string | null,
   index: number,
@@ -261,7 +242,6 @@ export type RendererInterface = {
   getBestMatchForTrackedPath: () => PathMatch | null,
   getFiberIDForNative: GetFiberIDForNative,
   getInstanceAndStyle(id: number): InstanceAndStyle,
-  getProfilingData(): ProfilingDataBackend,
   getOwnersList: (id: number) => Array<Owner> | null,
   getPathForElement: (id: number) => Array<PathFrame> | null,
   handleCommitFiberRoot: (fiber: Object, commitPriority?: number) => void,
@@ -285,8 +265,6 @@ export type RendererInterface = {
   setInProps: (id: number, path: Array<string | number>, value: any) => void,
   setInState: (id: number, path: Array<string | number>, value: any) => void,
   setTrackedPath: (path: Array<PathFrame> | null) => void,
-  startProfiling: (recordChangeDescriptions: boolean) => void,
-  stopProfiling: () => void,
   updateComponentFilters: (somponentFilters: Array<ComponentFilter>) => void,
 };
 

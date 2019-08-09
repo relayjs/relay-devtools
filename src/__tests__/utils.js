@@ -2,9 +2,6 @@
 
 import typeof ReactTestRenderer from 'react-test-renderer';
 
-import type Bridge from 'src/bridge';
-import type Store from 'src/devtools/store';
-import type { ProfilingDataFrontend } from 'src/devtools/views/Profiler/types';
 import type { ElementType } from 'src/types';
 
 export function act(callback: Function): void {
@@ -139,45 +136,4 @@ export function requireTestRenderer(): ReactTestRenderer {
   } finally {
     global.__REACT_DEVTOOLS_GLOBAL_HOOK__ = hook;
   }
-}
-
-export function exportImportHelper(bridge: Bridge, store: Store): void {
-  const { act } = require('./utils');
-  const {
-    prepareProfilingDataExport,
-    prepareProfilingDataFrontendFromExport,
-  } = require('src/devtools/views/Profiler/utils');
-
-  const { profilerStore } = store;
-
-  expect(profilerStore.profilingData).not.toBeNull();
-
-  const profilingDataFrontendInitial = ((profilerStore.profilingData: any): ProfilingDataFrontend);
-
-  const profilingDataExport = prepareProfilingDataExport(
-    profilingDataFrontendInitial
-  );
-
-  // Simulate writing/reading to disk.
-  const serializedProfilingDataExport = JSON.stringify(
-    profilingDataExport,
-    null,
-    2
-  );
-  const parsedProfilingDataExport = JSON.parse(serializedProfilingDataExport);
-
-  const profilingDataFrontend = prepareProfilingDataFrontendFromExport(
-    (parsedProfilingDataExport: any)
-  );
-
-  // Sanity check that profiling snapshots are serialized correctly.
-  expect(profilingDataFrontendInitial).toEqual(profilingDataFrontend);
-
-  // Snapshot the JSON-parsed object, rather than the raw string, because Jest formats the diff nicer.
-  expect(parsedProfilingDataExport).toMatchSnapshot('imported data');
-
-  act(() => {
-    // Apply the new exported-then-reimported data so tests can re-run assertions.
-    profilerStore.profilingData = profilingDataFrontend;
-  });
 }

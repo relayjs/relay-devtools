@@ -3,12 +3,7 @@
 import EventEmitter from 'events';
 import throttle from 'lodash.throttle';
 import Bridge from 'src/bridge';
-import {
-  SESSION_STORAGE_LAST_SELECTION_KEY,
-  SESSION_STORAGE_RELOAD_AND_PROFILE_KEY,
-  SESSION_STORAGE_RECORD_CHANGE_DESCRIPTIONS_KEY,
-  __DEBUG__,
-} from '../constants';
+import { SESSION_STORAGE_LAST_SELECTION_KEY, __DEBUG__ } from '../constants';
 import {
   sessionStorageGetItem,
   sessionStorageRemoveItem,
@@ -81,7 +76,6 @@ export default class Agent extends EventEmitter<{|
   shutdown: [],
 |}> {
   _bridge: Bridge;
-  _isProfiling: boolean = false;
   _recordChangeDescriptions: boolean = false;
   _rendererInterfaces: { [key: RendererID]: RendererInterface } = {};
   _persistedSelection: PersistedSelection | null = null;
@@ -89,19 +83,6 @@ export default class Agent extends EventEmitter<{|
 
   constructor(bridge: Bridge) {
     super();
-
-    if (
-      sessionStorageGetItem(SESSION_STORAGE_RELOAD_AND_PROFILE_KEY) === 'true'
-    ) {
-      this._recordChangeDescriptions =
-        sessionStorageGetItem(
-          SESSION_STORAGE_RECORD_CHANGE_DESCRIPTIONS_KEY
-        ) === 'true';
-      this._isProfiling = true;
-
-      sessionStorageRemoveItem(SESSION_STORAGE_RECORD_CHANGE_DESCRIPTIONS_KEY);
-      sessionStorageRemoveItem(SESSION_STORAGE_RELOAD_AND_PROFILE_KEY);
-    }
 
     const persistedSelectionString = sessionStorageGetItem(
       SESSION_STORAGE_LAST_SELECTION_KEY
@@ -113,8 +94,6 @@ export default class Agent extends EventEmitter<{|
     this._bridge = bridge;
 
     bridge.addListener('captureScreenshot', this.captureScreenshot);
-    bridge.addListener('getProfilingData', this.getProfilingData);
-    bridge.addListener('getProfilingStatus', this.getProfilingStatus);
     bridge.addListener('getOwnersList', this.getOwnersList);
     bridge.addListener('inspectElement', this.inspectElement);
     bridge.addListener('logElementToConsole', this.logElementToConsole);
@@ -123,11 +102,8 @@ export default class Agent extends EventEmitter<{|
     bridge.addListener('overrideProps', this.overrideProps);
     bridge.addListener('overrideState', this.overrideState);
     bridge.addListener('overrideSuspense', this.overrideSuspense);
-    bridge.addListener('reloadAndProfile', this.reloadAndProfile);
     bridge.addListener('screenshotCaptured', this.screenshotCaptured);
     bridge.addListener('selectElement', this.selectElement);
-    bridge.addListener('startProfiling', this.startProfiling);
-    bridge.addListener('stopProfiling', this.stopProfiling);
     bridge.addListener(
       'syncSelectionFromNativeElementsPanel',
       this.syncSelectionFromNativeElementsPanel
@@ -135,10 +111,6 @@ export default class Agent extends EventEmitter<{|
     bridge.addListener('shutdown', this.shutdown);
     bridge.addListener('updateComponentFilters', this.updateComponentFilters);
     bridge.addListener('viewElementSource', this.viewElementSource);
-
-    if (this._isProfiling) {
-      bridge.send('profilingStatus', true);
-    }
 
     // Notify the frontend if the backend supports the Storage API (e.g. localStorage).
     // If not, features like reload-and-profile will not work correctly and must be disabled.
@@ -191,19 +163,6 @@ export default class Agent extends EventEmitter<{|
     return null;
   }
 
-  getProfilingData = ({ rendererID }: {| rendererID: RendererID |}) => {
-    const renderer = this._rendererInterfaces[rendererID];
-    if (renderer == null) {
-      console.warn(`Invalid renderer id "${rendererID}"`);
-    }
-
-    this._bridge.send('profilingData', renderer.getProfilingData());
-  };
-
-  getProfilingStatus = () => {
-    this._bridge.send('profilingStatus', this._isProfiling);
-  };
-
   getOwnersList = ({ id, rendererID }: ElementAndRendererID) => {
     const renderer = this._rendererInterfaces[rendererID];
     if (renderer == null) {
@@ -230,19 +189,6 @@ export default class Agent extends EventEmitter<{|
     } else {
       renderer.logElementToConsole(id);
     }
-  };
-
-  reloadAndProfile = (recordChangeDescriptions: boolean) => {
-    sessionStorageSetItem(SESSION_STORAGE_RELOAD_AND_PROFILE_KEY, 'true');
-    sessionStorageSetItem(
-      SESSION_STORAGE_RECORD_CHANGE_DESCRIPTIONS_KEY,
-      recordChangeDescriptions ? 'true' : 'false'
-    );
-
-    // This code path should only be hit if the shell has explicitly told the Store that it supports profiling.
-    // In that case, the shell must also listen for this specific message to know when it needs to reload the app.
-    // The agent can't do this in a way that is renderer agnostic.
-    this._bridge.send('reloadAppForProfiling');
   };
 
   screenshotCaptured = ({
@@ -352,10 +298,6 @@ export default class Agent extends EventEmitter<{|
   ) {
     this._rendererInterfaces[rendererID] = rendererInterface;
 
-    if (this._isProfiling) {
-      rendererInterface.startProfiling(this._recordChangeDescriptions);
-    }
-
     // When the renderer is attached, we need to tell it whether
     // we remember the previous selection that we'd like to restore.
     // It'll start tracking mounts for matches to the last selection path.
@@ -376,30 +318,6 @@ export default class Agent extends EventEmitter<{|
   shutdown = () => {
     // Clean up the overlay if visible, and associated events.
     this.emit('shutdown');
-  };
-
-  startProfiling = (recordChangeDescriptions: boolean) => {
-    this._recordChangeDescriptions = recordChangeDescriptions;
-    this._isProfiling = true;
-    for (let rendererID in this._rendererInterfaces) {
-      const renderer = ((this._rendererInterfaces[
-        (rendererID: any)
-      ]: any): RendererInterface);
-      renderer.startProfiling(recordChangeDescriptions);
-    }
-    this._bridge.send('profilingStatus', this._isProfiling);
-  };
-
-  stopProfiling = () => {
-    this._isProfiling = false;
-    this._recordChangeDescriptions = false;
-    for (let rendererID in this._rendererInterfaces) {
-      const renderer = ((this._rendererInterfaces[
-        (rendererID: any)
-      ]: any): RendererInterface);
-      renderer.stopProfiling();
-    }
-    this._bridge.send('profilingStatus', this._isProfiling);
   };
 
   updateComponentFilters = (componentFilters: Array<ComponentFilter>) => {

@@ -6,7 +6,6 @@ import type { ComponentFilter, Wall } from './types';
 import type {
   InspectedElementPayload,
   OwnersList,
-  ProfilingDataBackend,
   RendererID,
 } from 'src/backend/types';
 
@@ -52,8 +51,6 @@ export default class Bridge extends EventEmitter<{|
   captureScreenshot: [{| commitIndex: number, rootID: number |}],
   clearNativeElementHighlight: [],
   getOwnersList: [ElementAndRendererID],
-  getProfilingData: [{| rendererID: RendererID |}],
-  getProfilingStatus: [],
   highlightNativeElement: [HighlightElementInDOM],
   init: [],
   inspectElement: [InspectElementParams],
@@ -68,10 +65,6 @@ export default class Bridge extends EventEmitter<{|
   overrideProps: [OverrideValue],
   overrideState: [OverrideValue],
   overrideSuspense: [OverrideSuspense],
-  profilingData: [ProfilingDataBackend],
-  profilingStatus: [boolean],
-  reloadAndProfile: [boolean],
-  reloadAppForProfiling: [],
   screenshotCaptured: [
     {| commitIndex: number, dataURL: string, rootID: number |},
   ],
@@ -79,9 +72,7 @@ export default class Bridge extends EventEmitter<{|
   selectFiber: [number],
   shutdown: [],
   startInspectingNative: [],
-  startProfiling: [boolean],
   stopInspectingNative: [boolean],
-  stopProfiling: [],
   syncSelectionFromNativeElementsPanel: [],
   syncSelectionToNativeElementsPanel: [],
   updateComponentFilters: [Array<ComponentFilter>],

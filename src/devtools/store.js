@@ -20,7 +20,6 @@ import {
 import { localStorageGetItem, localStorageSetItem } from '../storage';
 import { __DEBUG__ } from '../constants';
 import { printStore } from 'src/__tests__/storeSerializer';
-import ProfilerStore from './ProfilerStore';
 
 import type { Element } from './views/Components/types';
 import type { ComponentFilter, ElementType } from '../types';
@@ -44,16 +43,12 @@ const LOCAL_STORAGE_RECORD_CHANGE_DESCRIPTIONS_KEY =
   'React::DevTools::recordChangeDescriptions';
 
 type Config = {|
-  isProfiling?: boolean,
   supportsCaptureScreenshots?: boolean,
   supportsNativeInspection?: boolean,
-  supportsReloadAndProfile?: boolean,
-  supportsProfiling?: boolean,
 |};
 
 export type Capabilities = {|
   hasOwnerMetadata: boolean,
-  supportsProfiling: boolean,
 |};
 
 /**
@@ -67,8 +62,6 @@ export default class Store extends EventEmitter<{|
   mutated: [[Array<number>, Map<number, number>]],
   recordChangeDescriptions: [],
   roots: [],
-  supportsProfiling: [],
-  supportsReloadAndProfile: [],
 |}> {
   _bridge: Bridge;
 
@@ -95,8 +88,6 @@ export default class Store extends EventEmitter<{|
   // This map enables getOwnersListForElement() to avoid traversing the entire tree.
   _ownersMap: Map<number, Set<number>> = new Map();
 
-  _profilerStore: ProfilerStore;
-
   _recordChangeDescriptions: boolean = false;
 
   // Incremented each time the store is mutated.
@@ -116,8 +107,6 @@ export default class Store extends EventEmitter<{|
   // In the case of "supportsProfiling", the option may be updated based on the injected renderers.
   _supportsCaptureScreenshots: boolean = false;
   _supportsNativeInspection: boolean = false;
-  _supportsProfiling: boolean = false;
-  _supportsReloadAndProfile: boolean = false;
 
   // Total number of visible elements (within all roots).
   // Used for windowing purposes.
@@ -141,28 +130,14 @@ export default class Store extends EventEmitter<{|
 
     this._componentFilters = getSavedComponentFilters();
 
-    let isProfiling = false;
     if (config != null) {
-      isProfiling = config.isProfiling === true;
-
-      const {
-        supportsCaptureScreenshots,
-        supportsNativeInspection,
-        supportsProfiling,
-        supportsReloadAndProfile,
-      } = config;
+      const { supportsCaptureScreenshots, supportsNativeInspection } = config;
       if (supportsCaptureScreenshots) {
         this._supportsCaptureScreenshots = true;
         this._captureScreenshots =
           localStorageGetItem(LOCAL_STORAGE_CAPTURE_SCREENSHOTS_KEY) === 'true';
       }
       this._supportsNativeInspection = supportsNativeInspection !== false;
-      if (supportsProfiling) {
-        this._supportsProfiling = true;
-      }
-      if (supportsReloadAndProfile) {
-        this._supportsReloadAndProfile = true;
-      }
     }
 
     this._bridge = bridge;
@@ -176,8 +151,6 @@ export default class Store extends EventEmitter<{|
       'isBackendStorageAPISupported',
       this.onBridgeStorageSupported
     );
-
-    this._profilerStore = new ProfilerStore(bridge, this, isProfiling);
   }
 
   // This is only used in tests to avoid memory leaks.
@@ -245,12 +218,6 @@ export default class Store extends EventEmitter<{|
     return this._componentFilters;
   }
   set componentFilters(value: Array<ComponentFilter>): void {
-    if (this._profilerStore.isProfiling) {
-      // Re-mounting a tree while profiling is in progress might break a lot of assumptions.
-      // If necessary, we could support this- but it doesn't seem like a necessary use case.
-      throw Error('Cannot modify filter preferences while profiling');
-    }
-
     // Filter updates are expensive to apply (since they impact the entire tree).
     // Let's determine if they've changed and avoid doing this work if they haven't.
     const prevEnabledComponentFilters = this._componentFilters.filter(
@@ -295,10 +262,6 @@ export default class Store extends EventEmitter<{|
     return this._weightAcrossRoots;
   }
 
-  get profilerStore(): ProfilerStore {
-    return this._profilerStore;
-  }
-
   get recordChangeDescriptions(): boolean {
     return this._recordChangeDescriptions;
   }
@@ -331,17 +294,6 @@ export default class Store extends EventEmitter<{|
 
   get supportsNativeInspection(): boolean {
     return this._supportsNativeInspection;
-  }
-
-  get supportsProfiling(): boolean {
-    return this._supportsProfiling;
-  }
-
-  get supportsReloadAndProfile(): boolean {
-    // Does the DevTools shell support reloading and eagerly injecting the renderer interface?
-    // And if so, can the backend use the localStorage API?
-    // Both of these are required for the reload-and-profile feature to work.
-    return this._supportsReloadAndProfile && this._isBackendStorageAPISupported;
   }
 
   containsElement(id: number): boolean {
@@ -733,9 +685,6 @@ export default class Store extends EventEmitter<{|
               debug('Add', `new root node ${id}`);
             }
 
-            const supportsProfiling = operations[i] > 0;
-            i++;
-
             const hasOwnerMetadata = operations[i] > 0;
             i++;
 
@@ -743,7 +692,6 @@ export default class Store extends EventEmitter<{|
             this._rootIDToRendererID.set(id, rendererID);
             this._rootIDToCapabilities.set(id, {
               hasOwnerMetadata,
-              supportsProfiling,
             });
 
             this._idToElement.set(id, {
@@ -942,26 +890,14 @@ export default class Store extends EventEmitter<{|
     this._revision++;
 
     if (haveRootsChanged) {
-      const prevSupportsProfiling = this._supportsProfiling;
-
       this._hasOwnerMetadata = false;
-      this._supportsProfiling = false;
-      this._rootIDToCapabilities.forEach(
-        ({ hasOwnerMetadata, supportsProfiling }) => {
-          if (hasOwnerMetadata) {
-            this._hasOwnerMetadata = true;
-          }
-          if (supportsProfiling) {
-            this._supportsProfiling = true;
-          }
+      this._rootIDToCapabilities.forEach(({ hasOwnerMetadata }) => {
+        if (hasOwnerMetadata) {
+          this._hasOwnerMetadata = true;
         }
-      );
+      });
 
       this.emit('roots');
-
-      if (this._supportsProfiling !== prevSupportsProfiling) {
-        this.emit('supportsProfiling');
-      }
     }
 
     if (__DEBUG__) {
@@ -1000,7 +936,5 @@ export default class Store extends EventEmitter<{|
 
   onBridgeStorageSupported = (isBackendStorageAPISupported: boolean) => {
     this._isBackendStorageAPISupported = isBackendStorageAPISupported;
-
-    this.emit('supportsReloadAndProfile');
   };
 }

@@ -10,12 +10,10 @@ import Bridge from 'src/bridge';
 import Store from '../store';
 import { BridgeContext, StoreContext } from './context';
 import Components from './Components/Components';
-import Profiler from './Profiler/Profiler';
 import TabBar from './TabBar';
 import { SettingsContextController } from './Settings/SettingsContext';
 import { TreeContextController } from './Components/TreeContext';
 import ViewElementSourceContext from './Components/ViewElementSourceContext';
-import { ProfilerContextController } from './Profiler/ProfilerContext';
 import { ModalDialogContextController } from './ModalDialog';
 import RelayLogo from './RelayLogo';
 
@@ -26,7 +24,7 @@ import './root.css';
 import type { InspectedElement } from 'src/devtools/views/Components/types';
 
 export type BrowserTheme = 'dark' | 'light';
-export type TabID = 'components' | 'profiler' | 'settings';
+export type TabID = 'components' | 'settings';
 export type ViewElementSource = (
   id: number,
   inspectedElement: InspectedElement
@@ -51,7 +49,6 @@ export type Props = {|
   // The root <DevTools> app is rendered in the top-level extension window,
   // but individual tabs (e.g. Components, Profiling) can be rendered into portals within their browser panels.
   componentsPortalContainer?: Element,
-  profilerPortalContainer?: Element,
   settingsPortalContainer?: Element,
 |};
 
@@ -61,14 +58,8 @@ const componentsTab = {
   label: 'Components',
   title: 'React Components',
 };
-const profilerTab = {
-  id: ('profiler': TabID),
-  icon: 'profiler',
-  label: 'Profiler',
-  title: 'React Profiler',
-};
 
-const tabs = [componentsTab, profilerTab];
+const tabs = [componentsTab];
 
 export default function DevTools({
   bridge,
@@ -76,7 +67,6 @@ export default function DevTools({
   defaultTab = 'components',
   componentsPortalContainer,
   overrideTab,
-  profilerPortalContainer,
   settingsPortalContainer,
   showTabBar = false,
   store,
@@ -103,43 +93,34 @@ export default function DevTools({
           <SettingsContextController
             browserTheme={browserTheme}
             componentsPortalContainer={componentsPortalContainer}
-            profilerPortalContainer={profilerPortalContainer}
             settingsPortalContainer={settingsPortalContainer}
           >
             <ViewElementSourceContext.Provider value={viewElementSource}>
               <TreeContextController>
-                <ProfilerContextController>
-                  <div className={styles.DevTools}>
-                    {showTabBar && (
-                      <div className={styles.TabBar}>
-                        <RelayLogo />
-                        <span className={styles.DevToolsVersion}>
-                          {process.env.DEVTOOLS_VERSION}
-                        </span>
-                        <div className={styles.Spacer} />
-                        <TabBar
-                          currentTab={tab}
-                          id="DevTools"
-                          selectTab={setTab}
-                          size="large"
-                          tabs={tabs}
-                        />
-                      </div>
-                    )}
-                    <div
-                      className={styles.TabContent}
-                      hidden={tab !== 'components'}
-                    >
-                      <Components portalContainer={componentsPortalContainer} />
+                <div className={styles.DevTools}>
+                  {showTabBar && (
+                    <div className={styles.TabBar}>
+                      <RelayLogo />
+                      <span className={styles.DevToolsVersion}>
+                        {process.env.DEVTOOLS_VERSION}
+                      </span>
+                      <div className={styles.Spacer} />
+                      <TabBar
+                        currentTab={tab}
+                        id="DevTools"
+                        selectTab={setTab}
+                        size="large"
+                        tabs={tabs}
+                      />
                     </div>
-                    <div
-                      className={styles.TabContent}
-                      hidden={tab !== 'profiler'}
-                    >
-                      <Profiler portalContainer={profilerPortalContainer} />
-                    </div>
+                  )}
+                  <div
+                    className={styles.TabContent}
+                    hidden={tab !== 'components'}
+                  >
+                    <Components portalContainer={componentsPortalContainer} />
                   </div>
-                </ProfilerContextController>
+                </div>
               </TreeContextController>
             </ViewElementSourceContext.Provider>
           </SettingsContextController>
