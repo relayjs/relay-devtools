@@ -11,7 +11,8 @@ export type IconType =
   | 'network'
   | 'ranked-chart'
   | 'search'
-  | 'settings';
+  | 'settings'
+  | 'store-inspector';
 
 type Props = {|
   className?: string,
@@ -43,12 +44,14 @@ export default function Icon({ className = '', type }: Props) {
     case 'search':
       pathData = PATH_SEARCH;
       break;
+    case 'store-inspector':
+      pathData = PATH_SEARCH;
+      break;
     case 'settings':
       pathData = PATH_SETTINGS;
       break;
     default:
-      (type: empty);
-      console.warn(`Unsupported type "${type}" specified for Icon`);
+      console.warn(`Unsupported type "${(type: empty)}" specified for Icon`);
       break;
   }
 

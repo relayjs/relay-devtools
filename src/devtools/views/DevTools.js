@@ -11,6 +11,7 @@ import Store from '../store';
 import { BridgeContext, StoreContext } from './context';
 import Components from './Components/Components';
 import Network from './Network/Network';
+import StoreInspector from './StoreInspector/StoreInspector';
 import TabBar from './TabBar';
 import { SettingsContextController } from './Settings/SettingsContext';
 import { TreeContextController } from './Components/TreeContext';
@@ -25,7 +26,7 @@ import './root.css';
 import type { InspectedElement } from 'src/devtools/views/Components/types';
 
 export type BrowserTheme = 'dark' | 'light';
-export type TabID = 'network' | 'components' | 'settings';
+export type TabID = 'network' | 'components' | 'settings' | 'store-inspector';
 export type ViewElementSource = (
   id: number,
   inspectedElement: InspectedElement
@@ -52,6 +53,7 @@ export type Props = {|
   networkPortalContainer?: Element,
   componentsPortalContainer?: Element,
   settingsPortalContainer?: Element,
+  storeInspectorPortalContainer?: Element,
 |};
 
 const networkTab = {
@@ -60,6 +62,12 @@ const networkTab = {
   label: 'Network',
   title: 'Relay Network',
 };
+const storeInspectorTab = {
+  id: ('store-inspector': TabID),
+  icon: 'store-inspector',
+  label: 'Store',
+  title: 'Relay Store',
+};
 const componentsTab = {
   id: ('components': TabID),
   icon: 'components',
@@ -67,13 +75,14 @@ const componentsTab = {
   title: 'React Components',
 };
 
-const tabs = [networkTab, componentsTab];
+const tabs = [networkTab, storeInspectorTab, componentsTab];
 
 export default function DevTools({
   bridge,
   browserTheme = 'light',
   defaultTab = 'network',
   networkPortalContainer,
+  storeInspectorPortalContainer,
   componentsPortalContainer,
   overrideTab,
   settingsPortalContainer,
@@ -125,6 +134,14 @@ export default function DevTools({
                   )}
                   <div className={styles.TabContent} hidden={tab !== 'network'}>
                     <Network portalContainer={networkPortalContainer} />
+                  </div>
+                  <div
+                    className={styles.TabContent}
+                    hidden={tab !== 'store-inspector'}
+                  >
+                    <StoreInspector
+                      portalContainer={storeInspectorPortalContainer}
+                    />
                   </div>
                   <div
                     className={styles.TabContent}
