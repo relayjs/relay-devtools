@@ -2,13 +2,8 @@
 
 import EventEmitter from 'events';
 
-import type { ComponentFilter, Wall } from './types';
-import type {
-  InspectedElementPayload,
-  OwnersList,
-  ProfilingDataBackend,
-  RendererID,
-} from 'src/backend/types';
+import type { Wall } from './types';
+import type { InspectedElementPayload, RendererID } from 'src/backend/types';
 
 const BATCH_DURATION = 100;
 
@@ -17,14 +12,6 @@ type ElementAndRendererID = {| id: number, rendererID: RendererID |};
 type Message = {|
   event: string,
   payload: any,
-|};
-
-type HighlightElementInDOM = {|
-  ...ElementAndRendererID,
-  displayName: string,
-  hideAfterTimeout: boolean,
-  openNativeElementsPanel: boolean,
-  scrollIntoView: boolean,
 |};
 
 type OverrideValue = {|
@@ -49,29 +36,18 @@ type InspectElementParams = {|
 |};
 
 export default class Bridge extends EventEmitter<{|
-  captureScreenshot: [{| commitIndex: number, rootID: number |}],
-  clearNativeElementHighlight: [],
   getOwnersList: [ElementAndRendererID],
-  getProfilingData: [{| rendererID: RendererID |}],
-  getProfilingStatus: [],
-  highlightNativeElement: [HighlightElementInDOM],
   init: [],
   inspectElement: [InspectElementParams],
   inspectedElement: [InspectedElementPayload],
   isBackendStorageAPISupported: [boolean],
   logElementToConsole: [ElementAndRendererID],
   operations: [Array<number>],
-  ownersList: [OwnersList],
-  overrideComponentFilters: [Array<ComponentFilter>],
   overrideContext: [OverrideValue],
   overrideHookState: [OverrideHookState],
   overrideProps: [OverrideValue],
   overrideState: [OverrideValue],
   overrideSuspense: [OverrideSuspense],
-  profilingData: [ProfilingDataBackend],
-  profilingStatus: [boolean],
-  reloadAndProfile: [boolean],
-  reloadAppForProfiling: [],
   screenshotCaptured: [
     {| commitIndex: number, dataURL: string, rootID: number |},
   ],
@@ -79,12 +55,9 @@ export default class Bridge extends EventEmitter<{|
   selectFiber: [number],
   shutdown: [],
   startInspectingNative: [],
-  startProfiling: [boolean],
   stopInspectingNative: [boolean],
-  stopProfiling: [],
   syncSelectionFromNativeElementsPanel: [],
   syncSelectionToNativeElementsPanel: [],
-  updateComponentFilters: [Array<ComponentFilter>],
   viewElementSource: [ElementAndRendererID],
 |}> {
   _isShutdown: boolean = false;

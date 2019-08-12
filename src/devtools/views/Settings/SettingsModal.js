@@ -1,54 +1,19 @@
 // @flow
 
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-} from 'react';
+import React, { useCallback, useContext, useEffect, useRef } from 'react';
 import { SettingsModalContext } from './SettingsModalContext';
-import Store from 'src/devtools/store';
 import Button from '../Button';
 import ButtonIcon from '../ButtonIcon';
 import TabBar from '../TabBar';
-import { StoreContext } from '../context';
-import {
-  useLocalStorage,
-  useModalDismissSignal,
-  useSubscription,
-} from '../hooks';
-import ComponentsSettings from './ComponentsSettings';
+import { useLocalStorage, useModalDismissSignal } from '../hooks';
 import GeneralSettings from './GeneralSettings';
-import ProfilerSettings from './ProfilerSettings';
 
 import styles from './SettingsModal.css';
 
-type TabID = 'general' | 'components' | 'profiler';
+type TabID = 'general' | 'components';
 
 export default function SettingsModal(_: {||}) {
-  const { isModalShowing, setIsModalShowing } = useContext(
-    SettingsModalContext
-  );
-  const store = useContext(StoreContext);
-  const { profilerStore } = store;
-
-  // Updating preferences while profiling is in progress could break things (e.g. filtering)
-  // Explicitly disallow it for now.
-  const isProfilingSubscription = useMemo(
-    () => ({
-      getCurrentValue: () => profilerStore.isProfiling,
-      subscribe: (callback: Function) => {
-        profilerStore.addListener('isProfiling', callback);
-        return () => profilerStore.removeListener('isProfiling', callback);
-      },
-    }),
-    [profilerStore]
-  );
-  const isProfiling = useSubscription<boolean, Store>(isProfilingSubscription);
-  if (isProfiling && isModalShowing) {
-    setIsModalShowing(false);
-  }
+  const { isModalShowing } = useContext(SettingsModalContext);
 
   if (!isModalShowing) {
     return null;
@@ -82,12 +47,9 @@ function SettingsModalImpl(_: {||}) {
     case 'general':
       view = <GeneralSettings />;
       break;
-    case 'profiler':
-      view = <ProfilerSettings />;
-      break;
-    case 'components':
-      view = <ComponentsSettings />;
-      break;
+    // case 'components':
+    //   view = <ComponentsSettings />;
+    //   break;
     default:
       break;
   }
@@ -124,10 +86,5 @@ const tabs = [
     id: 'components',
     icon: 'components',
     label: 'Components',
-  },
-  {
-    id: 'profiler',
-    icon: 'profiler',
-    label: 'Profiler',
   },
 ];

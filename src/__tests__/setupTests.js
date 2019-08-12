@@ -11,10 +11,6 @@ env.beforeEach(() => {
   const Bridge = require('src/bridge').default;
   const Store = require('src/devtools/store').default;
   const { installHook } = require('src/hook');
-  const {
-    getDefaultComponentFilters,
-    saveComponentFilters,
-  } = require('src/utils');
 
   // Fake timers let us flush Bridge operations between setup and assertions.
   jest.useFakeTimers();
@@ -28,10 +24,6 @@ env.beforeEach(() => {
     }
     originalConsoleError.apply(console, args);
   };
-
-  // Initialize filters to a known good state.
-  saveComponentFilters(getDefaultComponentFilters());
-  global.__REACT_DEVTOOLS_COMPONENT_FILTERS__ = getDefaultComponentFilters();
 
   installHook(global);
 

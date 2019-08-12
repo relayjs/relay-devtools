@@ -22,15 +22,12 @@ export function initBackend(
         renderer: ReactRenderer,
         rendererInterface: RendererInterface,
       }) => {
-        agent.setRendererInterface(id, rendererInterface);
-
+        // agent.setRendererInterface(id, rendererInterface);
         // Now that the Store and the renderer interface are connected,
         // it's time to flush the pending operation codes to the frontend.
-        rendererInterface.flushInitialOperations();
+        // rendererInterface.flushInitialOperations();
       }
     ),
-
-    hook.sub('operations', agent.onHookOperations),
 
     // TODO Add additional subscriptions required for profiling mode
   ];

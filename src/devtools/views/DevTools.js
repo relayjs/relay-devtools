@@ -5,17 +5,14 @@
 import '@reach/menu-button/styles.css';
 import '@reach/tooltip/styles.css';
 
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import Bridge from 'src/bridge';
 import Store from '../store';
 import { BridgeContext, StoreContext } from './context';
-import Components from './Components/Components';
-import Profiler from './Profiler/Profiler';
+import Network from './Network/Network';
+import StoreInspector from './StoreInspector/StoreInspector';
 import TabBar from './TabBar';
 import { SettingsContextController } from './Settings/SettingsContext';
-import { TreeContextController } from './Components/TreeContext';
-import ViewElementSourceContext from './Components/ViewElementSourceContext';
-import { ProfilerContextController } from './Profiler/ProfilerContext';
 import { ModalDialogContextController } from './ModalDialog';
 import RelayLogo from './RelayLogo';
 
@@ -23,14 +20,9 @@ import styles from './DevTools.css';
 
 import './root.css';
 
-import type { InspectedElement } from 'src/devtools/views/Components/types';
-
 export type BrowserTheme = 'dark' | 'light';
-export type TabID = 'components' | 'profiler' | 'settings';
-export type ViewElementSource = (
-  id: number,
-  inspectedElement: InspectedElement
-) => void;
+export type TabID = 'network' | 'settings' | 'store-inspector';
+export type ViewElementSource = (id: number) => void;
 
 export type Props = {|
   bridge: Bridge,
@@ -50,33 +42,33 @@ export type Props = {|
   // To avoid potential multi-root trickiness, the web extension uses portals to render tabs.
   // The root <DevTools> app is rendered in the top-level extension window,
   // but individual tabs (e.g. Components, Profiling) can be rendered into portals within their browser panels.
-  componentsPortalContainer?: Element,
-  profilerPortalContainer?: Element,
+  networkPortalContainer?: Element,
   settingsPortalContainer?: Element,
+  storeInspectorPortalContainer?: Element,
 |};
 
-const componentsTab = {
-  id: ('components': TabID),
-  icon: 'components',
-  label: 'Components',
-  title: 'React Components',
+const networkTab = {
+  id: ('network': TabID),
+  icon: 'network',
+  label: 'Network',
+  title: 'Relay Network',
 };
-const profilerTab = {
-  id: ('profiler': TabID),
-  icon: 'profiler',
-  label: 'Profiler',
-  title: 'React Profiler',
+const storeInspectorTab = {
+  id: ('store-inspector': TabID),
+  icon: 'store-inspector',
+  label: 'Store',
+  title: 'Relay Store',
 };
 
-const tabs = [componentsTab, profilerTab];
+const tabs = [networkTab, storeInspectorTab];
 
 export default function DevTools({
   bridge,
   browserTheme = 'light',
-  defaultTab = 'components',
-  componentsPortalContainer,
+  defaultTab = 'network',
+  networkPortalContainer,
+  storeInspectorPortalContainer,
   overrideTab,
-  profilerPortalContainer,
   settingsPortalContainer,
   showTabBar = false,
   store,
@@ -88,60 +80,43 @@ export default function DevTools({
     setTab(overrideTab);
   }
 
-  const viewElementSource = useMemo(
-    () => ({
-      isFileLocationRequired: viewElementSourceRequiresFileLocation,
-      viewElementSourceFunction: viewElementSourceFunction || null,
-    }),
-    [viewElementSourceFunction, viewElementSourceRequiresFileLocation]
-  );
-
   return (
     <BridgeContext.Provider value={bridge}>
       <StoreContext.Provider value={store}>
         <ModalDialogContextController>
           <SettingsContextController
             browserTheme={browserTheme}
-            componentsPortalContainer={componentsPortalContainer}
-            profilerPortalContainer={profilerPortalContainer}
             settingsPortalContainer={settingsPortalContainer}
           >
-            <ViewElementSourceContext.Provider value={viewElementSource}>
-              <TreeContextController>
-                <ProfilerContextController>
-                  <div className={styles.DevTools}>
-                    {showTabBar && (
-                      <div className={styles.TabBar}>
-                        <RelayLogo />
-                        <span className={styles.DevToolsVersion}>
-                          {process.env.DEVTOOLS_VERSION}
-                        </span>
-                        <div className={styles.Spacer} />
-                        <TabBar
-                          currentTab={tab}
-                          id="DevTools"
-                          selectTab={setTab}
-                          size="large"
-                          tabs={tabs}
-                        />
-                      </div>
-                    )}
-                    <div
-                      className={styles.TabContent}
-                      hidden={tab !== 'components'}
-                    >
-                      <Components portalContainer={componentsPortalContainer} />
-                    </div>
-                    <div
-                      className={styles.TabContent}
-                      hidden={tab !== 'profiler'}
-                    >
-                      <Profiler portalContainer={profilerPortalContainer} />
-                    </div>
-                  </div>
-                </ProfilerContextController>
-              </TreeContextController>
-            </ViewElementSourceContext.Provider>
+            <div className={styles.DevTools}>
+              {showTabBar && (
+                <div className={styles.TabBar}>
+                  <RelayLogo />
+                  <span className={styles.DevToolsVersion}>
+                    {process.env.DEVTOOLS_VERSION}
+                  </span>
+                  <div className={styles.Spacer} />
+                  <TabBar
+                    currentTab={tab}
+                    id="DevTools"
+                    selectTab={setTab}
+                    size="large"
+                    tabs={tabs}
+                  />
+                </div>
+              )}
+              <div className={styles.TabContent} hidden={tab !== 'network'}>
+                <Network portalContainer={networkPortalContainer} />
+              </div>
+              <div
+                className={styles.TabContent}
+                hidden={tab !== 'store-inspector'}
+              >
+                <StoreInspector
+                  portalContainer={storeInspectorPortalContainer}
+                />
+              </div>
+            </div>
           </SettingsContextController>
         </ModalDialogContextController>
       </StoreContext.Provider>

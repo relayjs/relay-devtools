@@ -33,13 +33,6 @@ describe('Store component filters', () => {
     utils = require('./utils');
   });
 
-  it('should throw if filters are updated while profiling', () => {
-    act(() => store.profilerStore.startProfiling());
-    expect(() => (store.componentFilters = [])).toThrow(
-      'Cannot modify filter preferences while profiling'
-    );
-  });
-
   it('should support filtering by element type', () => {
     class Root extends React.Component<{| children: React$Node |}> {
       render() {

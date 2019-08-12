@@ -8,10 +8,11 @@ export type IconType =
   | 'components'
   | 'flame-chart'
   | 'interactions'
-  | 'profiler'
+  | 'network'
   | 'ranked-chart'
   | 'search'
-  | 'settings';
+  | 'settings'
+  | 'store-inspector';
 
 type Props = {|
   className?: string,
@@ -33,8 +34,9 @@ export default function Icon({ className = '', type }: Props) {
     case 'interactions':
       pathData = PATH_INTERACTIONS;
       break;
-    case 'profiler':
-      pathData = PATH_PROFILER;
+    case 'network':
+      // TODO add network icon
+      pathData = PATH_RANKED_CHART;
       break;
     case 'ranked-chart':
       pathData = PATH_RANKED_CHART;
@@ -42,11 +44,14 @@ export default function Icon({ className = '', type }: Props) {
     case 'search':
       pathData = PATH_SEARCH;
       break;
+    case 'store-inspector':
+      pathData = PATH_SEARCH;
+      break;
     case 'settings':
       pathData = PATH_SETTINGS;
       break;
     default:
-      console.warn(`Unsupported type "${type}" specified for Icon`);
+      console.warn(`Unsupported type "${(type: empty)}" specified for Icon`);
       break;
   }
 
@@ -89,8 +94,6 @@ const PATH_INTERACTIONS = `
   9.36 8 9.18 8 9c0-1.1.9-2 2-2s2 .9 2 2c0 .18-.02.36-.07.52l2.55
   2.55c.16-.05.34-.07.52-.07s.36.02.52.07l3.55-3.56C19.02 8.35 19 8.18 19 8c0-1.1.9-2 2-2s2 .9 2 2z
 `;
-
-const PATH_PROFILER = 'M5 9.2h3V19H5zM10.6 5h2.8v14h-2.8zm5.6 8H19v6h-2.8z';
 
 const PATH_SEARCH = `
   M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91
