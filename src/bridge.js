@@ -18,14 +18,6 @@ type Message = {|
   payload: any,
 |};
 
-type HighlightElementInDOM = {|
-  ...ElementAndRendererID,
-  displayName: string,
-  hideAfterTimeout: boolean,
-  openNativeElementsPanel: boolean,
-  scrollIntoView: boolean,
-|};
-
 type OverrideValue = {|
   ...ElementAndRendererID,
   path: Array<string | number>,
@@ -49,9 +41,7 @@ type InspectElementParams = {|
 
 export default class Bridge extends EventEmitter<{|
   captureScreenshot: [{| commitIndex: number, rootID: number |}],
-  clearNativeElementHighlight: [],
   getOwnersList: [ElementAndRendererID],
-  highlightNativeElement: [HighlightElementInDOM],
   init: [],
   inspectElement: [InspectElementParams],
   inspectedElement: [InspectedElementPayload],

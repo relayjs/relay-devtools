@@ -9,7 +9,6 @@ import {
   sessionStorageRemoveItem,
   sessionStorageSetItem,
 } from 'src/storage';
-import setupHighlighter from './views/Highlighter';
 
 import type {
   InstanceAndStyle,
@@ -120,8 +119,6 @@ export default class Agent extends EventEmitter<{|
       isBackendStorageAPISupported = true;
     } catch (error) {}
     bridge.send('isBackendStorageAPISupported', isBackendStorageAPISupported);
-
-    setupHighlighter(bridge, this);
   }
 
   get rendererInterfaces(): { [key: RendererID]: RendererInterface } {
