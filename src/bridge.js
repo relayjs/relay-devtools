@@ -2,12 +2,8 @@
 
 import EventEmitter from 'events';
 
-import type { ComponentFilter, Wall } from './types';
-import type {
-  InspectedElementPayload,
-  OwnersList,
-  RendererID,
-} from 'src/backend/types';
+import type { Wall } from './types';
+import type { InspectedElementPayload, RendererID } from 'src/backend/types';
 
 const BATCH_DURATION = 100;
 
@@ -47,8 +43,6 @@ export default class Bridge extends EventEmitter<{|
   isBackendStorageAPISupported: [boolean],
   logElementToConsole: [ElementAndRendererID],
   operations: [Array<number>],
-  ownersList: [OwnersList],
-  overrideComponentFilters: [Array<ComponentFilter>],
   overrideContext: [OverrideValue],
   overrideHookState: [OverrideHookState],
   overrideProps: [OverrideValue],
@@ -64,7 +58,6 @@ export default class Bridge extends EventEmitter<{|
   stopInspectingNative: [boolean],
   syncSelectionFromNativeElementsPanel: [],
   syncSelectionToNativeElementsPanel: [],
-  updateComponentFilters: [Array<ComponentFilter>],
   viewElementSource: [ElementAndRendererID],
 |}> {
   _isShutdown: boolean = false;

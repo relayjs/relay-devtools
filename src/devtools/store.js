@@ -3,23 +3,9 @@
 import EventEmitter from 'events';
 import { inspect } from 'util';
 import Bridge from 'src/bridge';
-import {
-  TREE_OPERATION_ADD,
-  TREE_OPERATION_REMOVE,
-  TREE_OPERATION_REORDER_CHILDREN,
-  TREE_OPERATION_UPDATE_TREE_BASE_DURATION,
-} from '../constants';
-import {
-  getSavedComponentFilters,
-  saveComponentFilters,
-  shallowDiffers,
-  utfDecodeString,
-} from '../utils';
 import { localStorageGetItem, localStorageSetItem } from '../storage';
 import { __DEBUG__ } from '../constants';
 import { printStore } from 'src/__tests__/storeSerializer';
-
-import type { ComponentFilter } from '../types';
 
 const debug = (methodName, ...args) => {
   if (__DEBUG__) {
@@ -61,8 +47,6 @@ export default class Store extends EventEmitter<{|
 
   // Should new nodes be collapsed by default when added to the tree?
   _collapseNodesByDefault: boolean = true;
-
-  _componentFilters: Array<ComponentFilter>;
 
   // At least one of the injected renderers contains (DEV only) owner metadata.
   _hasOwnerMetadata: boolean = false;
@@ -119,8 +103,6 @@ export default class Store extends EventEmitter<{|
       localStorageGetItem(LOCAL_STORAGE_RECORD_CHANGE_DESCRIPTIONS_KEY) ===
       'true';
 
-    this._componentFilters = getSavedComponentFilters();
-
     if (config != null) {
       const { supportsNativeInspection } = config;
       this._supportsNativeInspection = supportsNativeInspection !== false;
@@ -128,10 +110,6 @@ export default class Store extends EventEmitter<{|
 
     this._bridge = bridge;
     bridge.addListener('operations', this.onBridgeOperations);
-    bridge.addListener(
-      'overrideComponentFilters',
-      this.onBridgeOverrideComponentFilters
-    );
     bridge.addListener('shutdown', this.onBridgeShutdown);
     bridge.addListener(
       'isBackendStorageAPISupported',
@@ -186,46 +164,6 @@ export default class Store extends EventEmitter<{|
     this.emit('collapseNodesByDefault');
   }
 
-  get componentFilters(): Array<ComponentFilter> {
-    return this._componentFilters;
-  }
-  set componentFilters(value: Array<ComponentFilter>): void {
-    // Filter updates are expensive to apply (since they impact the entire tree).
-    // Let's determine if they've changed and avoid doing this work if they haven't.
-    const prevEnabledComponentFilters = this._componentFilters.filter(
-      filter => filter.isEnabled
-    );
-    const nextEnabledComponentFilters = value.filter(
-      filter => filter.isEnabled
-    );
-    let haveEnabledFiltersChanged =
-      prevEnabledComponentFilters.length !== nextEnabledComponentFilters.length;
-    if (!haveEnabledFiltersChanged) {
-      for (let i = 0; i < nextEnabledComponentFilters.length; i++) {
-        const prevFilter = prevEnabledComponentFilters[i];
-        const nextFilter = nextEnabledComponentFilters[i];
-        if (shallowDiffers(prevFilter, nextFilter)) {
-          haveEnabledFiltersChanged = true;
-          break;
-        }
-      }
-    }
-
-    this._componentFilters = value;
-
-    // Update persisted filter preferences stored in localStorage.
-    saveComponentFilters(value);
-
-    // Notify the renderer that filter prefernces have changed.
-    // This is an expensive opreation; it unmounts and remounts the entire tree,
-    // so only do it if the set of enabled component filters has changed.
-    if (haveEnabledFiltersChanged) {
-      this._bridge.send('updateComponentFilters', value);
-    }
-
-    this.emit('componentFilters');
-  }
-
   get hasOwnerMetadata(): boolean {
     return this._hasOwnerMetadata;
   }
@@ -274,83 +212,12 @@ export default class Store extends EventEmitter<{|
       debug('onBridgeOperations', operations.join(','));
     }
 
-    let haveRootsChanged = false;
-
-    const addedElementIDs: Array<number> = [];
-    // This is a mapping of removed ID -> parent ID:
-    const removedElementIDs: Map<number, number> = new Map();
-    // We'll use the parent ID to adjust selection if it gets deleted.
-
-    let i = 2;
-
-    // Reassemble the string table.
-    const stringTable = [
-      null, // ID = 0 corresponds to the null string.
-    ];
-    const stringTableSize = operations[i++];
-    const stringTableEnd = i + stringTableSize;
-    while (i < stringTableEnd) {
-      const nextLength = operations[i++];
-      const nextString = utfDecodeString(
-        (operations.slice(i, i + nextLength): any)
-      );
-      stringTable.push(nextString);
-      i += nextLength;
-    }
-
-    while (i < operations.length) {
-      const operation = operations[i];
-      switch (operation) {
-        case TREE_OPERATION_ADD:
-          break;
-        case TREE_OPERATION_REMOVE:
-          break;
-        case TREE_OPERATION_REORDER_CHILDREN:
-          break;
-        case TREE_OPERATION_UPDATE_TREE_BASE_DURATION:
-          // Base duration updates are only sent while profiling is in progress.
-          // We can ignore them at this point.
-          // The profiler UI uses them lazily in order to generate the tree.
-          i = i + 3;
-          break;
-        default:
-          throw Error(`Unsupported Bridge operation ${operation}`);
-      }
-      i += 10;
-    }
-
-    this._revision++;
-
-    if (haveRootsChanged) {
-      this._hasOwnerMetadata = false;
-      this._rootIDToCapabilities.forEach(({ hasOwnerMetadata }) => {
-        if (hasOwnerMetadata) {
-          this._hasOwnerMetadata = true;
-        }
-      });
-
-      this.emit('roots');
-    }
-
     if (__DEBUG__) {
       console.log(printStore(this, true));
       console.groupEnd();
     }
 
-    this.emit('mutated', [addedElementIDs, removedElementIDs]);
-  };
-
-  // Certain backends save filters on a per-domain basis.
-  // In order to prevent filter preferences and applied filters from being out of sync,
-  // this message enables the backend to override the frontend's current ("saved") filters.
-  // This action should also override the saved filters too,
-  // else reloading the frontend without reloading the backend would leave things out of sync.
-  onBridgeOverrideComponentFilters = (
-    componentFilters: Array<ComponentFilter>
-  ) => {
-    this._componentFilters = componentFilters;
-
-    saveComponentFilters(componentFilters);
+    // this.emit('mutated', [addedElementIDs, removedElementIDs]);
   };
 
   onBridgeShutdown = () => {

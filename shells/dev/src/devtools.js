@@ -8,16 +8,10 @@ import { installHook } from 'src/hook';
 import { initDevTools } from 'src/devtools';
 import Store from 'src/devtools/store';
 import DevTools from 'src/devtools/views/DevTools';
-import { getSavedComponentFilters } from 'src/utils';
 
 const iframe = ((document.getElementById('target'): any): HTMLIFrameElement);
 
 const { contentDocument, contentWindow } = iframe;
-
-// The renderer interface can't read saved component filters directly,
-// because they are stored in localStorage within the context of the extension.
-// Instead it relies on the extension to pass filters through.
-contentWindow.__REACT_DEVTOOLS_COMPONENT_FILTERS__ = getSavedComponentFilters();
 
 installHook(contentWindow);
 

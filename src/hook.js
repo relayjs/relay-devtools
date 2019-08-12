@@ -117,34 +117,6 @@ export function installHook(target: any): DevToolsHook | null {
     return 'production';
   }
 
-  function checkDCE(fn: Function) {
-    // This runs for production versions of React.
-    // Needs to be super safe.
-    try {
-      const toString = Function.prototype.toString;
-      const code = toString.call(fn);
-
-      // This is a string embedded in the passed function under DEV-only
-      // condition. However the function executes only in PROD. Therefore,
-      // if we see it, dead code elimination did not work.
-      if (code.indexOf('^_^') > -1) {
-        // Remember to report during next injection.
-        hasDetectedBadDCE = true;
-
-        // Bonus: throw an exception hoping that it gets picked up by a reporting system.
-        // Not synchronously so that it doesn't break the calling code.
-        setTimeout(function() {
-          throw new Error(
-            'React is running in production mode, but dead code ' +
-              'elimination has not been applied. Read how to correctly ' +
-              'configure React for production: ' +
-              'https://fb.me/react-perf-use-the-production-build'
-          );
-        });
-      }
-    } catch (err) {}
-  }
-
   let uidCounter = 0;
 
   function inject(renderer) {
@@ -201,42 +173,7 @@ export function installHook(target: any): DevToolsHook | null {
     }
   }
 
-  function getFiberRoots(rendererID) {
-    const roots = fiberRoots;
-    if (!roots[rendererID]) {
-      roots[rendererID] = new Set();
-    }
-    return roots[rendererID];
-  }
-
-  function onCommitFiberUnmount(rendererID, fiber) {
-    const rendererInterface = rendererInterfaces.get(rendererID);
-    if (rendererInterface != null) {
-      rendererInterface.handleCommitFiberUnmount(fiber);
-    }
-  }
-
-  function onCommitFiberRoot(rendererID, root, priorityLevel) {
-    const mountedRoots = hook.getFiberRoots(rendererID);
-    const current = root.current;
-    const isKnownRoot = mountedRoots.has(root);
-    const isUnmounting =
-      current.memoizedState == null || current.memoizedState.element == null;
-
-    // Keep track of mounted roots so we can hydrate when DevTools connect.
-    if (!isKnownRoot && !isUnmounting) {
-      mountedRoots.add(root);
-    } else if (isKnownRoot && isUnmounting) {
-      mountedRoots.delete(root);
-    }
-    const rendererInterface = rendererInterfaces.get(rendererID);
-    if (rendererInterface != null) {
-      rendererInterface.handleCommitFiberRoot(root, priorityLevel);
-    }
-  }
-
   // TODO: More meaningful names for "rendererInterfaces" and "renderers".
-  const fiberRoots = {};
   const rendererInterfaces = new Map();
   const listeners = {};
   const renderers = new Map();
@@ -247,20 +184,10 @@ export function installHook(target: any): DevToolsHook | null {
     renderers,
 
     emit,
-    getFiberRoots,
     inject,
     on,
     off,
     sub,
-
-    // This is a legacy flag.
-    // React v16 checks the hook for this to ensure DevTools is new enough.
-    supportsFiber: true,
-
-    // React calls these methods.
-    checkDCE,
-    onCommitFiberUnmount,
-    onCommitFiberRoot,
   };
 
   Object.defineProperty(

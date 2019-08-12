@@ -2,8 +2,6 @@
 
 import typeof ReactTestRenderer from 'react-test-renderer';
 
-import type { ElementType } from 'src/types';
-
 export function act(callback: Function): void {
   const TestUtils = require('react-dom/test-utils');
   TestUtils.act(() => {
@@ -53,65 +51,6 @@ export function beforeEachProfiling(): void {
     .mockImplementation(
       jest.requireActual('scheduler/unstable_mock').unstable_now
     );
-}
-
-export function createDisplayNameFilter(
-  source: string,
-  isEnabled: boolean = true
-) {
-  const Types = require('src/types');
-  let isValid = true;
-  try {
-    new RegExp(source);
-  } catch (error) {
-    isValid = false;
-  }
-  return {
-    type: Types.ComponentFilterDisplayName,
-    isEnabled,
-    isValid,
-    value: source,
-  };
-}
-
-export function createHOCFilter(isEnabled: boolean = true) {
-  const Types = require('src/types');
-  return {
-    type: Types.ComponentFilterHOC,
-    isEnabled,
-    isValid: true,
-  };
-}
-
-export function createElementTypeFilter(
-  elementType: ElementType,
-  isEnabled: boolean = true
-) {
-  const Types = require('src/types');
-  return {
-    type: Types.ComponentFilterElementType,
-    isEnabled,
-    value: elementType,
-  };
-}
-
-export function createLocationFilter(
-  source: string,
-  isEnabled: boolean = true
-) {
-  const Types = require('src/types');
-  let isValid = true;
-  try {
-    new RegExp(source);
-  } catch (error) {
-    isValid = false;
-  }
-  return {
-    type: Types.ComponentFilterLocation,
-    isEnabled,
-    isValid,
-    value: source,
-  };
 }
 
 export function getRendererID(): number {

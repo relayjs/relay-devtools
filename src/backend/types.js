@@ -1,7 +1,5 @@
 // @flow
 
-import type { ComponentFilter, ElementType } from 'src/types';
-
 type BundleType =
   | 0 // PROD
   | 1; // DEV
@@ -67,15 +65,6 @@ export type Fiber = {|
 
   _debugSource?: Source | null,
   _debugOwner?: Fiber | null,
-|};
-
-// TODO: If it's useful for the frontend to know which types of data an Element has
-// (e.g. props, state, context, hooks) then we could add a bitmask field for this
-// to keep the number of attributes small.
-export type FiberData = {|
-  key: string | null,
-  displayName: string | null,
-  type: ElementType,
 |};
 
 export type NativeType = Object;
@@ -152,17 +141,6 @@ export type PathMatch = {|
   isFullMatch: boolean,
 |};
 
-export type Owner = {|
-  displayName: string | null,
-  id: number,
-  type: ElementType,
-|};
-
-export type OwnersList = {|
-  id: number,
-  owners: Array<Owner> | null,
-|};
-
 export type InspectedElement = {|
   id: number,
 
@@ -187,13 +165,8 @@ export type InspectedElement = {|
   props: Object | null,
   state: Object | null,
 
-  // List of owners
-  owners: Array<Owner> | null,
-
   // Location of component in source coude.
   source: Source | null,
-
-  type: ElementType,
 |};
 
 export const InspectElementFullDataType = 'full-data';
@@ -237,35 +210,6 @@ export type InstanceAndStyle = {|
 
 export type RendererInterface = {
   cleanup: () => void,
-  findNativeNodesForFiberID: FindNativeNodesForFiberID,
-  flushInitialOperations: () => void,
-  getBestMatchForTrackedPath: () => PathMatch | null,
-  getFiberIDForNative: GetFiberIDForNative,
-  getInstanceAndStyle(id: number): InstanceAndStyle,
-  getOwnersList: (id: number) => Array<Owner> | null,
-  getPathForElement: (id: number) => Array<PathFrame> | null,
-  handleCommitFiberRoot: (fiber: Object, commitPriority?: number) => void,
-  handleCommitFiberUnmount: (fiber: Object) => void,
-  inspectElement: (
-    id: number,
-    path?: Array<string | number>
-  ) => InspectedElementPayload,
-  logElementToConsole: (id: number) => void,
-  overrideSuspense: (id: number, forceFallback: boolean) => void,
-  prepareViewElementSource: (id: number) => void,
-  renderer: ReactRenderer | null,
-  selectElement: (id: number) => void,
-  setInContext: (id: number, path: Array<string | number>, value: any) => void,
-  setInHook: (
-    id: number,
-    index: number,
-    path: Array<string | number>,
-    value: any
-  ) => void,
-  setInProps: (id: number, path: Array<string | number>, value: any) => void,
-  setInState: (id: number, path: Array<string | number>, value: any) => void,
-  setTrackedPath: (path: Array<PathFrame> | null) => void,
-  updateComponentFilters: (somponentFilters: Array<ComponentFilter>) => void,
 };
 
 export type Handler = (data: any) => void;
@@ -276,21 +220,11 @@ export type DevToolsHook = {
   renderers: Map<RendererID, ReactRenderer>,
 
   emit: (event: string, data: any) => void,
-  getFiberRoots: (rendererID: RendererID) => Set<Object>,
   inject: (renderer: ReactRenderer) => number | null,
   on: (event: string, handler: Handler) => void,
   off: (event: string, handler: Handler) => void,
   reactDevtoolsAgent?: ?Object,
   sub: (event: string, handler: Handler) => () => void,
-
-  // React uses these methods.
-  checkDCE: (fn: Function) => void,
-  onCommitFiberUnmount: (rendererID: RendererID, fiber: Object) => void,
-  onCommitFiberRoot: (
-    rendererID: RendererID,
-    fiber: Object,
-    commitPriority?: number
-  ) => void,
 };
 
 export type HooksNode = {
