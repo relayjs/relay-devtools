@@ -3,18 +3,7 @@
 import EventEmitter from 'events';
 import Bridge from 'src/bridge';
 
-import type {
-  NativeType,
-  PathFrame,
-  PathMatch,
-  RendererID,
-  RendererInterface,
-} from './types';
-
-type PersistedSelection = {|
-  rendererID: number,
-  path: Array<PathFrame>,
-|};
+import type { NativeType, RendererID, RendererInterface } from './types';
 
 export default class Agent extends EventEmitter<{|
   hideNativeHighlight: [],
@@ -24,8 +13,6 @@ export default class Agent extends EventEmitter<{|
   _bridge: Bridge;
   _recordChangeDescriptions: boolean = false;
   _rendererInterfaces: { [key: RendererID]: RendererInterface } = {};
-  _persistedSelection: PersistedSelection | null = null;
-  _persistedSelectionMatch: PathMatch | null = null;
 
   constructor(bridge: Bridge) {
     super();
