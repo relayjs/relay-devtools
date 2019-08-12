@@ -48,18 +48,6 @@ export default class Agent extends EventEmitter<{|
     return this._rendererInterfaces;
   }
 
-  screenshotCaptured = ({
-    commitIndex,
-    dataURL,
-    rootID,
-  }: {|
-    commitIndex: number,
-    dataURL: string,
-    rootID: number,
-  |}) => {
-    this._bridge.send('screenshotCaptured', { commitIndex, dataURL });
-  };
-
   shutdown = () => {
     // Clean up the overlay if visible, and associated events.
     this.emit('shutdown');

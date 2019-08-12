@@ -48,9 +48,6 @@ export default class Bridge extends EventEmitter<{|
   overrideProps: [OverrideValue],
   overrideState: [OverrideValue],
   overrideSuspense: [OverrideSuspense],
-  screenshotCaptured: [
-    {| commitIndex: number, dataURL: string, rootID: number |},
-  ],
   selectElement: [ElementAndRendererID],
   selectFiber: [number],
   shutdown: [],
