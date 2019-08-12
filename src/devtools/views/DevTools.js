@@ -10,6 +10,7 @@ import Bridge from 'src/bridge';
 import Store from '../store';
 import { BridgeContext, StoreContext } from './context';
 import Components from './Components/Components';
+import Network from './Network/Network';
 import TabBar from './TabBar';
 import { SettingsContextController } from './Settings/SettingsContext';
 import { TreeContextController } from './Components/TreeContext';
@@ -24,7 +25,7 @@ import './root.css';
 import type { InspectedElement } from 'src/devtools/views/Components/types';
 
 export type BrowserTheme = 'dark' | 'light';
-export type TabID = 'components' | 'settings';
+export type TabID = 'network' | 'components' | 'settings';
 export type ViewElementSource = (
   id: number,
   inspectedElement: InspectedElement
@@ -48,10 +49,17 @@ export type Props = {|
   // To avoid potential multi-root trickiness, the web extension uses portals to render tabs.
   // The root <DevTools> app is rendered in the top-level extension window,
   // but individual tabs (e.g. Components, Profiling) can be rendered into portals within their browser panels.
+  networkPortalContainer?: Element,
   componentsPortalContainer?: Element,
   settingsPortalContainer?: Element,
 |};
 
+const networkTab = {
+  id: ('network': TabID),
+  icon: 'network',
+  label: 'Network',
+  title: 'Relay Network',
+};
 const componentsTab = {
   id: ('components': TabID),
   icon: 'components',
@@ -59,12 +67,13 @@ const componentsTab = {
   title: 'React Components',
 };
 
-const tabs = [componentsTab];
+const tabs = [networkTab, componentsTab];
 
 export default function DevTools({
   bridge,
   browserTheme = 'light',
-  defaultTab = 'components',
+  defaultTab = 'network',
+  networkPortalContainer,
   componentsPortalContainer,
   overrideTab,
   settingsPortalContainer,
@@ -114,6 +123,9 @@ export default function DevTools({
                       />
                     </div>
                   )}
+                  <div className={styles.TabContent} hidden={tab !== 'network'}>
+                    <Network portalContainer={networkPortalContainer} />
+                  </div>
                   <div
                     className={styles.TabContent}
                     hidden={tab !== 'components'}

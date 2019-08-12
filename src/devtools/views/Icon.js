@@ -8,6 +8,7 @@ export type IconType =
   | 'components'
   | 'flame-chart'
   | 'interactions'
+  | 'network'
   | 'ranked-chart'
   | 'search'
   | 'settings';
@@ -32,6 +33,10 @@ export default function Icon({ className = '', type }: Props) {
     case 'interactions':
       pathData = PATH_INTERACTIONS;
       break;
+    case 'network':
+      // TODO add network icon
+      pathData = PATH_RANKED_CHART;
+      break;
     case 'ranked-chart':
       pathData = PATH_RANKED_CHART;
       break;
@@ -42,6 +47,7 @@ export default function Icon({ className = '', type }: Props) {
       pathData = PATH_SETTINGS;
       break;
     default:
+      (type: empty);
       console.warn(`Unsupported type "${type}" specified for Icon`);
       break;
   }
