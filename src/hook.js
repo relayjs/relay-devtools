@@ -123,9 +123,7 @@ export function installHook(target: any): DevToolsHook | null {
     const id = ++uidCounter;
     renderers.set(id, renderer);
 
-    const reactBuildType = hasDetectedBadDCE
-      ? 'deadcode'
-      : detectReactBuildType(renderer);
+    const reactBuildType = detectReactBuildType(renderer);
 
     // If we have just reloaded to profile, we need to inject the renderer interface before the app loads.
     // Otherwise the renderer won't yet exist and we can skip this step.
@@ -139,8 +137,6 @@ export function installHook(target: any): DevToolsHook | null {
 
     return id;
   }
-
-  let hasDetectedBadDCE = false;
 
   function sub(event, fn) {
     hook.on(event, fn);

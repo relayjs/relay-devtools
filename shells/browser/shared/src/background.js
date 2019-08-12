@@ -60,19 +60,19 @@ function doublePipe(one, two) {
   two.onDisconnect.addListener(shutdown);
 }
 
-function setIconAndPopup(reactBuildType, tabId) {
+function setIconAndPopup(relayBuildType, tabId) {
   chrome.browserAction.setIcon({
     tabId: tabId,
     path: {
-      '16': 'icons/16-' + reactBuildType + '.png',
-      '32': 'icons/32-' + reactBuildType + '.png',
-      '48': 'icons/48-' + reactBuildType + '.png',
-      '128': 'icons/128-' + reactBuildType + '.png',
+      '16': 'icons/16-' + relayBuildType + '.png',
+      '32': 'icons/32-' + relayBuildType + '.png',
+      '48': 'icons/48-' + relayBuildType + '.png',
+      '128': 'icons/128-' + relayBuildType + '.png',
     },
   });
   chrome.browserAction.setPopup({
     tabId: tabId,
-    popup: 'popups/' + reactBuildType + '.html',
+    popup: 'popups/' + relayBuildType + '.html',
   });
 }
 
@@ -93,21 +93,7 @@ chrome.runtime.onMessage.addListener((request, sender) => {
     // This is sent from the hook content script.
     // It tells us a renderer has attached.
     if (request.hasDetectedReact) {
-      // We use browserAction instead of pageAction because this lets us
-      // display a custom default popup when React is *not* detected.
-      // It is specified in the manifest.
-      let reactBuildType = request.reactBuildType;
-      if (sender.url.indexOf('facebook.github.io/react') !== -1) {
-        // Cheat: We use the development version on the website because
-        // it is better for interactive examples. However we're going
-        // to get misguided bug reports if the extension highlights it
-        // as using the dev version. We're just going to special case
-        // our own documentation and cheat. It is acceptable to use dev
-        // version of React in React docs, but not in any other case.
-        reactBuildType = 'production';
-      }
-
-      setIconAndPopup(reactBuildType, sender.tab.id);
+      setIconAndPopup('enabled', sender.tab.id);
     }
   }
 });
