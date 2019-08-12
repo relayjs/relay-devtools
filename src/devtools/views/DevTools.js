@@ -21,7 +21,7 @@ import styles from './DevTools.css';
 import './root.css';
 
 export type BrowserTheme = 'dark' | 'light';
-export type TabID = 'network' | 'components' | 'settings' | 'store-inspector';
+export type TabID = 'network' | 'settings' | 'store-inspector';
 export type ViewElementSource = (id: number) => void;
 
 export type Props = {|
@@ -43,7 +43,6 @@ export type Props = {|
   // The root <DevTools> app is rendered in the top-level extension window,
   // but individual tabs (e.g. Components, Profiling) can be rendered into portals within their browser panels.
   networkPortalContainer?: Element,
-  componentsPortalContainer?: Element,
   settingsPortalContainer?: Element,
   storeInspectorPortalContainer?: Element,
 |};
@@ -60,14 +59,8 @@ const storeInspectorTab = {
   label: 'Store',
   title: 'Relay Store',
 };
-const componentsTab = {
-  id: ('components': TabID),
-  icon: 'components',
-  label: 'Components',
-  title: 'React Components',
-};
 
-const tabs = [networkTab, storeInspectorTab, componentsTab];
+const tabs = [networkTab, storeInspectorTab];
 
 export default function DevTools({
   bridge,
@@ -75,7 +68,6 @@ export default function DevTools({
   defaultTab = 'network',
   networkPortalContainer,
   storeInspectorPortalContainer,
-  componentsPortalContainer,
   overrideTab,
   settingsPortalContainer,
   showTabBar = false,
@@ -94,7 +86,6 @@ export default function DevTools({
         <ModalDialogContextController>
           <SettingsContextController
             browserTheme={browserTheme}
-            componentsPortalContainer={componentsPortalContainer}
             settingsPortalContainer={settingsPortalContainer}
           >
             <div className={styles.DevTools}>
