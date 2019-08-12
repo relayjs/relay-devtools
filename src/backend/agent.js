@@ -92,7 +92,6 @@ export default class Agent extends EventEmitter<{|
 
     this._bridge = bridge;
 
-    bridge.addListener('captureScreenshot', this.captureScreenshot);
     bridge.addListener('getOwnersList', this.getOwnersList);
     bridge.addListener('inspectElement', this.inspectElement);
     bridge.addListener('logElementToConsole', this.logElementToConsole);
@@ -124,16 +123,6 @@ export default class Agent extends EventEmitter<{|
   get rendererInterfaces(): { [key: RendererID]: RendererInterface } {
     return this._rendererInterfaces;
   }
-
-  captureScreenshot = ({
-    commitIndex,
-    rootID,
-  }: {
-    commitIndex: number,
-    rootID: number,
-  }) => {
-    this._bridge.send('captureScreenshot', { commitIndex, rootID });
-  };
 
   getInstanceAndStyle({
     id,

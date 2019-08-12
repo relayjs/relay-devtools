@@ -124,7 +124,6 @@
     "fs-extra": "^3.0.1",
     "gh-pages": "^1.0.0",
     "graphql": "^14.4.2",
-    "html2canvas": "^1.0.0-alpha.12",
     "immutable": "3.7.6",
     "jest": "^24.7.1",
     "lerna": "^2.8.0",

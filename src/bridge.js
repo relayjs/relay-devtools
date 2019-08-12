@@ -40,7 +40,6 @@ type InspectElementParams = {|
 |};
 
 export default class Bridge extends EventEmitter<{|
-  captureScreenshot: [{| commitIndex: number, rootID: number |}],
   getOwnersList: [ElementAndRendererID],
   init: [],
   inspectElement: [InspectElementParams],

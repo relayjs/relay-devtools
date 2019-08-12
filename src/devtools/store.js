@@ -32,8 +32,6 @@ const debug = (methodName, ...args) => {
   }
 };
 
-const LOCAL_STORAGE_CAPTURE_SCREENSHOTS_KEY =
-  'React::DevTools::captureScreenshots';
 const LOCAL_STORAGE_COLLAPSE_ROOTS_BY_DEFAULT_KEY =
   'React::DevTools::collapseNodesByDefault';
 const LOCAL_STORAGE_RECORD_CHANGE_DESCRIPTIONS_KEY =
@@ -53,7 +51,6 @@ export type Capabilities = {|
  * ContextProviders can subscribe to the Store for specific things they want to provide.
  */
 export default class Store extends EventEmitter<{|
-  captureScreenshots: [],
   collapseNodesByDefault: [],
   componentFilters: [],
   mutated: [[Array<number>, Map<number, number>]],
@@ -61,8 +58,6 @@ export default class Store extends EventEmitter<{|
   roots: [],
 |}> {
   _bridge: Bridge;
-
-  _captureScreenshots: boolean = false;
 
   // Should new nodes be collapsed by default when added to the tree?
   _collapseNodesByDefault: boolean = true;
@@ -102,7 +97,6 @@ export default class Store extends EventEmitter<{|
 
   // These options may be initially set by a confiugraiton option when constructing the Store.
   // In the case of "supportsProfiling", the option may be updated based on the injected renderers.
-  _supportsCaptureScreenshots: boolean = false;
   _supportsNativeInspection: boolean = false;
 
   // Total number of visible elements (within all roots).
@@ -128,12 +122,7 @@ export default class Store extends EventEmitter<{|
     this._componentFilters = getSavedComponentFilters();
 
     if (config != null) {
-      const { supportsCaptureScreenshots, supportsNativeInspection } = config;
-      if (supportsCaptureScreenshots) {
-        this._supportsCaptureScreenshots = true;
-        this._captureScreenshots =
-          localStorageGetItem(LOCAL_STORAGE_CAPTURE_SCREENSHOTS_KEY) === 'true';
-      }
+      const { supportsNativeInspection } = config;
       this._supportsNativeInspection = supportsNativeInspection !== false;
     }
 
@@ -181,20 +170,6 @@ export default class Store extends EventEmitter<{|
         })}`
       );
     }
-  }
-
-  get captureScreenshots(): boolean {
-    return this._captureScreenshots;
-  }
-  set captureScreenshots(value: boolean): void {
-    this._captureScreenshots = value;
-
-    localStorageSetItem(
-      LOCAL_STORAGE_CAPTURE_SCREENSHOTS_KEY,
-      value ? 'true' : 'false'
-    );
-
-    this.emit('captureScreenshots');
   }
 
   get collapseNodesByDefault(): boolean {
@@ -283,10 +258,6 @@ export default class Store extends EventEmitter<{|
 
   get roots(): $ReadOnlyArray<number> {
     return this._roots;
-  }
-
-  get supportsCaptureScreenshots(): boolean {
-    return this._supportsCaptureScreenshots;
   }
 
   get supportsNativeInspection(): boolean {
