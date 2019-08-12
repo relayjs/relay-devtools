@@ -66,42 +66,42 @@ class User {
   +id: string;
   +name: string;
 
-  #gender: 'male' | 'female';
-  #profilePicture: {|
+  _gender: 'male' | 'female';
+  _profilePicture: {|
     +url: string,
   |};
-  #friends: $ReadOnlyArray<User>;
+  _friends: $ReadOnlyArray<User>;
 
   constructor(id) {
     this.__typename = 'User';
     this.id = id == null ? guid('user') : id;
-    this.#gender = chance.pick(['male', 'female']);
+    this._gender = chance.pick(['male', 'female']);
     this.name = chance.name({
-      gender: this.#gender,
+      gender: this._gender,
     });
   }
 
   profilePicture() {
-    if (!this.#profilePicture) {
-      this.#profilePicture = {
+    if (!this._profilePicture) {
+      this._profilePicture = {
         url: `https://randomuser.me/api/portraits/thumb/${
-          this.#gender == 'female' ? 'women' : 'men'
+          this._gender === 'female' ? 'women' : 'men'
         }/${Math.floor(Math.random() * 100)}.jpg`,
       };
     }
-    return this.#profilePicture;
+    return this._profilePicture;
   }
 
   friends() {
-    if (!this.#friends) {
-      this.#friends = [];
+    if (!this._friends) {
+      this._friends = [];
       for (let i = 0; i < 4; i++) {
-        this.#friends = this.#friends.concat([createUser()]);
+        this._friends = this._friends.concat([createUser()]);
       }
     } else {
-      this.#friends = this.#friends.concat([createUser()]);
+      this._friends = this._friends.concat([createUser()]);
     }
-    return createConnection(this.#friends);
+    return createConnection(this._friends);
   }
 }
 
