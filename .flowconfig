@@ -33,3 +33,6 @@ suppress_comment=\\(.\\|\n\\)*\\$FlowIgnore
 module.name_mapper='^src' ->'<PROJECT_ROOT>/src'
 esproposal.optional_chaining=enable
 [strict]
+
+[version]
+^0.105.0
