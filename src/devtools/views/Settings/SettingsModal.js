@@ -6,7 +6,6 @@ import Button from '../Button';
 import ButtonIcon from '../ButtonIcon';
 import TabBar from '../TabBar';
 import { useLocalStorage, useModalDismissSignal } from '../hooks';
-import ComponentsSettings from './ComponentsSettings';
 import GeneralSettings from './GeneralSettings';
 
 import styles from './SettingsModal.css';
@@ -48,9 +47,9 @@ function SettingsModalImpl(_: {||}) {
     case 'general':
       view = <GeneralSettings />;
       break;
-    case 'components':
-      view = <ComponentsSettings />;
-      break;
+    // case 'components':
+    //   view = <ComponentsSettings />;
+    //   break;
     default:
       break;
   }
