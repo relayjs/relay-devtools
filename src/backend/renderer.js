@@ -28,7 +28,7 @@ import {
   utfEncodeString,
 } from 'src/utils';
 import { sessionStorageGetItem } from 'src/storage';
-import { cleanForBridge, copyWithSet } from './utils';
+import { copyWithSet } from './utils';
 import {
   __DEBUG__,
   SESSION_STORAGE_RELOAD_AND_PROFILE_KEY,
@@ -2214,14 +2214,12 @@ export function attach(
           id,
           type: 'hydrated-path',
           path,
-          value: cleanForBridge(
-            getInObject(
-              ((mostRecentlyInspectedElement: any): InspectedElement),
-              path
-            ),
-            createIsPathWhitelisted(null, secondaryCategory),
+          value: (getInObject(
+            ((mostRecentlyInspectedElement: any): InspectedElement),
             path
           ),
+          createIsPathWhitelisted(null, secondaryCategory),
+          path),
         };
       } else {
         // If this element has not been updated since it was last inspected, we don't need to re-run it.
@@ -2257,26 +2255,16 @@ export function attach(
       // This will enable us to send patches without re-inspecting if hydrated paths are requested.
       // (Reducing how often we shallow-render is a better DX for function components that use hooks.)
       const cleanedInspectedElement = { ...mostRecentlyInspectedElement };
-      cleanedInspectedElement.context = cleanForBridge(
-        cleanedInspectedElement.context,
-        createIsPathWhitelisted('context', null)
-      );
-      cleanedInspectedElement.events = cleanForBridge(
-        cleanedInspectedElement.events,
-        createIsPathWhitelisted('events', 'events')
-      );
-      cleanedInspectedElement.hooks = cleanForBridge(
-        cleanedInspectedElement.hooks,
-        createIsPathWhitelisted('hooks', 'hooks')
-      );
-      cleanedInspectedElement.props = cleanForBridge(
-        cleanedInspectedElement.props,
-        createIsPathWhitelisted('props', null)
-      );
-      cleanedInspectedElement.state = cleanForBridge(
-        cleanedInspectedElement.state,
-        createIsPathWhitelisted('state', null)
-      );
+      cleanedInspectedElement.context = (cleanedInspectedElement.context,
+      createIsPathWhitelisted('context', null));
+      cleanedInspectedElement.events = (cleanedInspectedElement.events,
+      createIsPathWhitelisted('events', 'events'));
+      cleanedInspectedElement.hooks = (cleanedInspectedElement.hooks,
+      createIsPathWhitelisted('hooks', 'hooks'));
+      cleanedInspectedElement.props = (cleanedInspectedElement.props,
+      createIsPathWhitelisted('props', null));
+      cleanedInspectedElement.state = (cleanedInspectedElement.state,
+      createIsPathWhitelisted('state', null));
 
       return {
         id,
