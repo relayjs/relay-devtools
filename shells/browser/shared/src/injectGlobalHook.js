@@ -56,12 +56,6 @@ window.__REACT_DEVTOOLS_GLOBAL_HOOK__.on('renderer', function(evt) {
   }, '*');
 });
 `;
-const saveNativeValues = `
-window.__REACT_DEVTOOLS_GLOBAL_HOOK__.nativeObjectCreate = Object.create;
-window.__REACT_DEVTOOLS_GLOBAL_HOOK__.nativeMap = Map;
-window.__REACT_DEVTOOLS_GLOBAL_HOOK__.nativeWeakMap = WeakMap;
-window.__REACT_DEVTOOLS_GLOBAL_HOOK__.nativeSet = Set;
-`;
 
 // If we have just reloaded to profile, we need to inject the renderer interface before the app loads.
 if (sessionStorageGetItem(SESSION_STORAGE_RELOAD_AND_PROFILE_KEY) === 'true') {
@@ -84,6 +78,4 @@ if (sessionStorageGetItem(SESSION_STORAGE_RELOAD_AND_PROFILE_KEY) === 'true') {
 
 // Inject a `__REACT_DEVTOOLS_GLOBAL_HOOK__` global so that React can detect that the
 // devtools are installed (and skip its suggestion to install the devtools).
-injectCode(
-  ';(' + installHook.toString() + '(window))' + saveNativeValues + detectReact
-);
+injectCode(';(' + installHook.toString() + '(window))' + detectRelay);
