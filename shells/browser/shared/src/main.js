@@ -39,7 +39,7 @@ function createPanelIfReactLoaded() {
   }
 
   chrome.devtools.inspectedWindow.eval(
-    'window.__REACT_DEVTOOLS_GLOBAL_HOOK__ && window.__REACT_DEVTOOLS_GLOBAL_HOOK__.renderers.size > 0',
+    'window.__RELAY_DEVTOOLS_HOOK__ && window.__RELAY_DEVTOOLS_HOOK__.renderers.size > 0',
     function(pageHasReact, error) {
       if (!pageHasReact || panelCreated) {
         return;
@@ -176,8 +176,8 @@ function createPanelIfReactLoaded() {
         // In the future, if Chrome adds an inspect() that doesn't switch tabs,
         // we could make this happen automatically when you select another component.
         chrome.devtools.inspectedWindow.eval(
-          '(window.__REACT_DEVTOOLS_GLOBAL_HOOK__.$0 !== $0) ?' +
-            '(inspect(window.__REACT_DEVTOOLS_GLOBAL_HOOK__.$0), true) :' +
+          '(window.__RELAY_DEVTOOLS_HOOK__.$0 !== $0) ?' +
+            '(inspect(window.__RELAY_DEVTOOLS_HOOK__.$0), true) :' +
             'false',
           (didSelectionChange, error) => {
             if (error) {
@@ -191,8 +191,8 @@ function createPanelIfReactLoaded() {
         // When the user chooses a different node in the browser Elements tab,
         // copy it over to the hook object so that we can sync the selection.
         chrome.devtools.inspectedWindow.eval(
-          '(window.__REACT_DEVTOOLS_GLOBAL_HOOK__.$0 !== $0) ?' +
-            '(window.__REACT_DEVTOOLS_GLOBAL_HOOK__.$0 = $0, true) :' +
+          '(window.__RELAY_DEVTOOLS_HOOK__.$0 !== $0) ?' +
+            '(window.__RELAY_DEVTOOLS_HOOK__.$0 = $0, true) :' +
             'false',
           (didSelectionChange, error) => {
             if (error) {

@@ -3,58 +3,27 @@
 import EventEmitter from 'events';
 
 import type { Wall } from './types';
-import type { RendererID } from 'src/backend/types';
+import type { EnvironmentID } from 'src/backend/types';
 
 const BATCH_DURATION = 100;
 
-type ElementAndRendererID = {| id: number, rendererID: RendererID |};
+type ElementAndEnvironmentID = {| id: number, environmentID: EnvironmentID |};
 
 type Message = {|
   event: string,
   payload: any,
 |};
 
-type OverrideValue = {|
-  ...ElementAndRendererID,
-  path: Array<string | number>,
-  value: any,
-|};
-
-type OverrideHookState = {|
-  ...OverrideValue,
-  hookID: number,
-|};
-
-type OverrideSuspense = {|
-  ...ElementAndRendererID,
-  forceFallback: boolean,
-|};
-
 type InspectElementParams = {|
-  ...ElementAndRendererID,
+  ...ElementAndEnvironmentID,
   path?: Array<string | number>,
 |};
 
 export default class Bridge extends EventEmitter<{|
-  getOwnersList: [ElementAndRendererID],
   init: [],
   inspectElement: [InspectElementParams],
-  isBackendStorageAPISupported: [boolean],
-  logElementToConsole: [ElementAndRendererID],
   operations: [Array<number>],
-  overrideContext: [OverrideValue],
-  overrideHookState: [OverrideHookState],
-  overrideProps: [OverrideValue],
-  overrideState: [OverrideValue],
-  overrideSuspense: [OverrideSuspense],
-  selectElement: [ElementAndRendererID],
-  selectFiber: [number],
   shutdown: [],
-  startInspectingNative: [],
-  stopInspectingNative: [boolean],
-  syncSelectionFromNativeElementsPanel: [],
-  syncSelectionToNativeElementsPanel: [],
-  viewElementSource: [ElementAndRendererID],
 |}> {
   _isShutdown: boolean = false;
   _messageQueue: Array<any> = [];

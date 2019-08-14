@@ -14,7 +14,7 @@ function welcome(event) {
 
   window.removeEventListener('message', welcome);
 
-  setup(window.__REACT_DEVTOOLS_GLOBAL_HOOK__);
+  setup(window.__RELAY_DEVTOOLS_HOOK__);
 }
 
 window.addEventListener('message', welcome);

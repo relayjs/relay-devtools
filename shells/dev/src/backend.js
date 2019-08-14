@@ -21,4 +21,4 @@ const bridge = new Bridge({
 
 const agent = new Agent(bridge);
 
-initBackend(window.__REACT_DEVTOOLS_GLOBAL_HOOK__, agent, window.parent);
+initBackend(window.__RELAY_DEVTOOLS_HOOK__, agent, window.parent);

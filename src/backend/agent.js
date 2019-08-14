@@ -3,16 +3,14 @@
 import EventEmitter from 'events';
 import Bridge from 'src/bridge';
 
-import type { NativeType, RendererID, RendererInterface } from './types';
+import type { EnvironmentID, RendererInterface } from './types';
 
 export default class Agent extends EventEmitter<{|
-  hideNativeHighlight: [],
-  showNativeHighlight: [NativeType],
   shutdown: [],
 |}> {
   _bridge: Bridge;
   _recordChangeDescriptions: boolean = false;
-  _rendererInterfaces: { [key: RendererID]: RendererInterface } = {};
+  _rendererInterfaces: { [key: EnvironmentID]: RendererInterface } = {};
 
   constructor(bridge: Bridge) {
     super();
@@ -20,18 +18,9 @@ export default class Agent extends EventEmitter<{|
     this._bridge = bridge;
 
     bridge.addListener('shutdown', this.shutdown);
-
-    // Notify the frontend if the backend supports the Storage API (e.g. localStorage).
-    // If not, features like reload-and-profile will not work correctly and must be disabled.
-    let isBackendStorageAPISupported = false;
-    try {
-      localStorage.getItem('test');
-      isBackendStorageAPISupported = true;
-    } catch (error) {}
-    bridge.send('isBackendStorageAPISupported', isBackendStorageAPISupported);
   }
 
-  get rendererInterfaces(): { [key: RendererID]: RendererInterface } {
+  get rendererInterfaces(): { [key: EnvironmentID]: RendererInterface } {
     return this._rendererInterfaces;
   }
 

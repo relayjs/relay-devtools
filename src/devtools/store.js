@@ -1,9 +1,7 @@
 // @flow
 
 import EventEmitter from 'events';
-import { inspect } from 'util';
 import Bridge from 'src/bridge';
-import { localStorageGetItem, localStorageSetItem } from '../storage';
 import { __DEBUG__ } from '../constants';
 import { printStore } from 'src/__tests__/storeSerializer';
 
@@ -56,10 +54,6 @@ export default class Store extends EventEmitter<{|
   // The InspectedElementContext also relies on this mutability for its WeakMap usage.
   _idToElement: Map<number, Element> = new Map();
 
-  // Can the backend use the Storage API (e.g. localStorage)?
-  // If not, features like reload-and-profile will not work correctly and must be disabled.
-  _isBackendStorageAPISupported: boolean = false;
-
   // Map of element (id) to the set of elements (ids) it owns.
   // This map enables getOwnersListForElement() to avoid traversing the entire tree.
   _ownersMap: Map<number, Set<number>> = new Map();
@@ -94,15 +88,6 @@ export default class Store extends EventEmitter<{|
       debug('constructor', 'subscribing to Bridge');
     }
 
-    // Default this setting to true unless otherwise specified.
-    this._collapseNodesByDefault =
-      localStorageGetItem(LOCAL_STORAGE_COLLAPSE_ROOTS_BY_DEFAULT_KEY) !==
-      'false';
-
-    this._recordChangeDescriptions =
-      localStorageGetItem(LOCAL_STORAGE_RECORD_CHANGE_DESCRIPTIONS_KEY) ===
-      'true';
-
     if (config != null) {
       const { supportsNativeInspection } = config;
       this._supportsNativeInspection = supportsNativeInspection !== false;
@@ -111,99 +96,6 @@ export default class Store extends EventEmitter<{|
     this._bridge = bridge;
     bridge.addListener('operations', this.onBridgeOperations);
     bridge.addListener('shutdown', this.onBridgeShutdown);
-    bridge.addListener(
-      'isBackendStorageAPISupported',
-      this.onBridgeStorageSupported
-    );
-  }
-
-  // This is only used in tests to avoid memory leaks.
-  assertExpectedRootMapSizes() {
-    if (this.roots.length === 0) {
-      // The only safe time to assert these maps are empty is when the store is empty.
-      this.assertMapSizeMatchesRootCount(this._idToElement, '_idToElement');
-      this.assertMapSizeMatchesRootCount(this._ownersMap, '_ownersMap');
-    }
-
-    // These maps should always be the same size as the number of roots
-    this.assertMapSizeMatchesRootCount(
-      this._rootIDToCapabilities,
-      '_rootIDToCapabilities'
-    );
-    this.assertMapSizeMatchesRootCount(
-      this._rootIDToRendererID,
-      '_rootIDToRendererID'
-    );
-  }
-
-  // This is only used in tests to avoid memory leaks.
-  assertMapSizeMatchesRootCount(map: Map<any, any>, mapName: string) {
-    const expectedSize = this.roots.length;
-    if (map.size !== expectedSize) {
-      throw new Error(
-        `Expected ${mapName} to contain ${expectedSize} items, but it contains ${
-          map.size
-        } items\n\n${inspect(map, {
-          depth: 20,
-        })}`
-      );
-    }
-  }
-
-  get collapseNodesByDefault(): boolean {
-    return this._collapseNodesByDefault;
-  }
-  set collapseNodesByDefault(value: boolean): void {
-    this._collapseNodesByDefault = value;
-
-    localStorageSetItem(
-      LOCAL_STORAGE_COLLAPSE_ROOTS_BY_DEFAULT_KEY,
-      value ? 'true' : 'false'
-    );
-
-    this.emit('collapseNodesByDefault');
-  }
-
-  get hasOwnerMetadata(): boolean {
-    return this._hasOwnerMetadata;
-  }
-
-  get numElements(): number {
-    return this._weightAcrossRoots;
-  }
-
-  get recordChangeDescriptions(): boolean {
-    return this._recordChangeDescriptions;
-  }
-  set recordChangeDescriptions(value: boolean): void {
-    this._recordChangeDescriptions = value;
-
-    localStorageSetItem(
-      LOCAL_STORAGE_RECORD_CHANGE_DESCRIPTIONS_KEY,
-      value ? 'true' : 'false'
-    );
-
-    this.emit('recordChangeDescriptions');
-  }
-
-  get revision(): number {
-    return this._revision;
-  }
-
-  get rootIDToRendererID(): Map<number, number> {
-    return this._rootIDToRendererID;
-  }
-
-  get roots(): $ReadOnlyArray<number> {
-    return this._roots;
-  }
-
-  get supportsNativeInspection(): boolean {
-    return this._supportsNativeInspection;
-  }
-
-  containsElement(id: number): boolean {
-    return this._idToElement.get(id) != null;
   }
 
   onBridgeOperations = (operations: Array<number>) => {
@@ -227,13 +119,5 @@ export default class Store extends EventEmitter<{|
 
     this._bridge.removeListener('operations', this.onBridgeOperations);
     this._bridge.removeListener('shutdown', this.onBridgeShutdown);
-    this._bridge.removeListener(
-      'isBackendStorageAPISupported',
-      this.onBridgeStorageSupported
-    );
-  };
-
-  onBridgeStorageSupported = (isBackendStorageAPISupported: boolean) => {
-    this._isBackendStorageAPISupported = isBackendStorageAPISupported;
   };
 }

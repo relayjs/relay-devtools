@@ -45,7 +45,7 @@ env.beforeEach(() => {
 
   const agent = new Agent(bridge);
 
-  const hook = global.__REACT_DEVTOOLS_GLOBAL_HOOK__;
+  const hook = global.__RELAY_DEVTOOLS_HOOK__;
 
   initBackend(hook, agent, global);
 
@@ -56,7 +56,7 @@ env.beforeEach(() => {
   global.store = store;
 });
 env.afterEach(() => {
-  delete global.__REACT_DEVTOOLS_GLOBAL_HOOK__;
+  delete global.__RELAY_DEVTOOLS_HOOK__;
 
   // It's important to reset modules between test runs;
   // Without this, ReactDOM won't re-inject itself into the new hook.

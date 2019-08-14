@@ -17,7 +17,7 @@ type ConnectOptions = {
 
 installHook(window);
 
-const hook: DevToolsHook = window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
+const hook: DevToolsHook = window.__RELAY_DEVTOOLS_HOOK__;
 
 function debug(methodName: string, ...args) {
   if (__DEBUG__) {
@@ -101,7 +101,6 @@ export function connectToDevTools(options: ?ConnectOptions) {
       },
     });
 
-    // TODO (npm-packages) Warn if "isBackendStorageAPISupported"
     const agent = new Agent(bridge);
     agent.addListener('shutdown', () => {
       // If we received 'shutdown' from `agent`, we assume the `bridge` is already shutting down,

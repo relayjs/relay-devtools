@@ -31,7 +31,6 @@ window.addEventListener('message', function(evt) {
   ) {
     lastDetectionResult = {
       hasDetectedReact: true,
-      reactBuildType: evt.data.reactBuildType,
     };
     chrome.runtime.sendMessage(lastDetectionResult);
   }
@@ -48,11 +47,10 @@ window.addEventListener('pageshow', function(evt) {
   chrome.runtime.sendMessage(lastDetectionResult);
 });
 
-const detectReact = `
-window.__REACT_DEVTOOLS_GLOBAL_HOOK__.on('renderer', function(evt) {
+const detectRelay = `
+window.__RELAY_DEVTOOLS_HOOK__.on('renderer', function(evt) {
   window.postMessage({
     source: 'react-devtools-detector',
-    reactBuildType: evt.reactBuildType,
   }, '*');
 });
 `;
@@ -76,6 +74,6 @@ if (sessionStorageGetItem(SESSION_STORAGE_RELOAD_AND_PROFILE_KEY) === 'true') {
   injectCode(rendererCode);
 }
 
-// Inject a `__REACT_DEVTOOLS_GLOBAL_HOOK__` global so that React can detect that the
+// Inject a `__RELAY_DEVTOOLS_HOOK__` global so that Relay can detect that the
 // devtools are installed (and skip its suggestion to install the devtools).
 injectCode(';(' + installHook.toString() + '(window))' + detectRelay);

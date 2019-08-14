@@ -68,11 +68,11 @@ export function requireTestRenderer(): ReactTestRenderer {
   let hook;
   try {
     // Hide the hook before requiring TestRenderer, so we don't end up with a loop.
-    hook = global.__REACT_DEVTOOLS_GLOBAL_HOOK__;
-    delete global.__REACT_DEVTOOLS_GLOBAL_HOOK__;
+    hook = global.__RELAY_DEVTOOLS_HOOK__;
+    delete global.__RELAY_DEVTOOLS_HOOK__;
 
     return require('react-test-renderer');
   } finally {
-    global.__REACT_DEVTOOLS_GLOBAL_HOOK__ = hook;
+    global.__RELAY_DEVTOOLS_HOOK__ = hook;
   }
 }
