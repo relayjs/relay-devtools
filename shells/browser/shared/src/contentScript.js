@@ -6,7 +6,7 @@ let backendInitialized: boolean = false;
 function sayHelloToBackend() {
   window.postMessage(
     {
-      source: 'react-devtools-content-script',
+      source: 'relay-devtools-content-script',
       hello: true,
     },
     '*'
@@ -16,7 +16,7 @@ function sayHelloToBackend() {
 function handleMessageFromDevtools(message) {
   window.postMessage(
     {
-      source: 'react-devtools-content-script',
+      source: 'relay-devtools-content-script',
       payload: message,
     },
     '*'
@@ -27,7 +27,7 @@ function handleMessageFromPage(evt) {
   if (
     evt.source === window &&
     evt.data &&
-    evt.data.source === 'react-devtools-bridge'
+    evt.data.source === 'relay-devtools-bridge'
   ) {
     backendInitialized = true;
 
@@ -42,7 +42,7 @@ function handleDisconnect() {
 
   window.postMessage(
     {
-      source: 'react-devtools-content-script',
+      source: 'relay-devtools-content-script',
       payload: {
         type: 'event',
         event: 'shutdown',

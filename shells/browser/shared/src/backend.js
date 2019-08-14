@@ -7,7 +7,7 @@
 function welcome(event) {
   if (
     event.source !== window ||
-    event.data.source !== 'react-devtools-content-script'
+    event.data.source !== 'relay-devtools-content-script'
   ) {
     return;
   }
@@ -30,7 +30,7 @@ function setup(hook) {
         if (
           event.source !== window ||
           !event.data ||
-          event.data.source !== 'react-devtools-content-script' ||
+          event.data.source !== 'relay-devtools-content-script' ||
           !event.data.payload
         ) {
           return;
@@ -45,7 +45,7 @@ function setup(hook) {
     send(event: string, payload: any, transferable?: Array<any>) {
       window.postMessage(
         {
-          source: 'react-devtools-bridge',
+          source: 'relay-devtools-bridge',
           payload: { event, payload },
         },
         '*',
