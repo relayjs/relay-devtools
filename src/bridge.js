@@ -3,7 +3,7 @@
 import EventEmitter from 'events';
 
 import type { Wall } from './types';
-import type { InspectedElementPayload, RendererID } from 'src/backend/types';
+import type { RendererID } from 'src/backend/types';
 
 const BATCH_DURATION = 100;
 
@@ -39,7 +39,6 @@ export default class Bridge extends EventEmitter<{|
   getOwnersList: [ElementAndRendererID],
   init: [],
   inspectElement: [InspectElementParams],
-  inspectedElement: [InspectedElementPayload],
   isBackendStorageAPISupported: [boolean],
   logElementToConsole: [ElementAndRendererID],
   operations: [Array<number>],
