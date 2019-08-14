@@ -26,7 +26,7 @@ module.exports = api => {
     targets.firefox = minFirefoxVersion.toString();
 
     // This targets RN/Hermes.
-    targets.IE = '11';
+    targets.ie = '11';
   }
   const plugins = [
     ['relay'],
