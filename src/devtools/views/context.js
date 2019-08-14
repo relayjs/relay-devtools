@@ -1,9 +1,9 @@
 // @flow
 
 import { createContext } from 'react';
-import Bridge from 'src/bridge';
+import type Bridge from 'src/bridge';
 
-import Store from '../store';
+import type Store from '../store';
 
 export const BridgeContext = createContext<Bridge>(((null: any): Bridge));
 BridgeContext.displayName = 'BridgeContext';
