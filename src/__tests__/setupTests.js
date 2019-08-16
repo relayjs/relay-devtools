@@ -18,7 +18,7 @@ env.beforeEach(() => {
   const originalConsoleError = console.error;
   // $FlowFixMe
   console.error = (...args) => {
-    if (args[0] === 'Warning: React DevTools encountered an error: %s') {
+    if (args[0] === 'Warning: Relay DevTools encountered an error: %s') {
       // Rethrow errors from React.
       throw args[1];
     }

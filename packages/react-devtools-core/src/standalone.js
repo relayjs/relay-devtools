@@ -41,9 +41,9 @@ let bridge: Bridge | null = null;
 let store: Store | null = null;
 let root = null;
 
-const log = (...args) => console.log('[React DevTools]', ...args);
-log.warn = (...args) => console.warn('[React DevTools]', ...args);
-log.error = (...args) => console.error('[React DevTools]', ...args);
+const log = (...args) => console.log('[Relay DevTools]', ...args);
+log.warn = (...args) => console.warn('[Relay DevTools]', ...args);
+log.error = (...args) => console.error('[Relay DevTools]', ...args);
 
 function debug(methodName: string, ...args) {
   if (__DEBUG__) {

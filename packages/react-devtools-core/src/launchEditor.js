@@ -108,7 +108,7 @@ export default function launchEditor(
   absoluteProjectRoots: Array<string>
 ) {
   // We use relative paths at Facebook with deterministic builds.
-  // This is why our internal tooling calls React DevTools with absoluteProjectRoots.
+  // This is why our internal tooling calls Relay DevTools with absoluteProjectRoots.
   // If the filename is absolute then we don't need to care about this.
   let filePath;
   if (isAbsolute(maybeRelativePath)) {
