@@ -62,6 +62,7 @@ export default function Network(props: {| +portalContainer: mixed |}) {
         <div className={styles.Requests}>
           {mockRequests.map(request => (
             <div
+              key={request.id}
               onClick={() => {
                 setSelectedRequestID(request.id);
               }}

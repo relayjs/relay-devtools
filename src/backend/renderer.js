@@ -8,6 +8,7 @@ export function attach(
   renderer: ReactRenderer,
   global: Object
 ): RendererInterface {
+  console.log('renderer.attach');
   function cleanup() {
     // We don't patch any methods so there is no cleanup.
   }

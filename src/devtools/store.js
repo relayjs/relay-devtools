@@ -1,7 +1,7 @@
 // @flow
 
 import EventEmitter from 'events';
-import Bridge from 'src/bridge';
+import type { FrontendBridge } from 'src/bridge';
 import { __DEBUG__ } from '../constants';
 import { printStore } from 'src/__tests__/storeSerializer';
 
@@ -27,9 +27,9 @@ export default class Store extends EventEmitter<{|
   recordChangeDescriptions: [],
   roots: [],
 |}> {
-  _bridge: Bridge;
+  _bridge: FrontendBridge;
 
-  constructor(bridge: Bridge) {
+  constructor(bridge: FrontendBridge) {
     super();
 
     if (__DEBUG__) {

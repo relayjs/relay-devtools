@@ -6,6 +6,7 @@ import { installHook } from 'src/hook';
 import { initBackend } from 'src/backend';
 import { __DEBUG__ } from 'src/constants';
 
+import type { BackendBridge } from 'src/bridge';
 import type { DevToolsHook } from 'src/backend/types';
 
 type ConnectOptions = {
@@ -54,7 +55,7 @@ export function connectToDevTools(options: ?ConnectOptions) {
     return;
   }
 
-  let bridge: Bridge | null = null;
+  let bridge: BackendBridge | null = null;
 
   const messageListeners = [];
   const uri = 'ws://' + host + ':' + port;

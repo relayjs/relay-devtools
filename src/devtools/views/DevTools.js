@@ -6,7 +6,7 @@ import '@reach/menu-button/styles.css';
 import '@reach/tooltip/styles.css';
 
 import React, { useState } from 'react';
-import Bridge from 'src/bridge';
+import type { FrontendBridge } from 'src/bridge';
 import Store from '../store';
 import { BridgeContext, StoreContext } from './context';
 import Network from './Network/Network';
@@ -25,7 +25,7 @@ export type TabID = 'network' | 'settings' | 'store-inspector';
 export type ViewElementSource = (id: number) => void;
 
 export type Props = {|
-  bridge: Bridge,
+  bridge: FrontendBridge,
   browserTheme?: BrowserTheme,
   defaultTab?: TabID,
   showTabBar?: boolean,

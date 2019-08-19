@@ -3,27 +3,26 @@
 import EventEmitter from 'events';
 
 import type { Wall } from './types';
-import type { EnvironmentID } from 'src/backend/types';
 
 const BATCH_DURATION = 100;
-
-type ElementAndEnvironmentID = {| id: number, environmentID: EnvironmentID |};
 
 type Message = {|
   event: string,
   payload: any,
 |};
 
-type InspectElementParams = {|
-  ...ElementAndEnvironmentID,
-  path?: Array<string | number>,
-|};
-
-export default class Bridge extends EventEmitter<{|
-  init: [],
-  inspectElement: [InspectElementParams],
+type BackendEvents = {|
   operations: [Array<number>],
   shutdown: [],
+|};
+
+type FrontendEvents = {||};
+class Bridge<
+  OutgoingEvents: Object,
+  IncomingEvents: Object
+> extends EventEmitter<{|
+  ...IncomingEvents,
+  ...OutgoingEvents,
 |}> {
   _isShutdown: boolean = false;
   _messageQueue: Array<any> = [];
@@ -127,3 +126,8 @@ export default class Bridge extends EventEmitter<{|
     }
   };
 }
+
+export type BackendBridge = Bridge<BackendEvents, FrontendEvents>;
+export type FrontendBridge = Bridge<FrontendEvents, BackendEvents>;
+
+export default Bridge;

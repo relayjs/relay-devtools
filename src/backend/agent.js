@@ -1,18 +1,20 @@
 // @flow
 
 import EventEmitter from 'events';
-import Bridge from 'src/bridge';
+import type { BackendBridge } from 'src/bridge';
 
 import type { EnvironmentID, RendererInterface } from './types';
 
 export default class Agent extends EventEmitter<{|
   shutdown: [],
 |}> {
-  _bridge: Bridge;
+  _bridge: BackendBridge;
   _recordChangeDescriptions: boolean = false;
-  _rendererInterfaces: { [key: EnvironmentID]: RendererInterface } = {};
+  _rendererInterfaces: {
+    [key: EnvironmentID]: RendererInterface,
+  } = {};
 
-  constructor(bridge: Bridge) {
+  constructor(bridge: BackendBridge) {
     super();
 
     this._bridge = bridge;
@@ -20,7 +22,9 @@ export default class Agent extends EventEmitter<{|
     bridge.addListener('shutdown', this.shutdown);
   }
 
-  get rendererInterfaces(): { [key: EnvironmentID]: RendererInterface } {
+  get rendererInterfaces(): {
+    [key: EnvironmentID]: RendererInterface,
+  } {
     return this._rendererInterfaces;
   }
 

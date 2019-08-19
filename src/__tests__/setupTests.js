@@ -1,5 +1,7 @@
 // @flow
 
+import type { BackendBridge, FrontendBridge } from 'src/bridge';
+
 const env = jasmine.getEnv();
 env.beforeEach(() => {
   // These files should be required (and re-reuired) before each test,
@@ -43,13 +45,13 @@ env.beforeEach(() => {
     },
   });
 
-  const agent = new Agent(bridge);
+  const agent = new Agent(((bridge: any): BackendBridge));
 
   const hook = global.__RELAY_DEVTOOLS_HOOK__;
 
   initBackend(hook, agent, global);
 
-  const store = new Store(bridge);
+  const store = new Store(((bridge: any): FrontendBridge));
 
   global.agent = agent;
   global.bridge = bridge;
