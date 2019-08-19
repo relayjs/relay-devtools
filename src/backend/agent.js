@@ -3,15 +3,15 @@
 import EventEmitter from 'events';
 import type { BackendBridge } from 'src/bridge';
 
-import type { EnvironmentID, RendererInterface } from './types';
+import type { EnvironmentID, EnvironmentWrapper } from './types';
 
 export default class Agent extends EventEmitter<{|
   shutdown: [],
 |}> {
   _bridge: BackendBridge;
   _recordChangeDescriptions: boolean = false;
-  _rendererInterfaces: {
-    [key: EnvironmentID]: RendererInterface,
+  _environmentWrappers: {
+    [key: EnvironmentID]: EnvironmentWrapper,
   } = {};
 
   constructor(bridge: BackendBridge) {
@@ -22,10 +22,10 @@ export default class Agent extends EventEmitter<{|
     bridge.addListener('shutdown', this.shutdown);
   }
 
-  get rendererInterfaces(): {
-    [key: EnvironmentID]: RendererInterface,
+  get environmentWrappers(): {
+    [key: EnvironmentID]: EnvironmentWrapper,
   } {
-    return this._rendererInterfaces;
+    return this._environmentWrappers;
   }
 
   shutdown = () => {

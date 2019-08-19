@@ -15,17 +15,16 @@ export function installHook(target: any): DevToolsHook | null {
   if (target.hasOwnProperty('__RELAY_DEVTOOLS_HOOK__')) {
     return null;
   }
-  // TODO: More meaningful names for "rendererInterfaces" and "renderers".
   const listeners = {};
-  const renderers = new Map();
+  const environments = new Map();
 
   let uidCounter = 0;
 
-  function registerEnvironment(renderer) {
+  function registerEnvironment(environment) {
     const id = ++uidCounter;
-    renderers.set(id, renderer);
+    environments.set(id, environment);
 
-    hook.emit('renderer', { id, renderer });
+    hook.emit('environment', { id, environment });
 
     return id;
   }
@@ -61,11 +60,13 @@ export function installHook(target: any): DevToolsHook | null {
     }
   }
 
+  const environmentWrappers = new Map();
+
   const hook: DevToolsHook = {
     registerEnvironment,
-    // rendererInterfaces,
+    environmentWrappers,
     // listeners,
-    // renderers,
+    environments,
 
     emit,
     // inject,

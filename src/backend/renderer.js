@@ -1,13 +1,17 @@
 // @flow
 
-import type { DevToolsHook, ReactRenderer, RendererInterface } from './types';
+import type {
+  DevToolsHook,
+  RelayEnvironment,
+  EnvironmentWrapper,
+} from './types';
 
 export function attach(
   hook: DevToolsHook,
   rendererID: number,
-  renderer: ReactRenderer,
+  environment: RelayEnvironment,
   global: Object
-): RendererInterface {
+): EnvironmentWrapper {
   console.log('renderer.attach');
   function cleanup() {
     // We don't patch any methods so there is no cleanup.

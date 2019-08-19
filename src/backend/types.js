@@ -4,7 +4,7 @@ export type EnvironmentID = number;
 
 type Dispatcher = any;
 
-export type ReactRenderer = {
+export type RelayEnvironment = {
   version: string,
 
   // 16.9+
@@ -33,17 +33,17 @@ export type ReactRenderer = {
   Mount?: any,
 };
 
-export type RendererInterface = {
+export type EnvironmentWrapper = {
   cleanup: () => void,
 };
 
 export type Handler = (data: any) => void;
 
 export type DevToolsHook = {
-  registerEnvironment: (env: mixed) => number | null,
+  registerEnvironment: (env: RelayEnvironment) => number | null,
   // listeners: { [key: string]: Array<Handler> },
-  // rendererInterfaces: Map<RendererID, RendererInterface>,
-  // renderers: Map<RendererID, ReactRenderer>,
+  environmentWrappers: Map<EnvironmentID, EnvironmentWrapper>,
+  environments: Map<EnvironmentID, RelayEnvironment>,
 
   emit: (event: string, data: any) => void,
   on: (event: string, handler: Handler) => void,

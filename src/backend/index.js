@@ -1,6 +1,10 @@
 // @flow
 
-import type { DevToolsHook, ReactRenderer, RendererInterface } from './types';
+import type {
+  DevToolsHook,
+  RelayEnvironment,
+  EnvironmentWrapper,
+} from './types';
 import type Agent from './agent';
 
 import { attach } from './renderer';
@@ -11,65 +15,63 @@ export function initBackend(
   global: Object
 ): () => void {
   console.log('init backend', { hook, agent });
-  const subs = [];
-  // const subs = [
-  //   hook.sub(
-  //     'renderer-attached',
-  //     ({
-  //       id,
-  //       renderer,
-  //       rendererInterface,
-  //     }: {
-  //       id: number,
-  //       renderer: ReactRenderer,
-  //       rendererInterface: RendererInterface,
-  //     }) => {
-  //       // agent.setRendererInterface(id, rendererInterface);
-  //       // Now that the Store and the renderer interface are connected,
-  //       // it's time to flush the pending operation codes to the frontend.
-  //       // rendererInterface.flushInitialOperations();
-  //     }
-  //   ),
+  const subs = [
+    hook.sub(
+      'environment-attached',
+      ({
+        id,
+        environment,
+        environmentWrapper,
+      }: {
+        id: number,
+        environment: RelayEnvironment,
+        environmentWrapper: EnvironmentWrapper,
+      }) => {
+        // agent.setEnvironmentWrapper(id, environmentWrapper);
+        // Now that the Store and the renderer interface are connected,
+        // it's time to flush the pending operation codes to the frontend.
+        // environmentWrapper.flushInitialOperations();
+      }
+    ),
+  ];
 
-  //   // TODO Add additional subscriptions required for profiling mode
-  // ];
+  const attachEnvironment = (id: number, environment: RelayEnvironment) => {
+    let environmentWrapper = hook.environmentWrappers.get(id);
 
-  // const attachRenderer = (id: number, renderer: ReactRenderer) => {
-  //   let rendererInterface = hook.rendererInterfaces.get(id);
+    // Inject any not-yet-injected renderers (if we didn't reload-and-profile)
+    if (!environmentWrapper) {
+      environmentWrapper = attach(hook, id, environment, global);
+      hook.environmentWrappers.set(id, environmentWrapper);
+    }
 
-  //   // Inject any not-yet-injected renderers (if we didn't reload-and-profile)
-  //   if (!rendererInterface) {
-  //     rendererInterface = attach(hook, id, renderer, global);
-  //     hook.rendererInterfaces.set(id, rendererInterface);
-  //   }
-
-  //   // Notify the DevTools frontend about new renderers.
-  //   hook.emit('renderer-attached', {
-  //     id,
-  //     renderer,
-  //     rendererInterface,
-  //   });
-  // };
+    // Notify the DevTools frontend about new renderers.
+    hook.emit('environment-attached', {
+      id,
+      environment,
+      environmentWrapper,
+    });
+  };
 
   // Connect renderers that have already injected themselves.
-  // hook.renderers.forEach((renderer, id) => {
-  //   attachRenderer(id, renderer);
-  // });
+  hook.environments.forEach((environment, id) => {
+    console.log('here2');
+    attachEnvironment(id, environment);
+  });
 
   // Connect any new renderers that injected themselves.
-  // subs.push(
-  //   hook.sub(
-  //     'renderer',
-  //     ({ id, renderer }: { id: number, renderer: ReactRenderer }) => {
-  //       attachRenderer(id, renderer);
-  //     }
-  //   )
-  // );
+  subs.push(
+    hook.sub(
+      'environment',
+      ({ id, environment }: { id: number, environment: RelayEnvironment }) => {
+        attachEnvironment(id, environment);
+      }
+    )
+  );
 
   // const onAgentShutdown = () => {
   //   subs.forEach(fn => fn());
-  //   hook.rendererInterfaces.forEach(rendererInterface => {
-  //     rendererInterface.cleanup();
+  //   hook.environmentWrappers.forEach(environmentWrapper => {
+  //     environmentWrapper.cleanup();
   //   });
   // };
   // agent.addListener('shutdown', onAgentShutdown);
