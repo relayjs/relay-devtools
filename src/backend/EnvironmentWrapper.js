@@ -12,7 +12,8 @@ export function attach(
   environment: RelayEnvironment,
   global: Object
 ): EnvironmentWrapper {
-  console.log('renderer.attach');
+  console.log('EnvironmentWrapper.attach');
+
   function cleanup() {
     // We don't patch any methods so there is no cleanup.
   }

@@ -7,7 +7,7 @@ import type {
 } from './types';
 import type Agent from './agent';
 
-import { attach } from './renderer';
+import { attach } from './EnvironmentWrapper';
 
 export function initBackend(
   hook: DevToolsHook,
