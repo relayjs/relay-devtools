@@ -14,8 +14,15 @@ export function attach(
 ): EnvironmentWrapper {
   console.log('EnvironmentWrapper.attach');
 
+  const originalExecute = environment.execute;
+  environment.execute = (...args) => {
+    console.log('exec', args);
+    return originalExecute.apply(environment, args);
+  };
+
   function cleanup() {
     // We don't patch any methods so there is no cleanup.
+    environment.execute = originalExecute;
   }
 
   return {
