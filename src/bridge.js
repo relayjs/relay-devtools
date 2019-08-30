@@ -12,7 +12,7 @@ type Message = {|
 |};
 
 type BackendEvents = {|
-  operations: [Array<number>],
+  operations: [Array<string>],
   shutdown: [],
 |};
 

@@ -3,7 +3,6 @@
 import EventEmitter from 'events';
 import type { FrontendBridge } from 'src/bridge';
 import { __DEBUG__ } from '../constants';
-import { printStore } from 'src/__tests__/storeSerializer';
 
 const debug = (methodName, ...args) => {
   if (__DEBUG__) {
@@ -23,11 +22,13 @@ const debug = (methodName, ...args) => {
 export default class Store extends EventEmitter<{|
   collapseNodesByDefault: [],
   componentFilters: [],
-  mutated: [[Array<number>, Map<number, number>]],
+  mutated: [],
   recordChangeDescriptions: [],
   roots: [],
 |}> {
   _bridge: FrontendBridge;
+
+  _operations: Array<string> = [];
 
   constructor(bridge: FrontendBridge) {
     super();
@@ -41,18 +42,25 @@ export default class Store extends EventEmitter<{|
     bridge.addListener('shutdown', this.onBridgeShutdown);
   }
 
-  onBridgeOperations = (operations: Array<number>) => {
+  getOperations(): $ReadOnlyArray<string> {
+    return this._operations;
+  }
+
+  onBridgeOperations = (operations: Array<string>) => {
     if (__DEBUG__) {
       console.groupCollapsed('onBridgeOperations');
       debug('onBridgeOperations', operations.join(','));
     }
 
+    this._operations.push(...operations);
+
     if (__DEBUG__) {
-      console.log(printStore(this, true));
       console.groupEnd();
     }
 
-    // this.emit('mutated', [addedElementIDs, removedElementIDs]);
+    console.log('ops', this._operations);
+
+    this.emit('mutated');
   };
 
   onBridgeShutdown = () => {

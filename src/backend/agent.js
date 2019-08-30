@@ -32,4 +32,8 @@ export default class Agent extends EventEmitter<{|
     // Clean up the overlay if visible, and associated events.
     this.emit('shutdown');
   };
+
+  onEnvironmentExecute = (data: mixed) => {
+    this._bridge.send('operations', [data]);
+  };
 }

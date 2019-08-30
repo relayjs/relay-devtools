@@ -30,9 +30,12 @@ export function initBackend(
         // agent.setEnvironmentWrapper(id, environmentWrapper);
         // Now that the Store and the renderer interface are connected,
         // it's time to flush the pending operation codes to the frontend.
-        // environmentWrapper.flushInitialOperations();
+        environmentWrapper.flushInitialOperations();
       }
     ),
+    hook.sub('Environment.execute', data => {
+      agent.onEnvironmentExecute(data);
+    }),
   ];
 
   const attachEnvironment = (id: number, environment: RelayEnvironment) => {
@@ -54,7 +57,6 @@ export function initBackend(
 
   // Connect renderers that have already injected themselves.
   hook.environments.forEach((environment, id) => {
-    console.log('here2');
     attachEnvironment(id, environment);
   });
 
@@ -67,17 +69,6 @@ export function initBackend(
       }
     )
   );
-
-  // const onAgentShutdown = () => {
-  //   subs.forEach(fn => fn());
-  //   hook.environmentWrappers.forEach(environmentWrapper => {
-  //     environmentWrapper.cleanup();
-  //   });
-  // };
-  // agent.addListener('shutdown', onAgentShutdown);
-  // subs.push(() => {
-  //   agent.removeListener('shutdown', onAgentShutdown);
-  // });
 
   return () => {
     subs.forEach(fn => fn());

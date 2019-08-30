@@ -12,11 +12,17 @@ export function attach(
   environment: RelayEnvironment,
   global: Object
 ): EnvironmentWrapper {
+  let pendingOperationsQueue = [];
   console.log('EnvironmentWrapper.attach');
 
   const originalExecute = environment.execute;
   environment.execute = (...args) => {
-    console.log('exec', args);
+    console.log('instrumented environment.execute called with', args);
+    if (pendingOperationsQueue !== null) {
+      pendingOperationsQueue.push(args[0].operation.root.node.name);
+    } else {
+      hook.emit('Environment.execute', args[0].operation.root.node.name);
+    }
     return originalExecute.apply(environment, args);
   };
 
@@ -25,7 +31,17 @@ export function attach(
     environment.execute = originalExecute;
   }
 
+  function flushInitialOperations() {
+    if (pendingOperationsQueue != null) {
+      pendingOperationsQueue.forEach(pendingOperation => {
+        hook.emit('Environment.execute', pendingOperation);
+      });
+      pendingOperationsQueue = null;
+    }
+  }
+
   return {
     cleanup,
+    flushInitialOperations,
   };
 }

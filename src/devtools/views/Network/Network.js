@@ -1,6 +1,6 @@
 // @flow
 
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { StoreContext } from '../context';
 import TabBar from '../TabBar';
 import ButtonIcon from '../ButtonIcon';
@@ -26,18 +26,31 @@ const tabs = [
   },
 ];
 
-const mockRequests = Array.from(Array(30), (_, i) => ({
-  id: i,
-  name: `Mock Request ${i + 1}`,
-}));
-
 export default function Network(props: {| +portalContainer: mixed |}) {
-  const x = useContext(StoreContext);
+  const store = useContext(StoreContext);
+
+  const [_, forceUpdate] = useState({});
+
+  useEffect(() => {
+    const onMutated = () => {
+      forceUpdate({});
+    };
+    store.on('mutated', onMutated);
+    return () => {
+      store.off('mutated', onMutated);
+    };
+  }, [store]);
 
   const [selectedTabID, setSelectedTabID] = useState('bar');
-  const [selectedRequestID, setSelectedRequestID] = useState(3);
+  const [selectedRequestID, setSelectedRequestID] = useState(0);
 
-  console.log({ x });
+  const operations = store.getOperations();
+
+  const requests = operations.map((name, i) => ({
+    id: i,
+    name: name,
+  }));
+
   return (
     <div className={styles.Network}>
       <div className={styles.Toolbar}>
@@ -60,7 +73,7 @@ export default function Network(props: {| +portalContainer: mixed |}) {
       </div>
       <div className={styles.Content}>
         <div className={styles.Requests}>
-          {mockRequests.map(request => (
+          {requests.map(request => (
             <div
               key={request.id}
               onClick={() => {
@@ -75,7 +88,7 @@ export default function Network(props: {| +portalContainer: mixed |}) {
           ))}
         </div>
         <div className={styles.RequestDetails}>
-          {mockRequests.find(req => req.id === selectedRequestID)?.name}
+          {requests.find(req => req.id === selectedRequestID)?.name}
         </div>
       </div>
     </div>
