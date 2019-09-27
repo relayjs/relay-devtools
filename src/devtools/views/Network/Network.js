@@ -29,7 +29,7 @@ const tabs = [
 export default function Network(props: {| +portalContainer: mixed |}) {
   const store = useContext(StoreContext);
 
-  const [_, forceUpdate] = useState({});
+  const [, forceUpdate] = useState({});
 
   useEffect(() => {
     const onMutated = () => {
@@ -44,12 +44,61 @@ export default function Network(props: {| +portalContainer: mixed |}) {
   const [selectedTabID, setSelectedTabID] = useState('bar');
   const [selectedRequestID, setSelectedRequestID] = useState(0);
 
-  const operations = store.getOperations();
+  const events = store.getEvents();
 
-  const requests = operations.map((name, i) => ({
-    id: i,
-    name: name,
-  }));
+  const requests = new Map();
+
+  for (const event of events) {
+    switch (event.name) {
+      case 'execute.start': {
+        requests.set(event.transactionID, {
+          id: event.transactionID,
+          params: event.params,
+          variables: event.variables,
+          status: 'started',
+          responses: [],
+        });
+        break;
+      }
+      case 'execute.complete': {
+        const request = requests.get(event.transactionID);
+        if (request != null) {
+          request.status = 'completed';
+        }
+        break;
+      }
+      case 'execute.next': {
+        const request = requests.get(event.transactionID);
+        if (request != null) {
+          request.responses.push(event.response);
+        }
+        break;
+      }
+      case 'execute.unsubscribe': {
+        const request = requests.get(event.transactionID);
+        if (request != null) {
+          request.status = 'unsubscribed';
+        }
+        break;
+      }
+    }
+  }
+
+  const requestRows = Array.from(requests.values(), request => {
+    return (
+      <div
+        key={request.id}
+        onClick={() => {
+          setSelectedRequestID(request.id);
+        }}
+        className={`${styles.Request} ${
+          request.id === selectedRequestID ? styles.SelectedRequest : ''
+        }`}
+      >
+        {request.params.name} ({request.status})
+      </div>
+    );
+  });
 
   return (
     <div className={styles.Network}>
@@ -72,23 +121,20 @@ export default function Network(props: {| +portalContainer: mixed |}) {
         <div className={styles.Spacer} />
       </div>
       <div className={styles.Content}>
-        <div className={styles.Requests}>
-          {requests.map(request => (
-            <div
-              key={request.id}
-              onClick={() => {
-                setSelectedRequestID(request.id);
-              }}
-              className={`${styles.Request} ${
-                request.id === selectedRequestID ? styles.SelectedRequest : ''
-              }`}
-            >
-              {request.name}
-            </div>
-          ))}
-        </div>
+        <div className={styles.Requests}>{requestRows}</div>
         <div className={styles.RequestDetails}>
-          {requests.find(req => req.id === selectedRequestID)?.name}
+          <div>
+            Variables:{' '}
+            {JSON.stringify(requests.get(selectedRequestID)?.variables)}
+          </div>
+          <pre>
+            Reponses:{' '}
+            {JSON.stringify(
+              requests.get(selectedRequestID)?.responses,
+              null,
+              2
+            )}
+          </pre>
         </div>
       </div>
     </div>

@@ -3,6 +3,7 @@
 import EventEmitter from 'events';
 import type { FrontendBridge } from 'src/bridge';
 import { __DEBUG__ } from '../constants';
+import type { LogEvent } from '../types';
 
 const debug = (methodName, ...args) => {
   if (__DEBUG__) {
@@ -28,38 +29,21 @@ export default class Store extends EventEmitter<{|
 |}> {
   _bridge: FrontendBridge;
 
-  _operations: Array<string> = [];
+  _events: Array<LogEvent> = [];
 
   constructor(bridge: FrontendBridge) {
     super();
-
-    if (__DEBUG__) {
-      debug('constructor', 'subscribing to Bridge');
-    }
-
     this._bridge = bridge;
-    bridge.addListener('operations', this.onBridgeOperations);
+    bridge.addListener('events', this.onBridgeEvents);
     bridge.addListener('shutdown', this.onBridgeShutdown);
   }
 
-  getOperations(): $ReadOnlyArray<string> {
-    return this._operations;
+  getEvents(): $ReadOnlyArray<LogEvent> {
+    return this._events;
   }
 
-  onBridgeOperations = (operations: Array<string>) => {
-    if (__DEBUG__) {
-      console.groupCollapsed('onBridgeOperations');
-      debug('onBridgeOperations', operations.join(','));
-    }
-
-    this._operations.push(...operations);
-
-    if (__DEBUG__) {
-      console.groupEnd();
-    }
-
-    console.log('ops', this._operations);
-
+  onBridgeEvents = (events: Array<LogEvent>) => {
+    this._events.push(...events);
     this.emit('mutated');
   };
 
@@ -68,7 +52,7 @@ export default class Store extends EventEmitter<{|
       debug('onBridgeShutdown', 'unsubscribing from Bridge');
     }
 
-    this._bridge.removeListener('operations', this.onBridgeOperations);
+    this._bridge.removeListener('events', this.onBridgeEvents);
     this._bridge.removeListener('shutdown', this.onBridgeShutdown);
   };
 }

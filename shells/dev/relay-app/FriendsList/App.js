@@ -13,6 +13,9 @@ const environment = new Environment({
   configName: 'Example Environment',
   network,
   store,
+  log(event) {
+    console.log('[APP]', event);
+  },
 });
 
 export type Item = {|

@@ -142,7 +142,11 @@ const root = {
 };
 
 function fetchQuery(request, variables) {
-  return graphql(schema, request.text, root, null, variables);
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve(graphql(schema, request.text, root, null, variables));
+    }, 1000 + Math.round(Math.random() * 1000));
+  });
 }
 
 export default Network.create(fetchQuery);

@@ -16,6 +16,9 @@ export function initBackend(
 ): () => void {
   console.log('init backend', { hook, agent });
   const subs = [
+    hook.sub('environment.event', data => {
+      agent.onEnvironmentEvent(data);
+    }),
     hook.sub(
       'environment-attached',
       ({
@@ -33,9 +36,6 @@ export function initBackend(
         environmentWrapper.flushInitialOperations();
       }
     ),
-    hook.sub('Environment.execute', data => {
-      agent.onEnvironmentExecute(data);
-    }),
   ];
 
   const attachEnvironment = (id: number, environment: RelayEnvironment) => {

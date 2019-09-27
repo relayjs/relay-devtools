@@ -12,31 +12,33 @@ export function attach(
   environment: RelayEnvironment,
   global: Object
 ): EnvironmentWrapper {
-  let pendingOperationsQueue = [];
-  console.log('EnvironmentWrapper.attach');
+  let pendingEventsQueue = [];
 
-  const originalExecute = environment.execute;
-  environment.execute = (...args) => {
-    console.log('instrumented environment.execute called with', args);
-    if (pendingOperationsQueue !== null) {
-      pendingOperationsQueue.push(args[0].operation.root.node.name);
+  // $FlowFixMe
+  const originalLog = environment.__log;
+  // $FlowFixMe
+  environment.__log = event => {
+    originalLog(event);
+    console.log('[devtools]', event);
+    if (pendingEventsQueue !== null) {
+      pendingEventsQueue.push(event);
     } else {
-      hook.emit('Environment.execute', args[0].operation.root.node.name);
+      hook.emit('environment.event', event);
     }
-    return originalExecute.apply(environment, args);
   };
 
   function cleanup() {
     // We don't patch any methods so there is no cleanup.
-    environment.execute = originalExecute;
+    // $FlowFixMe
+    environment.__log = originalLog;
   }
 
   function flushInitialOperations() {
-    if (pendingOperationsQueue != null) {
-      pendingOperationsQueue.forEach(pendingOperation => {
-        hook.emit('Environment.execute', pendingOperation);
+    if (pendingEventsQueue != null) {
+      pendingEventsQueue.forEach(pendingEvent => {
+        hook.emit('environment.event', pendingEvent);
       });
-      pendingOperationsQueue = null;
+      pendingEventsQueue = null;
     }
   }
 

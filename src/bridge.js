@@ -2,7 +2,7 @@
 
 import EventEmitter from 'events';
 
-import type { Wall } from './types';
+import type { LogEvent, Wall } from './types';
 
 const BATCH_DURATION = 100;
 
@@ -12,7 +12,7 @@ type Message = {|
 |};
 
 type BackendEvents = {|
-  operations: [Array<string>],
+  events: [Array<LogEvent>],
   shutdown: [],
 |};
 
