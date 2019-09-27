@@ -104,9 +104,7 @@ export default function Network(props: {| +portalContainer: mixed |}) {
     <div className={styles.Network}>
       <div className={styles.Toolbar}>
         <Button
-          onClick={() => {
-            alert('not implememnted');
-          }}
+          onClick={store.clearEvents}
           title="Clear Logs"
         >
           <ButtonIcon type="clear" />

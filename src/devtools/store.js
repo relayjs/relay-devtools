@@ -47,6 +47,11 @@ export default class Store extends EventEmitter<{|
     this.emit('mutated');
   };
 
+  clearEvents = () => {
+    this._events.length=0;
+    this.emit('mutated')
+  }
+
   onBridgeShutdown = () => {
     if (__DEBUG__) {
       debug('onBridgeShutdown', 'unsubscribing from Bridge');
