@@ -23,14 +23,26 @@
   flex: 1;
 }
 
+.SectionTitle {
+  color: #616161;
+  font-weight: bold;
+}
+
+.SectionContent {
+  margin-left: 20px;
+  white-space: pre-wrap;
+}
+
 .Requests {
-  flex: 1;
+  border-right: 1px solid #d0d0d0;
   color: #303942;
+  flex: 1;
   overflow: scroll;
 }
 
 .Content {
   display: flex;
+  height: 100%;
   overflow: hidden;
 }
 
@@ -53,8 +65,24 @@
   background: #1a73e8;
   color: white;
 }
+.Request::before {
+  display: inline-block;
+  width: 1em;
+  content: '';
+}
+.StatusActive::before {
+  color: #6a6;
+  content: '●';
+}
+.StatusUnsubscribed {
+  color: #aaa;
+}
+.StatusError {
+  color: #a66;
+}
 
 .RequestDetails {
   flex: 3;
   overflow: scroll;
+  padding: 3px;
 }

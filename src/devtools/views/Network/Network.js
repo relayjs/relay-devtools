@@ -2,29 +2,19 @@
 
 import React, { useContext, useEffect, useState } from 'react';
 import { StoreContext } from '../context';
-import TabBar from '../TabBar';
 import ButtonIcon from '../ButtonIcon';
 import Button from '../Button';
 
 import styles from './Network.css';
 
-const tabs = [
-  {
-    icon: 'flame-chart',
-    id: 'foo',
-    label: 'Foo',
-  },
-  {
-    icon: 'flame-chart',
-    id: 'bar',
-    label: 'Bar',
-  },
-  {
-    icon: 'flame-chart',
-    id: 'baz',
-    label: 'Baz',
-  },
-];
+function Section(props: {| title: string, children: React$Node |}) {
+  return (
+    <>
+      <div className={styles.SectionTitle}>{props.title}</div>
+      <div className={styles.SectionContent}>{props.children}</div>
+    </>
+  );
+}
 
 export default function Network(props: {| +portalContainer: mixed |}) {
   const store = useContext(StoreContext);
@@ -41,7 +31,6 @@ export default function Network(props: {| +portalContainer: mixed |}) {
     };
   }, [store]);
 
-  const [selectedTabID, setSelectedTabID] = useState('bar');
   const [selectedRequestID, setSelectedRequestID] = useState(0);
 
   const events = store.getEvents();
@@ -55,7 +44,7 @@ export default function Network(props: {| +portalContainer: mixed |}) {
           id: event.transactionID,
           params: event.params,
           variables: event.variables,
-          status: 'started',
+          status: 'active',
           responses: [],
           infos: [],
         });
@@ -108,6 +97,21 @@ export default function Network(props: {| +portalContainer: mixed |}) {
   }
 
   const requestRows = Array.from(requests.values(), request => {
+    let statusClass;
+    switch (request.status) {
+      case 'unsubscribed':
+        statusClass = styles.StatusUnsubscribed;
+        break;
+      case 'error':
+        statusClass = styles.StatusError;
+        break;
+      case 'active':
+        statusClass = styles.StatusActive;
+        break;
+      default:
+        statusClass = '';
+        break;
+    }
     return (
       <div
         key={request.id}
@@ -116,7 +120,7 @@ export default function Network(props: {| +portalContainer: mixed |}) {
         }}
         className={`${styles.Request} ${
           request.id === selectedRequestID ? styles.SelectedRequest : ''
-        }`}
+        } ${statusClass}`}
       >
         {request.params.name} ({request.status})
       </div>
@@ -129,34 +133,36 @@ export default function Network(props: {| +portalContainer: mixed |}) {
         <Button onClick={store.clearEvents} title="Clear Logs">
           <ButtonIcon type="clear" />
         </Button>
-        <TabBar
-          currentTab={selectedTabID}
-          id="Profiler"
-          selectTab={setSelectedTabID}
-          tabs={tabs}
-          size="small"
-        />
         <div className={styles.Spacer} />
       </div>
       <div className={styles.Content}>
         <div className={styles.Requests}>{requestRows}</div>
         <div className={styles.RequestDetails}>
-          <div>
-            Variables:{' '}
-            {JSON.stringify(requests.get(selectedRequestID)?.variables)}
-          </div>
-          <pre>
-            Reponses:{' '}
+          <Section title="Status">
+            {requests.get(selectedRequestID)?.status || 'null'}
+          </Section>
+          <Section title="Request">
+            {JSON.stringify(requests.get(selectedRequestID)?.params, null, 2) ||
+              'null'}
+          </Section>
+          <Section title="Variables">
+            {JSON.stringify(
+              requests.get(selectedRequestID)?.variables,
+              null,
+              2
+            ) || 'null'}
+          </Section>
+          <Section title="Responses">
             {JSON.stringify(
               requests.get(selectedRequestID)?.responses,
               null,
               2
-            )}
-          </pre>
-          <pre>
-            Infos:{' '}
-            {JSON.stringify(requests.get(selectedRequestID)?.infos, null, 2)}
-          </pre>
+            ) || ''}
+          </Section>
+          <Section title="Info">
+            {JSON.stringify(requests.get(selectedRequestID)?.infos, null, 2) ||
+              ''}
+          </Section>
         </div>
       </div>
     </div>
