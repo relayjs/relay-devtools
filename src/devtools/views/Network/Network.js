@@ -35,9 +35,9 @@ export default function Network(props: {| +portalContainer: mixed |}) {
     const onMutated = () => {
       forceUpdate({});
     };
-    store.on('mutated', onMutated);
+    store.addListener('mutated', onMutated);
     return () => {
-      store.off('mutated', onMutated);
+      store.removeListener('mutated', onMutated);
     };
   }, [store]);
 
@@ -57,6 +57,7 @@ export default function Network(props: {| +portalContainer: mixed |}) {
           variables: event.variables,
           status: 'started',
           responses: [],
+          infos: [],
         });
         break;
       }
@@ -74,12 +75,34 @@ export default function Network(props: {| +portalContainer: mixed |}) {
         }
         break;
       }
+      case 'execute.info': {
+        const request = requests.get(event.transactionID);
+        if (request != null) {
+          request.infos.push(event.info);
+        }
+        break;
+      }
       case 'execute.unsubscribe': {
         const request = requests.get(event.transactionID);
         if (request != null) {
           request.status = 'unsubscribed';
         }
         break;
+      }
+      case 'execute.error': {
+        const request = requests.get(event.transactionID);
+        if (request != null) {
+          request.status = 'error';
+        }
+        break;
+      }
+      case 'queryresource.fetch':
+        // ignore
+        break;
+      default: {
+        /*:: (event.name: null); */
+        break;
+        // ignore unknown events
       }
     }
   }
@@ -103,10 +126,7 @@ export default function Network(props: {| +portalContainer: mixed |}) {
   return (
     <div className={styles.Network}>
       <div className={styles.Toolbar}>
-        <Button
-          onClick={store.clearEvents}
-          title="Clear Logs"
-        >
+        <Button onClick={store.clearEvents} title="Clear Logs">
           <ButtonIcon type="clear" />
         </Button>
         <TabBar
@@ -132,6 +152,10 @@ export default function Network(props: {| +portalContainer: mixed |}) {
               null,
               2
             )}
+          </pre>
+          <pre>
+            Infos:{' '}
+            {JSON.stringify(requests.get(selectedRequestID)?.infos, null, 2)}
           </pre>
         </div>
       </div>
