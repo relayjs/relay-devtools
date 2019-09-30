@@ -35,4 +35,4 @@ esproposal.optional_chaining=enable
 [strict]
 
 [version]
-^0.106.0
+^0.108.0

@@ -111,7 +111,7 @@
     "eslint-plugin-react-hooks": "^1.7.0",
     "events": "^3.0.0",
     "firefox-profile": "^1.0.2",
-    "flow-bin": "^0.106.3",
+    "flow-bin": "^0.108.0",
     "fs-extra": "^3.0.1",
     "gh-pages": "^1.0.0",
     "graphql": "^14.4.2",
