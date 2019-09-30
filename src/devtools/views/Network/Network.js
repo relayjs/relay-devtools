@@ -7,12 +7,46 @@ import Button from '../Button';
 
 import styles from './Network.css';
 
+type RequestStatus = 'active' | 'unsubscribed' | 'completed' | 'error';
+type RequestEntry = {|
+  +id: number,
+  params: any,
+  variables: { [string]: mixed },
+  status: RequestStatus,
+  responses: Array<mixed>,
+  infos: Array<mixed>,
+|};
+
 function Section(props: {| title: string, children: React$Node |}) {
   return (
     <>
       <div className={styles.SectionTitle}>{props.title}</div>
       <div className={styles.SectionContent}>{props.children}</div>
     </>
+  );
+}
+
+function RequestDetails(props: {| request: ?RequestEntry |}) {
+  const request = props.request;
+  if (request == null) {
+    return <div className={styles.RequestDetails}>No request selected</div>;
+  }
+  return (
+    <div className={styles.RequestDetails}>
+      <Section title="Status">{request.status}</Section>
+      <Section title="Request">
+        {JSON.stringify(request.params, null, 2) || 'null'}
+      </Section>
+      <Section title="Variables">
+        {JSON.stringify(request.variables, null, 2) || 'null'}
+      </Section>
+      <Section title="Responses">
+        {JSON.stringify(request.responses, null, 2) || ''}
+      </Section>
+      <Section title="Info">
+        {JSON.stringify(request.infos, null, 2) || ''}
+      </Section>
+    </div>
   );
 }
 
@@ -32,10 +66,9 @@ export default function Network(props: {| +portalContainer: mixed |}) {
   }, [store]);
 
   const [selectedRequestID, setSelectedRequestID] = useState(0);
-
   const events = store.getEvents();
 
-  const requests = new Map();
+  const requests: Map<number, RequestEntry> = new Map();
 
   for (const event of events) {
     switch (event.name) {
@@ -96,7 +129,12 @@ export default function Network(props: {| +portalContainer: mixed |}) {
     }
   }
 
+  let selectedRequest = requests.get(selectedRequestID);
+
   const requestRows = Array.from(requests.values(), request => {
+    if (selectedRequest == null) {
+      selectedRequest = request;
+    }
     let statusClass;
     switch (request.status) {
       case 'unsubscribed':
@@ -119,7 +157,7 @@ export default function Network(props: {| +portalContainer: mixed |}) {
           setSelectedRequestID(request.id);
         }}
         className={`${styles.Request} ${
-          request.id === selectedRequestID ? styles.SelectedRequest : ''
+          request.id === selectedRequest?.id ? styles.SelectedRequest : ''
         } ${statusClass}`}
       >
         {request.params.name} ({request.status})
@@ -137,33 +175,7 @@ export default function Network(props: {| +portalContainer: mixed |}) {
       </div>
       <div className={styles.Content}>
         <div className={styles.Requests}>{requestRows}</div>
-        <div className={styles.RequestDetails}>
-          <Section title="Status">
-            {requests.get(selectedRequestID)?.status || 'null'}
-          </Section>
-          <Section title="Request">
-            {JSON.stringify(requests.get(selectedRequestID)?.params, null, 2) ||
-              'null'}
-          </Section>
-          <Section title="Variables">
-            {JSON.stringify(
-              requests.get(selectedRequestID)?.variables,
-              null,
-              2
-            ) || 'null'}
-          </Section>
-          <Section title="Responses">
-            {JSON.stringify(
-              requests.get(selectedRequestID)?.responses,
-              null,
-              2
-            ) || ''}
-          </Section>
-          <Section title="Info">
-            {JSON.stringify(requests.get(selectedRequestID)?.infos, null, 2) ||
-              ''}
-          </Section>
-        </div>
+        <RequestDetails request={selectedRequest} />
       </div>
     </div>
   );
