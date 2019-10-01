@@ -27,7 +27,7 @@ window.addEventListener('message', function(evt) {
   if (
     evt.source === window &&
     evt.data &&
-    evt.data.source === 'react-devtools-detector'
+    evt.data.source === 'relay-devtools-detector'
   ) {
     lastDetectionResult = {
       hasDetectedReact: true,
@@ -48,9 +48,9 @@ window.addEventListener('pageshow', function(evt) {
 });
 
 const detectRelay = `
-window.__RELAY_DEVTOOLS_HOOK__.on('renderer', function(evt) {
+window.__RELAY_DEVTOOLS_HOOK__.on('environment', function(evt) {
   window.postMessage({
-    source: 'react-devtools-detector',
+    source: 'relay-devtools-detector',
   }, '*');
 });
 `;
