@@ -58,32 +58,32 @@
       const { Fragment, useCallback, useState } = React;
 
       function List(props) {
-        const [newItemText, setNewItemText] = useState("");
+        const [newItemText, setNewItemText] = useState('');
         const [items, setItems] = useState([
-          { id: 1, isComplete: true, text: "First" },
-          { id: 2, isComplete: true, text: "Second" },
-          { id: 3, isComplete: false, text: "Third" }
+          { id: 1, isComplete: true, text: 'First' },
+          { id: 2, isComplete: true, text: 'Second' },
+          { id: 3, isComplete: false, text: 'Third' },
         ]);
         const [uid, setUID] = useState(4);
 
         const handleClick = useCallback(() => {
-          if (newItemText !== "") {
+          if (newItemText !== '') {
             setItems([
               ...items,
               {
                 id: uid,
                 isComplete: false,
-                text: newItemText
-              }
+                text: newItemText,
+              },
             ]);
             setUID(uid + 1);
-            setNewItemText("");
+            setNewItemText('');
           }
         }, [newItemText, items, uid]);
 
         const handleKeyPress = useCallback(
           event => {
-            if (event.key === "Enter") {
+            if (event.key === 'Enter') {
               handleClick();
             }
           },
@@ -111,7 +111,7 @@
                 .slice(0, index)
                 .concat({
                   ...itemToToggle,
-                  isComplete: !itemToToggle.isComplete
+                  isComplete: !itemToToggle.isComplete,
                 })
                 .concat(items.slice(index + 1))
             );
@@ -132,7 +132,7 @@
             />
             <button
               className="IconButton"
-              disabled={newItemText === ""}
+              disabled={newItemText === ''}
               onClick={handleClick}
             >
               <span role="img" aria-label="Add item">
@@ -173,7 +173,7 @@
                 checked={item.isComplete}
                 onChange={handleToggle}
                 type="checkbox"
-              />{" "}
+              />{' '}
               {item.text}
             </label>
           </li>
@@ -208,13 +208,14 @@
       }
 
       const object = {
-        string: "abc",
-        longString: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKJLMNOPQRSTUVWXYZ1234567890",
-        emptyString: "",
+        string: 'abc',
+        longString:
+          'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKJLMNOPQRSTUVWXYZ1234567890',
+        emptyString: '',
         number: 123,
         boolean: true,
         undefined: undefined,
-        null: null
+        null: null,
       };
 
       function ObjectProps() {
@@ -222,12 +223,12 @@
           <ChildComponent
             object={{
               outer: {
-                inner: object
-              }
+                inner: object,
+              },
             }}
-            array={["first", "second", "third"]}
+            array={['first', 'second', 'third']}
             objectInArray={[object]}
-            arrayInObject={{ array: ["first", "second", "third"] }}
+            arrayInObject={{ array: ['first', 'second', 'third'] }}
             deepObject={{
               // Known limitation: we won't go deeper than several levels.
               // In the future, we might offer a way to request deeper access on demand.
@@ -240,16 +241,16 @@
                           g: {
                             h: {
                               i: {
-                                j: 10
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
+                                j: 10,
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
             }}
           />
         );
@@ -278,7 +279,7 @@
         );
       }
 
-      ReactDOM.render(<App />, document.getElementById("root"));
+      ReactDOM.render(<App />, document.getElementById('root'));
     </script>
   </body>
 </html>
