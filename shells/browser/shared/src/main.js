@@ -124,15 +124,9 @@ function createPanelIfReactLoaded() {
       }
 
       let currentPanel = null;
-      let needsToSyncElementSelection = false;
 
       chrome.devtools.panels.create('⚛ Components', '', 'panel.html', panel => {
         panel.onShown.addListener(panel => {
-          if (needsToSyncElementSelection) {
-            needsToSyncElementSelection = false;
-            bridge.send('syncSelectionFromNativeElementsPanel');
-          }
-
           if (currentPanel === panel) {
             return;
           }
