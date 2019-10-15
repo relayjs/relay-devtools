@@ -7,15 +7,7 @@ import Store from 'src/devtools/store';
 import inject from './inject';
 import { createViewElementSource, getBrowserTheme } from './utils';
 import { getSavedComponentFilters } from 'src/utils';
-import {
-  localStorageGetItem,
-  localStorageRemoveItem,
-  localStorageSetItem,
-} from 'src/storage';
 import DevTools from 'src/devtools/views/DevTools';
-
-const LOCAL_STORAGE_SUPPORTS_PROFILING_KEY =
-  'React::DevTools::supportsProfiling';
 
 let panelCreated = false;
 
@@ -86,10 +78,6 @@ function createPanelIfReactLoaded() {
             port.postMessage({ event, payload }, transferable);
           },
         });
-        bridge.addListener('reloadAppForProfiling', () => {
-          localStorageSetItem(LOCAL_STORAGE_SUPPORTS_PROFILING_KEY, 'true');
-          chrome.devtools.inspectedWindow.eval('window.location.reload();');
-        });
         bridge.addListener('syncSelectionToNativeElementsPanel', () => {
           setBrowserSelectionFromReact();
         });
@@ -97,18 +85,9 @@ function createPanelIfReactLoaded() {
         // This flag lets us tip the Store off early that we expect to be profiling.
         // This avoids flashing a temporary "Profiling not supported" message in the Profiler tab,
         // after a user has clicked the "reload and profile" button.
-        let isProfiling = false;
         let supportsProfiling = false;
-        if (
-          localStorageGetItem(LOCAL_STORAGE_SUPPORTS_PROFILING_KEY) === 'true'
-        ) {
-          supportsProfiling = true;
-          isProfiling = true;
-          localStorageRemoveItem(LOCAL_STORAGE_SUPPORTS_PROFILING_KEY);
-        }
 
         store = new Store(bridge, {
-          isProfiling,
           supportsCaptureScreenshots: true,
           supportsReloadAndProfile: true,
           supportsProfiling,

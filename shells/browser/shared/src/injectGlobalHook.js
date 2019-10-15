@@ -1,9 +1,10 @@
+/**
+ * @flow
+ */
 /* global chrome */
 
 import nullthrows from 'nullthrows';
 import { installHook } from 'src/hook';
-import { SESSION_STORAGE_RELOAD_AND_PROFILE_KEY } from 'src/constants';
-import { sessionStorageGetItem } from 'src/storage';
 
 function injectCode(code) {
   const script = document.createElement('script');
@@ -54,25 +55,6 @@ window.__RELAY_DEVTOOLS_HOOK__.on('environment', function(evt) {
   }, '*');
 });
 `;
-
-// If we have just reloaded to profile, we need to inject the renderer interface before the app loads.
-if (sessionStorageGetItem(SESSION_STORAGE_RELOAD_AND_PROFILE_KEY) === 'true') {
-  const rendererURL = chrome.runtime.getURL('build/renderer.js');
-  let rendererCode;
-
-  // We need to inject in time to catch the initial mount.
-  // This means we need to synchronously read the renderer code itself,
-  // and synchronously inject it into the page.
-  // There are very few ways to actually do this.
-  // This seems to be the best approach.
-  const request = new XMLHttpRequest();
-  request.addEventListener('load', function() {
-    rendererCode = this.responseText;
-  });
-  request.open('GET', rendererURL, false);
-  request.send();
-  injectCode(rendererCode);
-}
 
 // Inject a `__RELAY_DEVTOOLS_HOOK__` global so that Relay can detect that the
 // devtools are installed (and skip its suggestion to install the devtools).
