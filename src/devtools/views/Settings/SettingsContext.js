@@ -29,7 +29,6 @@ type Props = {|
   browserTheme: BrowserTheme,
   children: React$Node,
   componentsPortalContainer?: Element,
-  profilerPortalContainer?: Element,
   settingsPortalContainer?: Element,
 |};
 
@@ -37,7 +36,6 @@ function SettingsContextController({
   browserTheme,
   children,
   componentsPortalContainer,
-  profilerPortalContainer,
   settingsPortalContainer,
 }: Props) {
   const [displayDensity, setDisplayDensity] = useLocalStorage<DisplayDensity>(
@@ -59,12 +57,6 @@ function SettingsContextController({
           .documentElement: any): HTMLElement)
       );
     }
-    if (profilerPortalContainer != null) {
-      array.push(
-        ((profilerPortalContainer.ownerDocument
-          .documentElement: any): HTMLElement)
-      );
-    }
     if (settingsPortalContainer != null) {
       array.push(
         ((settingsPortalContainer.ownerDocument
@@ -72,11 +64,7 @@ function SettingsContextController({
       );
     }
     return array;
-  }, [
-    componentsPortalContainer,
-    profilerPortalContainer,
-    settingsPortalContainer,
-  ]);
+  }, [componentsPortalContainer, settingsPortalContainer]);
 
   const computedStyle = getComputedStyle((document.body: any));
   const comfortableLineHeight = parseInt(

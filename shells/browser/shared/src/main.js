@@ -30,7 +30,6 @@ function createPanelIfReactLoaded() {
       let store = null;
 
       let componentsPortalContainer = null;
-      let profilerPortalContainer = null;
       let settingsPortalContainer = null;
 
       let cloneStyleTags = null;
@@ -84,7 +83,6 @@ function createPanelIfReactLoaded() {
               browserTheme: getBrowserTheme(),
               componentsPortalContainer,
               overrideTab,
-              profilerPortalContainer,
               settingsPortalContainer,
               showTabBar: false,
               store,
@@ -139,23 +137,6 @@ function createPanelIfReactLoaded() {
         });
         panel.onHidden.addListener(() => {
           // TODO: Stop highlighting and stuff.
-        });
-      });
-
-      chrome.devtools.panels.create('⚛ Profiler', '', 'panel.html', panel => {
-        panel.onShown.addListener(panel => {
-          if (currentPanel === panel) {
-            return;
-          }
-
-          currentPanel = panel;
-          profilerPortalContainer = panel.container;
-
-          if (profilerPortalContainer != null) {
-            ensureInitialHTMLIsCleared(profilerPortalContainer);
-            render('profiler');
-            panel.injectStyles(cloneStyleTags);
-          }
         });
       });
 

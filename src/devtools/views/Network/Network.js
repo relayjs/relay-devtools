@@ -5,6 +5,7 @@ import { StoreContext } from '../context';
 import ButtonIcon from '../ButtonIcon';
 import Button from '../Button';
 
+import portaledContent from '../portaledContent';
 import styles from './Network.css';
 
 type RequestStatus = 'active' | 'unsubscribed' | 'completed' | 'error';
@@ -50,7 +51,7 @@ function RequestDetails(props: {| request: ?RequestEntry |}) {
   );
 }
 
-export default function Network(props: {| +portalContainer: mixed |}) {
+function Network(props: {| +portalContainer: mixed |}) {
   const store = useContext(StoreContext);
 
   const [, forceUpdate] = useState({});
@@ -180,3 +181,5 @@ export default function Network(props: {| +portalContainer: mixed |}) {
     </div>
   );
 }
+
+export default portaledContent(Network);
