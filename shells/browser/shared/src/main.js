@@ -29,8 +29,6 @@ function createPanelIfReactLoaded() {
       let bridge = null;
       let store = null;
 
-      let profilingData = null;
-
       let componentsPortalContainer = null;
       let profilerPortalContainer = null;
       let settingsPortalContainer = null;
@@ -65,7 +63,6 @@ function createPanelIfReactLoaded() {
         });
 
         store = new Store(bridge);
-        store.profilerStore.profilingData = profilingData;
 
         // Initialize the backend only once the Store has been initialized.
         // Otherwise the Store may miss important initial tree op codes.
@@ -174,8 +171,6 @@ function createPanelIfReactLoaded() {
 
           // `bridge.shutdown()` will remove all listeners we added, so we don't have to.
           bridge.shutdown();
-
-          profilingData = store.profilerStore.profilingData;
         }
       );
 
