@@ -16,9 +16,9 @@ function createPanelIfReactLoaded() {
   }
 
   chrome.devtools.inspectedWindow.eval(
-    'window.__RELAY_DEVTOOLS_HOOK__ && window.__RELAY_DEVTOOLS_HOOK__.renderers.size > 0',
-    function(pageHasReact, error) {
-      if (!pageHasReact || panelCreated) {
+    'window.__RELAY_DEVTOOLS_HOOK__ && window.__RELAY_DEVTOOLS_HOOK__.environments.size > 0',
+    (pageHasRelay, error) => {
+      if (!pageHasRelay || panelCreated) {
         return;
       }
 
