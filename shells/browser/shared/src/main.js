@@ -125,7 +125,7 @@ function createPanelIfReactLoaded() {
 
       let currentPanel = null;
 
-      chrome.devtools.panels.create('⚛ Components', '', 'panel.html', panel => {
+      chrome.devtools.panels.create('Relay', '', 'panel.html', panel => {
         panel.onShown.addListener(panel => {
           if (currentPanel === panel) {
             return;
