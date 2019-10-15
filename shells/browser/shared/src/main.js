@@ -29,7 +29,7 @@ function createPanelIfReactLoaded() {
       let bridge = null;
       let store = null;
 
-      let componentsPortalContainer = null;
+      let networkPortalContainer = null;
       let settingsPortalContainer = null;
 
       let cloneStyleTags = null;
@@ -81,7 +81,7 @@ function createPanelIfReactLoaded() {
             createElement(DevTools, {
               bridge,
               browserTheme: getBrowserTheme(),
-              componentsPortalContainer,
+              networkPortalContainer,
               overrideTab,
               settingsPortalContainer,
               showTabBar: false,
@@ -127,10 +127,10 @@ function createPanelIfReactLoaded() {
           }
 
           currentPanel = panel;
-          componentsPortalContainer = panel.container;
+          networkPortalContainer = panel.container;
 
-          if (componentsPortalContainer != null) {
-            ensureInitialHTMLIsCleared(componentsPortalContainer);
+          if (networkPortalContainer != null) {
+            ensureInitialHTMLIsCleared(networkPortalContainer);
             render('components');
             panel.injectStyles(cloneStyleTags);
           }

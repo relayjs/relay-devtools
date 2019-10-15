@@ -28,14 +28,14 @@ type DocumentElements = Array<HTMLElement>;
 type Props = {|
   browserTheme: BrowserTheme,
   children: React$Node,
-  componentsPortalContainer?: Element,
+  networkPortalContainer?: Element,
   settingsPortalContainer?: Element,
 |};
 
 function SettingsContextController({
   browserTheme,
   children,
-  componentsPortalContainer,
+  networkPortalContainer,
   settingsPortalContainer,
 }: Props) {
   const [displayDensity, setDisplayDensity] = useLocalStorage<DisplayDensity>(
@@ -51,9 +51,9 @@ function SettingsContextController({
     const array: Array<HTMLElement> = [
       ((document.documentElement: any): HTMLElement),
     ];
-    if (componentsPortalContainer != null) {
+    if (networkPortalContainer != null) {
       array.push(
-        ((componentsPortalContainer.ownerDocument
+        ((networkPortalContainer.ownerDocument
           .documentElement: any): HTMLElement)
       );
     }
@@ -64,7 +64,7 @@ function SettingsContextController({
       );
     }
     return array;
-  }, [componentsPortalContainer, settingsPortalContainer]);
+  }, [networkPortalContainer, settingsPortalContainer]);
 
   const computedStyle = getComputedStyle((document.body: any));
   const comfortableLineHeight = parseInt(
