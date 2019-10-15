@@ -29,7 +29,7 @@ export default class Store extends EventEmitter<{|
 |}> {
   _bridge: FrontendBridge;
 
-  _events: Array<LogEvent> = [];
+  _environmentEvents: Array<LogEvent> = [];
 
   constructor(bridge: FrontendBridge) {
     super();
@@ -39,16 +39,16 @@ export default class Store extends EventEmitter<{|
   }
 
   getEvents(): $ReadOnlyArray<LogEvent> {
-    return this._events;
+    return this._environmentEvents;
   }
 
   onBridgeEvents = (events: Array<LogEvent>) => {
-    this._events.push(...events);
+    this._environmentEvents.push(...events);
     this.emit('mutated');
   };
 
   clearEvents = () => {
-    this._events.length = 0;
+    this._environmentEvents.length = 0;
     this.emit('mutated');
   };
 
