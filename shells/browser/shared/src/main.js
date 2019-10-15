@@ -157,9 +157,6 @@ function createPanelIfReactLoaded() {
 
       // Re-initialize DevTools panel when a new page is loaded.
       chrome.devtools.network.onNavigated.addListener(function onNavigated() {
-        // Re-initialize saved filters on navigation,
-        // since global values stored on window get reset in this case.
-
         // It's easiest to recreate the DevTools panel (to clean up potential stale state).
         // We can revisit this in the future as a small optimization.
         flushSync(() => {
