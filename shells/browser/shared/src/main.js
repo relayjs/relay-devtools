@@ -64,16 +64,7 @@ function createPanelIfReactLoaded() {
           },
         });
 
-        // This flag lets us tip the Store off early that we expect to be profiling.
-        // This avoids flashing a temporary "Profiling not supported" message in the Profiler tab,
-        // after a user has clicked the "reload and profile" button.
-        let supportsProfiling = false;
-
-        store = new Store(bridge, {
-          supportsCaptureScreenshots: true,
-          supportsReloadAndProfile: true,
-          supportsProfiling,
-        });
+        store = new Store(bridge);
         store.profilerStore.profilingData = profilingData;
 
         // Initialize the backend only once the Store has been initialized.
