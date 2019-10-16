@@ -8,19 +8,15 @@ import KeyValue from './KeyValue';
 import { alphaSortEntries, serializeDataForCopy } from '../utils';
 import styles from './InspectedElementTree.css';
 
-type OverrideValueFn = (path: Array<string | number>, value: any) => void;
-
 type Props = {|
   data: Object | null,
   label: string,
-  overrideValueFn?: ?OverrideValueFn,
   showWhenEmpty?: boolean,
 |};
 
 export default function InspectedElementTree({
   data,
   label,
-  overrideValueFn,
   showWhenEmpty = false,
 }: Props) {
   const entries = data != null ? Object.entries(data) : null;
@@ -55,7 +51,6 @@ export default function InspectedElementTree({
               alphaSort={true}
               depth={1}
               name={name}
-              overrideValueFn={overrideValueFn}
               path={[name]}
               value={value}
             />

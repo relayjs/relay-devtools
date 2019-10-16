@@ -5,18 +5,13 @@ import type { Element } from 'react';
 // import EditableValue from './EditableValue';
 import ExpandCollapseToggle from './ExpandCollapseToggle';
 import { alphaSortEntries } from '../utils';
-// import { meta } from '../../../hydration';
 import styles from './KeyValue.css';
-
-type OverrideValueFn = (path: Array<string | number>, value: any) => void;
 
 type KeyValueProps = {|
   alphaSort: boolean,
   depth: number,
   hidden?: boolean,
-  isReadOnly?: boolean,
   name: string,
-  overrideValueFn?: ?OverrideValueFn,
   path: Array<any>,
   value: any,
 |};
@@ -24,10 +19,8 @@ type KeyValueProps = {|
 export default function KeyValue({
   alphaSort,
   depth,
-  isReadOnly,
   hidden,
   name,
-  overrideValueFn,
   path,
   value,
 }: KeyValueProps) {
@@ -59,25 +52,11 @@ export default function KeyValue({
       displayValue = 'undefined';
     }
 
-    const isEditable = typeof overrideValueFn === 'function' && !isReadOnly;
-
     children = (
       <div key="root" className={styles.Item} hidden={hidden} style={style}>
         <div className={styles.ExpandCollapseToggleSpacer} />
-        <span className={isEditable ? styles.EditableName : styles.Name}>
-          {name}
-        </span>
-        {isEditable ? (
-          /* <EditableValue
-            dataType={dataType}
-            overrideValueFn={((overrideValueFn: any): OverrideValueFn)}
-            path={path}
-            value={value}
-          /> */
-          'NOT SUPPORTED'
-        ) : (
-          <span className={styles.Value}>{displayValue}</span>
-        )}
+        <span className={styles.Name}>{name}</span>
+        <span className={styles.Value}>{displayValue}</span>
       </div>
     );
   } else {
@@ -89,10 +68,8 @@ export default function KeyValue({
           key={index}
           alphaSort={alphaSort}
           depth={depth + 1}
-          isReadOnly={isReadOnly}
           hidden={hidden || !isOpen}
           name={index}
-          overrideValueFn={overrideValueFn}
           path={path.concat(index)}
           value={value[index]}
         />
@@ -122,9 +99,6 @@ export default function KeyValue({
         </div>
       );
     } else {
-      // TRICKY
-      // It's important to use Object.entries() rather than Object.keys()
-      // because of the hidden meta Symbols used for hydration and unserializable values.
       const entries = Object.entries(value);
       if (alphaSort) {
         entries.sort(alphaSortEntries);
@@ -133,16 +107,13 @@ export default function KeyValue({
       const hasChildren = entries.length > 0;
       const displayName = 'Object';
 
-      let areChildrenReadOnly = isReadOnly; /*|| !!value[meta.readonly]*/
       children = entries.map<Element<any>>(([name, value]) => (
         <KeyValue
           key={name}
           alphaSort={alphaSort}
           depth={depth + 1}
-          isReadOnly={areChildrenReadOnly}
           hidden={hidden || !isOpen}
           name={name}
-          overrideValueFn={overrideValueFn}
           path={path.concat(name)}
           value={value}
         />
