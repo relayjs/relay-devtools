@@ -21,6 +21,12 @@ export default createPaginationContainer(
       return null;
     }
 
+    if (edges.length < 5) {
+      setTimeout(() => {
+        props.relay.loadMore();
+      }, 300);
+    }
+
     return (
       <Fragment>
         <ul className={styles.FriendsList}>

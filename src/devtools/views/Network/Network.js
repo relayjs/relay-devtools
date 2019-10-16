@@ -4,6 +4,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { StoreContext } from '../context';
 import ButtonIcon from '../ButtonIcon';
 import Button from '../Button';
+import InspectedElementTree from '../Components/InspectedElementTree';
 
 import portaledContent from '../portaledContent';
 import styles from './Network.css';
@@ -32,21 +33,33 @@ function RequestDetails(props: {| request: ?RequestEntry |}) {
   if (request == null) {
     return <div className={styles.RequestDetails}>No request selected</div>;
   }
+  const responses = request.responses.map((response, i) => (
+    <InspectedElementTree
+      key={i}
+      label={
+        request.responses.length > 1
+          ? `response (${i} of ${request.responses.length})`
+          : 'response'
+      }
+      data={response}
+      showWhenEmpty
+    />
+  ));
   return (
     <div className={styles.RequestDetails}>
       <Section title="Status">{request.status}</Section>
-      <Section title="Request">
-        {JSON.stringify(request.params, null, 2) || 'null'}
-      </Section>
-      <Section title="Variables">
-        {JSON.stringify(request.variables, null, 2) || 'null'}
-      </Section>
-      <Section title="Responses">
-        {JSON.stringify(request.responses, null, 2) || ''}
-      </Section>
-      <Section title="Info">
-        {JSON.stringify(request.infos, null, 2) || ''}
-      </Section>
+      <InspectedElementTree
+        label="request"
+        data={request.params}
+        showWhenEmpty
+      />
+      <InspectedElementTree
+        label="variables"
+        data={request.variables}
+        showWhenEmpty
+      />
+      <InspectedElementTree label="info" data={request.infos} />
+      {responses}
     </div>
   );
 }
