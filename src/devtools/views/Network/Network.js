@@ -38,7 +38,7 @@ function RequestDetails(props: {| request: ?RequestEntry |}) {
       key={i}
       label={
         request.responses.length > 1
-          ? `response (${i} of ${request.responses.length})`
+          ? `response (${i + 1} of ${request.responses.length})`
           : 'response'
       }
       data={response}
