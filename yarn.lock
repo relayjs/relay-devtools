@@ -2409,7 +2409,7 @@ babel-plugin-macros@^2.0.0:
     resolve "^1.10.0"
 
 "babel-plugin-relay@file:../relay/dist/babel-plugin-relay":
-  version "6.0.0"
+  version "7.0.0"
   dependencies:
     babel-plugin-macros "^2.0.0"
 
@@ -2427,10 +2427,10 @@ babel-polyfill@6.16.0:
     core-js "^2.4.0"
     regenerator-runtime "^0.9.5"
 
-babel-preset-fbjs@^3.1.2:
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/babel-preset-fbjs/-/babel-preset-fbjs-3.2.0.tgz#c0e6347d3e0379ed84b3c2434d3467567aa05297"
-  integrity sha512-5Jo+JeWiVz2wHUUyAlvb/sSYnXNig9r+HqGAOSfh5Fzxp7SnAaR/tEGRJ1ZX7C77kfk82658w6R5Z+uPATTD9g==
+babel-preset-fbjs@^3.3.0:
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/babel-preset-fbjs/-/babel-preset-fbjs-3.3.0.tgz#a6024764ea86c8e06a22d794ca8b69534d263541"
+  integrity sha512-7QTLTCd2gwB2qGoi5epSULMHugSVgpcVt5YAeiFO9ABLrutDQzKfGwzxgZHLpugq8qMdg/DhRZDZ5CLKxBkEbw==
   dependencies:
     "@babel/plugin-proposal-class-properties" "^7.0.0"
     "@babel/plugin-proposal-object-rest-spread" "^7.0.0"
@@ -9804,12 +9804,12 @@ react-is@^16.8.4:
   integrity sha512-PVadd+WaUDOAciICm/J1waJaSvgq+4rHE/K70j0PFqKhkTBsPv/82UGQJNXAngz1fOQLLxI6z1sEDmJDQhCTAA==
 
 "react-relay@file:../relay/dist/react-relay":
-  version "6.0.0"
+  version "7.0.0"
   dependencies:
     "@babel/runtime" "^7.0.0"
     fbjs "^1.0.0"
     nullthrows "^1.1.1"
-    relay-runtime "6.0.0"
+    relay-runtime "7.0.0"
 
 react-test-renderer@^0.0.0-50b50c26f:
   version "0.0.0-50b50c26f"
@@ -10117,7 +10117,7 @@ relaxed-json@1.0.1:
     commander "^2.6.0"
 
 "relay-compiler@file:../relay/dist/relay-compiler":
-  version "6.0.0"
+  version "7.0.0"
   dependencies:
     "@babel/core" "^7.0.0"
     "@babel/generator" "^7.0.0"
@@ -10125,24 +10125,24 @@ relaxed-json@1.0.1:
     "@babel/runtime" "^7.0.0"
     "@babel/traverse" "^7.0.0"
     "@babel/types" "^7.0.0"
-    babel-preset-fbjs "^3.1.2"
+    babel-preset-fbjs "^3.3.0"
     chalk "^2.4.1"
     fast-glob "^2.2.2"
     fb-watchman "^2.0.0"
     fbjs "^1.0.0"
     immutable "~3.7.6"
     nullthrows "^1.1.1"
-    relay-runtime "6.0.0"
+    relay-runtime "7.0.0"
     signedsource "^1.0.0"
     yargs "^9.0.0"
 
 "relay-config@file:../relay/dist/relay-config":
-  version "6.0.0"
+  version "7.0.0"
   dependencies:
     cosmiconfig "^5.0.5"
 
-relay-runtime@6.0.0, "relay-runtime@file:../relay/dist/relay-runtime":
-  version "6.0.0"
+relay-runtime@7.0.0, "relay-runtime@file:../relay/dist/relay-runtime":
+  version "7.0.0"
   dependencies:
     "@babel/runtime" "^7.0.0"
     fbjs "^1.0.0"
