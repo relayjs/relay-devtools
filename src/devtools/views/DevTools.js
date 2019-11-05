@@ -86,6 +86,7 @@ export default function DevTools({
         <ModalDialogContextController>
           <SettingsContextController
             browserTheme={browserTheme}
+            networkPortalContainer={networkPortalContainer}
             settingsPortalContainer={settingsPortalContainer}
           >
             <div className={styles.DevTools}>
