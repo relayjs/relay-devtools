@@ -25,6 +25,10 @@ export default function KeyValue({
   value,
 }: KeyValueProps) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [wasOpen, setWasOpen] = useState<boolean>(isOpen);
+  if (isOpen && !wasOpen) {
+    setWasOpen(true);
+  }
 
   const toggleIsOpen = () => setIsOpen(prevIsOpen => !prevIsOpen);
 
@@ -63,17 +67,19 @@ export default function KeyValue({
     if (Array.isArray(value)) {
       const hasChildren = value.length > 0;
 
-      children = value.map((innerValue, index) => (
-        <KeyValue
-          key={index}
-          alphaSort={alphaSort}
-          depth={depth + 1}
-          hidden={hidden || !isOpen}
-          name={index}
-          path={path.concat(index)}
-          value={value[index]}
-        />
-      ));
+      children = wasOpen
+        ? value.map((innerValue, index) => (
+            <KeyValue
+              key={index}
+              alphaSort={alphaSort}
+              depth={depth + 1}
+              hidden={hidden || !isOpen}
+              name={index}
+              path={path.concat(index)}
+              value={value[index]}
+            />
+          ))
+        : [];
       children.unshift(
         <div
           key={`${depth}-root`}
@@ -107,17 +113,19 @@ export default function KeyValue({
       const hasChildren = entries.length > 0;
       const displayName = 'Object';
 
-      children = entries.map<Element<any>>(([name, value]) => (
-        <KeyValue
-          key={name}
-          alphaSort={alphaSort}
-          depth={depth + 1}
-          hidden={hidden || !isOpen}
-          name={name}
-          path={path.concat(name)}
-          value={value}
-        />
-      ));
+      children = wasOpen
+        ? entries.map<Element<any>>(([name, value]) => (
+            <KeyValue
+              key={name}
+              alphaSort={alphaSort}
+              depth={depth + 1}
+              hidden={hidden || !isOpen}
+              name={name}
+              path={path.concat(name)}
+              value={value}
+            />
+          ))
+        : [];
       children.unshift(
         <div
           key={`${depth}-root`}
