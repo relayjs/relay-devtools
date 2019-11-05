@@ -39,11 +39,11 @@ function SettingsContextController({
   settingsPortalContainer,
 }: Props) {
   const [displayDensity, setDisplayDensity] = useLocalStorage<DisplayDensity>(
-    'React::DevTools::displayDensity',
+    'Relay::DevTools::displayDensity',
     'compact'
   );
   const [theme, setTheme] = useLocalStorage<Theme>(
-    'React::DevTools::theme',
+    'Relay::DevTools::theme',
     'auto'
   );
 

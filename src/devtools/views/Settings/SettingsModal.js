@@ -29,7 +29,7 @@ function SettingsModalImpl(_: {||}) {
   ]);
 
   const [selectedTabID, selectTab] = useLocalStorage<TabID>(
-    'React::DevTools::selectedSettingsTabID',
+    'Relay::DevTools::selectedSettingsTabID',
     'general'
   );
 
