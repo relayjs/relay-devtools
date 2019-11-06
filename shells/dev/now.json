@@ -1,5 +1,5 @@
 {
-  "name": "react-devtools-experimental",
-  "alias": ["react-devtools-experimental"],
+  "name": "relay-devtools-experimental",
+  "alias": ["relay-devtools-experimental"],
   "files": ["index.html", "dist"]
 }

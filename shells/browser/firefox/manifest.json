@@ -6,7 +6,7 @@
 
   "applications": {
     "gecko": {
-      "id": "@react-devtools",
+      "id": "@relay-devtools",
       "strict_min_version": "54.0"
     }
   },

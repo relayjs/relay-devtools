@@ -210,9 +210,9 @@ function startServer(port?: number = 8097) {
   httpServer.on('request', (request, response) => {
     // NPM installs should read from node_modules,
     // But local dev mode needs to use a relative path.
-    const basePath = existsSync('./node_modules/react-devtools-core')
-      ? 'node_modules/react-devtools-core'
-      : '../react-devtools-core';
+    const basePath = existsSync('./node_modules/relay-devtools-core')
+      ? 'node_modules/relay-devtools-core'
+      : '../relay-devtools-core';
 
     // Serve a file that immediately sets up the connection.
     const backendFile = readFileSync(`${basePath}/dist/backend.js`);
