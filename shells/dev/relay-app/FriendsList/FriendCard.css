@@ -1,0 +1,9 @@
+.Card {
+  display: flex;
+  align-items: center;
+}
+
+.ProfilePic {
+  margin-right: 0.25rem;
+  width: 2rem;
+}

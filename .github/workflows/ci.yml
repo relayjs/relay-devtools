@@ -1,0 +1,28 @@
+# Copyright (c) Facebook, Inc. and its affiliates.
+#
+# This source code is licensed under the MIT license found in the
+# LICENSE file in the root directory of this source tree.
+
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    name: Tests (Node ${{ matrix.node-version }})
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+      - name: Check formatting
+        run: yarn prettier:ci
+      - name: Check lint
+        run: yarn lint:ci
+      - name: Check Flow
+        run: yarn flow
+      - name: Test
+        run: yarn test

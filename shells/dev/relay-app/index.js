@@ -1,0 +1,38 @@
+/** @flow */
+
+// This test harness mounts each test app as a separate root to test multi-root applications.
+
+import { createElement } from 'react';
+import {
+  // $FlowFixMe Flow does not yet know about createRoot()
+  unstable_createRoot as createRoot,
+} from 'react-dom';
+import FriendsList from './FriendsList';
+
+import './styles.css';
+
+const roots = [];
+
+function mountHelper(App) {
+  const container = document.createElement('div');
+
+  ((document.body: any): HTMLBodyElement).appendChild(container);
+
+  const root = createRoot(container);
+  root.render(createElement(App));
+
+  roots.push(root);
+}
+
+function mountTestApp() {
+  mountHelper(FriendsList);
+}
+
+function unmountTestApp() {
+  roots.forEach(root => root.unmount());
+}
+
+mountTestApp();
+
+window.parent.mountTestApp = mountTestApp;
+window.parent.unmountTestApp = unmountTestApp;

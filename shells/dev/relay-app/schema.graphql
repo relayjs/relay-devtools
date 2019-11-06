@@ -1,0 +1,41 @@
+type Query {
+  node(id: ID!): Node
+}
+
+interface Node {
+  id: ID!
+}
+
+type User implements Node {
+  id: ID!
+  name: String
+  profilePicture: ProfilePicture,
+  friends(
+    after: ID
+    before: ID
+    first: Int
+    last: Int
+  ): FriendsConnection
+}
+
+type ProfilePicture {
+  url: String
+}
+
+type FriendsConnection {
+  count: Int
+  edges: [FriendsEdge]
+  pageInfo: PageInfo
+}
+
+type FriendsEdge {
+  cursor: String
+  node: User
+}
+
+type PageInfo {
+  hasPreviousPage: Boolean
+  hasNextPage: Boolean
+  endCursor: String
+  startCursor: String
+}
