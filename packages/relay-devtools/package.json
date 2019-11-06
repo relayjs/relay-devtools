@@ -25,7 +25,7 @@
     "electron": "^5.0.0",
     "ip": "^1.1.4",
     "minimist": "^1.2.0",
-    "relay-devtools-core": "^4.0.0",
+    "relay-devtools-core": "^1.0.0",
     "update-notifier": "^2.1.0"
   }
 }
