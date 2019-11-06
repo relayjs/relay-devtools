@@ -7,8 +7,6 @@
  * @flow strict
  */
 
-'use strict';
-
 declare function isPromise(p: mixed): boolean %checks(p instanceof Promise);
 
 function isPromise(p: $FlowFixMe): boolean {
