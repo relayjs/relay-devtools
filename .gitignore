@@ -1,6 +1,0 @@
-node_modules
-extension/dist
-extension-*.zip
-lib
-yarn-error.log
-.DS_Store
