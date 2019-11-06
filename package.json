@@ -136,7 +136,6 @@
     "react-window": "./vendor/react-window",
     "relay-compiler": "master",
     "relay-config": "master",
-    "request-promise": "^4.2.4",
     "rimraf": "^2.6.3",
     "scheduler": "^0.0.0-50b50c26f",
     "semver": "^5.5.1",
