@@ -9,19 +9,7 @@ function getGitCommit() {
 }
 
 function getGitHubURL() {
-  // TODO potentially replace this with an fb.me URL (assuming it can forward the query params)
-  const url = execSync('git remote get-url origin')
-    .toString()
-    .trim();
-
-  if (url.startsWith('https://')) {
-    return url.replace('.git', '');
-  } else {
-    return url
-      .replace(':', '/')
-      .replace('git@', 'https://')
-      .replace('.git', '');
-  }
+  return 'https://github.com/relayjs/relay-devtools';
 }
 
 function getVersionString() {
