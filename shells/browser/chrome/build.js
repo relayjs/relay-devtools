@@ -34,7 +34,7 @@ const main = async () => {
 
   console.log(chalk.green('\nThe Chrome extension has been built!'));
   console.log(chalk.green('You can test this build by running:'));
-  console.log(chalk.gray('\n# From the react-devtools root directory:'));
+  console.log(chalk.gray('\n# From the relay-devtools root directory:'));
   console.log('yarn run test:chrome');
 };
 

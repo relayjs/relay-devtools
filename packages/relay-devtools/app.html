@@ -116,11 +116,11 @@
 
       let devtools;
       try {
-        devtools = require('react-devtools-core/standalone').default;
+        devtools = require('relay-devtools-core/standalone').default;
       } catch (err) {
         alert(
           err.toString() +
-            '\n\nDid you run `yarn` and `yarn run build` in packages/react-devtools-core?'
+            '\n\nDid you run `yarn` and `yarn run build` in packages/relay-devtools-core?'
         );
       }
       window.devtools = devtools;

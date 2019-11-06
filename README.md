@@ -1,3 +1,7 @@
+# Relay DevTools
+
+**NOTE:** The Relay DevTools were started as a clone from the React DevTools. There is still code in here that hasn't been updated yet and should be either updated or removed.
+
 # Installation
 
 Install from source:

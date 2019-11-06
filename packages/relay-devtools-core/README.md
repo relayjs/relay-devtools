@@ -1,17 +1,17 @@
-# `react-devtools-core`
+# `relay-devtools-core`
 
-A standalone React DevTools implementation.
+A standalone Relay DevTools implementation.
 
-This is a low-level package. If you're looking for the Electron app you can run, **use `react-devtools` package instead.**
+This is a low-level package. If you're looking for the Electron app you can run, **use `relay-devtools` package instead.**
 
 ## API
 
-### `react-devtools-core`
+### `relay-devtools-core`
 
-This is similar requiring the `react-devtools` package, but provides several configurable options. Unlike `react-devtools`, requiring `react-devtools-core` doesn't connect immediately but instead exports a function:
+This is similar requiring the `relay-devtools` package, but provides several configurable options. Unlike `relay-devtools`, requiring `relay-devtools-core` doesn't connect immediately but instead exports a function:
 
 ```js
-const { connectToDevTools } = require('react-devtools-core');
+const { connectToDevTools } = require('relay-devtools-core');
 connectToDevTools({
   // Config options
 });
@@ -28,12 +28,12 @@ The `options` object may contain:
 - `resolveNativeStyle: (style: number) => ?Object` - Used by the React Native style plug-in.
 - `isAppActive: () => boolean` - If provided, DevTools will poll this method and wait until it returns true before connecting to React.
 
-## `react-devtools-core/standalone`
+## `relay-devtools-core/standalone`
 
 Renders the DevTools interface into a DOM node.
 
 ```js
-require('react-devtools-core/standalone')
+require('relay-devtools-core/standalone')
   .setContentDOMNode(document.getElementById('container'))
   .setStatusListener(status => {
     // This callback is optional...
@@ -41,4 +41,4 @@ require('react-devtools-core/standalone')
   .startServer(port);
 ```
 
-Reference the `react-devtools` package for a complete integration example.
+Reference the `relay-devtools` package for a complete integration example.

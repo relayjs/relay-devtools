@@ -1,11 +1,11 @@
 {
-  "name": "react-devtools-core",
-  "description": "Use react-devtools outside of the browser",
-  "version": "4.0.0",
+  "name": "relay-devtools-core",
+  "description": "Use relay-devtools outside of the browser",
+  "version": "1.0.0",
   "license": "MIT",
   "main": "./dist/backend.js",
   "repository": {
-    "url": "https://github.com/bvaughn/react-devtools-experimental.git",
+    "url": "https://github.com/relayjs/relay-devtools.git",
     "type": "git"
   },
   "files": [
