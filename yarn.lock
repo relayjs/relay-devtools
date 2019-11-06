@@ -2408,8 +2408,10 @@ babel-plugin-macros@^2.0.0:
     cosmiconfig "^5.2.0"
     resolve "^1.10.0"
 
-"babel-plugin-relay@file:../relay/dist/babel-plugin-relay":
-  version "7.0.0"
+babel-plugin-relay@master:
+  version "0.0.0-master-bb33efe0"
+  resolved "https://registry.yarnpkg.com/babel-plugin-relay/-/babel-plugin-relay-0.0.0-master-bb33efe0.tgz#51d2e1734b4f8b0f09ee13a313795089284d7cb0"
+  integrity sha512-yRUpN9xLrVsiEYiO90X6/R/qyCpaJpxhnJeEQTs+Lvr6BIpcXKO6erIRDO2Sf+L2AwnqlNoPUHF/142VyYQ9hQ==
   dependencies:
     babel-plugin-macros "^2.0.0"
 
@@ -9803,13 +9805,15 @@ react-is@^16.8.4:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.8.4.tgz#90f336a68c3a29a096a3d648ab80e87ec61482a2"
   integrity sha512-PVadd+WaUDOAciICm/J1waJaSvgq+4rHE/K70j0PFqKhkTBsPv/82UGQJNXAngz1fOQLLxI6z1sEDmJDQhCTAA==
 
-"react-relay@file:../relay/dist/react-relay":
-  version "7.0.0"
+react-relay@master:
+  version "0.0.0-master-bb33efe0"
+  resolved "https://registry.yarnpkg.com/react-relay/-/react-relay-0.0.0-master-bb33efe0.tgz#717aa522620205c2e2f06cd2a2100ec5efc8ad01"
+  integrity sha512-k32RWxqEEfxWto8Q23kuPUDZuUYdaRxiu8IG0eWx1Iqb/D19kR0//iSJmmytj3r/LTQSdeuoUxUto2FlJNdZfQ==
   dependencies:
     "@babel/runtime" "^7.0.0"
     fbjs "^1.0.0"
     nullthrows "^1.1.1"
-    relay-runtime "7.0.0"
+    relay-runtime "0.0.0-master-bb33efe0"
 
 react-test-renderer@^0.0.0-50b50c26f:
   version "0.0.0-50b50c26f"
@@ -10116,8 +10120,10 @@ relaxed-json@1.0.1:
     chalk "^1.0.0"
     commander "^2.6.0"
 
-"relay-compiler@file:../relay/dist/relay-compiler":
-  version "7.0.0"
+relay-compiler@master:
+  version "0.0.0-master-bb33efe0"
+  resolved "https://registry.yarnpkg.com/relay-compiler/-/relay-compiler-0.0.0-master-bb33efe0.tgz#87cea4b7b5edf6461998283e3d44dc3b37df7993"
+  integrity sha512-3pMkxLe3YspuMznPJOiNHwT49hJRuhxuqRy8yrihP5ydIiRz+XbWw5v6vzi6IFiJTOcnZ15JyMC6dojV4S++6A==
   dependencies:
     "@babel/core" "^7.0.0"
     "@babel/generator" "^7.0.0"
@@ -10132,17 +10138,21 @@ relaxed-json@1.0.1:
     fbjs "^1.0.0"
     immutable "~3.7.6"
     nullthrows "^1.1.1"
-    relay-runtime "7.0.0"
+    relay-runtime "0.0.0-master-bb33efe0"
     signedsource "^1.0.0"
     yargs "^9.0.0"
 
-"relay-config@file:../relay/dist/relay-config":
-  version "7.0.0"
+relay-config@master:
+  version "0.0.0-master-bb33efe0"
+  resolved "https://registry.yarnpkg.com/relay-config/-/relay-config-0.0.0-master-bb33efe0.tgz#062024164865f1eed0a506ceb52b86555fe9803b"
+  integrity sha512-pS4+T/w/Qx70NZPtnHKB/7dCsBtYCP+ctCM8+wxbMMyqMtW62rKI4mHAk/TaHDOcxtSNkAQSS2UdJ9Z4I401ig==
   dependencies:
     cosmiconfig "^5.0.5"
 
-relay-runtime@7.0.0, "relay-runtime@file:../relay/dist/relay-runtime":
-  version "7.0.0"
+relay-runtime@0.0.0-master-bb33efe0:
+  version "0.0.0-master-bb33efe0"
+  resolved "https://registry.yarnpkg.com/relay-runtime/-/relay-runtime-0.0.0-master-bb33efe0.tgz#0c15692b6b994ce3e6f5c5f9387e5e97ea8c2be0"
+  integrity sha512-Ys2fpamJHnz+m4FbMfcwgqtdhwO7SLuSAwS38FwcWfc1YKbbux7so1oKLjbezmT1N2eT8B36Go5nFqT/tYKcUQ==
   dependencies:
     "@babel/runtime" "^7.0.0"
     fbjs "^1.0.0"

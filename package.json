@@ -90,7 +90,7 @@
     "babel-eslint": "^10.0.2",
     "babel-jest": "^24.9.0",
     "babel-loader": "^8.0.6",
-    "babel-plugin-relay": "file:../relay/dist/babel-plugin-relay",
+    "babel-plugin-relay": "master",
     "chance": "^1.0.18",
     "child-process-promise": "^2.2.1",
     "chrome-launch": "^1.1.4",
@@ -131,7 +131,7 @@
     "prop-types": "^15.7.2",
     "react": "^0.0.0-50b50c26f",
     "react-dom": "^0.0.0-50b50c26f",
-    "react-relay": "file:../relay/dist/react-relay",
+    "react-relay": "master",
     "react-test-renderer": "^0.0.0-50b50c26f",
     "react-virtualized-auto-sizer": "^1.0.2",
     "react-window": "./vendor/react-window",
@@ -149,10 +149,10 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-optional-chaining": "^7.2.0",
-    "relay-compiler": "file:../relay/dist/relay-compiler",
-    "relay-config": "file:../relay/dist/relay-config"
+    "relay-compiler": "master",
+    "relay-config": "master"
   },
   "resolutions": {
-    "relay-runtime": "file:../relay/dist/relay-runtime"
+    "relay-runtime": "master"
   }
 }
