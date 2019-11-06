@@ -8,5 +8,5 @@ Modify the source code there and then rebuild this extension by running `node bu
 
 You can test a local build of the web extension like so:
 
- 1. Build the extension: `node build`
- 1. Follow the on-screen instructions.
+1.  Build the extension: `node build`
+1.  Follow the on-screen instructions.
