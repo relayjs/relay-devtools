@@ -75,9 +75,10 @@
     ],
     "**/*.js": "eslint --max-warnings 0"
   },
-  "dependencies": {
+  "devDependencies": {
     "@babel/core": "^7.5.5",
     "@babel/plugin-proposal-class-properties": "^7.5.5",
+    "@babel/plugin-proposal-optional-chaining": "^7.2.0",
     "@babel/plugin-transform-flow-strip-types": "^7.4.4",
     "@babel/plugin-transform-react-jsx-source": "^7.5.0",
     "@babel/preset-env": "^7.5.5",
@@ -115,7 +116,6 @@
     "fs-extra": "^3.0.1",
     "gh-pages": "^1.0.0",
     "graphql": "^14.4.2",
-    "immutable": "3.7.6",
     "jest": "^24.9.0",
     "lerna": "^2.8.0",
     "lint-staged": "^7.0.5",
@@ -135,6 +135,8 @@
     "react-test-renderer": "^0.0.0-50b50c26f",
     "react-virtualized-auto-sizer": "^1.0.2",
     "react-window": "./vendor/react-window",
+    "relay-compiler": "master",
+    "relay-config": "master",
     "request-promise": "^4.2.4",
     "rimraf": "^2.6.3",
     "scheduler": "^0.0.0-50b50c26f",
@@ -146,11 +148,6 @@
     "webpack-cli": "^3.1.2",
     "webpack-dev-server": "^3.3.1",
     "yargs": "^13.2.4"
-  },
-  "devDependencies": {
-    "@babel/plugin-proposal-optional-chaining": "^7.2.0",
-    "relay-compiler": "master",
-    "relay-config": "master"
   },
   "resolutions": {
     "relay-runtime": "master"
