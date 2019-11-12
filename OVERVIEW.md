@@ -7,8 +7,6 @@ The React DevTools extension consists of multiple pieces:
 
 One of the largest performance bottlenecks of the old React DevTools was the amount of bridge traffic. Each time React commits an update, the backend sends every fiber that changed across the bridge, resulting in a lot of (JSON) serialization. The primary goal for the DevTools rewrite was to reduce this traffic. Instead of sending everything across the bridge, **the backend should only send the minimum amount required to render the Elements tree**. The frontend can request more information (e.g. an element's props) on demand, only as needed.
 
-The old DevTools also rendered the entire application tree in the form of a large DOM structure of nested nodes. A secondary goal of the rewrite was to avoid rendering unnecessary nodes by using a windowing library (specifically [react-window](https://github.com/bvaughn/react-window)).
-
 ## Elements panel
 
 ### Serializing the tree

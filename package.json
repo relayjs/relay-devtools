@@ -133,7 +133,6 @@
     "react-relay": "master",
     "react-test-renderer": "^0.0.0-50b50c26f",
     "react-virtualized-auto-sizer": "^1.0.2",
-    "react-window": "./vendor/react-window",
     "relay-compiler": "master",
     "relay-config": "master",
     "rimraf": "^2.6.3",
