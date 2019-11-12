@@ -1,3 +1,8 @@
+# Copyright (c) Facebook, Inc. and its affiliates.
+#
+# This source code is licensed under the MIT license found in the
+# LICENSE file in the root directory of this source tree.
+
 type Query {
   node(id: ID!): Node
 }
@@ -9,13 +14,8 @@ interface Node {
 type User implements Node {
   id: ID!
   name: String
-  profilePicture: ProfilePicture,
-  friends(
-    after: ID
-    before: ID
-    first: Int
-    last: Int
-  ): FriendsConnection
+  profilePicture: ProfilePicture
+  friends(after: ID, before: ID, first: Int, last: Int): FriendsConnection
 }
 
 type ProfilePicture {

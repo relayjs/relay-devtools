@@ -1,10 +1,17 @@
 /**
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ * @flow
+ */
+
+/**
  * Install the hook on window, which is an event emitter.
  * Note because Chrome content scripts cannot directly modify the window object,
  * we are evaling this function by inserting a script tag.
  * That's why we have to inline the whole event emitter implementation here.
- *
- * @flow
  */
 
 import type { DevToolsHook } from 'src/backend/types';
