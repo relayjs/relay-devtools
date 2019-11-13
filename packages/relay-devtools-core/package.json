@@ -26,6 +26,6 @@
     "ws": "^7"
   },
   "devDependencies": {
-    "cross-env": "^3.1.4"
+    "cross-env": "^6.0.3"
   }
 }
