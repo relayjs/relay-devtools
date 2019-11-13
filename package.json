@@ -135,7 +135,6 @@
     "relay-config": "master",
     "rimraf": "^2.6.3",
     "scheduler": "^0.0.0-50b50c26f",
-    "serve-static": "^1.14.1",
     "style-loader": "^0.23.1",
     "web-ext": "^3.0.0",
     "webpack": "^4.26.0",
