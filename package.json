@@ -116,7 +116,6 @@
     "fs-extra": "^3.0.1",
     "graphql": "^14.4.2",
     "jest": "^24.9.0",
-    "lerna": "^2.8.0",
     "lint-staged": "^7.0.5",
     "local-storage-fallback": "^4.1.1",
     "lodash.throttle": "^4.1.1",
