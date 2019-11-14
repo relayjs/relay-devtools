@@ -21,7 +21,6 @@ export function initBackend(
   agent: Agent,
   global: Object
 ): () => void {
-  console.log('init backend', { hook, agent });
   const subs = [
     hook.sub('environment.event', data => {
       agent.onEnvironmentEvent(data);

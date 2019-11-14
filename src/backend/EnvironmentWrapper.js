@@ -26,7 +26,6 @@ export function attach(
   // $FlowFixMe
   environment.__log = event => {
     originalLog(event);
-    console.log('[devtools]', event);
     if (pendingEventsQueue !== null) {
       pendingEventsQueue.push(event);
     } else {
