@@ -225,7 +225,7 @@ function startServer(port?: number = 8097) {
     response.end(
       backendFile.toString() +
         '\n;' +
-        'ReactDevToolsBackend.connectToDevTools();'
+        'RelayDevToolsBackend.connectToDevTools();'
     );
   });
 

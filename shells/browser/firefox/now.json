@@ -1,5 +1,5 @@
 {
   "name": "relay-devtools-experimental-firefox",
   "alias": ["relay-devtools-experimental-firefox"],
-  "files": ["index.html", "ReactDevTools.zip"]
+  "files": ["index.html", "RelayDevTools.zip"]
 }

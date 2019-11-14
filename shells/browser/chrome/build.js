@@ -33,7 +33,7 @@ const main = async () => {
       safeKeyPath = join(relative(cwd, process.cwd()), keyPath);
     }
 
-    execSync(`crx pack ./unpacked -o ReactDevTools.crx -p ${safeKeyPath}`, {
+    execSync(`crx pack ./unpacked -o RelayDevTools.crx -p ${safeKeyPath}`, {
       cwd,
     });
   }

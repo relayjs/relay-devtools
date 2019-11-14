@@ -79,7 +79,7 @@ const build = async (tempPath, manifestPath) => {
 
   // Pack the extension
   const archive = archiver('zip', { zlib: { level: 9 } });
-  const zipStream = createWriteStream(join(tempPath, 'ReactDevTools.zip'));
+  const zipStream = createWriteStream(join(tempPath, 'RelayDevTools.zip'));
   await new Promise((resolve, reject) => {
     archive
       .directory(zipPath, false)
@@ -92,8 +92,8 @@ const build = async (tempPath, manifestPath) => {
 
 const postProcess = async (tempPath, destinationPath) => {
   const unpackedSourcePath = join(tempPath, 'zip');
-  const packedSourcePath = join(tempPath, 'ReactDevTools.zip');
-  const packedDestPath = join(destinationPath, 'ReactDevTools.zip');
+  const packedSourcePath = join(tempPath, 'RelayDevTools.zip');
+  const packedDestPath = join(destinationPath, 'RelayDevTools.zip');
   const unpackedDestPath = join(destinationPath, 'unpacked');
 
   await move(unpackedSourcePath, unpackedDestPath); // Copy built files to destination

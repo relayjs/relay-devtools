@@ -31,7 +31,7 @@ module.exports = {
     filename: '[name].js',
 
     // This name is important; standalone references it in order to connect.
-    library: 'ReactDevToolsBackend',
+    library: 'RelayDevToolsBackend',
     libraryTarget: 'umd',
   },
   resolve: {
