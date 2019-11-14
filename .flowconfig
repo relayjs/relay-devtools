@@ -16,6 +16,9 @@ shells/browser/chrome/build/*
 shells/browser/firefox/build/*
 shells/dev/build/*
 
+[declarations]
+<PROJECT_ROOT>/node_modules/graphql
+
 [include]
 
 [libs]
@@ -35,4 +38,4 @@ esproposal.optional_chaining=enable
 [strict]
 
 [version]
-^0.110.1
+^0.112.0

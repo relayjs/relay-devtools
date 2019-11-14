@@ -17,6 +17,7 @@ type Props = {
   children: React$Node,
   className?: string,
   title?: string,
+  ...
 };
 
 export default function Button({
@@ -26,7 +27,7 @@ export default function Button({
   ...rest
 }: Props) {
   let button = (
-    <button className={`${styles.Button} ${className}`} {...rest}>
+    <button {...rest} className={`${styles.Button} ${className}`}>
       <span className={`${styles.ButtonContent} ${className}`} tabIndex={-1}>
         {children}
       </span>
