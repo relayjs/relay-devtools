@@ -55,7 +55,21 @@ export default class Store extends EventEmitter<{|
   };
 
   clearEvents = () => {
-    this._environmentEvents.length = 0;
+    const completed = new Set();
+    for (const event of this._environmentEvents) {
+      if (
+        event.name === 'execute.complete' ||
+        event.name === 'execute.error' ||
+        event.name === 'execute.unsubscribe'
+      ) {
+        completed.add(event.transactionID);
+      }
+    }
+    this._environmentEvents = this._environmentEvents.filter(
+      event =>
+        event.name !== 'queryresource.fetch' &&
+        !completed.has(event.transactionID)
+    );
     this.emit('mutated');
   };
 
