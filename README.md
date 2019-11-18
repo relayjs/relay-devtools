@@ -10,7 +10,7 @@ From the Chrome Web Store: [here](https://chrome.google.com/webstore/detail/rela
 
 ### Firefox
 
-We haven't tested and released the Firefox extension yet. Issue #39 tracks this.
+We haven't tested and released the Firefox extension yet. [Issue #39](https://github.com/relayjs/relay-devtools/issues/39) tracks this.
 
 ### From Source
 
