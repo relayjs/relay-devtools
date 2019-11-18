@@ -4,7 +4,15 @@
 
 ## Installation
 
-Install from source:
+### Chrome
+
+From the Chrome Web Store: [here](https://chrome.google.com/webstore/detail/relay-developer-tools/ncedobpgnmkhcmnnkcimnobpfepidadl).
+
+### Firefox
+
+We haven't tested and released the Firefox extension yet. [Issue #39](https://github.com/relayjs/relay-devtools/issues/39) tracks this.
+
+### From Source
 
 ```sh
 git clone git@github.com:relayjs/relay-devtools.git
