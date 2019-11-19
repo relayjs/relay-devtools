@@ -14,8 +14,14 @@ cd relay-devtools
 yarn install
 
 yarn build:extension:chrome # builds at "shells/browser/chrome/build"
+yarn run test:chrome # Test Chrome extension
+
 yarn build:extension:firefox # builds at "shells/browser/firefox/build"
 ```
+
+## Contribute
+
+We actively welcome pull requests, learn how to [contribute](./CONTRIBUTING.md).
 
 ## Support
 
