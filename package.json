@@ -1,5 +1,6 @@
 {
   "version": "1.0.0",
+  "name": "relay-devtools",
   "repository": "relayjs/relay-devtools",
   "license": "MIT",
   "private": true,
