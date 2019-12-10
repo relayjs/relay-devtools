@@ -12,10 +12,10 @@
   },
 
   "icons": {
-    "16": "icons/16-production.png",
-    "32": "icons/32-production.png",
-    "48": "icons/48-production.png",
-    "128": "icons/128-production.png"
+    "16": "icons/16-enabled.png",
+    "32": "icons/32-enabled.png",
+    "48": "icons/48-enabled.png",
+    "128": "icons/128-enabled.png"
   },
 
   "browser_action": {
