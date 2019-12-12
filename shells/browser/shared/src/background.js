@@ -73,10 +73,10 @@ function setIconAndPopup(relayBuildType, tabId) {
   chrome.browserAction.setIcon({
     tabId: tabId,
     path: {
-      '16': 'icons/16-' + relayBuildType + '.png',
-      '32': 'icons/32-' + relayBuildType + '.png',
-      '48': 'icons/48-' + relayBuildType + '.png',
-      '128': 'icons/128-' + relayBuildType + '.png',
+      '16': `icons/${relayBuildType}16.png`,
+      '32': `icons/${relayBuildType}32.png`,
+      '48': `icons/${relayBuildType}48.png`,
+      '128': `icons/${relayBuildType}128.png`,
     },
   });
   chrome.browserAction.setPopup({

@@ -2,24 +2,24 @@
   "manifest_version": 2,
   "name": "Relay Developer Tools",
   "description": "Adds Relay debugging tools to the Chrome Developer Tools.",
-  "version": "0.9.0",
-  "version_name": "0.9.0",
+  "version": "0.9.1",
+  "version_name": "0.9.1",
 
   "minimum_chrome_version": "78",
 
   "icons": {
-    "16": "icons/16-enabled.png",
-    "32": "icons/32-enabled.png",
-    "48": "icons/48-enabled.png",
-    "128": "icons/128-enabled.png"
+    "16": "icons/enabled16.png",
+    "32": "icons/enabled32.png",
+    "48": "icons/enabled48.png",
+    "128": "icons/enabled128.png"
   },
 
   "browser_action": {
     "default_icon": {
-      "16": "icons/16-disabled.png",
-      "32": "icons/32-disabled.png",
-      "48": "icons/48-disabled.png",
-      "128": "icons/128-disabled.png"
+      "16": "icons/disabled16.png",
+      "32": "icons/disabled32.png",
+      "48": "icons/disabled48.png",
+      "128": "icons/disabled128.png"
     },
 
     "default_popup": "popups/disabled.html"
