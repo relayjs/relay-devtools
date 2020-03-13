@@ -53,7 +53,7 @@ function setup(hook) {
       window.postMessage(
         {
           source: 'relay-devtools-bridge',
-          payload: { event, payload },
+          payload: { event, payload: JSON.parse(JSON.stringify(payload)) },
         },
         '*',
         transferable
