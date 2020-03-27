@@ -37,6 +37,7 @@ export default class Store extends EventEmitter<{|
   _bridge: FrontendBridge;
 
   _environmentEvents: Array<LogEvent> = [];
+  _relayStoreRecords: any;
 
   constructor(bridge: FrontendBridge) {
     super();
@@ -49,8 +50,19 @@ export default class Store extends EventEmitter<{|
     return this._environmentEvents;
   }
 
+  getRecords(): any {
+    return this._relayStoreRecords;
+  }
+
   onBridgeEvents = (events: Array<LogEvent>) => {
-    this._environmentEvents.push(...events);
+    for (const event of events) {
+      if (event.name === 'store.updated') {
+        this._relayStoreRecords = event.records;
+      } else {
+        this._environmentEvents.push(event);
+      }
+    }
+
     this.emit('mutated');
   };
 

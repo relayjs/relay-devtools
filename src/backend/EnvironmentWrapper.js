@@ -33,10 +33,22 @@ export function attach(
     }
   };
 
+  const store = environment.getStore();
+  const originalPublish = store.publish.bind(store);
+  store.publish = (...args) => {
+    const result = originalPublish(...args);
+
+    const records = store.getSource().toJSON();
+    hook.emit('environment.event', { name: 'store.updated', records });
+
+    return result;
+  };
+
   function cleanup() {
     // We don't patch any methods so there is no cleanup.
     // $FlowFixMe
     environment.__log = originalLog;
+    store.publish = originalPublish;
   }
 
   function flushInitialOperations() {

@@ -9,8 +9,20 @@
 
 export type EnvironmentID = number;
 
+export type RelayRecordSource = {
+  getRecordIDs: () => string,
+  get: (id: string) => any,
+  toJSON: () => any,
+};
+
+export type RelayStore = {
+  publish: (...args: any[]) => any,
+  getSource: () => RelayRecordSource,
+};
+
 export type RelayEnvironment = {
   execute: (options: any) => any,
+  getStore: () => RelayStore,
 };
 
 export type EnvironmentWrapper = {
