@@ -15,16 +15,16 @@ import SearchInput from '../Components/SearchInput';
 import portaledContent from '../portaledContent';
 import styles from './StoreInspector.css';
 
-function getRecordData(records, record) {
+function getRecordData(records: { [string]: any }, record: any): any {
   if (Array.isArray(record)) {
     return record.map(r => getRecordData(records, r));
   } else if (record !== null && typeof record === 'object') {
-    let result = {};
+    let result: any = {};
     for (const [key, value] of Object.entries(record)) {
       if (key === '__ref') {
-        result = getRecordData(records, records[value]);
+        result = getRecordData(records, records[(value: any)]);
       } else if (key === '__refs') {
-        result = value.map(r => getRecordData(records, records[r]));
+        result = (value: any).map(r => getRecordData(records, records[r]));
       } else {
         result[key] = getRecordData(records, value);
       }

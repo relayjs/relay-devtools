@@ -15,7 +15,7 @@ import styles from './SearchInput.css';
 
 type Props = {|
   searchText: string,
-  onTextChange: (text: string) => void,
+  onChange: (text: string) => void,
 |};
 
 export default function SearchInput({ searchText, onChange }: Props) {
