@@ -46,9 +46,11 @@ export type Props = {|
   // Because of this, the extension needs to be able to change which tab is active/rendered.
   overrideTab?: TabID,
 
+  // TODO: Cleanup multi-tabs in webextensions
   // To avoid potential multi-root trickiness, the web extension uses portals to render tabs.
   // The root <DevTools> app is rendered in the top-level extension window,
   // but individual tabs (e.g. Components, Profiling) can be rendered into portals within their browser panels.
+  rootContainer?: Element,
   networkPortalContainer?: Element,
   settingsPortalContainer?: Element,
   storeInspectorPortalContainer?: Element,
@@ -73,6 +75,7 @@ export default function DevTools({
   bridge,
   browserTheme = 'light',
   defaultTab = 'network',
+  rootContainer,
   networkPortalContainer,
   storeInspectorPortalContainer,
   overrideTab,
@@ -93,6 +96,7 @@ export default function DevTools({
         <ModalDialogContextController>
           <SettingsContextController
             browserTheme={browserTheme}
+            rootContainer={rootContainer}
             networkPortalContainer={networkPortalContainer}
             settingsPortalContainer={settingsPortalContainer}
           >

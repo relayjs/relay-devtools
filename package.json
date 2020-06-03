@@ -64,7 +64,8 @@
     "test:firefox": "node ./shells/browser/firefox/test",
     "test:standalone": "cd packages/relay-devtools && yarn start",
     "typecheck": "flow check",
-    "relay": "relay-compiler"
+    "relay": "relay-compiler",
+    "watch:chrome:frontend": "cross-env NODE_ENV=development node ./shells/browser/chrome/watch"
   },
   "devEngines": {
     "node": "10.x || 11.x"

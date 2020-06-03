@@ -36,13 +36,10 @@ function createPanelIfReactLoaded() {
       let bridge = null;
       let store = null;
 
-      let networkPortalContainer = null;
-      let settingsPortalContainer = null;
-
       let cloneStyleTags = null;
-      let mostRecentOverrideTab = null;
       let render = null;
       let root = null;
+      let currentPanel = null;
 
       const tabId = chrome.devtools.inspectedWindow.tabId;
 
@@ -79,23 +76,19 @@ function createPanelIfReactLoaded() {
           store
         );
 
-        root = createRoot(document.createElement('div'));
-
-        render = (overrideTab = mostRecentOverrideTab) => {
-          mostRecentOverrideTab = overrideTab;
-
-          root.render(
-            createElement(DevTools, {
-              bridge,
-              browserTheme: getBrowserTheme(),
-              networkPortalContainer,
-              overrideTab,
-              settingsPortalContainer,
-              showTabBar: false,
-              store,
-              viewElementSourceFunction,
-            })
-          );
+        render = () => {
+          if (root) {
+            root.render(
+              createElement(DevTools, {
+                bridge,
+                browserTheme: getBrowserTheme(),
+                showTabBar: true,
+                store,
+                viewElementSourceFunction,
+                rootContainer: currentPanel.container,
+              })
+            );
+          }
         };
 
         render();
@@ -125,21 +118,18 @@ function createPanelIfReactLoaded() {
         container._hasInitialHTMLBeenCleared = true;
       }
 
-      let currentPanel = null;
-
       chrome.devtools.panels.create('Relay', '', 'panel.html', panel => {
         panel.onShown.addListener(panel => {
           if (currentPanel === panel) {
             return;
           }
-
           currentPanel = panel;
-          networkPortalContainer = panel.container;
 
-          if (networkPortalContainer != null) {
-            ensureInitialHTMLIsCleared(networkPortalContainer);
-            render('components');
+          if (panel.container != null) {
             panel.injectStyles(cloneStyleTags);
+            ensureInitialHTMLIsCleared(panel.container);
+            root = createRoot(panel.container);
+            render();
           }
         });
         panel.onHidden.addListener(() => {
