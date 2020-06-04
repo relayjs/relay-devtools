@@ -6,11 +6,16 @@
  */
 
 const { execSync } = require('child_process');
-const { readFileSync } = require('fs');
+const { readFileSync, existsSync } = require('fs');
 const { resolve } = require('path');
 
-function getGitCommit() {
-  return execSync('git show -s --format=%h')
+function getCommit() {
+  if (existsSync(resolve(__dirname, '../.git'))) {
+    return execSync('git show -s --format=%h')
+      .toString()
+      .trim();
+  }
+  return execSync('hg id -i')
     .toString()
     .trim();
 }
@@ -24,9 +29,9 @@ function getVersionString() {
     readFileSync(resolve(__dirname, '../package.json'))
   ).version;
 
-  const commit = getGitCommit();
+  const commit = getCommit();
 
   return `${packageVersion}-${commit}`;
 }
 
-module.exports = { getGitCommit, getGitHubURL, getVersionString };
+module.exports = { getCommit, getGitHubURL, getVersionString };

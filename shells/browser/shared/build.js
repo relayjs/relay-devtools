@@ -11,7 +11,7 @@ const { execSync } = require('child_process');
 const { readFileSync, writeFileSync, createWriteStream } = require('fs');
 const { copy, ensureDir, move, remove } = require('fs-extra');
 const { join } = require('path');
-const { getGitCommit } = require('../../utils');
+const { getCommit } = require('../../utils');
 
 // These files are copied along with Webpack-bundled files
 // to produce the final web extension
@@ -65,7 +65,7 @@ const build = async (tempPath, manifestPath) => {
     STATIC_FILES.map(file => copy(join(__dirname, file), join(zipPath, file)))
   );
 
-  const commit = getGitCommit();
+  const commit = getCommit();
   const versionDateString = `${commit} (${new Date().toLocaleDateString()})`;
 
   const manifest = JSON.parse(readFileSync(copiedManifestPath).toString());
