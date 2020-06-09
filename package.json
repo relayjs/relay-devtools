@@ -50,7 +50,7 @@
     "linc": "lint-staged",
     "lint": "eslint '**/*.js'",
     "lint:ci": "eslint '**/*.js' --max-warnings 0",
-    "precommit": "lint-staged",
+    "precommit": "yarn run prettier:ci && yarn run lint:ci && yarn run typecheck",
     "prettier": "prettier --write '**/*.{js,json,css,html,md}'",
     "prettier:ci": "prettier --check '**/*.{js,json,css,html,md}'",
     "start": "cd ./shells/dev && cross-env NODE_ENV=development cross-env TARGET=local webpack-dev-server --open",
@@ -64,7 +64,8 @@
     "test:firefox": "node ./shells/browser/firefox/test",
     "test:standalone": "cd packages/relay-devtools && yarn start",
     "typecheck": "flow check",
-    "relay": "relay-compiler"
+    "relay": "relay-compiler",
+    "watch:chrome:frontend": "cross-env NODE_ENV=development node ./shells/browser/chrome/watch"
   },
   "devEngines": {
     "node": "10.x || 11.x"

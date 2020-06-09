@@ -35,6 +35,7 @@ type DocumentElements = Array<HTMLElement>;
 type Props = {|
   browserTheme: BrowserTheme,
   children: React$Node,
+  rootContainer?: Element,
   networkPortalContainer?: Element,
   settingsPortalContainer?: Element,
 |};
@@ -42,6 +43,7 @@ type Props = {|
 function SettingsContextController({
   browserTheme,
   children,
+  rootContainer,
   networkPortalContainer,
   settingsPortalContainer,
 }: Props) {
@@ -58,6 +60,11 @@ function SettingsContextController({
     const array: Array<HTMLElement> = [
       ((document.documentElement: any): HTMLElement),
     ];
+    if (rootContainer != null) {
+      array.push(
+        ((rootContainer.ownerDocument.documentElement: any): HTMLElement)
+      );
+    }
     if (networkPortalContainer != null) {
       array.push(
         ((networkPortalContainer.ownerDocument
@@ -71,7 +78,7 @@ function SettingsContextController({
       );
     }
     return array;
-  }, [networkPortalContainer, settingsPortalContainer]);
+  }, [networkPortalContainer, rootContainer, settingsPortalContainer]);
 
   const computedStyle = getComputedStyle((document.body: any));
   const comfortableLineHeight = parseInt(
