@@ -47,6 +47,16 @@
   overflow: scroll;
 }
 
+.RequestsSearchBar {
+  width: 100%;
+  padding: 4px;
+}
+
+.RequestNotFound {
+  margin: 5px;
+  font-style: italic;
+}
+
 .Content {
   display: flex;
   height: 100%;

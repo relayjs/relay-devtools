@@ -7,7 +7,7 @@
  * @flow
  */
 
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { StoreContext } from '../context';
 import ButtonIcon from '../ButtonIcon';
 import Button from '../Button';
@@ -75,6 +75,10 @@ function Network(props: {| +portalContainer: mixed |}) {
   const store = useContext(StoreContext);
 
   const [, forceUpdate] = useState({});
+  const [requestSearch, setRequestSearch] = useState('');
+  const fetchSearchBarText = useCallback(e => {
+    setRequestSearch(e.target.value);
+  }, []);
 
   useEffect(() => {
     const onMutated = () => {
@@ -153,6 +157,12 @@ function Network(props: {| +portalContainer: mixed |}) {
   let selectedRequest = requests.get(selectedRequestID);
 
   const requestRows = Array.from(requests.values(), request => {
+    // Only display if the request name matches the user search
+    if (
+      !request.params.name.toLowerCase().includes(requestSearch.toLowerCase())
+    ) {
+      return null;
+    }
     if (selectedRequest == null) {
       selectedRequest = request;
     }
@@ -195,7 +205,21 @@ function Network(props: {| +portalContainer: mixed |}) {
         <div className={styles.Spacer} />
       </div>
       <div className={styles.Content}>
-        <div className={styles.Requests}>{requestRows}</div>
+        <div className={styles.Requests}>
+          <input
+            className={styles.RequestsSearchBar}
+            type="text"
+            onChange={fetchSearchBarText}
+            placeholder="Search"
+          ></input>
+          {requestRows[0] === null && requestSearch !== '' ? (
+            <p className={styles.RequestNotFound}>
+              Sorry, no requests with the name '{requestSearch}' were found!
+            </p>
+          ) : (
+            requestRows
+          )}
+        </div>
         <RequestDetails request={selectedRequest} />
       </div>
     </div>
