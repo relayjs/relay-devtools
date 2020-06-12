@@ -7,23 +7,27 @@
  * @flow
  */
 
-import React, { Fragment } from 'react';
+import React, { useCallback, useState, Fragment } from 'react';
 import { Environment, RecordSource, Store } from 'relay-runtime';
 import { graphql, QueryRenderer } from 'react-relay';
-import network from './InBrowserNetwork';
+import createInBrowserNetwork from './createInBrowserNetwork';
 import Friends from './Friends';
 
-const source = new RecordSource();
-const store = new Store(source);
+function createNewEnvironment(configName) {
+  const source = new RecordSource();
+  const store = new Store(source);
+  var environment = new Environment({
+    configName,
+    network: createInBrowserNetwork(),
+    store,
+    log(event) {
+      console.log('[APP]', event);
+    },
+  });
+  return environment;
+}
 
-const environment = new Environment({
-  configName: 'Example Environment',
-  network,
-  store,
-  log(event) {
-    console.log('[APP]', event);
-  },
-});
+const initialEnvironment = createNewEnvironment('Example Environment');
 
 export type Item = {|
   id: number,
@@ -34,11 +38,47 @@ export type Item = {|
 type Props = {||};
 
 export default function App(props: Props) {
+  // Add initial environment to environmentList
+  const [environmentList, updateEnvironmentList] = useState({
+    'Example Environment': initialEnvironment,
+  });
+  const [currentEnvironment, setCurrentEnvironment] = useState(
+    initialEnvironment
+  );
+
+  const createUpdateEnvironmentList = useCallback(() => {
+    const newEnvironment = createNewEnvironment(
+      'Example Environment ' + Object.keys(environmentList).length
+    );
+
+    updateEnvironmentList({
+      ...environmentList,
+      [newEnvironment.configName]: newEnvironment,
+    });
+  }, [environmentList]);
+
+  const selectNewEnvironment = useCallback(
+    e => {
+      setCurrentEnvironment(environmentList[e.target.value]);
+    },
+    [environmentList]
+  );
+
   return (
     <Fragment>
-      <h1>Example Relay App</h1>
+      <div className="addEnvironment">
+        <h1>Example Relay App</h1>
+        <button onClick={createUpdateEnvironmentList}>
+          Create Environment
+        </button>
+        <select onChange={selectNewEnvironment}>
+          {Object.keys(environmentList).map(key => (
+            <option>{key}</option>
+          ))}
+        </select>
+      </div>
       <QueryRenderer
-        environment={environment}
+        environment={currentEnvironment}
         query={graphql`
           query AppQuery {
             user: node(id: "my-id") {
