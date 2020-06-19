@@ -54,3 +54,8 @@ export type LogEvent =
       +name: 'execute.unsubscribe',
       +transactionID: number,
     |};
+
+export type EventData = {|
+  id: number,
+  data: LogEvent,
+|};

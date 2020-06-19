@@ -29,7 +29,10 @@ export function attach(
     if (pendingEventsQueue !== null) {
       pendingEventsQueue.push(event);
     } else {
-      hook.emit('environment.event', event);
+      hook.emit('environment.event', {
+        id: rendererID,
+        data: event,
+      });
     }
   };
 
@@ -42,7 +45,10 @@ export function attach(
   function flushInitialOperations() {
     if (pendingEventsQueue != null) {
       pendingEventsQueue.forEach(pendingEvent => {
-        hook.emit('environment.event', pendingEvent);
+        hook.emit('environment.event', {
+          id: rendererID,
+          data: pendingEvent,
+        });
       });
       pendingEventsQueue = null;
     }

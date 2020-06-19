@@ -10,7 +10,7 @@
 import EventEmitter from 'events';
 import type { FrontendBridge } from 'src/bridge';
 import { __DEBUG__ } from '../constants';
-import type { LogEvent } from '../types';
+import type { LogEvent, EventData } from '../types';
 
 const debug = (methodName, ...args) => {
   if (__DEBUG__) {
@@ -36,7 +36,8 @@ export default class Store extends EventEmitter<{|
 |}> {
   _bridge: FrontendBridge;
 
-  _environmentEvents: Array<LogEvent> = [];
+  _environmentEventsMap: Map<number, Array<LogEvent>> = new Map();
+  _allEnvironmentEvents: Array<LogEvent> = [];
 
   constructor(bridge: FrontendBridge) {
     super();
@@ -45,32 +46,60 @@ export default class Store extends EventEmitter<{|
     bridge.addListener('shutdown', this.onBridgeShutdown);
   }
 
-  getEvents(): $ReadOnlyArray<LogEvent> {
-    return this._environmentEvents;
+  getAllEvents(): Array<LogEvent> {
+    // TODO: Ask about this
+    this._allEnvironmentEvents = [];
+    this._environmentEventsMap.forEach((value, _) =>
+      this._allEnvironmentEvents.push(...value)
+    );
+    return this._allEnvironmentEvents;
   }
 
-  onBridgeEvents = (events: Array<LogEvent>) => {
-    this._environmentEvents.push(...events);
+  getEvents(environmentID: number): Array<LogEvent> {
+    var events = this._environmentEventsMap.get(environmentID);
+    return events === undefined ? [] : events;
+  }
+
+  onBridgeEvents = (events: Array<EventData>) => {
+    for (var e of events) {
+      var id = e.id;
+      var data = e.data;
+      var arr = this._environmentEventsMap.get(id);
+      if (arr) {
+        arr.push(data);
+      } else {
+        this._environmentEventsMap.set(id, [data]);
+      }
+      this.emit('mutated');
+    }
+  };
+
+  clearAllEvents = () => {
+    this._environmentEventsMap.forEach((_, key) => this.clearEvents(key));
     this.emit('mutated');
   };
 
-  clearEvents = () => {
+  clearEvents = (environmentID: number) => {
     const completed = new Set();
-    for (const event of this._environmentEvents) {
-      if (
-        event.name === 'execute.complete' ||
-        event.name === 'execute.error' ||
-        event.name === 'execute.unsubscribe'
-      ) {
-        completed.add(event.transactionID);
+    var eventArray = this._environmentEventsMap.get(environmentID);
+    if (eventArray !== undefined && eventArray.length > 0) {
+      for (const event of eventArray) {
+        if (
+          event.name === 'execute.complete' ||
+          event.name === 'execute.error' ||
+          event.name === 'execute.unsubscribe'
+        ) {
+          completed.add(event.transactionID);
+        }
       }
+      eventArray = eventArray.filter(
+        event =>
+          event.name !== 'queryresource.fetch' &&
+          !completed.has(event.transactionID)
+      );
+      this._environmentEventsMap.set(environmentID, eventArray);
+      this.emit('mutated');
     }
-    this._environmentEvents = this._environmentEvents.filter(
-      event =>
-        event.name !== 'queryresource.fetch' &&
-        !completed.has(event.transactionID)
-    );
-    this.emit('mutated');
   };
 
   onBridgeShutdown = () => {

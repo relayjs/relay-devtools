@@ -91,7 +91,7 @@ function Network(props: {| +portalContainer: mixed |}) {
   }, [store]);
 
   const [selectedRequestID, setSelectedRequestID] = useState(0);
-  const events = store.getEvents();
+  const events = store.getAllEvents();
 
   const requests: Map<number, RequestEntry> = new Map();
 
@@ -153,7 +153,6 @@ function Network(props: {| +portalContainer: mixed |}) {
       }
     }
   }
-
   let selectedRequest = requests.get(selectedRequestID);
 
   const requestRows = Array.from(requests.values(), request => {
@@ -199,7 +198,7 @@ function Network(props: {| +portalContainer: mixed |}) {
   return (
     <div className={styles.Network}>
       <div className={styles.Toolbar}>
-        <Button onClick={store.clearEvents} title="Clear Logs">
+        <Button onClick={store.clearAllEvents} title="Clear Logs">
           <ButtonIcon type="clear" />
         </Button>
         <div className={styles.Spacer} />
