@@ -7,6 +7,18 @@
  * @flow
  */
 
-export default function StoreInspector(props: {}) {
-  return 'Store Inspector';
+import React from 'react';
+import styles from './StoreInspector.css'
+
+export default function StoreInspector(props: {| +portalContainer: mixed |}) {
+  return (
+    <div className={styles.UnderConstruction}>
+      <div>
+        The Store Inspector is currently <span>under construction</span>. More to come soon!
+      </div>
+      <div>
+        Apologies for the inconvenience.
+      </div>
+    </div>
+  );
 }
