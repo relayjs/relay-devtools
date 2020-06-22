@@ -42,7 +42,8 @@
 
 .Requests {
   border-right: 1px solid #d0d0d0;
-  color: #303942;
+  background-color: var(--color-background);
+  color: var(--color-text);
   flex: 1;
   overflow: scroll;
 }
@@ -50,11 +51,14 @@
 .RequestsSearchBar {
   width: 100%;
   padding: 4px;
+  background-color: var(--color-background-search-bar);
+  color: var(--color-search-bar);
 }
 
 .RequestNotFound {
   margin: 5px;
   font-style: italic;
+  color: var(--color-text);
 }
 
 .Content {
@@ -64,23 +68,23 @@
 }
 
 .Request {
-  background: #ffffff;
+  background-color: var(--color-background);
   cursor: pointer;
   padding: 1px 4px;
 }
 .Request:hover {
-  background: #f1f6fd;
+  background-color: var(--color-background-hover);
 }
 .Request:nth-child(2n) {
-  background: #f5f5f5;
+  background-color: var(--color-background);
 }
 .Request:nth-child(2n):hover {
-  background: #eef3fa;
+  background-color: var(--color-background-hover);
 }
 .Request.SelectedRequest,
 .Request.SelectedRequest:hover {
-  background: #1a73e8;
-  color: white;
+  background-color: var(--color-background-selected);
+  color: var(--color-text-selected);
 }
 .Request::before {
   display: inline-block;

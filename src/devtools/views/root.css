@@ -20,6 +20,7 @@
   --light-color-background-hover: rgba(0, 136, 250, 0.1);
   --light-color-background-inactive: #e5e5e5;
   --light-color-background-invalid: #fff0f0;
+  --light-color-background-search-bar: #ffffff;
   --light-color-background-selected: #0088fa;
   --light-color-button-background: #ffffff;
   --light-color-button-background-focus: #ededed;
@@ -60,6 +61,7 @@
   --light-color-record-inactive: #0088fa;
   --light-color-scroll-thumb: #c2c2c2;
   --light-color-scroll-track: #fafafa;
+  --light-color-search-bar: #000000;
   --light-color-search-match: yellow;
   --light-color-search-match-current: #f7923b;
   --light-color-selected-tree-highlight-active: rgba(0, 136, 250, 0.1);
@@ -85,6 +87,7 @@
   --dark-color-background-hover: rgba(255, 255, 255, 0.1);
   --dark-color-background-inactive: #3d424a;
   --dark-color-background-invalid: #5c0000;
+  --dark-color-background-search-bar: #3a3b3c;
   --dark-color-background-selected: #178fb9;
   --dark-color-button-background: #282c34;
   --dark-color-button-background-focus: #3d424a;
@@ -125,6 +128,7 @@
   --dark-color-record-inactive: #61dafb;
   --dark-color-scroll-thumb: #afb3b9;
   --dark-color-scroll-track: #313640;
+  --dark-color-search-bar: #e4e6eb;
   --dark-color-search-match: yellow;
   --dark-color-search-match-current: #f7923b;
   --dark-color-selected-tree-highlight-active: rgba(23, 143, 185, 0.15);

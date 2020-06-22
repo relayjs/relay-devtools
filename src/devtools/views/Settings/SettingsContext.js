@@ -216,6 +216,7 @@ function updateThemeVariables(
   updateStyleHelper(theme, 'color-background-hover', documentElements);
   updateStyleHelper(theme, 'color-background-inactive', documentElements);
   updateStyleHelper(theme, 'color-background-invalid', documentElements);
+  updateStyleHelper(theme, 'color-background-search-bar', documentElements);
   updateStyleHelper(theme, 'color-background-selected', documentElements);
   updateStyleHelper(theme, 'color-border', documentElements);
   updateStyleHelper(theme, 'color-button-background', documentElements);
@@ -284,6 +285,7 @@ function updateThemeVariables(
   updateStyleHelper(theme, 'color-record-inactive', documentElements);
   updateStyleHelper(theme, 'color-color-scroll-thumb', documentElements);
   updateStyleHelper(theme, 'color-color-scroll-track', documentElements);
+  updateStyleHelper(theme, 'color-search-bar', documentElements);
   updateStyleHelper(theme, 'color-search-match', documentElements);
   updateStyleHelper(theme, 'color-search-match-current', documentElements);
   updateStyleHelper(
