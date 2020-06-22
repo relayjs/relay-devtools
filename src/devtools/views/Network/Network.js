@@ -162,7 +162,12 @@ function Network(props: {| +portalContainer: mixed, currentEnvID: ?number |}) {
   let requestArray = [];
   requests.forEach((request, _) => {
     if (
-      request.params.name.toLowerCase().includes(requestSearch.toLowerCase())
+      requestSearch
+        .trim()
+        .split(' ')
+        .some(search =>
+          request.params.name.toLowerCase().includes(search.toLowerCase())
+        )
     ) {
       requestArray.push(request);
     }
@@ -225,7 +230,7 @@ function Network(props: {| +portalContainer: mixed, currentEnvID: ?number |}) {
             onChange={fetchSearchBarText}
             placeholder="Search"
           ></input>
-          {requestRows[0] === null && requestSearch !== '' ? (
+          {requestRows.length <= 0 && requestSearch !== '' ? (
             <p className={styles.RequestNotFound}>
               Sorry, no requests with the name '{requestSearch}' were found!
             </p>
