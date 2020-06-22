@@ -12,7 +12,7 @@
 import '@reach/menu-button/styles.css';
 import '@reach/tooltip/styles.css';
 
-import React, { useState } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import type { FrontendBridge } from 'src/bridge';
 import Store from '../store';
 import { BridgeContext, StoreContext } from './context';
@@ -90,6 +90,35 @@ export default function DevTools({
     setTab(overrideTab);
   }
 
+  const [, forceUpdate] = useState({});
+
+  useEffect(() => {
+    const onMutated = () => {
+      forceUpdate({});
+    };
+    store.addListener('mutated', onMutated);
+    return () => {
+      store.removeListener('mutated', onMutated);
+    };
+  }, [store]);
+
+  const environmentNames = store.getEnvironmentNames();
+
+  let keys = environmentNames.keys();
+  const [currentEnvID, setCurrentEnvID] = useState();
+
+  // TODO(damassart): Optimize this and make it look less janky
+  // Add an event on the store and listen to 'event-initialize'
+  useEffect(() => {
+    if (currentEnvID === undefined) {
+      setCurrentEnvID(keys.next().value);
+    }
+  }, [currentEnvID, keys]);
+
+  const environmentChange = useCallback(e => {
+    setCurrentEnvID(parseInt(e.target.value));
+  }, []);
+
   return (
     <BridgeContext.Provider value={bridge}>
       <StoreContext.Provider value={store}>
@@ -107,6 +136,15 @@ export default function DevTools({
                   <span className={styles.DevToolsVersion}>
                     {process.env.DEVTOOLS_VERSION}
                   </span>
+                  <select onChange={environmentChange}>
+                    {Array.from(environmentNames.keys()).map(key => {
+                      return (
+                        <option key={key} value={key}>
+                          {key}: {environmentNames.get(key)}
+                        </option>
+                      );
+                    })}
+                  </select>
                   <div className={styles.Spacer} />
                   <TabBar
                     currentTab={tab}
@@ -118,7 +156,10 @@ export default function DevTools({
                 </div>
               )}
               <div className={styles.TabContent} hidden={tab !== 'network'}>
-                <Network portalContainer={networkPortalContainer} />
+                <Network
+                  portalContainer={networkPortalContainer}
+                  currentEnvID={currentEnvID}
+                />
               </div>
               <div
                 className={styles.TabContent}

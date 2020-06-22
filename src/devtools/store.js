@@ -37,7 +37,7 @@ export default class Store extends EventEmitter<{|
   _bridge: FrontendBridge;
 
   _environmentEventsMap: Map<number, Array<LogEvent>> = new Map();
-  _allEnvironmentEvents: Array<LogEvent> = [];
+  _environmentNames: Map<number, string> = new Map();
 
   constructor(bridge: FrontendBridge) {
     super();
@@ -46,29 +46,30 @@ export default class Store extends EventEmitter<{|
     bridge.addListener('shutdown', this.onBridgeShutdown);
   }
 
-  getAllEvents(): Array<LogEvent> {
-    // TODO: Ask about this
-    this._allEnvironmentEvents = [];
+  getAllEvents(): $ReadOnlyArray<LogEvent> {
+    let allEnvironmentEvents = [];
     this._environmentEventsMap.forEach((value, _) =>
-      this._allEnvironmentEvents.push(...value)
+      allEnvironmentEvents.push(...value)
     );
-    return this._allEnvironmentEvents;
+    return allEnvironmentEvents;
   }
 
-  getEvents(environmentID: number): Array<LogEvent> {
-    var events = this._environmentEventsMap.get(environmentID);
-    return events === undefined ? [] : events;
+  getEvents(environmentID: number): ?$ReadOnlyArray<LogEvent> {
+    return this._environmentEventsMap.get(environmentID);
+  }
+
+  getEnvironmentNames(): Map<number, string> {
+    return this._environmentNames;
   }
 
   onBridgeEvents = (events: Array<EventData>) => {
-    for (var e of events) {
-      var id = e.id;
-      var data = e.data;
-      var arr = this._environmentEventsMap.get(id);
+    for (let { id, envName, data } of events) {
+      let arr = this._environmentEventsMap.get(id);
       if (arr) {
         arr.push(data);
       } else {
         this._environmentEventsMap.set(id, [data]);
+        this._environmentNames.set(id, envName);
       }
       this.emit('mutated');
     }
@@ -81,7 +82,7 @@ export default class Store extends EventEmitter<{|
 
   clearEvents = (environmentID: number) => {
     const completed = new Set();
-    var eventArray = this._environmentEventsMap.get(environmentID);
+    let eventArray = this._environmentEventsMap.get(environmentID);
     if (eventArray !== undefined && eventArray.length > 0) {
       for (const event of eventArray) {
         if (

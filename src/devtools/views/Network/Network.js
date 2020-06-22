@@ -71,7 +71,7 @@ function RequestDetails(props: {| request: ?RequestEntry |}) {
   );
 }
 
-function Network(props: {| +portalContainer: mixed |}) {
+function Network(props: {| +portalContainer: mixed, currentEnvID: ?number |}) {
   const store = useContext(StoreContext);
 
   const [, forceUpdate] = useState({});
@@ -91,7 +91,12 @@ function Network(props: {| +portalContainer: mixed |}) {
   }, [store]);
 
   const [selectedRequestID, setSelectedRequestID] = useState(0);
-  const events = store.getAllEvents();
+
+  if (props.currentEnvID == null) {
+    return null;
+  }
+
+  const events = store.getEvents(props.currentEnvID) || [];
 
   const requests: Map<number, RequestEntry> = new Map();
 
@@ -154,14 +159,16 @@ function Network(props: {| +portalContainer: mixed |}) {
     }
   }
   let selectedRequest = requests.get(selectedRequestID);
-
-  const requestRows = Array.from(requests.values(), request => {
-    // Only display if the request name matches the user search
+  let requestArray = [];
+  requests.forEach((request, _) => {
     if (
-      !request.params.name.toLowerCase().includes(requestSearch.toLowerCase())
+      request.params.name.toLowerCase().includes(requestSearch.toLowerCase())
     ) {
-      return null;
+      requestArray.push(request);
     }
+  });
+
+  let requestRows = requestArray.map(request => {
     if (selectedRequest == null) {
       selectedRequest = request;
     }
@@ -198,7 +205,14 @@ function Network(props: {| +portalContainer: mixed |}) {
   return (
     <div className={styles.Network}>
       <div className={styles.Toolbar}>
-        <Button onClick={store.clearAllEvents} title="Clear Logs">
+        <Button
+          onClick={() =>
+            props.currentEnvID == null
+              ? {}
+              : store.clearEvents(props.currentEnvID)
+          }
+          title="Clear Logs"
+        >
           <ButtonIcon type="clear" />
         </Button>
         <div className={styles.Spacer} />

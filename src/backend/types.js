@@ -11,6 +11,7 @@ export type EnvironmentID = number;
 
 export type RelayEnvironment = {
   execute: (options: any) => any,
+  configName: ?string,
 };
 
 export type EnvironmentWrapper = {

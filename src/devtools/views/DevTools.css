@@ -33,6 +33,12 @@
   flex: 1;
 }
 
+select {
+  padding: 2px;
+  margin-right: 50px;
+  border-radius: 5px;
+}
+
 .TabContent {
   flex: 1 1 100%;
   overflow: auto;

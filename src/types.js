@@ -56,6 +56,7 @@ export type LogEvent =
     |};
 
 export type EventData = {|
-  id: number,
-  data: LogEvent,
+  +id: number,
+  +envName: string,
+  +data: LogEvent,
 |};
