@@ -9,7 +9,7 @@
 
 import EventEmitter from 'events';
 
-import type { EventData, Wall } from './types';
+import type { EnvironmentInfo, EventData, Wall } from './types';
 
 const BATCH_DURATION = 100;
 
@@ -21,6 +21,7 @@ type Message = {|
 type BackendEvents = {|
   events: [Array<EventData>],
   shutdown: [],
+  environmentInitialized: [Array<EnvironmentInfo>],
 |};
 
 type FrontendEvents = {||};

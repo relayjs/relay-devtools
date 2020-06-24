@@ -90,30 +90,26 @@ export default function DevTools({
     setTab(overrideTab);
   }
 
-  const [, forceUpdate] = useState({});
+  const [environmentIDs, setEnvironmentIDs] = useState(
+    store.getEnvironmentIDs()
+  );
+  const [currentEnvID, setCurrentEnvID] = useState(environmentIDs[0]);
 
-  useEffect(() => {
-    const onMutated = () => {
-      forceUpdate({});
-    };
-    store.addListener('mutated', onMutated);
-    return () => {
-      store.removeListener('mutated', onMutated);
-    };
-  }, [store]);
-
-  const environmentNames = store.getEnvironmentNames();
-
-  let keys = environmentNames.keys();
-  const [currentEnvID, setCurrentEnvID] = useState();
-
-  // TODO(damassart): Optimize this and make it look less janky
-  // Add an event on the store and listen to 'event-initialize'
-  useEffect(() => {
+  const setEnv = useCallback(() => {
+    const ids = store.getEnvironmentIDs();
     if (currentEnvID === undefined) {
-      setCurrentEnvID(keys.next().value);
+      const firstKey = ids[0];
+      setCurrentEnvID(firstKey);
     }
-  }, [currentEnvID, keys]);
+    setEnvironmentIDs(ids);
+  }, [store, currentEnvID]);
+
+  useEffect(() => {
+    store.addListener('environmentInitialized', setEnv);
+    return () => {
+      store.removeListener('environmentInitialized', setEnv);
+    };
+  }, [store, setEnv]);
 
   const environmentChange = useCallback(e => {
     setCurrentEnvID(parseInt(e.target.value));
@@ -137,10 +133,10 @@ export default function DevTools({
                     {process.env.DEVTOOLS_VERSION}
                   </span>
                   <select onChange={environmentChange}>
-                    {Array.from(environmentNames.keys()).map(key => {
+                    {environmentIDs.map(key => {
                       return (
                         <option key={key} value={key}>
-                          {key}: {environmentNames.get(key)}
+                          {key}: {store.getEnvironmentName(key)}
                         </option>
                       );
                     })}

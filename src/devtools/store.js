@@ -10,7 +10,7 @@
 import EventEmitter from 'events';
 import type { FrontendBridge } from 'src/bridge';
 import { __DEBUG__ } from '../constants';
-import type { LogEvent, EventData } from '../types';
+import type { LogEvent, EventData, EnvironmentInfo } from '../types';
 
 const debug = (methodName, ...args) => {
   if (__DEBUG__) {
@@ -30,6 +30,7 @@ const debug = (methodName, ...args) => {
 export default class Store extends EventEmitter<{|
   collapseNodesByDefault: [],
   componentFilters: [],
+  environmentInitialized: [],
   mutated: [],
   recordChangeDescriptions: [],
   roots: [],
@@ -44,6 +45,7 @@ export default class Store extends EventEmitter<{|
     this._bridge = bridge;
     bridge.addListener('events', this.onBridgeEvents);
     bridge.addListener('shutdown', this.onBridgeShutdown);
+    bridge.addListener('environmentInitialized', this.onBridgeEnvironmentInit);
   }
 
   getAllEvents(): $ReadOnlyArray<LogEvent> {
@@ -58,21 +60,35 @@ export default class Store extends EventEmitter<{|
     return this._environmentEventsMap.get(environmentID);
   }
 
-  getEnvironmentNames(): Map<number, string> {
-    return this._environmentNames;
+  getEnvironmentIDs(): $ReadOnlyArray<number> {
+    return Array.from(this._environmentNames.keys());
+  }
+
+  getEnvironmentName(environmentID: number): ?string {
+    return this._environmentNames.get(environmentID);
   }
 
   onBridgeEvents = (events: Array<EventData>) => {
-    for (let { id, envName, data } of events) {
+    for (let { id, data } of events) {
       let arr = this._environmentEventsMap.get(id);
       if (arr) {
         arr.push(data);
       } else {
         this._environmentEventsMap.set(id, [data]);
-        this._environmentNames.set(id, envName);
       }
       this.emit('mutated');
     }
+  };
+
+  onBridgeEnvironmentInit = (data: Array<EnvironmentInfo>) => {
+    for (let { id, environmentName } of data) {
+      let arr = this._environmentEventsMap.get(id);
+      if (!arr) {
+        this._environmentEventsMap.set(id, []);
+        this._environmentNames.set(id, environmentName);
+      }
+    }
+    this.emit('environmentInitialized');
   };
 
   clearAllEvents = () => {
@@ -110,5 +126,9 @@ export default class Store extends EventEmitter<{|
 
     this._bridge.removeListener('events', this.onBridgeEvents);
     this._bridge.removeListener('shutdown', this.onBridgeShutdown);
+    this._bridge.removeListener(
+      'environmentInitialized',
+      this.onBridgeEnvironmentInit
+    );
   };
 }

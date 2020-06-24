@@ -29,10 +29,8 @@ export function attach(
     if (pendingEventsQueue !== null) {
       pendingEventsQueue.push(event);
     } else {
-      // TODO(@damassart): Refactor this
       hook.emit('environment.event', {
         id: rendererID,
-        envName: environment.configName,
         data: event,
       });
     }

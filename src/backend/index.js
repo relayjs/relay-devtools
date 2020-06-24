@@ -37,6 +37,10 @@ export function initBackend(
         environmentWrapper: EnvironmentWrapper,
       }) => {
         // agent.setEnvironmentWrapper(id, environmentWrapper);
+        agent.onEnvironmentInitialized({
+          id: id,
+          environmentName: environment.configName,
+        });
         // Now that the Store and the renderer interface are connected,
         // it's time to flush the pending operation codes to the frontend.
         environmentWrapper.flushInitialOperations();

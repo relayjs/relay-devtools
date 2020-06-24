@@ -6,11 +6,11 @@
  */
 
 .UnderConstruction {
-    font-size: 30px;
-    padding: 10px;
+  font-size: 30px;
+  padding: 10px;
 }
 
 .UnderConstruction span {
-    color: #f38727;
-    font-weight: bold;
+  color: #f38727;
+  font-weight: bold;
 }

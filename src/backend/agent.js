@@ -40,6 +40,10 @@ export default class Agent extends EventEmitter<{|
     this.emit('shutdown');
   };
 
+  onEnvironmentInitialized = (data: mixed) => {
+    this._bridge.send('environmentInitialized', [data]);
+  };
+
   onEnvironmentEvent = (data: mixed) => {
     this._bridge.send('events', [data]);
   };
