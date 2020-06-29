@@ -82,11 +82,7 @@ export default class Store extends EventEmitter<{|
 
   onBridgeEnvironmentInit = (data: Array<EnvironmentInfo>) => {
     for (let { id, environmentName } of data) {
-      let arr = this._environmentEventsMap.get(id);
-      if (!arr) {
-        this._environmentEventsMap.set(id, []);
-        this._environmentNames.set(id, environmentName);
-      }
+      this._environmentNames.set(id, environmentName);
     }
     this.emit('environmentInitialized');
   };
