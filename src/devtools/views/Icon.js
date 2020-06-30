@@ -13,7 +13,9 @@ import styles from './Icon.css';
 export type IconType =
   | 'arrow'
   | 'components'
+  | 'fb-feedback'
   | 'flame-chart'
+  | 'github-feedback'
   | 'interactions'
   | 'network'
   | 'ranked-chart'
@@ -28,6 +30,7 @@ type Props = {|
 
 export default function Icon({ className = '', type }: Props) {
   let pathData = null;
+  let circlePathData = null;
   switch (type) {
     case 'arrow':
       pathData = PATH_ARROW;
@@ -35,8 +38,15 @@ export default function Icon({ className = '', type }: Props) {
     case 'components':
       pathData = PATH_COMPONENTS;
       break;
+    case 'fb-feedback':
+      pathData = PATH_FB_FEEDBACK;
+      break;
     case 'flame-chart':
       pathData = PATH_FLAME_CHART;
+      break;
+    case 'github-feedback':
+      pathData = PATH_GITHUB_FEEDBACK;
+      circlePathData = PATH_GITHUB_CIRCLE;
       break;
     case 'interactions':
       pathData = PATH_INTERACTIONS;
@@ -62,6 +72,22 @@ export default function Icon({ className = '', type }: Props) {
       break;
   }
 
+  if (pathData === PATH_GITHUB_FEEDBACK) {
+    return (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        className={`${styles.Icon} ${className}`}
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+      >
+        <path d="M0 0h24v24H0z" fill="none" />
+        <path fill="none" stroke="currentColor" d={circlePathData} />
+        <path fill="currentColor" d={pathData} />
+      </svg>
+    );
+  }
+
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -81,6 +107,10 @@ const PATH_ARROW = 'M8 5v14l11-7z';
 const PATH_COMPONENTS =
   'M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z';
 
+const PATH_FB_FEEDBACK = `
+  M 4.5 22.6 L 4.89 19.73 C 4 19.73 3.51 19.73 3.41 19.73 C 2.63 19.73 1.99 18.87 1.99 17.82 C 1.99 16.49 1.99 5.84 1.99 4.51 C 1.99 3.46 2.63 2.6 3.41 2.6 C 5.12 2.6 18.86 2.6 20.58 2.6 C 21.36 2.6 21.99 3.46 21.99 4.51 C 21.99 5.84 21.99 16.49 21.99 17.82 C 21.99 18.87 21.36 19.73 20.58 19.73 C 19.8 19.73 15.9 19.73 8.89 19.73 L 4.5 22.6 Z
+`;
+
 const PATH_FLAME_CHART = `
   M10.0650893,21.5040462 C7.14020814,20.6850349 5,18.0558698 5,14.9390244 C5,14.017627
   5,9.81707317 7.83333333,7.37804878 C7.83333333,7.37804878 7.58333333,11.199187 10,
@@ -92,6 +122,13 @@ const PATH_FLAME_CHART = `
   C11.3814715,20.6514763 10.8125,20.1226027 10.8125,19.4702042 C10.8125,18.6069669
   12.0833333,16.9347829 12.0833333,16.9347829 C12.0833333,16.9347829 13.3541667,18.6069669
   13.3541667,19.4702042 C13.3541667,20.1226027 12.7851952,20.6514763 12.0833333,20.6514763 Z
+`;
+
+const PATH_GITHUB_CIRCLE = `M 22.07 13.07 C 22.07 18.59 17.58 23.07 12.07 23.07 C 6.55 23.07 2.07 18.59 2.07 13.07 C 2.07 7.55 6.55 3.07 12.07 3.07 C 17.58 3.07 22.07 7.55 22.07 13.07 Z`;
+
+const PATH_GITHUB_FEEDBACK = `
+  M 10.93 5.09 L 12.68 5.09 L 12.68 14.42 L 10.93 14.42 L 10.93 5.09 Z
+  M 13.81 18.36 C 13.81 19.46 12.91 20.36 11.81 20.36 C 10.71 20.36 9.81 19.46 9.81 18.36 C 9.81 17.26 10.71 16.36 11.81 16.36 C 12.91 16.36 13.81 17.26 13.81 18.36 Z
 `;
 
 const PATH_INTERACTIONS = `

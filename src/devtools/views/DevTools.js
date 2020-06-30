@@ -22,6 +22,9 @@ import TabBar from './TabBar';
 import { SettingsContextController } from './Settings/SettingsContext';
 import { ModalDialogContextController } from './ModalDialog';
 import RelayLogo from './RelayLogo';
+import tooltipStyles from './Tooltip.css';
+import Tooltip from '@reach/tooltip';
+import Icon from './Icon';
 
 import styles from './DevTools.css';
 
@@ -149,6 +152,38 @@ export default function DevTools({
                     size="large"
                     tabs={tabs}
                   />
+                  <div className={styles.FeedbackLinks}>
+                    <Tooltip
+                      className={tooltipStyles.Tooltip}
+                      label="FB Internal Feedback Group"
+                    >
+                      <a
+                        href={process.env.DEVTOOLS_FEEDBACK_GROUP}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <Icon
+                          className={styles.IconSizeLarge}
+                          type="fb-feedback"
+                        />
+                      </a>
+                    </Tooltip>
+                    <Tooltip
+                      className={tooltipStyles.Tooltip}
+                      label="Github Issues"
+                    >
+                      <a
+                        href={process.env.GITHUB_ISSUES_URL}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <Icon
+                          className={styles.IconSizeLarge}
+                          type="github-feedback"
+                        />
+                      </a>
+                    </Tooltip>
+                  </div>
                 </div>
               )}
               <div className={styles.TabContent} hidden={tab !== 'network'}>

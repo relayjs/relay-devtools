@@ -24,6 +24,14 @@ function getGitHubURL() {
   return 'https://github.com/relayjs/relay-devtools';
 }
 
+function getGitHubIssuesURL() {
+  return 'https://github.com/relayjs/relay-devtools/issues/new';
+}
+
+function getInternalDevToolsFeedbackGroup() {
+  return 'https://fburl.com/ieftwi8l';
+}
+
 function getVersionString() {
   const packageVersion = JSON.parse(
     readFileSync(resolve(__dirname, '../package.json'))
@@ -34,4 +42,10 @@ function getVersionString() {
   return `${packageVersion}-${commit}`;
 }
 
-module.exports = { getCommit, getGitHubURL, getVersionString };
+module.exports = {
+  getCommit,
+  getGitHubIssuesURL,
+  getGitHubURL,
+  getInternalDevToolsFeedbackGroup,
+  getVersionString,
+};

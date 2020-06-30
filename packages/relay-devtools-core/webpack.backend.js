@@ -7,7 +7,12 @@
 
 const { resolve } = require('path');
 const { DefinePlugin } = require('webpack');
-const { getGitHubURL, getVersionString } = require('../../shells/utils');
+const {
+  getGitHubIssuesURL,
+  getGitHubURL,
+  getInternalDevToolsFeedbackGroup,
+  getVersionString,
+} = require('../../shells/utils');
 
 const NODE_ENV = process.env.NODE_ENV;
 if (!NODE_ENV) {
@@ -19,6 +24,8 @@ const __DEV__ = NODE_ENV === 'development';
 
 const GITHUB_URL = getGitHubURL();
 const DEVTOOLS_VERSION = getVersionString();
+const GITHUB_ISSUES_URL = getGitHubIssuesURL();
+const DEVTOOLS_FEEDBACK_GROUP = getInternalDevToolsFeedbackGroup();
 
 module.exports = {
   mode: 'development', // TODO TESTING __DEV__ ? 'development' : 'production',
@@ -44,6 +51,8 @@ module.exports = {
       __DEV__: true,
       'process.env.DEVTOOLS_VERSION': `"${DEVTOOLS_VERSION}"`,
       'process.env.GITHUB_URL': `"${GITHUB_URL}"`,
+      'process.env.GITHUB_ISSUES_URL': `"${GITHUB_ISSUES_URL}"`,
+      'process.env.DEVTOOLS_FEEDBACK_GROUP': `"${DEVTOOLS_FEEDBACK_GROUP}"`,
     }),
   ],
   module: {
