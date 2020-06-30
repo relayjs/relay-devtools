@@ -42,6 +42,16 @@ export function attach(
     environment.__log = originalLog;
   }
 
+  function sendStoreRecords() {
+    const store = environment.getStore();
+    const records = store.getSource().toJSON();
+    hook.emit('environment.store', {
+      name: 'refresh.store',
+      id: rendererID,
+      records,
+    });
+  }
+
   function flushInitialOperations() {
     if (pendingEventsQueue != null) {
       pendingEventsQueue.forEach(pendingEvent => {
@@ -53,10 +63,12 @@ export function attach(
       });
       pendingEventsQueue = null;
     }
+    this.sendStoreRecords();
   }
 
   return {
     cleanup,
+    sendStoreRecords,
     flushInitialOperations,
   };
 }

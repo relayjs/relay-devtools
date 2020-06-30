@@ -25,6 +25,9 @@ export function initBackend(
     hook.sub('environment.event', data => {
       agent.onEnvironmentEvent(data);
     }),
+    hook.sub('environment.store', data => {
+      agent.onStoreData(data);
+    }),
     hook.sub(
       'environment-attached',
       ({
@@ -36,7 +39,7 @@ export function initBackend(
         environment: RelayEnvironment,
         environmentWrapper: EnvironmentWrapper,
       }) => {
-        // agent.setEnvironmentWrapper(id, environmentWrapper);
+        agent.setEnvironmentWrapper(id, environmentWrapper);
         agent.onEnvironmentInitialized({
           id: id,
           environmentName: environment.configName,

@@ -163,6 +163,7 @@ export default function DevTools({
               >
                 <StoreInspector
                   portalContainer={storeInspectorPortalContainer}
+                  currentEnvID={currentEnvID}
                 />
               </div>
             </div>

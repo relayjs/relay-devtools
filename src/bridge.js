@@ -9,7 +9,7 @@
 
 import EventEmitter from 'events';
 
-import type { EnvironmentInfo, EventData, Wall } from './types';
+import type { EnvironmentInfo, EventData, StoreData, Wall } from './types';
 
 const BATCH_DURATION = 100;
 
@@ -22,9 +22,12 @@ type BackendEvents = {|
   events: [Array<EventData>],
   shutdown: [],
   environmentInitialized: [Array<EnvironmentInfo>],
+  storeRecords: [Array<StoreData>],
 |};
 
-type FrontendEvents = {||};
+type FrontendEvents = {|
+  refreshStore: [number],
+|};
 class Bridge<
   OutgoingEvents: Object,
   IncomingEvents: Object

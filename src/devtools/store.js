@@ -10,7 +10,13 @@
 import EventEmitter from 'events';
 import type { FrontendBridge } from 'src/bridge';
 import { __DEBUG__ } from '../constants';
-import type { LogEvent, EventData, EnvironmentInfo } from '../types';
+import type {
+  LogEvent,
+  EventData,
+  EnvironmentInfo,
+  StoreData,
+  StoreRecords,
+} from '../types';
 
 const debug = (methodName, ...args) => {
   if (__DEBUG__) {
@@ -32,6 +38,7 @@ export default class Store extends EventEmitter<{|
   componentFilters: [],
   environmentInitialized: [],
   mutated: [],
+  storeDataReceived: [],
   recordChangeDescriptions: [],
   roots: [],
 |}> {
@@ -39,6 +46,7 @@ export default class Store extends EventEmitter<{|
 
   _environmentEventsMap: Map<number, Array<LogEvent>> = new Map();
   _environmentNames: Map<number, string> = new Map();
+  _environmentStoreData: Map<number, StoreRecords> = new Map();
 
   constructor(bridge: FrontendBridge) {
     super();
@@ -46,6 +54,7 @@ export default class Store extends EventEmitter<{|
     bridge.addListener('events', this.onBridgeEvents);
     bridge.addListener('shutdown', this.onBridgeShutdown);
     bridge.addListener('environmentInitialized', this.onBridgeEnvironmentInit);
+    bridge.addListener('storeRecords', this.onBridgeStoreRecords);
   }
 
   getAllEvents(): $ReadOnlyArray<LogEvent> {
@@ -67,6 +76,21 @@ export default class Store extends EventEmitter<{|
   getEnvironmentName(environmentID: number): ?string {
     return this._environmentNames.get(environmentID);
   }
+
+  getRecords(environmentID: number): ?StoreRecords {
+    return this._environmentStoreData.get(environmentID);
+  }
+
+  getAllRecords(): ?$ReadOnlyArray<StoreRecords> {
+    return Array.from(this._environmentStoreData.values());
+  }
+
+  onBridgeStoreRecords = (data: Array<StoreData>) => {
+    for (let { id, records } of data) {
+      this._environmentStoreData.set(id, records);
+      this.emit('storeDataReceived');
+    }
+  };
 
   onBridgeEvents = (events: Array<EventData>) => {
     for (let { id, data } of events) {
@@ -126,5 +150,6 @@ export default class Store extends EventEmitter<{|
       'environmentInitialized',
       this.onBridgeEnvironmentInit
     );
+    this._bridge.removeListener('storeRecords', this.onBridgeStoreRecords);
   };
 }

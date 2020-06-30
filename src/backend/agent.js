@@ -14,6 +14,7 @@ import type { EnvironmentID, EnvironmentWrapper } from './types';
 
 export default class Agent extends EventEmitter<{|
   shutdown: [],
+  refreshStore: [],
 |}> {
   _bridge: BackendBridge;
   _recordChangeDescriptions: boolean = false;
@@ -27,6 +28,7 @@ export default class Agent extends EventEmitter<{|
     this._bridge = bridge;
 
     bridge.addListener('shutdown', this.shutdown);
+    bridge.addListener('refreshStore', this.refreshStore);
   }
 
   get environmentWrappers(): {
@@ -40,8 +42,24 @@ export default class Agent extends EventEmitter<{|
     this.emit('shutdown');
   };
 
+  refreshStore = (id: EnvironmentID) => {
+    const wrapper = this._environmentWrappers[id];
+    wrapper.sendStoreRecords();
+  };
+
   onEnvironmentInitialized = (data: mixed) => {
     this._bridge.send('environmentInitialized', [data]);
+  };
+
+  setEnvironmentWrapper = (
+    id: number,
+    environmentWrapper: EnvironmentWrapper
+  ) => {
+    this._environmentWrappers[id] = environmentWrapper;
+  };
+
+  onStoreData = (data: mixed) => {
+    this._bridge.send('storeRecords', [data]);
   };
 
   onEnvironmentEvent = (data: mixed) => {

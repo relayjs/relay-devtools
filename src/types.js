@@ -55,9 +55,20 @@ export type LogEvent =
       +transactionID: number,
     |};
 
+export type StoreRecords = {|
+  +__id: string,
+  +__typename: string,
+|};
+
 export type EventData = {|
   +id: number,
   +data: LogEvent,
+|};
+
+export type StoreData = {|
+  +name: string,
+  +id: number,
+  +records: StoreRecords,
 |};
 
 export type EnvironmentInfo = {|
