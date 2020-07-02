@@ -71,6 +71,26 @@ function RequestDetails(props: {| request: ?RequestEntry |}) {
   );
 }
 
+function appearsInResponse(searchText: string, response: Object) {
+  if (response == null) {
+    return false;
+  }
+  for (let key in response) {
+    if (typeof response[key] == 'object' && response[key] !== null) {
+      return appearsInResponse(searchText, response[key]);
+    } else if (
+      response[key] !== null &&
+      response[key]
+        .toString()
+        .toLowerCase()
+        .includes(searchText)
+    ) {
+      return true;
+    }
+  }
+  return false;
+}
+
 function Network(props: {| +portalContainer: mixed, currentEnvID: ?number |}) {
   const store = useContext(StoreContext);
 
@@ -165,8 +185,12 @@ function Network(props: {| +portalContainer: mixed, currentEnvID: ?number |}) {
       requestSearch
         .trim()
         .split(' ')
-        .some(search =>
-          request.params.name.toLowerCase().includes(search.toLowerCase())
+        .some(
+          search =>
+            request.params.name.toLowerCase().includes(search.toLowerCase()) ||
+            request.responses.some(response =>
+              appearsInResponse(search.toLowerCase(), response)
+            )
         )
     ) {
       requestArray.push(request);
