@@ -26,7 +26,7 @@ export default function Button({
   title = '',
   ...rest
 }: Props) {
-  let button = (
+  const innerButton = (
     <button {...rest} className={`${styles.Button} ${className}`}>
       <span className={`${styles.ButtonContent} ${className}`} tabIndex={-1}>
         {children}
@@ -35,12 +35,12 @@ export default function Button({
   );
 
   if (title) {
-    button = (
+    return (
       <Tooltip className={tooltipStyles.Tooltip} label={title}>
-        {button}
+        {innerButton}
       </Tooltip>
     );
   }
 
-  return button;
+  return innerButton;
 }

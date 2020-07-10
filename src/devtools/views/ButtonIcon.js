@@ -43,92 +43,68 @@ type Props = {|
   type: IconType,
 |};
 
-export default function ButtonIcon({ className = '', type }: Props) {
-  let pathData = null;
+function getPathData(type) {
   switch (type) {
     case 'add':
-      pathData = PATH_ADD;
-      break;
+      return PATH_ADD;
     case 'cancel':
-      pathData = PATH_CANCEL;
-      break;
+      return PATH_CANCEL;
     case 'clear':
-      pathData = PATH_CLEAR;
-      break;
+      return PATH_CLEAR;
     case 'close':
-      pathData = PATH_CLOSE;
-      break;
+      return PATH_CLOSE;
     case 'collapsed':
-      pathData = PATH_COLLAPSED;
-      break;
+      return PATH_COLLAPSED;
     case 'copy':
-      pathData = PATH_COPY;
-      break;
+      return PATH_COPY;
     case 'delete':
-      pathData = PATH_DELETE;
-      break;
+      return PATH_DELETE;
     case 'down':
-      pathData = PATH_DOWN;
-      break;
+      return PATH_DOWN;
     case 'expanded':
-      pathData = PATH_EXPANDED;
-      break;
+      return PATH_EXPANDED;
     case 'export':
-      pathData = PATH_EXPORT;
-      break;
+      return PATH_EXPORT;
     case 'filter':
-      pathData = PATH_FILTER;
-      break;
+      return PATH_FILTER;
     case 'import':
-      pathData = PATH_IMPORT;
-      break;
+      return PATH_IMPORT;
     case 'log-data':
-      pathData = PATH_LOG_DATA;
-      break;
+      return PATH_LOG_DATA;
     case 'more':
-      pathData = PATH_MORE;
-      break;
+      return PATH_MORE;
     case 'next':
-      pathData = PATH_NEXT;
-      break;
+      return PATH_NEXT;
     case 'previous':
-      pathData = PATH_PREVIOUS;
-      break;
+      return PATH_PREVIOUS;
     case 'record':
-      pathData = PATH_RECORD;
-      break;
+      return PATH_RECORD;
     case 'reload':
-      pathData = PATH_RELOAD;
-      break;
+      return PATH_RELOAD;
     case 'save':
-      pathData = PATH_SAVE;
-      break;
+      return PATH_SAVE;
     case 'search':
-      pathData = PATH_SEARCH;
-      break;
+      return PATH_SEARCH;
     case 'settings':
-      pathData = PATH_SETTINGS;
-      break;
+      return PATH_SETTINGS;
     case 'suspend':
-      pathData = PATH_SUSPEND;
-      break;
+      return PATH_SUSPEND;
     case 'undo':
-      pathData = PATH_UNDO;
-      break;
+      return PATH_UNDO;
     case 'up':
-      pathData = PATH_UP;
-      break;
+      return PATH_UP;
     case 'view-dom':
-      pathData = PATH_VIEW_DOM;
-      break;
+      return PATH_VIEW_DOM;
     case 'view-source':
-      pathData = PATH_VIEW_SOURCE;
-      break;
+      return PATH_VIEW_SOURCE;
     default:
       console.warn(`Unsupported type "${type}" specified for ButtonIcon`);
-      break;
+      return null;
   }
+}
 
+export default function ButtonIcon({ className = '', type }: Props) {
+  let pathData = getPathData(type);
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -188,7 +164,7 @@ const PATH_LOG_DATA = `
 `;
 
 const PATH_MORE = `
-  M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 
+  M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9
   2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z
 `;
 

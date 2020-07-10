@@ -117,12 +117,10 @@ export default function StoreInspector(props: {|
   }
 
   let records = store.getRecords(props.currentEnvID);
-  let selectedRecord = {};
 
-  if (records != null) {
-    selectedRecord = records[selectedRecordID];
+  if (records == null) {
+    return null;
   }
-
   return (
     <div className={styles.StoreInspector}>
       <div className={styles.Toolbar}>
@@ -141,7 +139,7 @@ export default function StoreInspector(props: {|
           selectedRecordID={selectedRecordID}
           setSelectedRecordID={setSelectedRecordID}
         />
-        <RecordDetails selectedRecord={selectedRecord} />
+        <RecordDetails selectedRecord={records[selectedRecordID]} />
       </div>
     </div>
   );

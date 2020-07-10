@@ -26,6 +26,7 @@ export default function InspectedElementTree({
   label,
   showWhenEmpty = false,
 }: Props) {
+  //TODO(damassart): Clean this up
   const entries = data != null ? Object.entries(data) : null;
   if (entries !== null) {
     entries.sort(alphaSortEntries);

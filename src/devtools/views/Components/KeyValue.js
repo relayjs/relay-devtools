@@ -49,8 +49,7 @@ export default function KeyValue({
   const style = {
     paddingLeft: `${(depth - 1) * 0.75}rem`,
   };
-
-  let children = null;
+  //TODO(damassart): Make this into a function
   if (isSimpleType) {
     let displayValue = value;
     if (dataType === 'string') {
@@ -63,7 +62,7 @@ export default function KeyValue({
       displayValue = 'undefined';
     }
 
-    children = (
+    return (
       <div key="root" className={styles.Item} hidden={hidden} style={style}>
         <div className={styles.ExpandCollapseToggleSpacer} />
         <span className={styles.Name}>{name}</span>
@@ -74,7 +73,7 @@ export default function KeyValue({
     if (Array.isArray(value)) {
       const hasChildren = value.length > 0;
 
-      children = wasOpen
+      let children = wasOpen
         ? value.map((innerValue, index) => (
             <KeyValue
               key={index}
@@ -111,7 +110,9 @@ export default function KeyValue({
           </span>
         </div>
       );
+      return children;
     } else {
+      //TODO(damassart): Fix this
       const entries = Object.entries(value);
       if (alphaSort) {
         entries.sort(alphaSortEntries);
@@ -120,7 +121,7 @@ export default function KeyValue({
       const hasChildren = entries.length > 0;
       const displayName = 'Object';
 
-      children = wasOpen
+      let children = wasOpen
         ? entries.map<Element<any>>(([name, value]) => (
             <KeyValue
               key={name}
@@ -157,8 +158,7 @@ export default function KeyValue({
           </span>
         </div>
       );
+      return children;
     }
   }
-
-  return children;
 }

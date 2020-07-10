@@ -69,7 +69,7 @@ export default function TabBar({
   return (
     <Fragment>
       {tabs.map(({ icon, id, label, title }) => {
-        let button = (
+        const innerButton = (
           <label
             className={classNames(
               tabClassName,
@@ -106,14 +106,14 @@ export default function TabBar({
         );
 
         if (title) {
-          button = (
+          return (
             <Tooltip key={id} className={tooltipStyles.Tooltip} label={title}>
-              {button}
+              {innerButton}
             </Tooltip>
           );
         }
 
-        return button;
+        return innerButton;
       })}
     </Fragment>
   );

@@ -21,12 +21,20 @@ type TabID = 'general' | 'components';
 
 export default function SettingsModal(_: {||}) {
   const { isModalShowing } = useContext(SettingsModalContext);
+  return !isModalShowing ? null : <SettingsModalImpl />;
+}
 
-  if (!isModalShowing) {
-    return null;
+function getSelectedTabView(selectedTabID) {
+  switch (selectedTabID) {
+    case 'general':
+      return <GeneralSettings />;
+    // case 'components':
+    //   return <ComponentsSettings />;
+    //   break;
+    default:
+      break;
   }
-
-  return <SettingsModalImpl />;
+  return null;
 }
 
 function SettingsModalImpl(_: {||}) {
@@ -49,17 +57,7 @@ function SettingsModalImpl(_: {||}) {
     }
   }, [modalRef]);
 
-  let view = null;
-  switch (selectedTabID) {
-    case 'general':
-      view = <GeneralSettings />;
-      break;
-    // case 'components':
-    //   view = <ComponentsSettings />;
-    //   break;
-    default:
-      break;
-  }
+  const view = getSelectedTabView(selectedTabID);
 
   return (
     <div className={styles.Background}>

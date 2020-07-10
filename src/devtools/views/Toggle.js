@@ -30,21 +30,18 @@ export default function Toggle({
   onChange,
   title,
 }: Props) {
-  let defaultClassName;
-  if (isDisabled) {
-    defaultClassName = styles.ToggleDisabled;
-  } else if (isChecked) {
-    defaultClassName = styles.ToggleOn;
-  } else {
-    defaultClassName = styles.ToggleOff;
-  }
+  let defaultClassName = isDisabled
+    ? styles.ToggleDisabled
+    : isChecked
+    ? styles.ToggleOn
+    : styles.ToggleOff;
 
   const handleClick = useCallback(() => onChange(!isChecked), [
     isChecked,
     onChange,
   ]);
 
-  let toggle = (
+  const innerToggle = (
     <button
       className={`${defaultClassName} ${className}`}
       disabled={isDisabled}
@@ -57,12 +54,12 @@ export default function Toggle({
   );
 
   if (title) {
-    toggle = (
+    return (
       <Tooltip className={tooltipStyles.Tooltip} label={title}>
-        {toggle}
+        {innerToggle}
       </Tooltip>
     );
   }
 
-  return toggle;
+  return innerToggle;
 }

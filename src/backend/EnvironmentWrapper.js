@@ -26,6 +26,7 @@ export function attach(
   // $FlowFixMe
   environment.__log = event => {
     originalLog(event);
+    // TODO(damassart): Make this a modular function
     if (pendingEventsQueue !== null) {
       pendingEventsQueue.push(event);
     } else {
@@ -53,6 +54,7 @@ export function attach(
   }
 
   function flushInitialOperations() {
+    // TODO(damassart): Make this a modular function
     if (pendingEventsQueue != null) {
       pendingEventsQueue.forEach(pendingEvent => {
         hook.emit('environment.event', {

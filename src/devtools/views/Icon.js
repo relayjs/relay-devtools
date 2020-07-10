@@ -28,50 +28,41 @@ type Props = {|
   type: IconType,
 |};
 
-export default function Icon({ className = '', type }: Props) {
-  let pathData = null;
-  let circlePathData = null;
+function getPathData(type) {
   switch (type) {
     case 'arrow':
-      pathData = PATH_ARROW;
-      break;
+      return PATH_ARROW;
     case 'components':
-      pathData = PATH_COMPONENTS;
-      break;
+      return PATH_COMPONENTS;
     case 'fb-feedback':
-      pathData = PATH_FB_FEEDBACK;
-      break;
+      return PATH_FB_FEEDBACK;
     case 'flame-chart':
-      pathData = PATH_FLAME_CHART;
-      break;
+      return PATH_FLAME_CHART;
     case 'github-feedback':
-      pathData = PATH_GITHUB_FEEDBACK;
-      circlePathData = PATH_GITHUB_CIRCLE;
-      break;
+      return PATH_GITHUB_FEEDBACK;
     case 'interactions':
-      pathData = PATH_INTERACTIONS;
-      break;
+      return PATH_INTERACTIONS;
     case 'network':
       // TODO add network icon
-      pathData = PATH_RANKED_CHART;
-      break;
+      return PATH_RANKED_CHART;
     case 'ranked-chart':
-      pathData = PATH_RANKED_CHART;
-      break;
+      return PATH_RANKED_CHART;
     case 'search':
-      pathData = PATH_SEARCH;
-      break;
+      return PATH_SEARCH;
     case 'store-inspector':
-      pathData = PATH_SEARCH;
-      break;
+      return PATH_SEARCH;
     case 'settings':
-      pathData = PATH_SETTINGS;
-      break;
+      return PATH_SETTINGS;
     default:
       console.warn(`Unsupported type "${(type: empty)}" specified for Icon`);
-      break;
+      return null;
   }
+}
 
+export default function Icon({ className = '', type }: Props) {
+  let pathData = getPathData(type);
+  let circlePathData =
+    pathData === PATH_GITHUB_FEEDBACK ? PATH_GITHUB_CIRCLE : null;
   if (pathData === PATH_GITHUB_FEEDBACK) {
     return (
       <svg
