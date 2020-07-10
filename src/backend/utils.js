@@ -9,7 +9,7 @@
 
 export function copyWithSet(
   obj: Object | Array<any>,
-  path: Array<string | number>,
+  path: Array<number | string>,
   value: any,
   index: number = 0
 ): Object | Array<any> {
@@ -17,9 +17,8 @@ export function copyWithSet(
   if (index >= path.length) {
     return value;
   }
-  const key = path[index];
+  const key = parseInt(path[index]);
   const updated = Array.isArray(obj) ? obj.slice() : { ...obj };
-  // $FlowFixMe number or string is fine here
   updated[key] = copyWithSet(obj[key], path, value, index + 1);
   return updated;
 }

@@ -21,9 +21,7 @@ export function attach(
 ): EnvironmentWrapper {
   let pendingEventsQueue = [];
 
-  // $FlowFixMe
   const originalLog = environment.__log;
-  // $FlowFixMe
   environment.__log = event => {
     originalLog(event);
     // TODO(damassart): Make this a modular function
@@ -39,7 +37,6 @@ export function attach(
 
   function cleanup() {
     // We don't patch any methods so there is no cleanup.
-    // $FlowFixMe
     environment.__log = originalLog;
   }
 

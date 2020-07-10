@@ -23,6 +23,7 @@ export type RelayEnvironment = {
   execute: (options: any) => any,
   configName: ?string,
   getStore: () => RelayStore,
+  __log: (event: Object) => any,
 };
 
 export type EnvironmentWrapper = {
