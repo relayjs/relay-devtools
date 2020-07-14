@@ -10,6 +10,10 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { BridgeContext, StoreContext } from '../context';
 import InspectedElementTree from './InspectedElementTreeStoreInspector';
+import Button from '../Button';
+import ButtonIcon from '../ButtonIcon';
+import { copy } from 'clipboard-js';
+import { serializeDataForCopy } from '../utils';
 
 import styles from './StoreInspector.css';
 
@@ -166,12 +170,16 @@ export default function StoreInspector(props: {|
   }, [store]);
 
   const [selectedRecordID, setSelectedRecordID] = useState(0);
+  let records = {};
+  const copyToClipboard = useCallback(() => {
+    copy(serializeDataForCopy(records));
+  }, [records]);
 
   if (props.currentEnvID == null) {
     return null;
   }
 
-  let records = store.getRecords(props.currentEnvID);
+  records = store.getRecords(props.currentEnvID);
   let selectedRecord = {};
   let recordsByType = new Map();
   if (records != null) {
@@ -199,6 +207,9 @@ export default function StoreInspector(props: {|
         >
           Refresh
         </button>
+        <Button onClick={copyToClipboard} title="Copy to clipboard">
+          <ButtonIcon type="copy" />
+        </Button>
         <div className={styles.Spacer} />
       </div>
       <div className={styles.Content}>
