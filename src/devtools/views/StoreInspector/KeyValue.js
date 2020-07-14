@@ -7,12 +7,13 @@
  * @flow
  */
 
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import type { Element } from 'react';
 // import EditableValue from './EditableValue';
-import ExpandCollapseToggle from './ExpandCollapseToggle';
+import ExpandCollapseToggle from '../Components/ExpandCollapseToggle';
 import { alphaSortEntries } from '../utils';
 import styles from './KeyValue.css';
+import type { StoreRecords } from '../../../types.js';
 
 type KeyValueProps = {|
   alphaSort: boolean,
@@ -21,7 +22,21 @@ type KeyValueProps = {|
   name: string,
   path: Array<any>,
   value: any,
+  records: StoreRecords,
+  setSelectedRecordID: (id: number) => void,
 |};
+
+function getDisplayValue(value, dataType) {
+  return dataType === 'string'
+    ? `"${value}"`
+    : dataType === 'boolean'
+    ? value.toString()
+    : value === null
+    ? 'null'
+    : value === undefined
+    ? 'undefined'
+    : value;
+}
 
 export default function KeyValue({
   alphaSort,
@@ -30,50 +45,67 @@ export default function KeyValue({
   name,
   path,
   value,
+  records,
+  setSelectedRecordID,
 }: KeyValueProps) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [wasOpen, setWasOpen] = useState<boolean>(isOpen);
-  if (isOpen && !wasOpen) {
-    setWasOpen(true);
-  }
+  const [wasEverOpen, setWasEverOpen] = useState<boolean>(isOpen);
+  useEffect(() => {
+    if (isOpen && !wasEverOpen) {
+      setWasEverOpen(true);
+    }
+  }, [isOpen, wasEverOpen]);
+  const sortedEntries = useMemo(
+    () =>
+      alphaSort
+        ? Object.entries(value).sort(alphaSortEntries)
+        : Object.entries(value),
+    [value, alphaSort]
+  );
 
-  const toggleIsOpen = () => setIsOpen(prevIsOpen => !prevIsOpen);
+  const toggleIsOpen = useCallback(() => {
+    setIsOpen(!isOpen);
+  }, [isOpen]);
 
   const dataType = typeof value;
-  const isSimpleType =
-    dataType === 'number' ||
-    dataType === 'string' ||
-    dataType === 'boolean' ||
-    value == null;
+  const isSimpleType = typeof value !== 'object' && value !== null;
 
   const style = {
     paddingLeft: `${(depth - 1) * 0.75}rem`,
   };
-  //TODO(damassart): Make this into a function
-  if (isSimpleType) {
-    let displayValue = value;
-    if (dataType === 'string') {
-      displayValue = `"${value}"`;
-    } else if (dataType === 'boolean') {
-      displayValue = value ? 'true' : 'false';
-    } else if (value === null) {
-      displayValue = 'null';
-    } else if (value === undefined) {
-      displayValue = 'undefined';
-    }
 
-    return (
-      <div key="root" className={styles.Item} hidden={hidden} style={style}>
-        <div className={styles.ExpandCollapseToggleSpacer} />
-        <span className={styles.Name}>{name}</span>
-        <span className={styles.Value}>{displayValue}</span>
-      </div>
-    );
+  if (isSimpleType) {
+    let displayValue = getDisplayValue(value, dataType);
+
+    if (value !== null && records.hasOwnProperty(value)) {
+      return (
+        <div key="root" className={styles.Item} hidden={hidden} style={style}>
+          <div className={styles.ExpandCollapseToggleSpacer} />
+          <span className={styles.Name}>{name}</span>
+          <span
+            className={styles.Value}
+            onClick={() => {
+              setSelectedRecordID(records[value].__id);
+            }}
+          >
+            {displayValue}
+          </span>
+        </div>
+      );
+    } else {
+      return (
+        <div key="root" className={styles.Item} hidden={hidden} style={style}>
+          <div className={styles.ExpandCollapseToggleSpacer} />
+          <span className={styles.Name}>{name}</span>
+          <span className={styles.Value}>{displayValue}</span>
+        </div>
+      );
+    }
   } else {
     if (Array.isArray(value)) {
       const hasChildren = value.length > 0;
 
-      let children = wasOpen
+      let children = wasEverOpen
         ? value.map((innerValue, index) => (
             <KeyValue
               key={index}
@@ -83,6 +115,8 @@ export default function KeyValue({
               name={index}
               path={path.concat(index)}
               value={value[index]}
+              records={records}
+              setSelectedRecordID={setSelectedRecordID}
             />
           ))
         : [];
@@ -112,17 +146,18 @@ export default function KeyValue({
       );
       return children;
     } else {
-      //TODO(damassart): Fix this
-      const entries = Object.entries(value);
-      if (alphaSort) {
-        entries.sort(alphaSortEntries);
-      }
+      const hasChildren = sortedEntries.length > 0;
+      let recordFieldKey = sortedEntries[0][0];
+      let nextReferencedRecordID = sortedEntries[0][1];
+      let displayName =
+        recordFieldKey !== '__ref'
+          ? 'Object'
+          : typeof nextReferencedRecordID === 'string'
+          ? records[nextReferencedRecordID].__typename
+          : 'Object';
 
-      const hasChildren = entries.length > 0;
-      const displayName = 'Object';
-
-      let children = wasOpen
-        ? entries.map<Element<any>>(([name, value]) => (
+      let children = wasEverOpen
+        ? sortedEntries.map<Element<any>>(([name, value]) => (
             <KeyValue
               key={name}
               alphaSort={alphaSort}
@@ -131,6 +166,8 @@ export default function KeyValue({
               name={name}
               path={path.concat(name)}
               value={value}
+              records={records}
+              setSelectedRecordID={setSelectedRecordID}
             />
           ))
         : [];

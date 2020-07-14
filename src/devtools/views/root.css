@@ -18,6 +18,7 @@
   --light-color-attribute-editable-value: #1a1aa6;
   --light-color-background: #ffffff;
   --light-color-background-hover: rgba(0, 136, 250, 0.1);
+  --light-color-background-hover-inactive: #ffffff;
   --light-color-background-inactive: #e5e5e5;
   --light-color-background-invalid: #fff0f0;
   --light-color-background-search-bar: #ffffff;
@@ -85,6 +86,7 @@
   --dark-color-attribute-editable-value: yellow;
   --dark-color-background: #282c34;
   --dark-color-background-hover: rgba(255, 255, 255, 0.1);
+  --dark-color-background-hover-inactive: #282c34;
   --dark-color-background-inactive: #3d424a;
   --dark-color-background-invalid: #5c0000;
   --dark-color-background-search-bar: #3a3b3c;

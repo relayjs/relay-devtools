@@ -9,7 +9,7 @@
 
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { BridgeContext, StoreContext } from '../context';
-import InspectedElementTree from '../Components/InspectedElementTree';
+import InspectedElementTree from './InspectedElementTreeStoreInspector';
 
 import styles from './StoreInspector.css';
 
@@ -22,37 +22,86 @@ function Section(props: {| title: string, children: React$Node |}) {
   );
 }
 
-function RecordList({ records, selectedRecordID, setSelectedRecordID }) {
+function RecordList({
+  records,
+  recordsByType,
+  selectedRecordID,
+  setSelectedRecordID,
+}) {
   const [recordSearch, setRecordSearch] = useState('');
   const fetchSearchBarText = useCallback(e => {
     setRecordSearch(e.target.value);
   }, []);
+  const [recordListStyles, setRecordListStyles] = useState({});
+  const [plusMinusCollapse, setPlusMinusCollapse] = useState({});
 
-  if (records == null) {
+  if (records == null || recordsByType == null) {
     return <div>Loading...</div>;
   }
-  const recordRows = Object.keys(records)
-    .filter(recordID =>
-      recordSearch
-        .trim()
-        .split(' ')
-        .some(search => recordID.toLowerCase().includes(search.toLowerCase()))
-    )
-    .map(recordID => {
-      return (
-        <div
-          key={recordID}
-          onClick={() => {
-            setSelectedRecordID(recordID);
-          }}
-          className={`${styles.Record} ${
-            recordID === selectedRecordID ? styles.SelectedRecord : ''
-          }`}
-        >
-          {recordID}
+
+  let recordsArray = Array.from(recordsByType).map((recs, _) => {
+    let type = recs[0];
+    let ids = recs[1];
+    return (
+      <div key={type}>
+        <div className={styles.Collapse}>
+          <button
+            key={type}
+            onClick={() => {
+              if (recordListStyles[type] === 'none') {
+                setRecordListStyles({ ...recordListStyles, [type]: 'block' });
+                setPlusMinusCollapse({ ...plusMinusCollapse, [type]: '-' });
+              } else {
+                setRecordListStyles({ ...recordListStyles, [type]: 'none' });
+                setPlusMinusCollapse({ ...plusMinusCollapse, [type]: '+' });
+              }
+            }}
+            className={styles.Type}
+          >
+            {type}
+          </button>
+          <span className={styles.PlusMinusCollapse}>
+            {plusMinusCollapse[type] == null ? '-' : plusMinusCollapse[type]}
+          </span>
         </div>
-      );
-    });
+        <div
+          className={styles.RecordListContent}
+          style={{
+            display:
+              recordListStyles[type] == null ? 'block' : recordListStyles[type],
+          }}
+        >
+          {ids
+            .filter(id =>
+              recordSearch
+                .trim()
+                .split(' ')
+                .some(
+                  search =>
+                    id.toLowerCase().includes(search.toLowerCase()) ||
+                    type.toLowerCase().includes(search.toLowerCase())
+                )
+            )
+            .map(id => {
+              return (
+                <div
+                  key={id}
+                  onClick={() => {
+                    setSelectedRecordID(id);
+                  }}
+                  className={`${styles.Record} ${
+                    id === selectedRecordID ? styles.SelectedRecord : ''
+                  }`}
+                >
+                  {id}
+                </div>
+              );
+            })}
+        </div>
+        <hr />
+      </div>
+    );
+  });
 
   return (
     <div className={styles.Records}>
@@ -62,29 +111,35 @@ function RecordList({ records, selectedRecordID, setSelectedRecordID }) {
         onChange={fetchSearchBarText}
         placeholder="Search"
       ></input>
-      {recordRows.length <= 0 && recordSearch !== '' ? (
+      {recordsArray.length <= 0 && recordSearch !== '' ? (
         <p className={styles.RecordNotFound}>
           Sorry, no records with the name '{recordSearch}' were found!
         </p>
       ) : (
-        recordRows
+        recordsArray
       )}
     </div>
   );
 }
 
-function RecordDetails(props: {| selectedRecord: Object |}) {
-  if (props.selectedRecord == null) {
+function RecordDetails({ records, selectedRecord, setSelectedRecordID }) {
+  if (selectedRecord == null) {
     return <div className={styles.RecordDetails}>No record selected</div>;
   }
 
-  const { __id, __typename, ...data } = props.selectedRecord;
+  const { __id, __typename, ...data } = selectedRecord;
 
   return (
     <div className={styles.RecordDetails}>
       <Section title="ID">{__id}</Section>
       <Section title="Type">{__typename}</Section>
-      <InspectedElementTree label="Store data" data={data} showWhenEmpty />
+      <InspectedElementTree
+        label="Store data"
+        data={data}
+        records={records}
+        setSelectedRecordID={setSelectedRecordID}
+        showWhenEmpty
+      />
     </div>
   );
 }
@@ -117,6 +172,19 @@ export default function StoreInspector(props: {|
   }
 
   let records = store.getRecords(props.currentEnvID);
+  let selectedRecord = {};
+  let recordsByType = new Map();
+  if (records != null) {
+    for (let key in records) {
+      let arr = recordsByType.get(records[key].__typename);
+      if (arr) {
+        arr.push(key);
+      } else {
+        recordsByType.set(records[key].__typename, [key]);
+      }
+    }
+    selectedRecord = records[selectedRecordID];
+  }
 
   if (records == null) {
     return null;
@@ -136,10 +204,15 @@ export default function StoreInspector(props: {|
       <div className={styles.Content}>
         <RecordList
           records={records}
+          recordsByType={recordsByType}
           selectedRecordID={selectedRecordID}
           setSelectedRecordID={setSelectedRecordID}
         />
-        <RecordDetails selectedRecord={records[selectedRecordID]} />
+        <RecordDetails
+          records={records}
+          setSelectedRecordID={setSelectedRecordID}
+          selectedRecord={selectedRecord}
+        />
       </div>
     </div>
   );

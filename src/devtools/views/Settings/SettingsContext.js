@@ -214,6 +214,7 @@ function updateThemeVariables(
   updateStyleHelper(theme, 'color-attribute-editable-value', documentElements);
   updateStyleHelper(theme, 'color-background', documentElements);
   updateStyleHelper(theme, 'color-background-hover', documentElements);
+  updateStyleHelper(theme, 'color-background-hover-inactive', documentElements);
   updateStyleHelper(theme, 'color-background-inactive', documentElements);
   updateStyleHelper(theme, 'color-background-invalid', documentElements);
   updateStyleHelper(theme, 'color-background-search-bar', documentElements);

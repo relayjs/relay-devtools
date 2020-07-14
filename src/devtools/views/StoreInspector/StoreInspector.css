@@ -83,7 +83,7 @@
 }
 
 .Record:nth-child(2n) {
-  background-color: var(--color-background);
+  background-color: var(--color-background-inactive);
 }
 
 .Record:nth-child(2n):hover {
@@ -105,4 +105,29 @@
   flex: 3;
   overflow: scroll;
   padding: 3px;
+}
+
+.RecordListContent {
+  display: block;
+}
+
+.PlusMinusCollapse {
+  float: right;
+  font-size: 15px;
+  margin: 0px 5px;
+}
+
+.Type {
+  background-color: var(--color-background);
+  color: var(--color-text);
+  font-weight: bold;
+  cursor: pointer;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;
+}
+
+.Collapse {
+  display: flex;
 }
