@@ -77,7 +77,7 @@ const tabs = [networkTab, storeInspectorTab];
 export default function DevTools({
   bridge,
   browserTheme = 'light',
-  defaultTab = 'network',
+  defaultTab = 'store-inspector',
   rootContainer,
   networkPortalContainer,
   storeInspectorPortalContainer,
