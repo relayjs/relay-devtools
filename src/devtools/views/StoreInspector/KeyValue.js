@@ -6,8 +6,8 @@
  *
  * @flow
  */
-
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import * as React from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { Element } from 'react';
 // import EditableValue from './EditableValue';
 import ExpandCollapseToggle from '../Components/ExpandCollapseToggle';
@@ -21,21 +21,19 @@ type KeyValueProps = {|
   hidden?: boolean,
   name: string,
   path: Array<any>,
-  value: any,
+  value: mixed,
   records: StoreRecords,
   setSelectedRecordID: (id: number) => void,
 |};
 
-function getDisplayValue(value, dataType) {
-  return dataType === 'string'
+function getDisplayValue(value) {
+  return typeof value === 'string'
     ? `"${value}"`
-    : dataType === 'boolean'
+    : typeof value === 'boolean'
     ? value.toString()
     : value === null
     ? 'null'
-    : value === undefined
-    ? 'undefined'
-    : value;
+    : 'undefined';
 }
 
 export default function KeyValue({
@@ -57,9 +55,11 @@ export default function KeyValue({
   }, [isOpen, wasEverOpen]);
   const sortedEntries = useMemo(
     () =>
-      alphaSort
-        ? Object.entries(value).sort(alphaSortEntries)
-        : Object.entries(value),
+      value !== null && typeof value === 'object'
+        ? alphaSort
+          ? Object.entries(value).sort(alphaSortEntries)
+          : Object.entries(value)
+        : [],
     [value, alphaSort]
   );
 
@@ -67,7 +67,6 @@ export default function KeyValue({
     setIsOpen(!isOpen);
   }, [isOpen]);
 
-  const dataType = typeof value;
   const isSimpleType = typeof value !== 'object' && value !== null;
 
   const style = {
@@ -75,9 +74,13 @@ export default function KeyValue({
   };
 
   if (isSimpleType) {
-    let displayValue = getDisplayValue(value, dataType);
+    let displayValue = getDisplayValue(value);
 
-    if (value !== null && records.hasOwnProperty(value)) {
+    if (
+      value !== null &&
+      records.hasOwnProperty(value) &&
+      typeof value === 'string'
+    ) {
       return (
         <div key="root" className={styles.Item} hidden={hidden} style={style}>
           <div className={styles.ExpandCollapseToggleSpacer} />
@@ -106,15 +109,15 @@ export default function KeyValue({
       const hasChildren = value.length > 0;
 
       let children = wasEverOpen
-        ? value.map((innerValue, index) => (
+        ? value.map<React.Node>((innerValue, mapIndex): React.Node => (
             <KeyValue
-              key={index}
+              key={mapIndex}
               alphaSort={alphaSort}
               depth={depth + 1}
               hidden={hidden || !isOpen}
-              name={index}
-              path={path.concat(index)}
-              value={value[index]}
+              name={mapIndex.toString()}
+              path={path.concat(mapIndex)}
+              value={value[mapIndex]}
               records={records}
               setSelectedRecordID={setSelectedRecordID}
             />
@@ -147,10 +150,18 @@ export default function KeyValue({
       return children;
     } else {
       const hasChildren = sortedEntries.length > 0;
-      let recordFieldKey = sortedEntries[0][0];
-      let nextReferencedRecordID = sortedEntries[0][1];
+      // sortedEntries contains an array of tuples which contain a string and a value.
+      // In some cases, the string is a __ref. In this case, there should be no other values
+      // within the array because __ref is a reference to another record.
+      let entryReference = sortedEntries[0];
+      let recordFieldKey =
+        entryReference == null ? null : entryReference[0];
+      let nextReferencedRecordID =
+        entryReference == null ? null : entryReference[1];
       let displayName =
-        recordFieldKey !== '__ref'
+        sortedEntries === []
+          ? 'Object '
+          : recordFieldKey !== '__ref'
           ? 'Object'
           : typeof nextReferencedRecordID === 'string'
           ? records[nextReferencedRecordID].__typename

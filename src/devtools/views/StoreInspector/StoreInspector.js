@@ -184,11 +184,13 @@ export default function StoreInspector(props: {|
   let recordsByType = new Map();
   if (records != null) {
     for (let key in records) {
-      let arr = recordsByType.get(records[key].__typename);
-      if (arr) {
-        arr.push(key);
-      } else {
-        recordsByType.set(records[key].__typename, [key]);
+      if (records[key] != null) {
+        let arr = recordsByType.get(records[key].__typename);
+        if (arr) {
+          arr.push(key);
+        } else {
+          recordsByType.set(records[key].__typename, [key]);
+        }
       }
     }
     selectedRecord = records[selectedRecordID];
