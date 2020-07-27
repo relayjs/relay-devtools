@@ -14,8 +14,34 @@ import Button from '../Button';
 import ButtonIcon from '../ButtonIcon';
 import { copy } from 'clipboard-js';
 import { serializeDataForCopy } from '../utils';
+import TabBar from './StoreTabBar';
 
 import styles from './StoreInspector.css';
+
+export type TabID = 'explorer' | 'snapshot' | 'watchlist';
+export type TabInfo = {|
+  id: string,
+  label: string,
+  title?: string,
+|};
+
+const snapshotTab = {
+  id: ('snapshot': TabID),
+  label: 'Snapshot',
+  title: 'Relay Snapshot',
+};
+const watchListTab = {
+  id: ('watchlist': TabID),
+  label: 'Watchlist',
+  title: 'Relay Watchlist',
+};
+const explorerTab = {
+  id: ('explorer': TabID),
+  label: 'Store Explorer',
+  title: 'Relay Store Explorer',
+};
+
+const tabs = [explorerTab, snapshotTab, watchListTab];
 
 function Section(props: {| title: string, children: React$Node |}) {
   return (
@@ -148,16 +174,22 @@ function RecordDetails({ records, selectedRecord, setSelectedRecordID }) {
   );
 }
 
+function Snapshots() {
+  return null;
+}
+
+function WatchList() {
+  return null;
+}
+
 export default function StoreInspector(props: {|
   +portalContainer: mixed,
   currentEnvID: ?number,
 |}) {
   const store = useContext(StoreContext);
   const bridge = useContext(BridgeContext);
+  const [tab, setTab] = useState(explorerTab);
   const [, forceUpdate] = useState({});
-  const refreshStore = useCallback(() => {
-    bridge.send('refreshStore', props.currentEnvID);
-  }, [props, bridge]);
 
   useEffect(() => {
     const onStoreData = () => {
@@ -171,6 +203,9 @@ export default function StoreInspector(props: {|
 
   const [selectedRecordID, setSelectedRecordID] = useState('');
   let records = {};
+  const refreshStore = useCallback(() => {
+    bridge.send('refreshStore', props.currentEnvID);
+  }, [props, bridge]);
   const copyToClipboard = useCallback(() => {
     copy(serializeDataForCopy(records));
   }, [records]);
@@ -215,18 +250,42 @@ export default function StoreInspector(props: {|
         </Button>
         <div className={styles.Spacer} />
       </div>
+      <div className={styles.TabBar}>
+        <div className={styles.Spacer} />
+        <TabBar
+          tabID={tab.id}
+          id="StoreTab"
+          selectTab={setTab}
+          size="small"
+          tabs={tabs}
+        />
+      </div>
       <div className={styles.Content}>
-        <RecordList
-          records={records}
-          recordsByType={recordsByType}
-          selectedRecordID={selectedRecordID}
-          setSelectedRecordID={setSelectedRecordID}
-        />
-        <RecordDetails
-          records={records}
-          setSelectedRecordID={setSelectedRecordID}
-          selectedRecord={selectedRecord}
-        />
+        {tab === explorerTab && (
+          <div className={styles.TabContent}>
+            <RecordList
+              records={records}
+              recordsByType={recordsByType}
+              selectedRecordID={selectedRecordID}
+              setSelectedRecordID={setSelectedRecordID}
+            />
+            <RecordDetails
+              records={records}
+              setSelectedRecordID={setSelectedRecordID}
+              selectedRecord={selectedRecord}
+            />
+          </div>
+        )}
+        {tab === snapshotTab && (
+          <div className={styles.TabContent}>
+            <Snapshots />
+          </div>
+        )}
+        {tab === watchListTab && (
+          <div className={styles.TabContent}>
+            <WatchList />
+          </div>
+        )}
       </div>
     </div>
   );
