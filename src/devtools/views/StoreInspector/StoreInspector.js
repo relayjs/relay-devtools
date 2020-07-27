@@ -169,7 +169,7 @@ export default function StoreInspector(props: {|
     };
   }, [store]);
 
-  const [selectedRecordID, setSelectedRecordID] = useState(0);
+  const [selectedRecordID, setSelectedRecordID] = useState('');
   let records = {};
   const copyToClipboard = useCallback(() => {
     copy(serializeDataForCopy(records));
@@ -184,12 +184,13 @@ export default function StoreInspector(props: {|
   let recordsByType = new Map();
   if (records != null) {
     for (let key in records) {
-      if (records[key] != null) {
-        let arr = recordsByType.get(records[key].__typename);
+      let rec = records[key];
+      if (rec != null) {
+        let arr = recordsByType.get(rec.__typename);
         if (arr) {
           arr.push(key);
         } else {
-          recordsByType.set(records[key].__typename, [key]);
+          recordsByType.set(rec.__typename, [key]);
         }
       }
     }

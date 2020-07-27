@@ -23,7 +23,7 @@ type KeyValueProps = {|
   path: Array<any>,
   value: mixed,
   records: StoreRecords,
-  setSelectedRecordID: (id: number) => void,
+  setSelectedRecordID: (id: string) => void,
 |};
 
 function getDisplayValue(value) {
@@ -62,6 +62,11 @@ export default function KeyValue({
         : [],
     [value, alphaSort]
   );
+  const selectRecordID = useCallback(() => {
+    if (typeof value === 'string' && records[value] != null) {
+      setSelectedRecordID(records[value].__id);
+    }
+  }, [records, value, setSelectedRecordID]);
 
   const toggleIsOpen = useCallback(() => {
     setIsOpen(!isOpen);
@@ -85,12 +90,7 @@ export default function KeyValue({
         <div key="root" className={styles.Item} hidden={hidden} style={style}>
           <div className={styles.ExpandCollapseToggleSpacer} />
           <span className={styles.Name}>{name}</span>
-          <span
-            className={styles.Value}
-            onClick={() => {
-              setSelectedRecordID(records[value].__id);
-            }}
-          >
+          <span className={styles.Value} onClick={selectRecordID}>
             {displayValue}
           </span>
         </div>
@@ -154,8 +154,7 @@ export default function KeyValue({
       // In some cases, the string is a __ref. In this case, there should be no other values
       // within the array because __ref is a reference to another record.
       let entryReference = sortedEntries[0];
-      let recordFieldKey =
-        entryReference == null ? null : entryReference[0];
+      let recordFieldKey = entryReference == null ? null : entryReference[0];
       let nextReferencedRecordID =
         entryReference == null ? null : entryReference[1];
       let displayName =
@@ -163,7 +162,8 @@ export default function KeyValue({
           ? 'Object '
           : recordFieldKey !== '__ref'
           ? 'Object'
-          : typeof nextReferencedRecordID === 'string'
+          : typeof nextReferencedRecordID === 'string' &&
+            records[nextReferencedRecordID] != null
           ? records[nextReferencedRecordID].__typename
           : 'Object';
 

@@ -16,6 +16,7 @@ import type {
   EnvironmentInfo,
   StoreData,
   StoreRecords,
+  Record,
 } from '../types';
 
 const debug = (methodName, ...args) => {
@@ -54,7 +55,7 @@ export default class Store extends EventEmitter<{|
     bridge.addListener('events', this.onBridgeEvents);
     bridge.addListener('shutdown', this.onBridgeShutdown);
     bridge.addListener('environmentInitialized', this.onBridgeEnvironmentInit);
-    bridge.addListener('storeRecords', this.onBridgeStoreRecords);
+    bridge.addListener('storeRecords', this.onBridgeStoreSnapshot);
   }
 
   getAllEvents(): $ReadOnlyArray<LogEvent> {
@@ -85,22 +86,81 @@ export default class Store extends EventEmitter<{|
     return Array.from(this._environmentStoreData.values());
   }
 
-  onBridgeStoreRecords = (data: Array<StoreData>) => {
+  mergeRecords(id: number, newRecords: ?StoreRecords) {
+    if (newRecords == null) {
+      return;
+    }
+    let oldRecords = this._environmentStoreData.get(id);
+    if (oldRecords == null) {
+      this._environmentStoreData.set(id, newRecords);
+      return;
+    }
+    const dataIDs = Object.keys(newRecords);
+
+    for (let ii = 0; ii < dataIDs.length; ii++) {
+      const dataID = dataIDs[ii];
+      const oldRecord = oldRecords[dataID];
+      const newRecord = newRecords[dataID];
+      if (oldRecord && newRecord) {
+        let updated: Record | null = null;
+        const keys = Object.keys(newRecord);
+        for (let ii = 0; ii < keys.length; ii++) {
+          const key = keys[ii];
+          if (updated || oldRecord[key] !== newRecord[key]) {
+            updated = updated !== null ? updated : { ...oldRecord };
+            updated[key] = newRecord[key];
+          }
+        }
+        updated = updated !== null ? updated : oldRecord;
+        if (updated !== newRecord) {
+          oldRecords[dataID] = updated;
+        }
+      } else if (oldRecord == null) {
+        oldRecords[dataID] = newRecord;
+      } else if (newRecord == null) {
+        delete oldRecords[dataID];
+      }
+    }
+    this._environmentStoreData.set(id, oldRecords);
+  }
+
+  onBridgeStoreSnapshot = (data: Array<StoreData>) => {
     for (let { id, records } of data) {
       this._environmentStoreData.set(id, records);
       this.emit('storeDataReceived');
     }
   };
 
+  setStoreEvents = (id: number, data: LogEvent) => {
+    switch (data.name) {
+      case 'store.publish':
+        if (!data.optimistic) {
+          this.mergeRecords(id, data.source);
+        }
+        break;
+      default:
+        break;
+    }
+    this.emit('storeDataReceived');
+  };
+
+  setEnvironmentEvents = (id: number, data: LogEvent) => {
+    let arr = this._environmentEventsMap.get(id);
+    if (arr) {
+      arr.push(data);
+    } else {
+      this._environmentEventsMap.set(id, [data]);
+    }
+    this.emit('mutated');
+  };
+
   onBridgeEvents = (events: Array<EventData>) => {
-    for (let { id, data } of events) {
-      let arr = this._environmentEventsMap.get(id);
-      if (arr) {
-        arr.push(data);
-      } else {
-        this._environmentEventsMap.set(id, [data]);
+    for (let { id, data, eventType } of events) {
+      if (eventType === 'store') {
+        this.setStoreEvents(id, data);
+      } else if (eventType === 'environment') {
+        this.setEnvironmentEvents(id, data);
       }
-      this.emit('mutated');
     }
   };
 
@@ -132,6 +192,7 @@ export default class Store extends EventEmitter<{|
       eventArray = eventArray.filter(
         event =>
           event.name !== 'queryresource.fetch' &&
+          event.name !== 'store.publish' &&
           !completed.has(event.transactionID)
       );
       this._environmentEventsMap.set(environmentID, eventArray);
@@ -150,6 +211,6 @@ export default class Store extends EventEmitter<{|
       'environmentInitialized',
       this.onBridgeEnvironmentInit
     );
-    this._bridge.removeListener('storeRecords', this.onBridgeStoreRecords);
+    this._bridge.removeListener('storeRecords', this.onBridgeStoreSnapshot);
   };
 }

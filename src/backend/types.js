@@ -17,13 +17,14 @@ export type RelayRecordSource = {
 
 export type RelayStore = {
   getSource: () => RelayRecordSource,
+  __log: (event: Object) => void,
 };
 
 export type RelayEnvironment = {
   execute: (options: any) => any,
   configName: ?string,
   getStore: () => RelayStore,
-  __log: (event: Object) => any,
+  __log: (event: Object) => void,
 };
 
 export type EnvironmentWrapper = {

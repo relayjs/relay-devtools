@@ -20,6 +20,7 @@ export function attach(
   global: Object
 ): EnvironmentWrapper {
   let pendingEventsQueue = [];
+  const store = environment.getStore();
 
   const originalLog = environment.__log;
   environment.__log = event => {
@@ -31,6 +32,21 @@ export function attach(
       hook.emit('environment.event', {
         id: rendererID,
         data: event,
+        eventType: 'environment',
+      });
+    }
+  };
+
+  const storeOriginalLog = store.__log;
+  store.__log = event => {
+    if (storeOriginalLog !== null) {
+      storeOriginalLog(event);
+    }
+    if (event.name === 'store.publish') {
+      hook.emit('environment.event', {
+        id: rendererID,
+        data: event,
+        eventType: 'store',
       });
     }
   };
@@ -38,10 +54,10 @@ export function attach(
   function cleanup() {
     // We don't patch any methods so there is no cleanup.
     environment.__log = originalLog;
+    store.__log = storeOriginalLog;
   }
 
   function sendStoreRecords() {
-    const store = environment.getStore();
     const records = store.getSource().toJSON();
     hook.emit('environment.store', {
       name: 'refresh.store',
@@ -58,6 +74,7 @@ export function attach(
           id: rendererID,
           envName: environment.configName,
           data: pendingEvent,
+          eventType: 'environment',
         });
       });
       pendingEventsQueue = null;

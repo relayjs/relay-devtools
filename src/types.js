@@ -13,6 +13,11 @@ export type Wall = {|
   send: (event: string, payload: any, transferable?: Array<any>) => void,
 |};
 
+export type Record = { [key: string]: any, ... };
+export type DataID = string;
+
+export type StoreRecords = { [DataID]: ?Record, ... };
+
 // Copied from relay
 export type LogEvent =
   | {|
@@ -24,6 +29,11 @@ export type LogEvent =
       +renderPolicy: string,
       +hasFullQuery: boolean,
       +shouldFetch: boolean,
+    |}
+  | {|
+      +name: 'store.publish',
+      +source: any,
+      +optimistic: boolean,
     |}
   | {|
       +name: 'execute.info',
@@ -55,14 +65,11 @@ export type LogEvent =
       +transactionID: number,
     |};
 
-export type StoreRecords = {|
-  +__id: string,
-  +__typename: string,
-|};
-
 export type EventData = {|
   +id: number,
   +data: LogEvent,
+  +source: StoreRecords,
+  +eventType: string,
 |};
 
 export type StoreData = {|

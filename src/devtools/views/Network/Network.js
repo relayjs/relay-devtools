@@ -168,6 +168,9 @@ function Network(props: {| +portalContainer: mixed, currentEnvID: ?number |}) {
         }
         break;
       }
+      case 'store.publish':
+        // ignore
+        break;
       case 'queryresource.fetch':
         // ignore
         break;

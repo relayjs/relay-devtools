@@ -20,7 +20,7 @@ type Props = {|
   data: Object,
   label: string,
   records: StoreRecords,
-  setSelectedRecordID: (id: number) => void,
+  setSelectedRecordID: (id: string) => void,
   showWhenEmpty?: boolean,
 |};
 
