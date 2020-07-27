@@ -70,35 +70,46 @@ function RecordList({
   }
 
   let recordsArray = Array.from(recordsByType).map((recs, _) => {
-    let type = recs[0];
-    let ids = recs[1];
+    const typename = ((recs[0]: any): string);
+    const ids = recs[1];
+
     return (
-      <div key={type}>
+      <div key={typename}>
         <div className={styles.Collapse}>
           <button
-            key={type}
+            key={typename}
             onClick={() => {
-              if (recordListStyles[type] === 'none') {
-                setRecordListStyles({ ...recordListStyles, [type]: 'block' });
-                setPlusMinusCollapse({ ...plusMinusCollapse, [type]: '-' });
+              if (recordListStyles[typename] === 'none') {
+                setRecordListStyles({
+                  ...recordListStyles,
+                  [typename]: 'block',
+                });
+                setPlusMinusCollapse({ ...plusMinusCollapse, [typename]: '-' });
               } else {
-                setRecordListStyles({ ...recordListStyles, [type]: 'none' });
-                setPlusMinusCollapse({ ...plusMinusCollapse, [type]: '+' });
+                setRecordListStyles({
+                  ...recordListStyles,
+                  [typename]: 'none',
+                });
+                setPlusMinusCollapse({ ...plusMinusCollapse, [typename]: '+' });
               }
             }}
             className={styles.Type}
           >
-            {type}
+            {typename}
           </button>
           <span className={styles.PlusMinusCollapse}>
-            {plusMinusCollapse[type] == null ? '-' : plusMinusCollapse[type]}
+            {plusMinusCollapse[typename] == null
+              ? '-'
+              : plusMinusCollapse[typename]}
           </span>
         </div>
         <div
           className={styles.RecordListContent}
           style={{
             display:
-              recordListStyles[type] == null ? 'block' : recordListStyles[type],
+              recordListStyles[typename] == null
+                ? 'block'
+                : recordListStyles[typename],
           }}
         >
           {ids
@@ -109,7 +120,7 @@ function RecordList({
                 .some(
                   search =>
                     id.toLowerCase().includes(search.toLowerCase()) ||
-                    type.toLowerCase().includes(search.toLowerCase())
+                    typename.toLowerCase().includes(search.toLowerCase())
                 )
             )
             .map(id => {
@@ -159,10 +170,13 @@ function RecordDetails({ records, selectedRecord, setSelectedRecordID }) {
 
   const { __id, __typename, ...data } = selectedRecord;
 
+  let typename: string = (__typename: any);
+  let id: string = (__id: any);
+
   return (
     <div className={styles.RecordDetails}>
-      <Section title="ID">{__id}</Section>
-      <Section title="Type">{__typename}</Section>
+      <Section title="ID">{id}</Section>
+      <Section title="Type">{typename}</Section>
       <InspectedElementTree
         label="Store data"
         data={data}

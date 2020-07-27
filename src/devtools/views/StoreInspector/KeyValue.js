@@ -63,8 +63,13 @@ export default function KeyValue({
     [value, alphaSort]
   );
   const selectRecordID = useCallback(() => {
-    if (typeof value === 'string' && records[value] != null) {
-      setSelectedRecordID(records[value].__id);
+    if (
+      typeof value === 'string' &&
+      records[value] != null &&
+      typeof records[value].__id === 'string'
+    ) {
+      let id = records[value].__id;
+      setSelectedRecordID(id);
     }
   }, [records, value, setSelectedRecordID]);
 
@@ -164,7 +169,7 @@ export default function KeyValue({
           ? 'Object'
           : typeof nextReferencedRecordID === 'string' &&
             records[nextReferencedRecordID] != null
-          ? records[nextReferencedRecordID].__typename
+          ? ((records[nextReferencedRecordID].__typename: any): string)
           : 'Object';
 
       let children = wasEverOpen

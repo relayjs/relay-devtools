@@ -13,7 +13,7 @@ export type Wall = {|
   send: (event: string, payload: any, transferable?: Array<any>) => void,
 |};
 
-export type Record = { [key: string]: any, ... };
+export type Record = { [key: string]: mixed, ... };
 export type DataID = string;
 
 export type StoreRecords = { [DataID]: ?Record, ... };
