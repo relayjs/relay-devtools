@@ -174,14 +174,133 @@ function RecordDetails({ records, selectedRecord, setSelectedRecordID }) {
   );
 }
 
-function Snapshots() {
-  return null;
+function SnapshotList({
+  snapshotList,
+  setSelectedSnapshotID,
+  selectedSnapshotID,
+}) {
+  let snapshotIDs = Object.keys(snapshotList).map(snapshotID => {
+    return (
+      <div
+        key={snapshotID}
+        onClick={() => {
+          setSelectedSnapshotID(snapshotID);
+        }}
+        className={`${styles.Record} ${
+          snapshotID === selectedSnapshotID ? styles.SelectedRecord : ''
+        }`}
+      >
+        {snapshotID}
+      </div>
+    );
+  });
+
+  return (
+    <div className={styles.SnapshotList}>
+      <h2>Snapshots</h2>
+      <div>{snapshotIDs}</div>
+    </div>
+  );
+}
+
+function SnapshotDetails({
+  snapshotList,
+  snapshotListByType,
+  selectedSnapshotID,
+}) {
+  const [selectedRecordID, setSelectedRecordID] = useState(0);
+  let snapshotRecords = snapshotList[selectedSnapshotID];
+  if (snapshotRecords == null) {
+    return null;
+  }
+  let snapshotRecordsByType = snapshotListByType[selectedSnapshotID];
+  let selectedRecord = snapshotRecords[selectedRecordID];
+
+  return (
+    <div className={styles.TabContent}>
+      <RecordList
+        records={snapshotRecords}
+        recordsByType={snapshotRecordsByType}
+        selectedRecordID={selectedRecordID}
+        setSelectedRecordID={setSelectedRecordID}
+      />
+      <RecordDetails
+        records={snapshotRecords}
+        setSelectedRecordID={setSelectedRecordID}
+        selectedRecord={selectedRecord}
+      />
+    </div>
+  );
+}
+
+function Snapshots({ envSnapshotList, envSnapshotListByType, currentEnvID }) {
+  const [selectedSnapshotID, setSelectedSnapshotID] = useState(0);
+
+  if (
+    envSnapshotList == null ||
+    Object.keys(envSnapshotList).length <= 0 ||
+    currentEnvID == null ||
+    envSnapshotList[currentEnvID] == null
+  ) {
+    return (
+      <div>
+        No Snapshots! <br /> To take a snapshot, hit the snapshot button!
+      </div>
+    );
+  }
+
+  let snapshotList = envSnapshotList[currentEnvID];
+  let snapshotListByType = envSnapshotListByType[currentEnvID];
+
+  return (
+    <div className={styles.TabContent}>
+      <SnapshotList
+        snapshotList={snapshotList}
+        setSelectedSnapshotID={setSelectedSnapshotID}
+        selectedSnapshotID={selectedSnapshotID}
+      />
+      <SnapshotDetails
+        snapshotList={snapshotList}
+        snapshotListByType={snapshotListByType}
+        selectedSnapshotID={selectedSnapshotID}
+      />
+    </div>
+  );
 }
 
 function WatchList() {
   return null;
 }
 
+function deepCopyFunction(inObject) {
+  if (typeof inObject !== 'object' || inObject === null) {
+    return inObject;
+  }
+
+  if (Array.isArray(inObject)) {
+    let outObject = [];
+    for (let i = 0; i < inObject.length; i++) {
+      let value = inObject[i];
+      outObject[i] = deepCopyFunction(value);
+    }
+    return outObject;
+  } else if (inObject instanceof Map) {
+    let outObject = new Map();
+    inObject.forEach((val, key) => {
+      outObject.set(key, deepCopyFunction(val));
+    });
+    return outObject;
+  } else {
+    let outObject = {};
+    for (let key in inObject) {
+      let value = inObject[key];
+      if (typeof key === 'string' && key != null) {
+        outObject[key] = deepCopyFunction(value);
+      }
+    }
+    return outObject;
+  }
+}
 export default function StoreInspector(props: {|
   +portalContainer: mixed,
   currentEnvID: ?number,
@@ -190,6 +309,8 @@ export default function StoreInspector(props: {|
   const bridge = useContext(BridgeContext);
   const [tab, setTab] = useState(explorerTab);
   const [, forceUpdate] = useState({});
+  const [envSnapshotList, setEnvSnapshotList] = useState({});
+  const [envSnapshotListByType, setEnvSnapshotListByType] = useState({});
 
   useEffect(() => {
     const onStoreData = () => {
@@ -203,9 +324,31 @@ export default function StoreInspector(props: {|
 
   const [selectedRecordID, setSelectedRecordID] = useState('');
   let records = {};
+  let recordsByType = new Map();
+
   const refreshStore = useCallback(() => {
-    bridge.send('refreshStore', props.currentEnvID);
-  }, [props, bridge]);
+    let currEnvID = props.currentEnvID;
+    if (currEnvID != null) {
+      let recordsArr = envSnapshotList[currEnvID] || [];
+      recordsArr.push(deepCopyFunction(records));
+      let recordsTypeArr = envSnapshotListByType[currEnvID] || [];
+      recordsTypeArr.push(deepCopyFunction(recordsByType));
+      setEnvSnapshotList({ ...envSnapshotList, [currEnvID]: recordsArr });
+      setEnvSnapshotListByType({
+        ...envSnapshotListByType,
+        [currEnvID]: recordsTypeArr,
+      });
+      bridge.send('refreshStore', currEnvID);
+    }
+  }, [
+    props,
+    bridge,
+    records,
+    recordsByType,
+    envSnapshotList,
+    envSnapshotListByType,
+  ]);
+
   const copyToClipboard = useCallback(() => {
     copy(serializeDataForCopy(records));
   }, [records]);
@@ -216,7 +359,6 @@ export default function StoreInspector(props: {|
 
   records = store.getRecords(props.currentEnvID);
   let selectedRecord = {};
-  let recordsByType = new Map();
   if (records != null) {
     for (let key in records) {
       let rec = records[key];
@@ -243,7 +385,7 @@ export default function StoreInspector(props: {|
           onClick={refreshStore}
           title="Refresh"
         >
-          Refresh
+          Take Snapshot
         </button>
         <Button onClick={copyToClipboard} title="Copy to clipboard">
           <ButtonIcon type="copy" />
@@ -278,7 +420,11 @@ export default function StoreInspector(props: {|
         )}
         {tab === snapshotTab && (
           <div className={styles.TabContent}>
-            <Snapshots />
+            <Snapshots
+              envSnapshotList={envSnapshotList}
+              envSnapshotListByType={envSnapshotListByType}
+              currentEnvID={props.currentEnvID}
+            />
           </div>
         )}
         {tab === watchListTab && (

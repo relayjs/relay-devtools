@@ -153,7 +153,13 @@
   display: flex;
 }
 
-.Snapshots {
-  padding: 3px;
-  border-left: 1px solid #d0d0d0;
+.SnapshotList {
+  width: 30%;
+  margin-left: 0.5em;
+  padding-right: 0.5em;
+  border-right: 1px solid #d0d0d0;
+}
+
+.SnapshotList h2 {
+  margin: 0px;
 }

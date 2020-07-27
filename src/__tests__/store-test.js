@@ -26,7 +26,6 @@ describe('Store', () => {
 
     // Testing case when oldRecords is null and we just set the map to the newRecords
     store.mergeRecords(1, { user: { __id: 'user', __typename: 'User' } });
-    jest.runAllTimers();
 
     expect(store.getRecords(1)).toEqual({
       user: { __id: 'user', __typename: 'User' },
@@ -34,14 +33,12 @@ describe('Store', () => {
 
     // Testing case when newRecords is null/undefined and we don't change anything
     store.mergeRecords(1, null);
-    jest.runAllTimers();
 
     expect(store.getRecords(1)).toEqual({
       user: { __id: 'user', __typename: 'User' },
     });
 
     store.mergeRecords(1, undefined);
-    jest.runAllTimers();
 
     expect(store.getRecords(1)).toEqual({
       user: { __id: 'user', __typename: 'User' },
@@ -49,7 +46,6 @@ describe('Store', () => {
 
     // Testing multiple environments
     store.mergeRecords(2, { user: { __id: 'user', __typename: 'User' } });
-    jest.runAllTimers();
 
     expect(store.getRecords(1)).toEqual({
       user: { __id: 'user', __typename: 'User' },
@@ -67,7 +63,6 @@ describe('Store', () => {
         profile_pic: 'some_url',
       },
     });
-    jest.runAllTimers();
 
     expect(store.getRecords(1)).toEqual({
       Jonathan: {
@@ -86,7 +81,6 @@ describe('Store', () => {
         profile_pic: 'a_different_url',
       },
     });
-    jest.runAllTimers();
 
     expect(store.getRecords(1)).toEqual({
       Jonathan: {
@@ -114,7 +108,6 @@ describe('Store', () => {
         profile_pic: 'new_url',
       },
     });
-    jest.runAllTimers();
 
     expect(store.getRecords(1)).toEqual({
       Jonathan: {
@@ -165,7 +158,6 @@ describe('Store', () => {
         profile_pic: 'new_url',
       },
     });
-    jest.runAllTimers();
 
     expect(store.getRecords(1)).toEqual({
       Jonathan: {
@@ -205,7 +197,6 @@ describe('Store', () => {
         profile_pic: 'new_url',
       },
     });
-    jest.runAllTimers();
 
     expect(store.getRecords(1)).toEqual({
       Jonathan: {
