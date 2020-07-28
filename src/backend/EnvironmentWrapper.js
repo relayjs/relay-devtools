@@ -48,6 +48,12 @@ export function attach(
         data: event,
         eventType: 'store',
       });
+    } else if (event.name === 'store.restore') {
+      hook.emit('environment.event', {
+        id: rendererID,
+        data: event,
+        eventType: 'store',
+      });
     }
   };
 

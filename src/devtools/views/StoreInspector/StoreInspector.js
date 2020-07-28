@@ -18,7 +18,7 @@ import TabBar from './StoreTabBar';
 
 import styles from './StoreInspector.css';
 
-export type TabID = 'explorer' | 'snapshot' | 'watchlist';
+export type TabID = 'explorer' | 'snapshot' | 'watchlist' | 'optimistic';
 export type TabInfo = {|
   id: string,
   label: string,
@@ -40,8 +40,13 @@ const explorerTab = {
   label: 'Store Explorer',
   title: 'Relay Store Explorer',
 };
+const optimisticTab = {
+  id: ('optimistic': TabID),
+  label: 'Optimistic Updates',
+  title: 'Relay Optimistic Updates',
+};
 
-const tabs = [explorerTab, snapshotTab, watchListTab];
+const tabs = [explorerTab, snapshotTab, watchListTab, optimisticTab];
 
 function Section(props: {| title: string, children: React$Node |}) {
   return (
@@ -286,6 +291,44 @@ function WatchList() {
   return null;
 }
 
+function Optimistic({ optimisticUpdates }) {
+  const [selectedRecordID, setSelectedRecordID] = useState('');
+  if (optimisticUpdates == null) {
+    return <div>No Optimistic Updates!</div>;
+  }
+  let optimisticUpdatesByType = new Map();
+
+  for (let key in optimisticUpdates) {
+    let rec = optimisticUpdates[key];
+    if (rec != null) {
+      let arr = optimisticUpdatesByType.get(rec.__typename);
+      if (arr) {
+        arr.push(key);
+      } else {
+        optimisticUpdatesByType.set(rec.__typename, [key]);
+      }
+    }
+  }
+
+  let selectedRecord = optimisticUpdates[selectedRecordID];
+
+  return (
+    <div className={styles.TabContent}>
+      <RecordList
+        records={optimisticUpdates}
+        recordsByType={optimisticUpdatesByType}
+        selectedRecordID={selectedRecordID}
+        setSelectedRecordID={setSelectedRecordID}
+      />
+      <RecordDetails
+        records={optimisticUpdates}
+        setSelectedRecordID={setSelectedRecordID}
+        selectedRecord={selectedRecord}
+      />
+    </div>
+  );
+}
+
 function deepCopyFunction(inObject) {
   if (typeof inObject !== 'object' || inObject === null) {
     return inObject;
@@ -367,11 +410,14 @@ export default function StoreInspector(props: {|
     copy(serializeDataForCopy(records));
   }, [records]);
 
-  if (props.currentEnvID == null) {
+  const currentEnvID = props.currentEnvID;
+
+  if (currentEnvID == null) {
     return null;
   }
 
-  records = store.getRecords(props.currentEnvID);
+  records = store.getRecords(currentEnvID);
+  let optimisticUpdates = store.getOptimisticUpdates(currentEnvID);
   let selectedRecord = {};
   if (records != null) {
     for (let key in records) {
@@ -444,6 +490,11 @@ export default function StoreInspector(props: {|
         {tab === watchListTab && (
           <div className={styles.TabContent}>
             <WatchList />
+          </div>
+        )}
+        {tab === optimisticTab && (
+          <div className={styles.TabContent}>
+            <Optimistic optimisticUpdates={optimisticUpdates} />
           </div>
         )}
       </div>

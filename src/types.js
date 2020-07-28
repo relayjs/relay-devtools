@@ -36,6 +36,9 @@ export type LogEvent =
       +optimistic: boolean,
     |}
   | {|
+      +name: 'store.restore',
+    |}
+  | {|
       +name: 'execute.info',
       +transactionID: number,
       +info: mixed,

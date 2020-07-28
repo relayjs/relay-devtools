@@ -212,4 +212,168 @@ describe('Store', () => {
       },
     });
   });
+
+  it('should merge optimistic updates correctly', () => {
+    const wall = {
+      listen: jest.fn(() => () => {}),
+      send: jest.fn(),
+    };
+    const bridge = new Bridge(wall);
+    const store = new Store(bridge);
+
+    // Testing with a real optimistic source
+    // Testing case when oldRecords is null and we just set the map to the newRecords
+    store.mergeOptimisticRecords(1, {
+      'Ym9va21hcms6MTAwMDAxNzg1MzU1MDU0OjY0NDcxNTQ0NTY1MDkyNDoyNTAxMDA4NjU3MDg1NDU60g==': {
+        'unread_count(bookmark_render_location:"COMET_LEFT_NAV")': 0,
+        'unread_count(bookmark_render_location:"COMET_TOP_TAB")': 0,
+        'unread_count_string(bookmark_render_location:"COMET_LEFT_NAV")': null,
+        __id:
+          'Ym9va21hcms6MTAwMDAxNzg1MzU1MDU0OjY0NDcxNTQ0NTY1MDkyNDoyNTAxMDA4NjU3MDg1NDU60g==',
+        __typename: 'Bookmark',
+      },
+    });
+
+    expect(store.getOptimisticUpdates(1)).toEqual({
+      'Ym9va21hcms6MTAwMDAxNzg1MzU1MDU0OjY0NDcxNTQ0NTY1MDkyNDoyNTAxMDA4NjU3MDg1NDU60g==': {
+        'unread_count(bookmark_render_location:"COMET_LEFT_NAV")': 0,
+        'unread_count(bookmark_render_location:"COMET_TOP_TAB")': 0,
+        'unread_count_string(bookmark_render_location:"COMET_LEFT_NAV")': null,
+        __id:
+          'Ym9va21hcms6MTAwMDAxNzg1MzU1MDU0OjY0NDcxNTQ0NTY1MDkyNDoyNTAxMDA4NjU3MDg1NDU60g==',
+        __typename: 'Bookmark',
+      },
+    });
+
+    // Testing case when newRecords is null/undefined and we don't change anything
+    store.mergeOptimisticRecords(1, null);
+    jest.runAllTimers();
+
+    expect(store.getOptimisticUpdates(1)).toEqual({
+      'Ym9va21hcms6MTAwMDAxNzg1MzU1MDU0OjY0NDcxNTQ0NTY1MDkyNDoyNTAxMDA4NjU3MDg1NDU60g==': {
+        'unread_count(bookmark_render_location:"COMET_LEFT_NAV")': 0,
+        'unread_count(bookmark_render_location:"COMET_TOP_TAB")': 0,
+        'unread_count_string(bookmark_render_location:"COMET_LEFT_NAV")': null,
+        __id:
+          'Ym9va21hcms6MTAwMDAxNzg1MzU1MDU0OjY0NDcxNTQ0NTY1MDkyNDoyNTAxMDA4NjU3MDg1NDU60g==',
+        __typename: 'Bookmark',
+      },
+    });
+
+    store.mergeOptimisticRecords(1, undefined);
+    jest.runAllTimers();
+
+    expect(store.getOptimisticUpdates(1)).toEqual({
+      'Ym9va21hcms6MTAwMDAxNzg1MzU1MDU0OjY0NDcxNTQ0NTY1MDkyNDoyNTAxMDA4NjU3MDg1NDU60g==': {
+        'unread_count(bookmark_render_location:"COMET_LEFT_NAV")': 0,
+        'unread_count(bookmark_render_location:"COMET_TOP_TAB")': 0,
+        'unread_count_string(bookmark_render_location:"COMET_LEFT_NAV")': null,
+        __id:
+          'Ym9va21hcms6MTAwMDAxNzg1MzU1MDU0OjY0NDcxNTQ0NTY1MDkyNDoyNTAxMDA4NjU3MDg1NDU60g==',
+        __typename: 'Bookmark',
+      },
+    });
+
+    // Removing all optimistic updates
+    // Simulating the store.restore event
+
+    store.clearOptimisticUpdates(1);
+    jest.runAllTimers();
+
+    expect(store.getRecords(1)).toEqual(undefined);
+
+    // Testing multiple records
+    store.mergeOptimisticRecords(1, {
+      Jonathan: {
+        __id: 'Jonathan',
+        __typename: 'User',
+        profile_pic: 'some_url',
+      },
+      Lilly: {
+        __id: 'Lilly',
+        __typename: 'User',
+        profile_pic: 'url',
+      },
+    });
+    jest.runAllTimers();
+
+    expect(store.getOptimisticUpdates(1)).toEqual({
+      Jonathan: {
+        __id: 'Jonathan',
+        __typename: 'User',
+        profile_pic: 'some_url',
+      },
+      Lilly: {
+        __id: 'Lilly',
+        __typename: 'User',
+        profile_pic: 'url',
+      },
+    });
+
+    //Testing overwriting a record
+    store.mergeOptimisticRecords(1, {
+      Jonathan: {
+        __id: 'Jonathan',
+        __typename: 'User',
+        profile_pic: 'a_different_url',
+      },
+    });
+    jest.runAllTimers();
+
+    expect(store.getOptimisticUpdates(1)).toEqual({
+      Jonathan: {
+        __id: 'Jonathan',
+        __typename: 'User',
+        profile_pic: 'a_different_url',
+      },
+      Lilly: {
+        __id: 'Lilly',
+        __typename: 'User',
+        profile_pic: 'url',
+      },
+    });
+
+    store.mergeOptimisticRecords(1, {
+      Jonathan: {
+        __id: 'Jonathan',
+        __typename: 'User',
+        nickname: 'Zuck',
+      },
+      Bob: {
+        __id: 'Jonathan',
+        __typename: 'User',
+        profile_pic: 'a_different_url',
+      },
+      user: {
+        __id: 'user',
+        __typename: 'User',
+        profile_pic: 'new_url',
+      },
+    });
+    jest.runAllTimers();
+
+    expect(store.getOptimisticUpdates(1)).toEqual({
+      Jonathan: {
+        __id: 'Jonathan',
+        __typename: 'User',
+        profile_pic: 'a_different_url',
+        nickname: 'Zuck',
+      },
+      Bob: {
+        __id: 'Jonathan',
+        __typename: 'User',
+        profile_pic: 'a_different_url',
+      },
+      Lilly: {
+        __id: 'Lilly',
+        __typename: 'User',
+        profile_pic: 'url',
+      },
+      user: {
+        __id: 'user',
+        __typename: 'User',
+        profile_pic: 'new_url',
+      },
+    });
+  });
 });

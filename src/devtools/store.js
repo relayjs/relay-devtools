@@ -48,6 +48,7 @@ export default class Store extends EventEmitter<{|
   _environmentEventsMap: Map<number, Array<LogEvent>> = new Map();
   _environmentNames: Map<number, string> = new Map();
   _environmentStoreData: Map<number, StoreRecords> = new Map();
+  _environmentStoreOptimisticData: Map<number, StoreRecords> = new Map();
 
   constructor(bridge: FrontendBridge) {
     super();
@@ -84,6 +85,10 @@ export default class Store extends EventEmitter<{|
 
   getAllRecords(): ?$ReadOnlyArray<StoreRecords> {
     return Array.from(this._environmentStoreData.values());
+  }
+
+  getOptimisticUpdates(environmentID: number): ?StoreRecords {
+    return this._environmentStoreOptimisticData.get(environmentID);
   }
 
   mergeRecords(id: number, newRecords: ?StoreRecords) {
@@ -124,6 +129,44 @@ export default class Store extends EventEmitter<{|
     this._environmentStoreData.set(id, oldRecords);
   }
 
+  mergeOptimisticRecords(id: number, newRecords: ?StoreRecords) {
+    if (newRecords == null) {
+      return;
+    }
+    let oldRecords = this._environmentStoreOptimisticData.get(id);
+    if (oldRecords == null) {
+      this._environmentStoreOptimisticData.set(id, newRecords);
+      return;
+    }
+    const dataIDs = Object.keys(newRecords);
+
+    for (let ii = 0; ii < dataIDs.length; ii++) {
+      const dataID = dataIDs[ii];
+      const oldRecord = oldRecords[dataID];
+      const newRecord = newRecords[dataID];
+      if (oldRecord && newRecord) {
+        let updated: Record | null = null;
+        const keys = Object.keys(newRecord);
+        for (let ii = 0; ii < keys.length; ii++) {
+          const key = keys[ii];
+          if (updated || oldRecord[key] !== newRecord[key]) {
+            updated = updated !== null ? updated : { ...oldRecord };
+            updated[key] = newRecord[key];
+          }
+        }
+        updated = updated !== null ? updated : oldRecord;
+        if (updated !== newRecord) {
+          oldRecords[dataID] = updated;
+        }
+      } else if (oldRecord == null) {
+        oldRecords[dataID] = newRecord;
+      } else if (newRecord == null) {
+        delete oldRecords[dataID];
+      }
+    }
+    this._environmentStoreOptimisticData.set(id, oldRecords);
+  }
+
   onBridgeStoreSnapshot = (data: Array<StoreData>) => {
     for (let { id, records } of data) {
       this._environmentStoreData.set(id, records);
@@ -134,9 +177,13 @@ export default class Store extends EventEmitter<{|
   setStoreEvents = (id: number, data: LogEvent) => {
     switch (data.name) {
       case 'store.publish':
-        if (!data.optimistic) {
-          this.mergeRecords(id, data.source);
+        this.mergeRecords(id, data.source);
+        if (data.optimistic) {
+          this.mergeOptimisticRecords(id, data.source);
         }
+        break;
+      case 'store.restore':
+        this.clearOptimisticUpdates(id);
         break;
       default:
         break;
@@ -171,6 +218,10 @@ export default class Store extends EventEmitter<{|
     this.emit('environmentInitialized');
   };
 
+  clearOptimisticUpdates = (envID: number) => {
+    this._environmentStoreOptimisticData.delete(envID);
+  };
+
   clearAllEvents = () => {
     this._environmentEventsMap.forEach((_, key) => this.clearEvents(key));
     this.emit('mutated');
@@ -193,6 +244,7 @@ export default class Store extends EventEmitter<{|
         event =>
           event.name !== 'queryresource.fetch' &&
           event.name !== 'store.publish' &&
+          event.name !== 'store.restore' &&
           !completed.has(event.transactionID)
       );
       this._environmentEventsMap.set(environmentID, eventArray);
