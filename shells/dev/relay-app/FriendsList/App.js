@@ -90,6 +90,7 @@ export default function App(props: Props) {
           }
         `}
         variables={{}}
+        // eslint-disable-next-line no-shadow
         render={({ props }) => {
           if (props) {
             return (

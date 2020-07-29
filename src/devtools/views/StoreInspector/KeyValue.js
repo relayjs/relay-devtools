@@ -173,15 +173,15 @@ export default function KeyValue({
           : 'Object';
 
       let children = wasEverOpen
-        ? sortedEntries.map<Element<any>>(([name, value]) => (
+        ? sortedEntries.map<Element<any>>(([entriesName, entriesVal]) => (
             <KeyValue
-              key={name}
+              key={entriesName}
               alphaSort={alphaSort}
               depth={depth + 1}
               hidden={hidden || !isOpen}
-              name={name}
-              path={path.concat(name)}
-              value={value}
+              name={entriesName}
+              path={path.concat(entriesName)}
+              value={entriesVal}
               records={records}
               setSelectedRecordID={setSelectedRecordID}
             />

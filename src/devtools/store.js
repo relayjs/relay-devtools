@@ -109,8 +109,8 @@ export default class Store extends EventEmitter<{|
       if (oldRecord && newRecord) {
         let updated: Record | null = null;
         const keys = Object.keys(newRecord);
-        for (let ii = 0; ii < keys.length; ii++) {
-          const key = keys[ii];
+        for (let iii = 0; iii < keys.length; iii++) {
+          const key = keys[iii];
           if (updated || oldRecord[key] !== newRecord[key]) {
             updated = updated !== null ? updated : { ...oldRecord };
             updated[key] = newRecord[key];

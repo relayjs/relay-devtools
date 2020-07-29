@@ -5,7 +5,8 @@
     "jsx-a11y/anchor-has-content": "off",
     "no-loop-func": "off",
     "react-hooks/exhaustive-deps": "error",
-    "react-hooks/rules-of-hooks": "error"
+    "react-hooks/rules-of-hooks": "error",
+    "no-shadow": "error",
   },
   "settings": {
     "version": "detect"

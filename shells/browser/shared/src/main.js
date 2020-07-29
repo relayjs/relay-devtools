@@ -119,16 +119,16 @@ function createPanelIfReactLoaded() {
       }
 
       chrome.devtools.panels.create('Relay', '', 'panel.html', panel => {
-        panel.onShown.addListener(panel => {
-          if (currentPanel === panel) {
+        panel.onShown.addListener(listenPanel => {
+          if (currentPanel === listenPanel) {
             return;
           }
-          currentPanel = panel;
+          currentPanel = listenPanel;
 
-          if (panel.container != null) {
-            panel.injectStyles(cloneStyleTags);
-            ensureInitialHTMLIsCleared(panel.container);
-            root = createRoot(panel.container);
+          if (listenPanel.container != null) {
+            listenPanel.injectStyles(cloneStyleTags);
+            ensureInitialHTMLIsCleared(listenPanel.container);
+            root = createRoot(listenPanel.container);
             render();
           }
         });
