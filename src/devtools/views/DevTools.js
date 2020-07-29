@@ -135,7 +135,10 @@ export default function DevTools({
                   <span className={styles.DevToolsVersion}>
                     {process.env.DEVTOOLS_VERSION}
                   </span>
-                  <select onChange={environmentChange}>
+                  <select
+                    className={styles.environmentDropDown}
+                    onChange={environmentChange}
+                  >
                     {environmentIDs.map(key => {
                       return (
                         <option key={key} value={key}>

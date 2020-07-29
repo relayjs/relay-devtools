@@ -67,6 +67,11 @@ select {
   content: 'DevTools ';
 }
 
+.environmentDropDown {
+  width: 40%;
+  text-overflow: ellipsis;
+}
+
 @media screen and (max-width: 400px) {
   .DevToolsVersion:before {
     content: '';
