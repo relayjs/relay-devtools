@@ -11,6 +11,7 @@ import EventEmitter from 'events';
 import type { FrontendBridge } from 'src/bridge';
 import { __DEBUG__ } from '../constants';
 import type {
+  DataID,
   LogEvent,
   EventData,
   EnvironmentInfo,
@@ -83,6 +84,18 @@ export default class Store extends EventEmitter<{|
     return this._environmentStoreData.get(environmentID);
   }
 
+  getRecordIDs(environmentID: number): ?$ReadOnlyArray<string> {
+    const storeRecords = this._environmentStoreData.get(environmentID);
+    return storeRecords ? Object.keys(storeRecords) : null;
+  }
+
+  removeRecord(environmentID: number, recordID: string) {
+    const storeRecords = this._environmentStoreData.get(environmentID);
+    if (storeRecords != null) {
+      delete storeRecords[recordID];
+    }
+  }
+
   getAllRecords(): ?$ReadOnlyArray<StoreRecords> {
     return Array.from(this._environmentStoreData.values());
   }
@@ -147,8 +160,8 @@ export default class Store extends EventEmitter<{|
       if (oldRecord && newRecord) {
         let updated: Record | null = null;
         const keys = Object.keys(newRecord);
-        for (let ii = 0; ii < keys.length; ii++) {
-          const key = keys[ii];
+        for (let iii = 0; iii < keys.length; iii++) {
+          const key = keys[iii];
           if (updated || oldRecord[key] !== newRecord[key]) {
             updated = updated !== null ? updated : { ...oldRecord };
             updated[key] = newRecord[key];
@@ -184,6 +197,9 @@ export default class Store extends EventEmitter<{|
         break;
       case 'store.restore':
         this.clearOptimisticUpdates(id);
+        break;
+      case 'store.gc':
+        this.garbageCollectRecords(id, data.references);
         break;
       default:
         break;
@@ -222,6 +238,25 @@ export default class Store extends EventEmitter<{|
     this._environmentStoreOptimisticData.delete(envID);
   };
 
+  garbageCollectRecords = (
+    envID: number,
+    references: $ReadOnlyArray<DataID>
+  ) => {
+    if (references.length === 0) {
+      this._environmentStoreData.delete(envID);
+    } else {
+      const storeIDs = this.getRecordIDs(envID);
+      if (storeIDs == null) {
+        return;
+      }
+      for (let dataID of storeIDs) {
+        if (!references.includes(dataID)) {
+          this.removeRecord(envID, dataID);
+        }
+      }
+    }
+  };
+
   clearAllEvents = () => {
     this._environmentEventsMap.forEach((_, key) => this.clearEvents(key));
     this.emit('mutated');
@@ -245,6 +280,7 @@ export default class Store extends EventEmitter<{|
           event.name !== 'queryresource.fetch' &&
           event.name !== 'store.publish' &&
           event.name !== 'store.restore' &&
+          event.name !== 'store.gc' &&
           !completed.has(event.transactionID)
       );
       this._environmentEventsMap.set(environmentID, eventArray);

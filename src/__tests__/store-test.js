@@ -16,6 +16,62 @@ describe('Store', () => {
     Store = require('src/devtools/store').default;
   });
 
+  it('should delete individual records correctly', () => {
+    const wall = {
+      listen: jest.fn(() => () => {}),
+      send: jest.fn(),
+    };
+    const bridge = new Bridge(wall);
+    const store = new Store(bridge);
+
+    store.mergeRecords(1, {
+      Bob: {
+        __id: 'Bob',
+        __typename: 'User',
+        profile_pic: 'a_different_url',
+      },
+      Lisa: {
+        __id: 'Lisa',
+        __typename: 'User',
+        profile_pic: 'a_different_url',
+      },
+      user: {
+        __id: 'user',
+        __typename: 'User',
+        profile_pic: 'new_url',
+      },
+    });
+
+    expect(store.getRecords(1)).toEqual({
+      Bob: {
+        __id: 'Bob',
+        __typename: 'User',
+        profile_pic: 'a_different_url',
+      },
+      Lisa: {
+        __id: 'Lisa',
+        __typename: 'User',
+        profile_pic: 'a_different_url',
+      },
+      user: {
+        __id: 'user',
+        __typename: 'User',
+        profile_pic: 'new_url',
+      },
+    });
+
+    store.removeRecord(1, 'Lisa');
+    store.removeRecord(1, 'Bob');
+
+    expect(store.getRecords(1)).toEqual({
+      user: {
+        __id: 'user',
+        __typename: 'User',
+        profile_pic: 'new_url',
+      },
+    });
+  });
+
   it('should merge records correctly', () => {
     const wall = {
       listen: jest.fn(() => () => {}),

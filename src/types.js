@@ -36,6 +36,10 @@ export type LogEvent =
       +optimistic: boolean,
     |}
   | {|
+      +name: 'store.gc',
+      +references: Array<DataID>,
+    |}
+  | {|
       +name: 'store.restore',
     |}
   | {|

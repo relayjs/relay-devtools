@@ -38,22 +38,38 @@ export function attach(
   };
 
   const storeOriginalLog = store.__log;
+  // TODO(damassart): Make this cleaner
   store.__log = event => {
     if (storeOriginalLog !== null) {
       storeOriginalLog(event);
     }
-    if (event.name === 'store.publish') {
-      hook.emit('environment.event', {
-        id: rendererID,
-        data: event,
-        eventType: 'store',
-      });
-    } else if (event.name === 'store.restore') {
-      hook.emit('environment.event', {
-        id: rendererID,
-        data: event,
-        eventType: 'store',
-      });
+    switch (event.name) {
+      case 'store.publish':
+        hook.emit('environment.event', {
+          id: rendererID,
+          data: event,
+          eventType: 'store',
+        });
+        break;
+      case 'store.restore':
+        hook.emit('environment.event', {
+          id: rendererID,
+          data: event,
+          eventType: 'store',
+        });
+        break;
+      case 'store.gc':
+        // references is a Set, but we can't serialize Sets,
+        // so we convert references to an Array
+        event.references = Array.from(event.references);
+        hook.emit('environment.event', {
+          id: rendererID,
+          data: event,
+          eventType: 'store',
+        });
+        break;
+      default:
+        break;
     }
   };
 

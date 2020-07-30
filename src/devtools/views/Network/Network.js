@@ -174,6 +174,9 @@ function Network(props: {| +portalContainer: mixed, currentEnvID: ?number |}) {
       case 'store.restore':
         //ignore
         break;
+      case 'store.gc':
+        //ignore
+        break;
       case 'queryresource.fetch':
         // ignore
         break;

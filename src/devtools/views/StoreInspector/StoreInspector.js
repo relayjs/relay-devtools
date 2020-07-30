@@ -18,7 +18,7 @@ import TabBar from './StoreTabBar';
 
 import styles from './StoreInspector.css';
 
-export type TabID = 'explorer' | 'snapshot' | 'watchlist' | 'optimistic';
+export type TabID = 'explorer' | 'snapshot' | 'optimistic';
 export type TabInfo = {|
   id: string,
   label: string,
@@ -29,11 +29,6 @@ const snapshotTab = {
   id: ('snapshot': TabID),
   label: 'Snapshot',
   title: 'Relay Snapshot',
-};
-const watchListTab = {
-  id: ('watchlist': TabID),
-  label: 'Watchlist',
-  title: 'Relay Watchlist',
 };
 const explorerTab = {
   id: ('explorer': TabID),
@@ -46,7 +41,7 @@ const optimisticTab = {
   title: 'Relay Optimistic Updates',
 };
 
-const tabs = [explorerTab, snapshotTab, watchListTab, optimisticTab];
+const tabs = [explorerTab, snapshotTab, optimisticTab];
 
 function Section(props: {| title: string, children: React$Node |}) {
   return (
@@ -287,10 +282,6 @@ function Snapshots({ envSnapshotList, envSnapshotListByType, currentEnvID }) {
   );
 }
 
-function WatchList() {
-  return null;
-}
-
 function Optimistic({ optimisticUpdates }) {
   const [selectedRecordID, setSelectedRecordID] = useState('');
   if (optimisticUpdates == null) {
@@ -485,11 +476,6 @@ export default function StoreInspector(props: {|
               envSnapshotListByType={envSnapshotListByType}
               currentEnvID={props.currentEnvID}
             />
-          </div>
-        )}
-        {tab === watchListTab && (
-          <div className={styles.TabContent}>
-            <WatchList />
           </div>
         )}
         {tab === optimisticTab && (
