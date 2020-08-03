@@ -248,10 +248,14 @@ export default class Store extends EventEmitter<{|
         } else if (data.name === 'store.notify.complete') {
           let records = this.getRecords(id);
           if (records != null) {
+            data.invalidatedRecords = {};
             data.updatedRecords = {};
             Object.keys(data.updatedRecordIDs).forEach(recID => {
               data.updatedRecords[recID] = { ...records[recID] };
             });
+            data.invalidatedRecordIDs.forEach(
+              recID => (data.invalidatedRecords[recID] = { ...records[recID] })
+            );
           }
         }
         allEvents.push(data);

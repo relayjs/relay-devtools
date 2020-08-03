@@ -55,6 +55,7 @@ export type LogEvent =
       +updatedRecordIDs: UpdatedRecords,
       +invalidatedRecordIDs: Array<DataID>,
       updatedRecords: StoreRecords,
+      invalidatedRecords: StoreRecords,
     |}
   | {|
       +name: 'execute.info',

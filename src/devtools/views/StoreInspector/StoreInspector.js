@@ -18,7 +18,13 @@ import TabBar from './StoreTabBar';
 
 import styles from './StoreInspector.css';
 
-export type TabID = 'explorer' | 'snapshot' | 'optimistic' | 'profiler';
+export type TabID =
+  | 'explorer'
+  | 'snapshot'
+  | 'optimistic'
+  | 'profiler'
+  | 'invalidRecords'
+  | 'updatedRecords';
 export type TabInfo = {|
   id: string,
   label: string,
@@ -45,8 +51,19 @@ const profilerTab = {
   label: 'Store Profiler',
   title: 'Relay Store Profiler',
 };
+const invalidatedRecordsTab = {
+  id: ('invalidRecords': TabID),
+  label: 'Invalidated Records Notify',
+  title: 'Relay Profiler Invalidated Records',
+};
+const updatedRecordsTab = {
+  id: ('updatedRecords': TabID),
+  label: 'Updated Records Notify',
+  title: 'Relay Profiler Updated Records',
+};
 
 const tabs = [explorerTab, snapshotTab, optimisticTab, profilerTab];
+const notifyCompleteTabs = [invalidatedRecordsTab, updatedRecordsTab];
 
 function Section(props: {| title: string, children: React$Node |}) {
   return (
@@ -366,6 +383,7 @@ function AllEventsList({ events, selectedEventID, setSelectedEventID }) {
         return event.optimistic ? (
           <StoreEventDisplay
             displayText={'Optimistic Update: ' + event.name}
+            key={index}
             index={index}
             setSelectedEventID={setSelectedEventID}
             selectedEventID={selectedEventID}
@@ -373,6 +391,7 @@ function AllEventsList({ events, selectedEventID, setSelectedEventID }) {
         ) : (
           <StoreEventDisplay
             displayText={event.name}
+            key={index}
             index={index}
             setSelectedEventID={setSelectedEventID}
             selectedEventID={selectedEventID}
@@ -382,6 +401,7 @@ function AllEventsList({ events, selectedEventID, setSelectedEventID }) {
         return (
           <StoreEventDisplay
             displayText={event.name}
+            key={index}
             index={index}
             setSelectedEventID={setSelectedEventID}
             selectedEventID={selectedEventID}
@@ -391,6 +411,7 @@ function AllEventsList({ events, selectedEventID, setSelectedEventID }) {
         return (
           <StoreEventDisplay
             displayText={event.name}
+            key={index}
             index={index}
             setSelectedEventID={setSelectedEventID}
             selectedEventID={selectedEventID}
@@ -400,6 +421,7 @@ function AllEventsList({ events, selectedEventID, setSelectedEventID }) {
         return (
           <StoreEventDisplay
             displayText={event.name}
+            key={index}
             index={index}
             setSelectedEventID={setSelectedEventID}
             selectedEventID={selectedEventID}
@@ -409,6 +431,7 @@ function AllEventsList({ events, selectedEventID, setSelectedEventID }) {
         return (
           <StoreEventDisplay
             displayText={event.name}
+            key={index}
             index={index}
             setSelectedEventID={setSelectedEventID}
             selectedEventID={selectedEventID}
@@ -418,6 +441,7 @@ function AllEventsList({ events, selectedEventID, setSelectedEventID }) {
         return (
           <StoreEventDisplay
             displayText={event.name}
+            key={index}
             index={index}
             setSelectedEventID={setSelectedEventID}
             selectedEventID={selectedEventID}
@@ -465,14 +489,14 @@ function AllEventsList({ events, selectedEventID, setSelectedEventID }) {
 }
 
 function AllEventsDetails({ events, selectedEventID, setSelectedEventID }) {
-  const [selectedRecordID, setSelectedRecordID] = useState(0);
+  const [selectedRecordID, setSelectedRecordID] = useState('');
+  const [tab, setTab] = useState(updatedRecordsTab);
   let selectedEvent = events[selectedEventID];
 
   if (events == null) {
     return null;
   }
   if (selectedEvent == null) {
-    console.log(selectedEvent);
     return (
       <div className={styles.RestoreEvent}>
         This event may have been deleted
@@ -568,49 +592,100 @@ function AllEventsDetails({ events, selectedEventID, setSelectedEventID }) {
     return <div className={styles.RestoreEvent}>Store Notify Start</div>;
   } else if (selectedEvent.name === 'store.notify.complete') {
     let records = {};
-    Object.keys(selectedEvent.updatedRecordIDs)
-      .filter(ref => selectedEvent.updatedRecordIDs[ref] === true)
-      .forEach(ref => {
-        records[ref] = selectedEvent.updatedRecords[ref];
-      });
-
+    let invalidRecs = {};
     let recordsByType = new Map();
+    let invalidatedRecordsByType = new Map();
+    let selectedRecord = null;
+    let invalidatedSelectedRecord = null;
 
-    if (records != null) {
-      for (let key in records) {
-        let rec = records[key];
-        if (rec != null) {
-          let arr = recordsByType.get(rec.__typename);
-          if (arr) {
-            arr.push(key);
+    if (tab === updatedRecordsTab) {
+      Object.keys(selectedEvent.updatedRecordIDs)
+        .filter(ref => selectedEvent.updatedRecordIDs[ref] === true)
+        .forEach(ref => {
+          records[ref] = selectedEvent.updatedRecords[ref];
+        });
+
+      if (records != null) {
+        for (let key in records) {
+          let rec = records[key];
+          if (rec != null) {
+            let arr = recordsByType.get(rec.__typename);
+            if (arr) {
+              arr.push(key);
+            } else {
+              recordsByType.set(rec.__typename, [key]);
+            }
           } else {
-            recordsByType.set(rec.__typename, [key]);
-          }
-        } else {
-          let arr = recordsByType.get(rec['DeletedRecords']);
-          if (arr) {
-            arr.push(key);
-          } else {
-            recordsByType.set('DeletedRecords', [key]);
+            let arr = recordsByType.get(rec['DeletedRecords']);
+            if (arr) {
+              arr.push(key);
+            } else {
+              recordsByType.set('DeletedRecords', [key]);
+            }
           }
         }
       }
+      selectedRecord = records[selectedRecordID];
+    } else if (tab === invalidatedRecordsTab) {
+      if (selectedEvent.invalidatedRecords != null) {
+        for (let key in selectedEvent.invalidatedRecords) {
+          let rec = selectedEvent.invalidatedRecords[key];
+          if (rec != null) {
+            let arr = invalidatedRecordsByType.get(rec.__typename);
+            if (arr) {
+              arr.push(key);
+            } else {
+              invalidatedRecordsByType.set(rec.__typename, [key]);
+            }
+          }
+        }
+      }
+      invalidatedSelectedRecord =
+        selectedEvent.invalidatedRecords[selectedRecordID];
     }
-    let selectedRecord = records[selectedRecordID];
 
     return (
-      <div className={styles.RecordsTabContent}>
-        <RecordList
-          records={records}
-          recordsByType={recordsByType}
-          selectedRecordID={selectedRecordID}
-          setSelectedRecordID={setSelectedRecordID}
-        />
-        <RecordDetails
-          records={records}
-          setSelectedRecordID={setSelectedRecordID}
-          selectedRecord={selectedRecord}
-        />
+      <div className={styles.NotifyComplete}>
+        <div className={styles.TabBar}>
+          <div className={styles.Spacer} />
+          <TabBar
+            tabID={tab.id}
+            id="StoreTab"
+            selectTab={setTab}
+            size="small"
+            tabs={notifyCompleteTabs}
+          />
+        </div>
+        {tab === updatedRecordsTab && (
+          <div className={styles.RecordsTabContent}>
+            <RecordList
+              records={records}
+              recordsByType={recordsByType}
+              selectedRecordID={selectedRecordID}
+              setSelectedRecordID={setSelectedRecordID}
+            />
+            <RecordDetails
+              records={records}
+              setSelectedRecordID={setSelectedRecordID}
+              selectedRecord={selectedRecord}
+            />
+          </div>
+        )}
+        {tab === invalidatedRecordsTab && (
+          <div className={styles.RecordsTabContent}>
+            <RecordList
+              records={invalidRecs}
+              recordsByType={invalidatedRecordsByType}
+              selectedRecordID={selectedRecordID}
+              setSelectedRecordID={setSelectedRecordID}
+            />
+            <RecordDetails
+              records={invalidRecs}
+              setSelectedRecordID={setSelectedRecordID}
+              selectedRecord={invalidatedSelectedRecord}
+            />
+          </div>
+        )}
       </div>
     );
   } else {
