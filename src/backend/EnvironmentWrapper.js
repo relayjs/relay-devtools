@@ -44,20 +44,6 @@ export function attach(
       storeOriginalLog(event);
     }
     switch (event.name) {
-      case 'store.publish':
-        hook.emit('environment.event', {
-          id: rendererID,
-          data: event,
-          eventType: 'store',
-        });
-        break;
-      case 'store.restore':
-        hook.emit('environment.event', {
-          id: rendererID,
-          data: event,
-          eventType: 'store',
-        });
-        break;
       case 'store.gc':
         // references is a Set, but we can't serialize Sets,
         // so we convert references to an Array
@@ -68,7 +54,20 @@ export function attach(
           eventType: 'store',
         });
         break;
+      case 'store.notify.complete':
+        event.invalidatedRecordIDs = Array.from(event.invalidatedRecordIDs);
+        hook.emit('environment.event', {
+          id: rendererID,
+          data: event,
+          eventType: 'store',
+        });
+        break;
       default:
+        hook.emit('environment.event', {
+          id: rendererID,
+          data: event,
+          eventType: 'store',
+        });
         break;
     }
   };

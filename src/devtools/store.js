@@ -245,6 +245,14 @@ export default class Store extends EventEmitter<{|
                 return recID;
               });
           }
+        } else if (data.name === 'store.notify.complete') {
+          let records = this.getRecords(id);
+          if (records != null) {
+            data.updatedRecords = {};
+            Object.keys(data.updatedRecordIDs).forEach(recID => {
+              data.updatedRecords[recID] = { ...records[recID] };
+            });
+          }
         }
         allEvents.push(data);
       } else {
@@ -312,6 +320,9 @@ export default class Store extends EventEmitter<{|
           event.name !== 'store.publish' &&
           event.name !== 'store.restore' &&
           event.name !== 'store.gc' &&
+          event.name !== 'store.snapshot' &&
+          event.name !== 'store.notify.complete' &&
+          event.name !== 'store.notify.start' &&
           !completed.has(event.transactionID)
       );
       this._environmentEventsMap.set(environmentID, eventArray);

@@ -396,6 +396,33 @@ function AllEventsList({ events, selectedEventID, setSelectedEventID }) {
             selectedEventID={selectedEventID}
           />
         );
+      case 'store.snapshot':
+        return (
+          <StoreEventDisplay
+            displayText={event.name}
+            index={index}
+            setSelectedEventID={setSelectedEventID}
+            selectedEventID={selectedEventID}
+          />
+        );
+      case 'store.notify.start':
+        return (
+          <StoreEventDisplay
+            displayText={event.name}
+            index={index}
+            setSelectedEventID={setSelectedEventID}
+            selectedEventID={selectedEventID}
+          />
+        );
+      case 'store.notify.complete':
+        return (
+          <StoreEventDisplay
+            displayText={event.name}
+            index={index}
+            setSelectedEventID={setSelectedEventID}
+            selectedEventID={selectedEventID}
+          />
+        );
       default:
         break;
     }
@@ -441,8 +468,16 @@ function AllEventsDetails({ events, selectedEventID, setSelectedEventID }) {
   const [selectedRecordID, setSelectedRecordID] = useState(0);
   let selectedEvent = events[selectedEventID];
 
-  if (events == null || selectedEvent == null) {
+  if (events == null) {
     return null;
+  }
+  if (selectedEvent == null) {
+    console.log(selectedEvent);
+    return (
+      <div className={styles.RestoreEvent}>
+        This event may have been deleted
+      </div>
+    );
   }
 
   if (selectedEvent.name === 'store.publish') {
@@ -525,6 +560,57 @@ function AllEventsDetails({ events, selectedEventID, setSelectedEventID }) {
     return (
       <div className={styles.RestoreEvent}>
         All optimistic updates have been restored
+      </div>
+    );
+  } else if (selectedEvent.name === 'store.snapshot') {
+    return <div className={styles.RestoreEvent}>Relay Runtime Snapshot</div>;
+  } else if (selectedEvent.name === 'store.notify.start') {
+    return <div className={styles.RestoreEvent}>Store Notify Start</div>;
+  } else if (selectedEvent.name === 'store.notify.complete') {
+    let records = {};
+    Object.keys(selectedEvent.updatedRecordIDs)
+      .filter(ref => selectedEvent.updatedRecordIDs[ref] === true)
+      .forEach(ref => {
+        records[ref] = selectedEvent.updatedRecords[ref];
+      });
+
+    let recordsByType = new Map();
+
+    if (records != null) {
+      for (let key in records) {
+        let rec = records[key];
+        if (rec != null) {
+          let arr = recordsByType.get(rec.__typename);
+          if (arr) {
+            arr.push(key);
+          } else {
+            recordsByType.set(rec.__typename, [key]);
+          }
+        } else {
+          let arr = recordsByType.get(rec['DeletedRecords']);
+          if (arr) {
+            arr.push(key);
+          } else {
+            recordsByType.set('DeletedRecords', [key]);
+          }
+        }
+      }
+    }
+    let selectedRecord = records[selectedRecordID];
+
+    return (
+      <div className={styles.RecordsTabContent}>
+        <RecordList
+          records={records}
+          recordsByType={recordsByType}
+          selectedRecordID={selectedRecordID}
+          setSelectedRecordID={setSelectedRecordID}
+        />
+        <RecordDetails
+          records={records}
+          setSelectedRecordID={setSelectedRecordID}
+          selectedRecord={selectedRecord}
+        />
       </div>
     );
   } else {

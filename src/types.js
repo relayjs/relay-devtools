@@ -15,6 +15,7 @@ export type Wall = {|
 
 export type Record = { [key: string]: mixed, ... };
 export type DataID = string;
+export type UpdatedRecords = { [dataID: DataID]: boolean, ... };
 
 export type StoreRecords = { [DataID]: ?Record, ... };
 
@@ -42,6 +43,18 @@ export type LogEvent =
     |}
   | {|
       +name: 'store.restore',
+    |}
+  | {|
+      +name: 'store.snapshot',
+    |}
+  | {|
+      +name: 'store.notify.start',
+    |}
+  | {|
+      +name: 'store.notify.complete',
+      +updatedRecordIDs: UpdatedRecords,
+      +invalidatedRecordIDs: Array<DataID>,
+      updatedRecords: StoreRecords,
     |}
   | {|
       +name: 'execute.info',
