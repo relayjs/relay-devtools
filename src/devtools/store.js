@@ -50,6 +50,7 @@ export default class Store extends EventEmitter<{|
   _environmentNames: Map<number, string> = new Map();
   _environmentStoreData: Map<number, StoreRecords> = new Map();
   _environmentStoreOptimisticData: Map<number, StoreRecords> = new Map();
+  _environmentAllEvents: Map<number, Array<LogEvent>> = new Map();
 
   constructor(bridge: FrontendBridge) {
     super();
@@ -61,6 +62,16 @@ export default class Store extends EventEmitter<{|
   }
 
   getAllEvents(): $ReadOnlyArray<LogEvent> {
+    let allEvents = [];
+    this._environmentAllEvents.forEach((value, _) => allEvents.push(...value));
+    return allEvents;
+  }
+
+  getEvents(environmentID: number): ?$ReadOnlyArray<LogEvent> {
+    return this._environmentAllEvents.get(environmentID);
+  }
+
+  getAllEnvironmentEvents(): $ReadOnlyArray<LogEvent> {
     let allEnvironmentEvents = [];
     this._environmentEventsMap.forEach((value, _) =>
       allEnvironmentEvents.push(...value)
@@ -68,7 +79,7 @@ export default class Store extends EventEmitter<{|
     return allEnvironmentEvents;
   }
 
-  getEvents(environmentID: number): ?$ReadOnlyArray<LogEvent> {
+  getEnvironmentEvents(environmentID: number): ?$ReadOnlyArray<LogEvent> {
     return this._environmentEventsMap.get(environmentID);
   }
 
@@ -223,6 +234,12 @@ export default class Store extends EventEmitter<{|
         this.setStoreEvents(id, data);
       } else if (eventType === 'environment') {
         this.setEnvironmentEvents(id, data);
+      }
+      let allEvents = this._environmentAllEvents.get(id);
+      if (allEvents) {
+        allEvents.push(data);
+      } else {
+        this._environmentAllEvents.set(id, [data]);
       }
     }
   };

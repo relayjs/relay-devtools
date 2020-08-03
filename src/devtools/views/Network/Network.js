@@ -116,7 +116,7 @@ function Network(props: {| +portalContainer: mixed, currentEnvID: ?number |}) {
     return null;
   }
 
-  const events = store.getEvents(props.currentEnvID) || [];
+  const events = store.getEnvironmentEvents(props.currentEnvID) || [];
 
   const requests: Map<number, RequestEntry> = new Map();
 

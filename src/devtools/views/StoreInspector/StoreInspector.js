@@ -18,7 +18,7 @@ import TabBar from './StoreTabBar';
 
 import styles from './StoreInspector.css';
 
-export type TabID = 'explorer' | 'snapshot' | 'optimistic';
+export type TabID = 'explorer' | 'snapshot' | 'optimistic' | 'profiler';
 export type TabInfo = {|
   id: string,
   label: string,
@@ -40,8 +40,13 @@ const optimisticTab = {
   label: 'Optimistic Updates',
   title: 'Relay Optimistic Updates',
 };
+const profilerTab = {
+  id: ('profiler': TabID),
+  label: 'Store Profiler',
+  title: 'Relay Store Profiler',
+};
 
-const tabs = [explorerTab, snapshotTab, optimisticTab];
+const tabs = [explorerTab, snapshotTab, optimisticTab, profilerTab];
 
 function Section(props: {| title: string, children: React$Node |}) {
   return (
@@ -320,6 +325,196 @@ function Optimistic({ optimisticUpdates }) {
   );
 }
 
+function RecordEventsMenu() {
+  return (
+    <div className={styles.RecordEventsMenu}>
+      <button>Record</button>
+    </div>
+  );
+}
+
+function StoreEventDisplay({
+  displayText,
+  index,
+  setSelectedEventID,
+  selectedEventID,
+}) {
+  return (
+    <div
+      key={index}
+      onClick={() => {
+        setSelectedEventID(index);
+      }}
+      className={`${styles.Record} ${
+        index === selectedEventID ? styles.SelectedRecord : ''
+      }`}
+    >
+      {displayText}
+    </div>
+  );
+}
+
+function AllEventsList({ events, selectedEventID, setSelectedEventID }) {
+  const [eventSearch, setEventSearch] = useState('');
+  const fetchSearchBarText = useCallback(e => {
+    setEventSearch(e.target.value);
+  }, []);
+
+  let eventsArrayDisplay = events.map((event, index) => {
+    switch (event.name) {
+      case 'store.publish':
+        return event.optimistic ? (
+          <StoreEventDisplay
+            displayText={'Optimistic Update: ' + event.name}
+            index={index}
+            setSelectedEventID={setSelectedEventID}
+            selectedEventID={selectedEventID}
+          />
+        ) : (
+          <StoreEventDisplay
+            displayText={event.name}
+            index={index}
+            setSelectedEventID={setSelectedEventID}
+            selectedEventID={selectedEventID}
+          />
+        );
+      case 'store.gc':
+        return (
+          <StoreEventDisplay
+            displayText={event.name}
+            index={index}
+            setSelectedEventID={setSelectedEventID}
+            selectedEventID={selectedEventID}
+          />
+        );
+      case 'store.restore':
+        return (
+          <StoreEventDisplay
+            displayText={event.name}
+            index={index}
+            setSelectedEventID={setSelectedEventID}
+            selectedEventID={selectedEventID}
+          />
+        );
+      default:
+        break;
+    }
+    return null;
+  });
+
+  // TODO(damassart): Fix search
+  eventsArrayDisplay = eventsArrayDisplay.filter(event =>
+    eventSearch
+      .trim()
+      .split(' ')
+      .some(
+        search =>
+          event != null &&
+          String(event.props.displayText)
+            .toLowerCase()
+            .includes(search.toLowerCase())
+      )
+  );
+
+  return (
+    <div className={styles.AllEventsList}>
+      <input
+        className={styles.EventsSearchBar}
+        type="text"
+        onChange={fetchSearchBarText}
+        placeholder="Search"
+      ></input>
+      <div>
+        {eventsArrayDisplay.length <= 0 && eventSearch !== '' ? (
+          <p className={styles.RecordNotFound}>
+            Sorry, no events with the name '{eventSearch}' were found!
+          </p>
+        ) : (
+          eventsArrayDisplay
+        )}
+      </div>
+    </div>
+  );
+}
+
+function AllEventsDetails({ events, selectedEventID, setSelectedEventID }) {
+  const [selectedRecordID, setSelectedRecordID] = useState(0);
+  let selectedEvent = events[selectedEventID];
+
+  if (events == null || selectedEvent == null) {
+    return null;
+  }
+
+  if (selectedEvent.name === 'store.publish') {
+    let recordsByType = new Map();
+    let records = selectedEvent.source;
+    if (records != null) {
+      for (let key in records) {
+        let rec = records[key];
+        if (rec != null) {
+          let arr = recordsByType.get(rec.__typename);
+          if (arr) {
+            arr.push(key);
+          } else {
+            recordsByType.set(rec.__typename, [key]);
+          }
+        }
+      }
+    }
+    let selectedRecord = selectedEvent.source[selectedRecordID];
+
+    return (
+      <div className={styles.RecordsTabContent}>
+        <RecordList
+          records={records}
+          recordsByType={recordsByType}
+          selectedRecordID={selectedRecordID}
+          setSelectedRecordID={setSelectedRecordID}
+        />
+        <RecordDetails
+          records={records}
+          setSelectedRecordID={setSelectedRecordID}
+          selectedRecord={selectedRecord}
+        />
+      </div>
+    );
+  } else if (selectedEvent.name === 'store.gc') {
+    // TODO(damassart)
+    return <div>The following records have not been garbage collected:</div>;
+  } else if (selectedEvent.name === 'store.restore') {
+    return (
+      <div className={styles.RestoreEvent}>
+        All optimistic updates have been restored
+      </div>
+    );
+  } else {
+    return null;
+  }
+}
+
+function Profiler({ allEvents }) {
+  const [selectedEventID, setSelectedEventID] = useState(0);
+
+  if (allEvents == null) {
+    return null;
+  }
+
+  return (
+    <div className={styles.EventsTabContent}>
+      <AllEventsList
+        events={allEvents}
+        selectedEventID={selectedEventID}
+        setSelectedEventID={setSelectedEventID}
+      />
+      <AllEventsDetails
+        events={allEvents}
+        selectedEventID={selectedEventID}
+        setSelectedEventID={setSelectedEventID}
+      />
+    </div>
+  );
+}
+
 function deepCopyFunction(inObject) {
   if (typeof inObject !== 'object' || inObject === null) {
     return inObject;
@@ -407,6 +602,8 @@ export default function StoreInspector(props: {|
     return null;
   }
 
+  let allEvents = store.getEvents(currentEnvID);
+
   records = store.getRecords(currentEnvID);
   let optimisticUpdates = store.getOptimisticUpdates(currentEnvID);
   let selectedRecord = {};
@@ -481,6 +678,12 @@ export default function StoreInspector(props: {|
         {tab === optimisticTab && (
           <div className={styles.TabContent}>
             <Optimistic optimisticUpdates={optimisticUpdates} />
+          </div>
+        )}
+        {tab === profilerTab && (
+          <div className={styles.RecordEvents}>
+            <RecordEventsMenu />
+            <Profiler allEvents={allEvents} />
           </div>
         )}
       </div>
