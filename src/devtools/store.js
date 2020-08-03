@@ -230,16 +230,30 @@ export default class Store extends EventEmitter<{|
 
   onBridgeEvents = (events: Array<EventData>) => {
     for (let { id, data, eventType } of events) {
+      let allEvents = this._environmentAllEvents.get(id);
+      if (allEvents) {
+        if (data.name === 'store.gc') {
+          let records = this.getRecords(id);
+          if (records != null) {
+            data.gcRecords = {};
+            data.references = Object.keys(records)
+              .filter(
+                recID => recID != null && !data.references.includes(recID)
+              )
+              .map(recID => {
+                data.gcRecords[recID] = records[recID];
+                return recID;
+              });
+          }
+        }
+        allEvents.push(data);
+      } else {
+        this._environmentAllEvents.set(id, [data]);
+      }
       if (eventType === 'store') {
         this.setStoreEvents(id, data);
       } else if (eventType === 'environment') {
         this.setEnvironmentEvents(id, data);
-      }
-      let allEvents = this._environmentAllEvents.get(id);
-      if (allEvents) {
-        allEvents.push(data);
-      } else {
-        this._environmentAllEvents.set(id, [data]);
       }
     }
   };

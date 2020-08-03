@@ -479,8 +479,48 @@ function AllEventsDetails({ events, selectedEventID, setSelectedEventID }) {
       </div>
     );
   } else if (selectedEvent.name === 'store.gc') {
-    // TODO(damassart)
-    return <div>The following records have not been garbage collected:</div>;
+    let records = {};
+    selectedEvent.references
+      .filter(ref => selectedEvent.gcRecords[ref] != null)
+      .map(ref => (records[ref] = selectedEvent.gcRecords[ref]));
+
+    let recordsByType = new Map();
+
+    if (records != null) {
+      for (let key in records) {
+        let rec = records[key];
+        if (rec != null) {
+          let arr = recordsByType.get(rec.__typename);
+          if (arr) {
+            arr.push(key);
+          } else {
+            recordsByType.set(rec.__typename, [key]);
+          }
+        }
+      }
+    }
+    let selectedRecord = records[selectedRecordID];
+
+    return (
+      <div className={styles.gcEvent}>
+        <div className={styles.gcExplained}>
+          The following records have been garbage collected:
+        </div>
+        <div className={styles.RecordsTabContent}>
+          <RecordList
+            records={records}
+            recordsByType={recordsByType}
+            selectedRecordID={selectedRecordID}
+            setSelectedRecordID={setSelectedRecordID}
+          />
+          <RecordDetails
+            records={records}
+            setSelectedRecordID={setSelectedRecordID}
+            selectedRecord={selectedRecord}
+          />
+        </div>
+      </div>
+    );
   } else if (selectedEvent.name === 'store.restore') {
     return (
       <div className={styles.RestoreEvent}>

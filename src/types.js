@@ -37,7 +37,8 @@ export type LogEvent =
     |}
   | {|
       +name: 'store.gc',
-      +references: Array<DataID>,
+      references: Array<DataID>,
+      gcRecords: StoreRecords,
     |}
   | {|
       +name: 'store.restore',
