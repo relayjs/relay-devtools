@@ -16,6 +16,7 @@ export type Props = {|
   events: $ReadOnlyArray<LogEvent>,
   selectedEventID: number,
   setSelectedEventID: number => void,
+  checked: { [string]: boolean },
 |};
 
 function appearsInObject(searchText: string, obj: Object) {
@@ -70,6 +71,7 @@ export default function AllEventsList({
   events,
   selectedEventID,
   setSelectedEventID,
+  checked,
 }: Props) {
   const [eventSearch, setEventSearch] = useState('');
   const fetchSearchBarText = useCallback(e => {
@@ -78,6 +80,24 @@ export default function AllEventsList({
 
   let eventsArrayDisplay = events.map((event, index) => {
     let displayText = '';
+
+    if (!checked['networkEvents'] && !checked['storeEvents']) {
+      return null;
+    } else if (
+      checked['networkEvents'] &&
+      !checked['storeEvents'] &&
+      event.name.toLowerCase().includes('store')
+    ) {
+      return null;
+    } else if (
+      checked['storeEvents'] &&
+      !checked['networkEvents'] &&
+      (event.name.toLowerCase().includes('execute') ||
+        event.name.toLowerCase().includes('query'))
+    ) {
+      return null;
+    }
+
     switch (event.name) {
       case 'store.publish':
         return event.optimistic ? (

@@ -60,12 +60,51 @@ const recorderTab = {
 
 const tabs = [explorerTab, snapshotTab, optimisticTab, recorderTab];
 
+function FilterButtons({ checked, setChecked, isRecording, store }) {
+  const updateChecked = useCallback(
+    e => {
+      setChecked({
+        ...checked,
+        [e.target.name]: !checked[e.target.name],
+      });
+    },
+    [checked, setChecked]
+  );
+
+  return (
+    <form>
+      <label>
+        <input
+          type="checkbox"
+          name="networkEvents"
+          checked={checked['networkEvents']}
+          onChange={updateChecked}
+          disabled={isRecording}
+        />
+        Network Events
+      </label>
+      <label>
+        <input
+          type="checkbox"
+          name="storeEvents"
+          checked={checked['storeEvents']}
+          onChange={updateChecked}
+          disabled={isRecording}
+        />
+        Store Events
+      </label>
+    </form>
+  );
+}
+
 function RecordEventsMenu({
   isRecording,
   startRecording,
   stopRecording,
   stopAndClearRecording,
   store,
+  checked,
+  setChecked,
 }) {
   let className = isRecording
     ? styles.ActiveRecordToggle
@@ -84,6 +123,12 @@ function RecordEventsMenu({
         <ButtonIcon type="clear" />
       </Button>
       <RecordingImportExportButtons isRecording={isRecording} store={store} />
+      <FilterButtons
+        checked={checked}
+        setChecked={setChecked}
+        isRecording={isRecording}
+        store={store}
+      />
     </div>
   );
 }
@@ -99,6 +144,10 @@ export default function StoreInspector(props: {|
   const [envSnapshotList, setEnvSnapshotList] = useState({});
   const [envSnapshotListByType, setEnvSnapshotListByType] = useState({});
   const [isRecording, setIsRecording] = useState(false);
+  const [checked, setChecked] = useState({
+    networkEvents: true,
+    storeEvents: true,
+  });
   const stopAndClearRecording = useCallback(() => {
     setIsRecording(false);
     store.stopRecording();
@@ -248,8 +297,14 @@ export default function StoreInspector(props: {|
               startRecording={startRecording}
               stopAndClearRecording={stopAndClearRecording}
               store={store}
+              checked={checked}
+              setChecked={setChecked}
             />
-            <EventLogger allEvents={allEvents} isRecording={isRecording} />
+            <EventLogger
+              allEvents={allEvents}
+              isRecording={isRecording}
+              checked={checked}
+            />
           </div>
         )}
       </div>

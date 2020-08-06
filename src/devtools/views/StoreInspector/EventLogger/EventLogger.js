@@ -18,6 +18,7 @@ import styles from './EventLogger.css';
 export type Props = {|
   allEvents: ?$ReadOnlyArray<LogEvent>,
   isRecording: boolean,
+  checked: { [string]: boolean },
 |};
 
 function AllEventsDetails({ events, selectedEventID, setSelectedEventID }) {
@@ -46,7 +47,11 @@ function AllEventsDetails({ events, selectedEventID, setSelectedEventID }) {
   );
 }
 
-export default function EventLogger({ allEvents, isRecording }: Props) {
+export default function EventLogger({
+  allEvents,
+  isRecording,
+  checked,
+}: Props) {
   const [selectedEventID, setSelectedEventID] = useState(0);
 
   if (allEvents == null && !isRecording) {
@@ -68,6 +73,7 @@ export default function EventLogger({ allEvents, isRecording }: Props) {
         events={allEvents}
         selectedEventID={selectedEventID}
         setSelectedEventID={setSelectedEventID}
+        checked={checked}
       />
       <AllEventsDetails
         events={allEvents}
