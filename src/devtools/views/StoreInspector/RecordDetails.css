@@ -1,0 +1,15 @@
+.RecordDetails {
+  flex: 2;
+  overflow: scroll;
+  padding: 3px;
+}
+
+.SectionTitle {
+  color: #616161;
+  font-weight: bold;
+}
+
+.SectionContent {
+  margin-left: 20px;
+  white-space: pre-wrap;
+}

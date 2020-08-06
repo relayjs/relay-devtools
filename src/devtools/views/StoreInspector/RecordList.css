@@ -1,0 +1,74 @@
+.Collapse {
+  display: flex;
+}
+
+.Type {
+  background-color: var(--color-background);
+  color: var(--color-text);
+  font-weight: bold;
+  cursor: pointer;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;
+}
+
+.PlusMinusCollapse {
+  float: right;
+  font-size: 15px;
+  margin: 0px 5px;
+}
+
+.RecordListContent {
+  display: block;
+}
+
+.Record {
+  background-color: var(--color-background);
+  cursor: pointer;
+  padding: 1px 4px;
+}
+
+.Record:hover {
+  background-color: var(--color-background-hover);
+}
+
+.Record:nth-child(2n) {
+  background-color: var(--color-background-inactive);
+}
+
+.Record:nth-child(2n):hover {
+  background-color: var(--color-background-hover);
+}
+
+.Record.SelectedRecord,
+.Record.SelectedRecord:hover {
+  background-color: var(--color-background-selected);
+  color: var(--color-text-selected);
+}
+.Record::before {
+  display: inline-block;
+  width: 1em;
+  content: '';
+}
+
+.Records {
+  border-right: 1px solid #d0d0d0;
+  background-color: var(--color-background);
+  color: var(--color-text);
+  flex: 1;
+  overflow: scroll;
+}
+
+.RecordsSearchBar {
+  width: 100%;
+  padding: 4px;
+  background-color: var(--color-background-search-bar);
+  color: var(--color-search-bar);
+}
+
+.RecordNotFound {
+  margin: 5px;
+  font-style: italic;
+  color: var(--color-text);
+}

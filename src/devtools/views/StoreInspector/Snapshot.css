@@ -1,0 +1,44 @@
+.Record {
+  background-color: var(--color-background);
+  cursor: pointer;
+  padding: 1px 4px;
+}
+
+.Record:hover {
+  background-color: var(--color-background-hover);
+}
+
+.Record:nth-child(2n) {
+  background-color: var(--color-background-inactive);
+}
+
+.Record:nth-child(2n):hover {
+  background-color: var(--color-background-hover);
+}
+
+.Record.SelectedRecord,
+.Record.SelectedRecord:hover {
+  background-color: var(--color-background-selected);
+  color: var(--color-text-selected);
+}
+.Record::before {
+  display: inline-block;
+  width: 1em;
+  content: '';
+}
+
+.SnapshotList {
+  width: 30%;
+  margin-left: 0.5em;
+  padding-right: 0.5em;
+  border-right: 1px solid #d0d0d0;
+}
+
+.SnapshotList h2 {
+  margin: 0px;
+}
+
+.TabContent {
+  display: inline-flex;
+  width: 100%;
+}

@@ -1,0 +1,141 @@
+.Record {
+  background-color: var(--color-background);
+  cursor: pointer;
+  padding: 1px 4px;
+}
+
+.Record:hover {
+  background-color: var(--color-background-hover);
+}
+
+.Record:nth-child(2n) {
+  background-color: var(--color-background-inactive);
+}
+
+.Record:nth-child(2n):hover {
+  background-color: var(--color-background-hover);
+}
+
+.Record.SelectedRecord,
+.Record.SelectedRecord:hover {
+  background-color: var(--color-background-selected);
+  color: var(--color-text-selected);
+}
+.Record::before {
+  display: inline-block;
+  width: 1em;
+  content: '';
+}
+
+.AllEventsList {
+  padding-right: 0em;
+  border-right: 1px solid #d0d0d0;
+  flex: 1;
+  overflow: scroll;
+}
+
+.EventsSearchBar {
+  width: 100%;
+  padding: 4px;
+  background-color: var(--color-background-search-bar);
+  color: var(--color-search-bar);
+}
+
+.EventsTabContent {
+  display: inline-flex;
+  width: 100%;
+  height: 100%;
+}
+
+.RecordNotFound {
+  margin: 5px;
+  font-style: italic;
+  color: var(--color-text);
+}
+
+.RequestDetails {
+  flex: 2;
+  overflow: scroll;
+  padding: 3px;
+}
+
+.RestoreEvent {
+  padding: 0.4em;
+  font-size: 16px;
+  flex: 2;
+}
+
+.gcEvent {
+  flex: 2;
+  width: 100%;
+  height: 100%;
+  overflow: scroll;
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  align-items: stretch;
+  background-color: var(--color-background);
+  color: var(--color-text);
+}
+
+.gcExplained {
+  border-bottom: 1px solid var(--color-border);
+  font-size: 14px;
+  padding: 0.3em;
+  padding-bottom: 0.4em;
+}
+
+.RecordsTabContent {
+  flex: 2;
+  overflow: scroll;
+  display: inline-flex;
+}
+
+.TabBar {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  padding-left: 0.5rem;
+  background-color: var(--color-background);
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+  font-family: var(--font-family-sans);
+  font-size: var(--font-size-sans-large);
+  user-select: none;
+  margin-bottom: 0.2em;
+
+  /* Electron drag area */
+  -webkit-app-region: drag;
+}
+
+.NotifyComplete {
+  width: 100%;
+  height: 100%;
+  flex: 2;
+  overflow: scroll;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  background-color: var(--color-background);
+  color: var(--color-text);
+}
+
+.Spacer {
+  flex: 1;
+}
+
+.NotRecording {
+  font-size: 14px;
+  padding: 0.4em;
+}
+
+.SectionTitle {
+  color: #616161;
+  font-weight: bold;
+}
+
+.SectionContent {
+  margin-left: 20px;
+  white-space: pre-wrap;
+}
