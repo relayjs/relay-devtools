@@ -256,3 +256,34 @@
   padding: 0.3em;
   padding-bottom: 0.4em;
 }
+
+.ActiveRecordToggle {
+  color: var(--color-record-active);
+}
+.ActiveRecordToggle:hover {
+  color: var(--color-record-active);
+}
+.ActiveRecordToggle:focus {
+  color: var(--color-record-active);
+}
+.ActiveRecordToggle:active {
+  color: var(--color-record-hover);
+}
+
+.InactiveRecordToggle {
+  color: var(--color-record-inactive);
+}
+.InactiveRecordToggle:hover {
+  color: var(--color-record-hover);
+}
+.InactiveRecordToggle:focus {
+  color: var(--color-record-inactive);
+}
+.InactiveRecordToggle:active {
+  color: var(--color-record-hover);
+}
+
+.NotRecording {
+  font-size: 14px;
+  padding: 0.4em;
+}

@@ -353,10 +353,28 @@ function Optimistic({ optimisticUpdates }) {
   );
 }
 
-function RecordEventsMenu() {
+function RecordEventsMenu({
+  isProfiling,
+  startProfiling,
+  stopProfiling,
+  stopAndClearProfiling,
+}) {
+  let className = isProfiling
+    ? styles.ActiveRecordToggle
+    : styles.InactiveRecordToggle;
+
   return (
     <div className={styles.RecordEventsMenu}>
-      <button>Record</button>
+      <Button
+        onClick={isProfiling ? stopProfiling : startProfiling}
+        title={isProfiling ? 'Stop profiling' : 'Start profiling'}
+        className={className}
+      >
+        <ButtonIcon type="record" />
+      </Button>
+      <Button onClick={stopAndClearProfiling} title="Stop and Clear Profiling">
+        <ButtonIcon type="clear" />
+      </Button>
     </div>
   );
 }
@@ -769,10 +787,19 @@ function AllEventsDetails({ events, selectedEventID, setSelectedEventID }) {
   }
 }
 
-function Profiler({ allEvents }) {
+function Profiler({ allEvents, isProfiling }) {
   const [selectedEventID, setSelectedEventID] = useState(0);
 
-  if (allEvents == null) {
+  if (allEvents == null && !isProfiling) {
+    return (
+      <div className={styles.NotRecording}>
+        Profiler is not recording. To record, hit the record button on the top
+        left of the tab.
+      </div>
+    );
+  } else if (allEvents == null && isProfiling) {
+    return <div className={styles.NotRecording}>Loading events...</div>;
+  } else if (allEvents == null) {
     return null;
   }
 
@@ -833,13 +860,30 @@ export default function StoreInspector(props: {|
   const [envSnapshotList, setEnvSnapshotList] = useState({});
   const [envSnapshotListByType, setEnvSnapshotListByType] = useState({});
 
+  const [isProfiling, setIsProfiling] = useState(false);
+  const stopAndClearProfiling = useCallback(() => {
+    setIsProfiling(false);
+    store.stopProfiling();
+    store.clearAllEvents();
+  }, [store, setIsProfiling]);
+  const stopProfiling = useCallback(() => {
+    setIsProfiling(false);
+    store.stopProfiling();
+  }, [store, setIsProfiling]);
+  const startProfiling = useCallback(() => {
+    setIsProfiling(true);
+    store.startProfiling();
+  }, [store, setIsProfiling]);
+
   useEffect(() => {
-    const onStoreData = () => {
+    const refreshEvents = () => {
       forceUpdate({});
     };
-    store.addListener('storeDataReceived', onStoreData);
+    store.addListener('storeDataReceived', refreshEvents);
+    store.addListener('allEventsReceived', refreshEvents);
     return () => {
-      store.removeListener('storeDataReceived', onStoreData);
+      store.removeListener('storeDataReceived', refreshEvents);
+      store.removeListener('allEventsReceived', refreshEvents);
     };
   }, [store]);
 
@@ -960,8 +1004,13 @@ export default function StoreInspector(props: {|
         )}
         {tab === profilerTab && (
           <div className={styles.RecordEvents}>
-            <RecordEventsMenu />
-            <Profiler allEvents={allEvents} />
+            <RecordEventsMenu
+              isProfiling={isProfiling}
+              stopProfiling={stopProfiling}
+              startProfiling={startProfiling}
+              stopAndClearProfiling={stopAndClearProfiling}
+            />
+            <Profiler allEvents={allEvents} isProfiling={isProfiling} />
           </div>
         )}
       </div>

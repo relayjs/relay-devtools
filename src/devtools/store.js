@@ -41,6 +41,7 @@ export default class Store extends EventEmitter<{|
   environmentInitialized: [],
   mutated: [],
   storeDataReceived: [],
+  allEventsReceived: [],
   recordChangeDescriptions: [],
   roots: [],
 |}> {
@@ -52,6 +53,7 @@ export default class Store extends EventEmitter<{|
   _environmentStoreOptimisticData: Map<number, StoreRecords> = new Map();
   _environmentAllEvents: Map<number, Array<LogEvent>> = new Map();
   _recordedRequests: Map<number, Map<number, LogEvent>> = new Map();
+  _isProfiling: boolean = false;
 
   constructor(bridge: FrontendBridge) {
     super();
@@ -260,41 +262,54 @@ export default class Store extends EventEmitter<{|
     }
   };
 
+  startProfiling = () => {
+    this._isProfiling = true;
+    this.clearAllEvents();
+  };
+
+  stopProfiling = () => {
+    this._isProfiling = false;
+  };
+
   onBridgeEvents = (events: Array<EventData>) => {
     for (let { id, data, eventType } of events) {
-      let allEvents = this._environmentAllEvents.get(id);
-      if (allEvents) {
-        if (data.name === 'store.gc') {
-          let records = this.getRecords(id);
-          if (records != null) {
-            data.gcRecords = {};
-            data.references = Object.keys(records)
-              .filter(
-                recID => recID != null && !data.references.includes(recID)
-              )
-              .map(recID => {
-                data.gcRecords[recID] = records[recID];
-                return recID;
+      if (this._isProfiling) {
+        let allEvents = this._environmentAllEvents.get(id);
+        if (allEvents) {
+          if (data.name === 'store.gc') {
+            let records = this.getRecords(id);
+            if (records != null) {
+              data.gcRecords = {};
+              data.references = Object.keys(records)
+                .filter(
+                  recID => recID != null && !data.references.includes(recID)
+                )
+                .map(recID => {
+                  data.gcRecords[recID] = records[recID];
+                  return recID;
+                });
+            }
+          } else if (data.name === 'store.notify.complete') {
+            let records = this.getRecords(id);
+            if (records != null) {
+              data.invalidatedRecords = {};
+              data.updatedRecords = {};
+              Object.keys(data.updatedRecordIDs).forEach(recID => {
+                data.updatedRecords[recID] = { ...records[recID] };
               });
+              data.invalidatedRecordIDs.forEach(
+                recID =>
+                  (data.invalidatedRecords[recID] = { ...records[recID] })
+              );
+            }
+          } else if (data.name.startsWith('execute')) {
+            this.appendInformationToRequest(id, data);
           }
-        } else if (data.name === 'store.notify.complete') {
-          let records = this.getRecords(id);
-          if (records != null) {
-            data.invalidatedRecords = {};
-            data.updatedRecords = {};
-            Object.keys(data.updatedRecordIDs).forEach(recID => {
-              data.updatedRecords[recID] = { ...records[recID] };
-            });
-            data.invalidatedRecordIDs.forEach(
-              recID => (data.invalidatedRecords[recID] = { ...records[recID] })
-            );
-          }
-        } else if (data.name.startsWith('execute')) {
-          this.appendInformationToRequest(id, data);
+          allEvents.push(data);
+        } else {
+          this._environmentAllEvents.set(id, [data]);
         }
-        allEvents.push(data);
-      } else {
-        this._environmentAllEvents.set(id, [data]);
+        this.emit('allEventsReceived');
       }
       if (eventType === 'store') {
         this.setStoreEvents(id, data);
@@ -335,11 +350,22 @@ export default class Store extends EventEmitter<{|
   };
 
   clearAllEvents = () => {
-    this._environmentEventsMap.forEach((_, key) => this.clearEvents(key));
-    this.emit('mutated');
+    this._environmentAllEvents.forEach((_, key) => this.clearEvents(key));
+    this.emit('allEventsReceived');
   };
 
   clearEvents = (environmentID: number) => {
+    this._environmentAllEvents.delete(environmentID);
+  };
+
+  clearAllNetworkEvents = () => {
+    this._environmentEventsMap.forEach((_, key) =>
+      this.clearNetworkEvents(key)
+    );
+    this.emit('mutated');
+  };
+
+  clearNetworkEvents = (environmentID: number) => {
     const completed = new Set();
     let eventArray = this._environmentEventsMap.get(environmentID);
     if (eventArray !== undefined && eventArray.length > 0) {

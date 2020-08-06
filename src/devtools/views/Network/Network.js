@@ -256,7 +256,7 @@ function Network(props: {| +portalContainer: mixed, currentEnvID: ?number |}) {
           onClick={() =>
             props.currentEnvID == null
               ? {}
-              : store.clearEvents(props.currentEnvID)
+              : store.clearNetworkEvents(props.currentEnvID)
           }
           title="Clear Logs"
         >
