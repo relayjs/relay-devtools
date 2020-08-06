@@ -7,7 +7,7 @@
  * @flow
  */
 
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import type { LogEvent } from '../../../../types';
 
 import styles from './EventLogger.css';
@@ -17,6 +17,33 @@ export type Props = {|
   selectedEventID: number,
   setSelectedEventID: number => void,
 |};
+
+function appearsInObject(searchText: string, obj: Object) {
+  if (obj == null) {
+    return false;
+  }
+  for (let key in obj) {
+    if (typeof obj[key] == 'object' && obj[key] !== null) {
+      const appears = appearsInObject(searchText, obj[key]);
+      if (appears) {
+        return appears;
+      }
+    } else if (
+      (obj[key] !== null &&
+        obj[key]
+          .toString()
+          .toLowerCase()
+          .includes(searchText)) ||
+      key
+        .toString()
+        .toLowerCase()
+        .includes(searchText)
+    ) {
+      return true;
+    }
+  }
+  return false;
+}
 
 function StoreEventDisplay({
   displayText,
@@ -120,19 +147,25 @@ export default function AllEventsList({
     );
   });
 
-  // TODO(damassart): Fix search
-  // TODO(damassart): Memoize this
-  eventsArrayDisplay = eventsArrayDisplay.filter(event =>
-    eventSearch
-      .trim()
-      .split(' ')
-      .some(
-        search =>
-          event != null &&
-          String(event.props.displayText)
-            .toLowerCase()
-            .includes(search.toLowerCase())
-      )
+  eventsArrayDisplay = useMemo(
+    () =>
+      eventsArrayDisplay.filter(
+        (event, index) =>
+          eventSearch === '' ||
+          eventSearch
+            .trim()
+            .split(' ')
+            .some(
+              search =>
+                (event != null &&
+                  String(event.props.displayText)
+                    .toLowerCase()
+                    .includes(search.toLowerCase())) ||
+                (events[index] != null &&
+                  appearsInObject(search.toLowerCase(), events[index]))
+            )
+      ),
+    [eventsArrayDisplay, eventSearch, events]
   );
 
   return (
