@@ -61,6 +61,8 @@ export type LogEvent =
       +name: 'execute.info',
       +transactionID: number,
       +info: mixed,
+      params: $FlowFixMe,
+      variables: $FlowFixMe,
     |}
   | {|
       +name: 'execute.start',
@@ -72,19 +74,27 @@ export type LogEvent =
       +name: 'execute.next',
       +transactionID: number,
       +response: $FlowFixMe,
+      params: $FlowFixMe,
+      variables: $FlowFixMe,
     |}
   | {|
       +name: 'execute.error',
       +transactionID: number,
       +error: Error,
+      params: $FlowFixMe,
+      variables: $FlowFixMe,
     |}
   | {|
       +name: 'execute.complete',
       +transactionID: number,
+      params: $FlowFixMe,
+      variables: $FlowFixMe,
     |}
   | {|
       +name: 'execute.unsubscribe',
       +transactionID: number,
+      params: $FlowFixMe,
+      variables: $FlowFixMe,
     |};
 
 export type EventData = {|

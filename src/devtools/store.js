@@ -51,6 +51,7 @@ export default class Store extends EventEmitter<{|
   _environmentStoreData: Map<number, StoreRecords> = new Map();
   _environmentStoreOptimisticData: Map<number, StoreRecords> = new Map();
   _environmentAllEvents: Map<number, Array<LogEvent>> = new Map();
+  _recordedRequests: Map<number, Map<number, LogEvent>> = new Map();
 
   constructor(bridge: FrontendBridge) {
     super();
@@ -228,6 +229,37 @@ export default class Store extends EventEmitter<{|
     this.emit('mutated');
   };
 
+  appendInformationToRequest = (id: number, data: LogEvent) => {
+    switch (data.name) {
+      case 'execute.start':
+        let requestArr = this._recordedRequests.get(id);
+        if (requestArr) {
+          requestArr.set(data.transactionID, data);
+        } else {
+          let newRequest = new Map<number, LogEvent>();
+          newRequest.set(data.transactionID, data);
+          this._recordedRequests.set(id, newRequest);
+        }
+        break;
+      case 'execute.next':
+      case 'execute.info':
+      case 'execute.complete':
+      case 'execute.error':
+      case 'execute.unsubscribe':
+        let requests = this._recordedRequests.get(id);
+        if (requests) {
+          let request = requests.get(data.transactionID);
+          if (request && request.name === 'execute.start') {
+            data.params = request.params;
+            data.variables = request.variables;
+          }
+        }
+        break;
+      default:
+        break;
+    }
+  };
+
   onBridgeEvents = (events: Array<EventData>) => {
     for (let { id, data, eventType } of events) {
       let allEvents = this._environmentAllEvents.get(id);
@@ -257,6 +289,8 @@ export default class Store extends EventEmitter<{|
               recID => (data.invalidatedRecords[recID] = { ...records[recID] })
             );
           }
+        } else if (data.name.startsWith('execute')) {
+          this.appendInformationToRequest(id, data);
         }
         allEvents.push(data);
       } else {

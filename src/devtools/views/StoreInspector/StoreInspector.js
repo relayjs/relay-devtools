@@ -9,7 +9,8 @@
 
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { BridgeContext, StoreContext } from '../context';
-import InspectedElementTree from './InspectedElementTreeStoreInspector';
+import InspectedElementTree from '../Components/InspectedElementTree';
+import InspectedElementTreeStoreInspector from './InspectedElementTreeStoreInspector';
 import Button from '../Button';
 import ButtonIcon from '../ButtonIcon';
 import { copy } from 'clipboard-js';
@@ -17,6 +18,16 @@ import { serializeDataForCopy } from '../utils';
 import TabBar from './StoreTabBar';
 
 import styles from './StoreInspector.css';
+
+type RequestStatus = 'active' | 'unsubscribed' | 'completed' | 'error';
+type RequestEntry = {|
+  +id: number,
+  params: any,
+  variables: { [string]: mixed },
+  status: RequestStatus,
+  responses: Array<mixed>,
+  infos: Array<mixed>,
+|};
 
 export type TabID =
   | 'explorer'
@@ -199,7 +210,7 @@ function RecordDetails({ records, selectedRecord, setSelectedRecordID }) {
     <div className={styles.RecordDetails}>
       <Section title="ID">{id}</Section>
       <Section title="Type">{typename}</Section>
-      <InspectedElementTree
+      <InspectedElementTreeStoreInspector
         label="Store data"
         data={data}
         records={records}
@@ -398,46 +409,17 @@ function AllEventsList({ events, selectedEventID, setSelectedEventID }) {
           />
         );
       case 'store.gc':
-        return (
-          <StoreEventDisplay
-            displayText={event.name}
-            key={index}
-            index={index}
-            setSelectedEventID={setSelectedEventID}
-            selectedEventID={selectedEventID}
-          />
-        );
       case 'store.restore':
-        return (
-          <StoreEventDisplay
-            displayText={event.name}
-            key={index}
-            index={index}
-            setSelectedEventID={setSelectedEventID}
-            selectedEventID={selectedEventID}
-          />
-        );
       case 'store.snapshot':
-        return (
-          <StoreEventDisplay
-            displayText={event.name}
-            key={index}
-            index={index}
-            setSelectedEventID={setSelectedEventID}
-            selectedEventID={selectedEventID}
-          />
-        );
       case 'store.notify.start':
-        return (
-          <StoreEventDisplay
-            displayText={event.name}
-            key={index}
-            index={index}
-            setSelectedEventID={setSelectedEventID}
-            selectedEventID={selectedEventID}
-          />
-        );
       case 'store.notify.complete':
+      case 'execute.start':
+      case 'execute.info':
+      case 'execute.next':
+      case 'execute.complete':
+      case 'execute.subscribe':
+      case 'execute.error':
+      default:
         return (
           <StoreEventDisplay
             displayText={event.name}
@@ -447,13 +429,11 @@ function AllEventsList({ events, selectedEventID, setSelectedEventID }) {
             selectedEventID={selectedEventID}
           />
         );
-      default:
-        break;
     }
-    return null;
   });
 
   // TODO(damassart): Fix search
+  // TODO(damassart): Memoize this
   eventsArrayDisplay = eventsArrayDisplay.filter(event =>
     eventSearch
       .trim()
@@ -488,6 +468,42 @@ function AllEventsList({ events, selectedEventID, setSelectedEventID }) {
   );
 }
 
+function RequestDetails(props: {| request: ?RequestEntry |}) {
+  const request = props.request;
+  if (request == null) {
+    return <div className={styles.RequestDetails}>No request selected</div>;
+  }
+  const responses = request.responses.map((response, i) => (
+    <InspectedElementTree
+      key={i}
+      label={
+        request.responses.length > 1
+          ? `response (${i + 1} of ${request.responses.length})`
+          : 'response'
+      }
+      data={response}
+      showWhenEmpty
+    />
+  ));
+  return (
+    <div className={styles.RequestDetails}>
+      <Section title="Status">{request.status}</Section>
+      <InspectedElementTree
+        label="request"
+        data={request.params}
+        showWhenEmpty
+      />
+      <InspectedElementTree
+        label="variables"
+        data={request.variables}
+        showWhenEmpty
+      />
+      <InspectedElementTree label="info" data={request.infos} />
+      {responses}
+    </div>
+  );
+}
+
 function AllEventsDetails({ events, selectedEventID, setSelectedEventID }) {
   const [selectedRecordID, setSelectedRecordID] = useState('');
   const [tab, setTab] = useState(updatedRecordsTab);
@@ -504,7 +520,67 @@ function AllEventsDetails({ events, selectedEventID, setSelectedEventID }) {
     );
   }
 
-  if (selectedEvent.name === 'store.publish') {
+  if (selectedEvent.name === 'execute.start') {
+    const request: RequestEntry = {
+      id: selectedEvent.transactionID,
+      params: selectedEvent.params,
+      variables: selectedEvent.variables,
+      status: 'active',
+      responses: [],
+      infos: [],
+    };
+    return <RequestDetails request={request} />;
+  } else if (selectedEvent.name === 'execute.complete') {
+    const request: RequestEntry = {
+      id: selectedEvent.transactionID,
+      params: selectedEvent.params,
+      variables: selectedEvent.variables,
+      status: 'completed',
+      responses: [],
+      infos: [],
+    };
+    return <RequestDetails request={request} />;
+  } else if (selectedEvent.name === 'execute.next') {
+    const request: RequestEntry = {
+      id: selectedEvent.transactionID,
+      params: selectedEvent.params,
+      variables: selectedEvent.variables,
+      status: 'active',
+      responses: [selectedEvent.response],
+      infos: [],
+    };
+    return <RequestDetails request={request} />;
+  } else if (selectedEvent.name === 'execute.info') {
+    const request: RequestEntry = {
+      id: selectedEvent.transactionID,
+      params: selectedEvent.params,
+      variables: selectedEvent.variables,
+      status: 'active',
+      responses: [],
+      infos: [selectedEvent.info],
+    };
+    return <RequestDetails request={request} />;
+  } else if (selectedEvent.name === 'execute.unsubscribe') {
+    const request: RequestEntry = {
+      id: selectedEvent.transactionID,
+      params: selectedEvent.params,
+      variables: selectedEvent.variables,
+      status: 'unsubscribed',
+      responses: [],
+      infos: [],
+    };
+    return <RequestDetails request={request} />;
+  } else if (selectedEvent.name === 'execute.error') {
+    const request: RequestEntry = {
+      id: selectedEvent.transactionID,
+      params: selectedEvent.params,
+      variables: selectedEvent.variables,
+      status: 'error',
+      responses: [],
+      infos: [],
+    };
+    return <RequestDetails request={request} />;
+  } else if (selectedEvent.name === 'store.publish') {
     let recordsByType = new Map();
     let records = selectedEvent.source;
     if (records != null) {
@@ -745,6 +821,7 @@ function deepCopyFunction(inObject) {
     return outObject;
   }
 }
+
 export default function StoreInspector(props: {|
   +portalContainer: mixed,
   currentEnvID: ?number,

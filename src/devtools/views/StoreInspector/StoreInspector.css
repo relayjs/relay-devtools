@@ -129,6 +129,12 @@
   padding: 3px;
 }
 
+.RequestDetails {
+  flex: 2;
+  overflow: scroll;
+  padding: 3px;
+}
+
 .RecordListContent {
   display: block;
 }
