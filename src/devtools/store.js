@@ -64,10 +64,19 @@ export default class Store extends EventEmitter<{|
     bridge.addListener('storeRecords', this.onBridgeStoreSnapshot);
   }
 
-  getAllEvents(): $ReadOnlyArray<LogEvent> {
+  getAllEventsArray(): $ReadOnlyArray<LogEvent> {
     let allEvents = [];
     this._environmentAllEvents.forEach((value, _) => allEvents.push(...value));
     return allEvents;
+  }
+
+  setAllEventsMap(environmentID: number, events: Array<LogEvent>) {
+    this._environmentAllEvents.set(environmentID, events);
+    this.emit('allEventsReceived');
+  }
+
+  getAllEventsMap(): Map<number, Array<LogEvent>> {
+    return this._environmentAllEvents;
   }
 
   getEvents(environmentID: number): ?$ReadOnlyArray<LogEvent> {

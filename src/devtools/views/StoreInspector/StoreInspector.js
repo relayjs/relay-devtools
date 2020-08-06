@@ -16,6 +16,7 @@ import ButtonIcon from '../ButtonIcon';
 import { copy } from 'clipboard-js';
 import { serializeDataForCopy } from '../utils';
 import TabBar from './StoreTabBar';
+import RecordingImportExportButtons from './RecordingImportExportButtons';
 
 import styles from './StoreInspector.css';
 
@@ -358,6 +359,7 @@ function RecordEventsMenu({
   startProfiling,
   stopProfiling,
   stopAndClearProfiling,
+  store,
 }) {
   let className = isProfiling
     ? styles.ActiveRecordToggle
@@ -375,6 +377,7 @@ function RecordEventsMenu({
       <Button onClick={stopAndClearProfiling} title="Stop and Clear Profiling">
         <ButtonIcon type="clear" />
       </Button>
+      <RecordingImportExportButtons isProfiling={isProfiling} store={store} />
     </div>
   );
 }
@@ -1009,6 +1012,7 @@ export default function StoreInspector(props: {|
               stopProfiling={stopProfiling}
               startProfiling={startProfiling}
               stopAndClearProfiling={stopAndClearProfiling}
+              store={store}
             />
             <Profiler allEvents={allEvents} isProfiling={isProfiling} />
           </div>
