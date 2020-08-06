@@ -53,7 +53,7 @@ export default class Store extends EventEmitter<{|
   _environmentStoreOptimisticData: Map<number, StoreRecords> = new Map();
   _environmentAllEvents: Map<number, Array<LogEvent>> = new Map();
   _recordedRequests: Map<number, Map<number, LogEvent>> = new Map();
-  _isProfiling: boolean = false;
+  _isRecording: boolean = false;
 
   constructor(bridge: FrontendBridge) {
     super();
@@ -271,18 +271,18 @@ export default class Store extends EventEmitter<{|
     }
   };
 
-  startProfiling = () => {
-    this._isProfiling = true;
+  startRecording = () => {
+    this._isRecording = true;
     this.clearAllEvents();
   };
 
-  stopProfiling = () => {
-    this._isProfiling = false;
+  stopRecording = () => {
+    this._isRecording = false;
   };
 
   onBridgeEvents = (events: Array<EventData>) => {
     for (let { id, data, eventType } of events) {
-      if (this._isProfiling) {
+      if (this._isRecording) {
         let allEvents = this._environmentAllEvents.get(id);
         if (allEvents) {
           if (data.name === 'store.gc') {

@@ -16,7 +16,7 @@ import type Store from '../../store';
 
 import styles from './RecordingImportExportButtons.css';
 
-// Keeping this in memory seems to be enough to enable the browser to download larger profiles.
+// Keeping this in memory seems to be enough to enable the browser to download larger recordings.
 // Without this, we would see a "Download failed: network error" failure.
 let downloadUrl = null;
 
@@ -40,7 +40,7 @@ function downloadFile(
 }
 
 export default function RecordingImportExportButtons(props: {|
-  isProfiling: boolean,
+  isRecording: boolean,
   store: Store,
 |}) {
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -94,8 +94,6 @@ export default function RecordingImportExportButtons(props: {|
             Array<LogEvent>
           >);
           parsedDataRecording.forEach((val, key) => {
-            console.log(key);
-            console.log(val);
             props.store.setAllEventsMap(key, val);
           });
           setErr('');
@@ -124,14 +122,14 @@ export default function RecordingImportExportButtons(props: {|
       />
       <a href="/#" ref={downloadRef} className={styles.Input} />
       <Button
-        disabled={props.isProfiling}
+        disabled={props.isRecording}
         onClick={loadData}
         title="Load recording..."
       >
         <ButtonIcon type="import" />
       </Button>
       <Button
-        disabled={props.isProfiling}
+        disabled={props.isRecording}
         onClick={downloadData}
         title="Save recording..."
       >

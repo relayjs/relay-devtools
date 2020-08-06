@@ -34,7 +34,7 @@ export type TabID =
   | 'explorer'
   | 'snapshot'
   | 'optimistic'
-  | 'profiler'
+  | 'recorder'
   | 'invalidRecords'
   | 'updatedRecords';
 export type TabInfo = {|
@@ -58,23 +58,23 @@ const optimisticTab = {
   label: 'Optimistic Updates',
   title: 'Relay Optimistic Updates',
 };
-const profilerTab = {
-  id: ('profiler': TabID),
-  label: 'Store Profiler',
-  title: 'Relay Store Profiler',
+const recorderTab = {
+  id: ('recorder': TabID),
+  label: 'Event Logger',
+  title: 'Relay Store Event Logger',
 };
 const invalidatedRecordsTab = {
   id: ('invalidRecords': TabID),
   label: 'Invalidated Records Notify',
-  title: 'Relay Profiler Invalidated Records',
+  title: 'Relay Event Logger: Invalidated Records',
 };
 const updatedRecordsTab = {
   id: ('updatedRecords': TabID),
   label: 'Updated Records Notify',
-  title: 'Relay Profiler Updated Records',
+  title: 'Relay Event Logger: Updated Records',
 };
 
-const tabs = [explorerTab, snapshotTab, optimisticTab, profilerTab];
+const tabs = [explorerTab, snapshotTab, optimisticTab, recorderTab];
 const notifyCompleteTabs = [invalidatedRecordsTab, updatedRecordsTab];
 
 function Section(props: {| title: string, children: React$Node |}) {
@@ -355,29 +355,29 @@ function Optimistic({ optimisticUpdates }) {
 }
 
 function RecordEventsMenu({
-  isProfiling,
-  startProfiling,
-  stopProfiling,
-  stopAndClearProfiling,
+  isRecording,
+  startRecording,
+  stopRecording,
+  stopAndClearRecording,
   store,
 }) {
-  let className = isProfiling
+  let className = isRecording
     ? styles.ActiveRecordToggle
     : styles.InactiveRecordToggle;
 
   return (
     <div className={styles.RecordEventsMenu}>
       <Button
-        onClick={isProfiling ? stopProfiling : startProfiling}
-        title={isProfiling ? 'Stop profiling' : 'Start profiling'}
+        onClick={isRecording ? stopRecording : startRecording}
+        title={isRecording ? 'Stop recording' : 'Start recording'}
         className={className}
       >
         <ButtonIcon type="record" />
       </Button>
-      <Button onClick={stopAndClearProfiling} title="Stop and Clear Profiling">
+      <Button onClick={stopAndClearRecording} title="Stop and Clear Recording">
         <ButtonIcon type="clear" />
       </Button>
-      <RecordingImportExportButtons isProfiling={isProfiling} store={store} />
+      <RecordingImportExportButtons isRecording={isRecording} store={store} />
     </div>
   );
 }
@@ -410,11 +410,12 @@ function AllEventsList({ events, selectedEventID, setSelectedEventID }) {
   }, []);
 
   let eventsArrayDisplay = events.map((event, index) => {
+    let displayText = '';
     switch (event.name) {
       case 'store.publish':
         return event.optimistic ? (
           <StoreEventDisplay
-            displayText={'Optimistic Update: ' + event.name}
+            displayText="Store Optimistic Update"
             key={index}
             index={index}
             setSelectedEventID={setSelectedEventID}
@@ -422,7 +423,7 @@ function AllEventsList({ events, selectedEventID, setSelectedEventID }) {
           />
         ) : (
           <StoreEventDisplay
-            displayText={event.name}
+            displayText="Store Publish"
             key={index}
             index={index}
             setSelectedEventID={setSelectedEventID}
@@ -430,27 +431,53 @@ function AllEventsList({ events, selectedEventID, setSelectedEventID }) {
           />
         );
       case 'store.gc':
+        displayText = 'Store GC';
+        break;
       case 'store.restore':
+        displayText = 'Store Restore';
+        break;
       case 'store.snapshot':
+        displayText = 'Store Snapshot';
+        break;
       case 'store.notify.start':
+        displayText = 'Notify Start';
+        break;
       case 'store.notify.complete':
+        displayText = 'Notify Complete';
+        break;
+      case 'queryresource.fetch':
+        displayText = 'QueryResource Fetch';
+        break;
       case 'execute.start':
+        displayText = 'Network Start';
+        break;
       case 'execute.info':
+        displayText = 'Network Info';
+        break;
       case 'execute.next':
+        displayText = 'Network Next';
+        break;
       case 'execute.complete':
+        displayText = 'Network Complete';
+        break;
       case 'execute.subscribe':
+        displayText = 'Network Subscribe';
+        break;
       case 'execute.error':
+        displayText = 'Network Error';
+        break;
       default:
-        return (
-          <StoreEventDisplay
-            displayText={event.name}
-            key={index}
-            index={index}
-            setSelectedEventID={setSelectedEventID}
-            selectedEventID={selectedEventID}
-          />
-        );
+        return null;
     }
+    return (
+      <StoreEventDisplay
+        displayText={displayText}
+        key={index}
+        index={index}
+        setSelectedEventID={setSelectedEventID}
+        selectedEventID={selectedEventID}
+      />
+    );
   });
 
   // TODO(damassart): Fix search
@@ -550,7 +577,15 @@ function AllEventsDetails({ events, selectedEventID, setSelectedEventID }) {
       responses: [],
       infos: [],
     };
-    return <RequestDetails request={request} />;
+    return (
+      <div className={styles.gcEvent}>
+        <div className={styles.gcExplained}>
+          The following network request has been sent. Responses will soon
+          follow in an execute.next event:
+        </div>
+        <RequestDetails request={request} />
+      </div>
+    );
   } else if (selectedEvent.name === 'execute.complete') {
     const request: RequestEntry = {
       id: selectedEvent.transactionID,
@@ -560,7 +595,15 @@ function AllEventsDetails({ events, selectedEventID, setSelectedEventID }) {
       responses: [],
       infos: [],
     };
-    return <RequestDetails request={request} />;
+    return (
+      <div className={styles.gcEvent}>
+        <div className={styles.gcExplained}>
+          The following network request is complete. All info and responses have
+          been received:
+        </div>
+        <RequestDetails request={request} />
+      </div>
+    );
   } else if (selectedEvent.name === 'execute.next') {
     const request: RequestEntry = {
       id: selectedEvent.transactionID,
@@ -570,7 +613,14 @@ function AllEventsDetails({ events, selectedEventID, setSelectedEventID }) {
       responses: [selectedEvent.response],
       infos: [],
     };
-    return <RequestDetails request={request} />;
+    return (
+      <div className={styles.gcEvent}>
+        <div className={styles.gcExplained}>
+          A response for the following request was received:
+        </div>
+        <RequestDetails request={request} />
+      </div>
+    );
   } else if (selectedEvent.name === 'execute.info') {
     const request: RequestEntry = {
       id: selectedEvent.transactionID,
@@ -580,7 +630,14 @@ function AllEventsDetails({ events, selectedEventID, setSelectedEventID }) {
       responses: [],
       infos: [selectedEvent.info],
     };
-    return <RequestDetails request={request} />;
+    return (
+      <div className={styles.gcEvent}>
+        <div className={styles.gcExplained}>
+          The info array for the following request was updated:
+        </div>
+        <RequestDetails request={request} />
+      </div>
+    );
   } else if (selectedEvent.name === 'execute.unsubscribe') {
     const request: RequestEntry = {
       id: selectedEvent.transactionID,
@@ -590,7 +647,14 @@ function AllEventsDetails({ events, selectedEventID, setSelectedEventID }) {
       responses: [],
       infos: [],
     };
-    return <RequestDetails request={request} />;
+    return (
+      <div className={styles.gcEvent}>
+        <div className={styles.gcExplained}>
+          The following network request is no longer active:
+        </div>
+        <RequestDetails request={request} />
+      </div>
+    );
   } else if (selectedEvent.name === 'execute.error') {
     const request: RequestEntry = {
       id: selectedEvent.transactionID,
@@ -600,7 +664,14 @@ function AllEventsDetails({ events, selectedEventID, setSelectedEventID }) {
       responses: [],
       infos: [],
     };
-    return <RequestDetails request={request} />;
+    return (
+      <div className={styles.gcEvent}>
+        <div className={styles.gcExplained}>
+          There was an error with the following network request:
+        </div>
+        <RequestDetails request={request} />
+      </div>
+    );
   } else if (selectedEvent.name === 'store.publish') {
     let recordsByType = new Map();
     let records = selectedEvent.source;
@@ -618,20 +689,28 @@ function AllEventsDetails({ events, selectedEventID, setSelectedEventID }) {
       }
     }
     let selectedRecord = selectedEvent.source[selectedRecordID];
+    let displayText = 'The following records have been published to the store:';
+    if (selectedEvent.optimistc) {
+      displayText =
+        'The following records are part of an optimistic update to the store:';
+    }
 
     return (
-      <div className={styles.RecordsTabContent}>
-        <RecordList
-          records={records}
-          recordsByType={recordsByType}
-          selectedRecordID={selectedRecordID}
-          setSelectedRecordID={setSelectedRecordID}
-        />
-        <RecordDetails
-          records={records}
-          setSelectedRecordID={setSelectedRecordID}
-          selectedRecord={selectedRecord}
-        />
+      <div className={styles.gcEvent}>
+        <div className={styles.gcExplained}>{displayText}</div>
+        <div className={styles.RecordsTabContent}>
+          <RecordList
+            records={records}
+            recordsByType={recordsByType}
+            selectedRecordID={selectedRecordID}
+            setSelectedRecordID={setSelectedRecordID}
+          />
+          <RecordDetails
+            records={records}
+            setSelectedRecordID={setSelectedRecordID}
+            selectedRecord={selectedRecord}
+          />
+        </div>
       </div>
     );
   } else if (selectedEvent.name === 'store.gc') {
@@ -683,10 +762,20 @@ function AllEventsDetails({ events, selectedEventID, setSelectedEventID }) {
         All optimistic updates have been restored
       </div>
     );
+  } else if (selectedEvent.name === 'queryresource.fetch') {
+    return <div className={styles.RestoreEvent}>Query Resource Fetched</div>;
   } else if (selectedEvent.name === 'store.snapshot') {
-    return <div className={styles.RestoreEvent}>Relay Runtime Snapshot</div>;
+    return (
+      <div className={styles.RestoreEvent}>
+        A snapshot was taken in the Relay runtime store.
+      </div>
+    );
   } else if (selectedEvent.name === 'store.notify.start') {
-    return <div className={styles.RestoreEvent}>Store Notify Start</div>;
+    return (
+      <div className={styles.RestoreEvent}>
+        A notification was sent to the store, signaling an update.
+      </div>
+    );
   } else if (selectedEvent.name === 'store.notify.complete') {
     let records = {};
     let invalidRecs = {};
@@ -754,33 +843,44 @@ function AllEventsDetails({ events, selectedEventID, setSelectedEventID }) {
           />
         </div>
         {tab === updatedRecordsTab && (
-          <div className={styles.RecordsTabContent}>
-            <RecordList
-              records={records}
-              recordsByType={recordsByType}
-              selectedRecordID={selectedRecordID}
-              setSelectedRecordID={setSelectedRecordID}
-            />
-            <RecordDetails
-              records={records}
-              setSelectedRecordID={setSelectedRecordID}
-              selectedRecord={selectedRecord}
-            />
+          <div className={styles.gcEvent}>
+            <div className={styles.gcExplained}>
+              Subscribers are notified for the following record changes:
+            </div>
+            <div className={styles.RecordsTabContent}>
+              <RecordList
+                records={records}
+                recordsByType={recordsByType}
+                selectedRecordID={selectedRecordID}
+                setSelectedRecordID={setSelectedRecordID}
+              />
+              <RecordDetails
+                records={records}
+                setSelectedRecordID={setSelectedRecordID}
+                selectedRecord={selectedRecord}
+              />
+            </div>
           </div>
         )}
         {tab === invalidatedRecordsTab && (
-          <div className={styles.RecordsTabContent}>
-            <RecordList
-              records={invalidRecs}
-              recordsByType={invalidatedRecordsByType}
-              selectedRecordID={selectedRecordID}
-              setSelectedRecordID={setSelectedRecordID}
-            />
-            <RecordDetails
-              records={invalidRecs}
-              setSelectedRecordID={setSelectedRecordID}
-              selectedRecord={invalidatedSelectedRecord}
-            />
+          <div className={styles.gcEvent}>
+            <div className={styles.gcExplained}>
+              The notification to the store has been received and the following
+              records are now invalidated!
+            </div>
+            <div className={styles.RecordsTabContent}>
+              <RecordList
+                records={invalidRecs}
+                recordsByType={invalidatedRecordsByType}
+                selectedRecordID={selectedRecordID}
+                setSelectedRecordID={setSelectedRecordID}
+              />
+              <RecordDetails
+                records={invalidRecs}
+                setSelectedRecordID={setSelectedRecordID}
+                selectedRecord={invalidatedSelectedRecord}
+              />
+            </div>
           </div>
         )}
       </div>
@@ -790,17 +890,17 @@ function AllEventsDetails({ events, selectedEventID, setSelectedEventID }) {
   }
 }
 
-function Profiler({ allEvents, isProfiling }) {
+function EventLogger({ allEvents, isRecording }) {
   const [selectedEventID, setSelectedEventID] = useState(0);
 
-  if (allEvents == null && !isProfiling) {
+  if (allEvents == null && !isRecording) {
     return (
       <div className={styles.NotRecording}>
-        Profiler is not recording. To record, hit the record button on the top
-        left of the tab.
+        Event Logger is not recording. To record, hit the record button on the
+        top left of the tab.
       </div>
     );
-  } else if (allEvents == null && isProfiling) {
+  } else if (allEvents == null && isRecording) {
     return <div className={styles.NotRecording}>Loading events...</div>;
   } else if (allEvents == null) {
     return null;
@@ -862,21 +962,20 @@ export default function StoreInspector(props: {|
   const [, forceUpdate] = useState({});
   const [envSnapshotList, setEnvSnapshotList] = useState({});
   const [envSnapshotListByType, setEnvSnapshotListByType] = useState({});
-
-  const [isProfiling, setIsProfiling] = useState(false);
-  const stopAndClearProfiling = useCallback(() => {
-    setIsProfiling(false);
-    store.stopProfiling();
+  const [isRecording, setIsRecording] = useState(false);
+  const stopAndClearRecording = useCallback(() => {
+    setIsRecording(false);
+    store.stopRecording();
     store.clearAllEvents();
-  }, [store, setIsProfiling]);
-  const stopProfiling = useCallback(() => {
-    setIsProfiling(false);
-    store.stopProfiling();
-  }, [store, setIsProfiling]);
-  const startProfiling = useCallback(() => {
-    setIsProfiling(true);
-    store.startProfiling();
-  }, [store, setIsProfiling]);
+  }, [store, setIsRecording]);
+  const stopRecording = useCallback(() => {
+    setIsRecording(false);
+    store.stopRecording();
+  }, [store, setIsRecording]);
+  const startRecording = useCallback(() => {
+    setIsRecording(true);
+    store.startRecording();
+  }, [store, setIsRecording]);
 
   useEffect(() => {
     const refreshEvents = () => {
@@ -1005,16 +1104,16 @@ export default function StoreInspector(props: {|
             <Optimistic optimisticUpdates={optimisticUpdates} />
           </div>
         )}
-        {tab === profilerTab && (
+        {tab === recorderTab && (
           <div className={styles.RecordEvents}>
             <RecordEventsMenu
-              isProfiling={isProfiling}
-              stopProfiling={stopProfiling}
-              startProfiling={startProfiling}
-              stopAndClearProfiling={stopAndClearProfiling}
+              isRecording={isRecording}
+              stopRecording={stopRecording}
+              startRecording={startRecording}
+              stopAndClearRecording={stopAndClearRecording}
               store={store}
             />
-            <Profiler allEvents={allEvents} isProfiling={isProfiling} />
+            <EventLogger allEvents={allEvents} isRecording={isRecording} />
           </div>
         )}
       </div>
