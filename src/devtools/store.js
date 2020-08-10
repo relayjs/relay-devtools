@@ -54,6 +54,7 @@ export default class Store extends EventEmitter<{|
   _environmentAllEvents: Map<number, Array<LogEvent>> = new Map();
   _recordedRequests: Map<number, Map<number, LogEvent>> = new Map();
   _isRecording: boolean = false;
+  _importEnvID: ?number = null;
 
   constructor(bridge: FrontendBridge) {
     super();
@@ -97,6 +98,15 @@ export default class Store extends EventEmitter<{|
 
   getEnvironmentIDs(): $ReadOnlyArray<number> {
     return Array.from(this._environmentNames.keys());
+  }
+
+  getImportEnvID(): ?number {
+    return this._importEnvID;
+  }
+
+  setImportEnvID(envID: ?number) {
+    this._importEnvID = envID;
+    this.emit('allEventsReceived');
   }
 
   getEnvironmentName(environmentID: number): ?string {

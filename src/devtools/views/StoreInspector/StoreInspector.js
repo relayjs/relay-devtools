@@ -72,7 +72,7 @@ function FilterButtons({ checked, setChecked, isRecording, store }) {
   );
 
   return (
-    <form>
+    <form className={styles.FilterButtons}>
       <label>
         <input
           type="checkbox"
@@ -106,23 +106,41 @@ function RecordEventsMenu({
   checked,
   setChecked,
 }) {
+  const [importing, setImporting] = useState(false);
   let className = isRecording
     ? styles.ActiveRecordToggle
     : styles.InactiveRecordToggle;
 
+  const clickRecord = useCallback(() => {
+    isRecording ? stopRecording() : startRecording();
+    setImporting(false);
+    store.setImportEnvID(null);
+  }, [isRecording, store, stopRecording, startRecording]);
+
+  const clickClear = useCallback(() => {
+    stopAndClearRecording();
+    setImporting(false);
+    store.setImportEnvID(null);
+  }, [store, stopAndClearRecording, setImporting]);
+
   return (
     <div className={styles.RecordEventsMenu}>
       <Button
-        onClick={isRecording ? stopRecording : startRecording}
+        onClick={clickRecord}
         title={isRecording ? 'Stop recording' : 'Start recording'}
         className={className}
       >
         <ButtonIcon type="record" />
       </Button>
-      <Button onClick={stopAndClearRecording} title="Stop and Clear Recording">
+      <Button onClick={clickClear} title="Stop and Clear Recording">
         <ButtonIcon type="clear" />
       </Button>
-      <RecordingImportExportButtons isRecording={isRecording} store={store} />
+      <RecordingImportExportButtons
+        isRecording={isRecording}
+        store={store}
+        importing={importing}
+        setImporting={setImporting}
+      />
       <FilterButtons
         checked={checked}
         setChecked={setChecked}
@@ -211,7 +229,11 @@ export default function StoreInspector(props: {|
     return null;
   }
 
-  let allEvents = store.getEvents(currentEnvID);
+  const recordingImportEnvironmentID = store.getImportEnvID();
+
+  let allEvents = recordingImportEnvironmentID
+    ? store.getEvents(recordingImportEnvironmentID)
+    : store.getEvents(currentEnvID);
 
   records = store.getRecords(currentEnvID);
   let optimisticUpdates = store.getOptimisticUpdates(currentEnvID);

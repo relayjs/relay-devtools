@@ -18,7 +18,7 @@
 }
 
 .Errors {
-  margin: 0;
+  margin: 0em 0.5em;
 }
 
 .ErrorMsg {
@@ -26,4 +26,11 @@
   text-align: center;
   vertical-align: middle;
   color: #dc3545;
+}
+
+.environmentDropDown {
+  width: 25%;
+  text-overflow: ellipsis;
+  margin-left: 0.4em;
+  margin-right: 0em;
 }

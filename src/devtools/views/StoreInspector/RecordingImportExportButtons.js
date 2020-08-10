@@ -13,6 +13,7 @@ import Button from '../Button';
 import ButtonIcon from '../ButtonIcon';
 import type { LogEvent } from '../../../types';
 import type Store from '../../store';
+import { serializeEventLoggerRecording } from './utils';
 
 import styles from './RecordingImportExportButtons.css';
 
@@ -42,45 +43,55 @@ function downloadFile(
 export default function RecordingImportExportButtons(props: {|
   isRecording: boolean,
   store: Store,
+  importing: boolean,
+  setImporting: boolean => void,
 |}) {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const downloadRef = useRef<HTMLAnchorElement | null>(null);
   const [err, setErr] = useState('');
+  const [environmentIDs, setEnvironmentIDs] = useState([]);
+  const [environmentNames, setEnvironmentNames] = useState({});
 
-  const allEvents = Array.from(props.store.getAllEventsMap().entries());
   const downloadData = useCallback(() => {
     const anchorElement = downloadRef.current;
-
-    if (allEvents != null && anchorElement != null) {
+    const allEventsWithEnvironmentNames = serializeEventLoggerRecording(
+      props.store
+    );
+    if (allEventsWithEnvironmentNames != null && anchorElement != null) {
       const date = new Date();
-      const text = JSON.stringify(allEvents, null, 2);
-      if (text != null) {
-        const dateString = date
-          .toLocaleDateString(undefined, {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-          })
-          .replace(/\//g, '-');
-        const timeString = date
-          .toLocaleTimeString(undefined, {
-            hour12: false,
-          })
-          .replace(/:/g, '-');
-        downloadFile(
-          anchorElement,
-          `relay-devtools-recorded-data.${dateString}.${timeString}.json`,
-          text
-        );
-      }
+      const text = JSON.stringify(allEventsWithEnvironmentNames, null, 2);
+      const dateString = date
+        .toLocaleDateString(undefined, {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+        })
+        .replace(/\//g, '-');
+      const timeString = date
+        .toLocaleTimeString(undefined, {
+          hour12: false,
+        })
+        .replace(/:/g, '-');
+      downloadFile(
+        anchorElement,
+        `relay-devtools-recorded-data.${dateString}.${timeString}.json`,
+        text
+      );
     }
-  }, [allEvents]);
+  }, [props.store]);
 
   const loadData = useCallback(() => {
-    if (inputRef.current !== null) {
+    if (!props.isRecording && inputRef.current !== null) {
       inputRef.current.click();
     }
-  }, []);
+  }, [props.isRecording]);
+
+  const environmentChange = useCallback(
+    e => {
+      props.store.setImportEnvID(parseInt(e.target.value));
+    },
+    [props.store]
+  );
 
   const handleFiles = useCallback(() => {
     const input = inputRef.current;
@@ -90,12 +101,23 @@ export default function RecordingImportExportButtons(props: {|
         try {
           const raw = ((fileReader.result: any): string);
           const parsedDataRecording = ((new Map(JSON.parse(raw)): any): Map<
-            number,
+            string,
             Array<LogEvent>
           >);
+          let envIDs = [];
+          let envNames = {};
           parsedDataRecording.forEach((val, key) => {
-            props.store.setAllEventsMap(key, val);
+            let environment = String(key).split(' ');
+            const id = parseInt(environment.shift());
+            const name = environment.join(' ');
+            envIDs.push(id);
+            envNames[id] = name;
+            props.store.setAllEventsMap(id, val);
           });
+          props.store.setImportEnvID(envIDs[0]);
+
+          setEnvironmentIDs(envIDs);
+          setEnvironmentNames(envNames);
           setErr('');
         } catch (error) {
           console.error(
@@ -105,10 +127,11 @@ export default function RecordingImportExportButtons(props: {|
           );
           setErr('Error Loading File. Check console for more details.');
         }
+        props.setImporting(true);
       });
       fileReader.readAsText(input.files[0]);
     }
-  }, [props.store, setErr]);
+  }, [props, setErr, setEnvironmentIDs, setEnvironmentNames]);
 
   return (
     <Fragment>
@@ -121,11 +144,7 @@ export default function RecordingImportExportButtons(props: {|
         tabIndex={-1}
       />
       <a href="/#" ref={downloadRef} className={styles.Input} />
-      <Button
-        disabled={props.isRecording}
-        onClick={loadData}
-        title="Load recording..."
-      >
+      <Button onClick={loadData} title="Load recording...">
         <ButtonIcon type="import" />
       </Button>
       <Button
@@ -135,6 +154,20 @@ export default function RecordingImportExportButtons(props: {|
       >
         <ButtonIcon type="export" />
       </Button>
+      {props.importing && (
+        <select
+          className={styles.environmentDropDown}
+          onChange={environmentChange}
+        >
+          {environmentIDs.map(key => {
+            return (
+              <option key={key} value={key}>
+                {key}: {environmentNames[key]}
+              </option>
+            );
+          })}
+        </select>
+      )}
       <div className={styles.Errors}>
         <p className={styles.ErrorMsg}>{err}</p>
       </div>
