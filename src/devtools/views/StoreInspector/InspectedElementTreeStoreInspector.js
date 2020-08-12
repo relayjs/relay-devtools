@@ -62,7 +62,7 @@ export default function InspectedElementTree({
               key={name}
               alphaSort={true}
               depth={1}
-              name={name}
+              keyName={name}
               path={[name]}
               value={value}
               records={records}

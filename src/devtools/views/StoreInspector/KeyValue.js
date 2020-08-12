@@ -19,12 +19,15 @@ type KeyValueProps = {|
   alphaSort: boolean,
   depth: number,
   hidden?: boolean,
-  name: string,
+  keyName: string,
   path: Array<any>,
   value: mixed,
   records: StoreRecords,
   setSelectedRecordID: (id: string) => void,
 |};
+
+const REF = '__ref';
+const REFS = '__refs';
 
 function getDisplayValue(value) {
   return typeof value === 'string'
@@ -40,7 +43,7 @@ export default function KeyValue({
   alphaSort,
   depth,
   hidden,
-  name,
+  keyName,
   path,
   value,
   records,
@@ -63,15 +66,17 @@ export default function KeyValue({
     [value, alphaSort]
   );
   const selectRecordID = useCallback(() => {
-    if (
-      typeof value === 'string' &&
-      records[value] != null &&
-      typeof records[value].__id === 'string'
-    ) {
-      let id = records[value].__id;
-      setSelectedRecordID(id);
+    // When this is called, the variable value is the next record referenced by the current record.
+    const nextRecID =
+      value !== null &&
+      typeof value === 'object' &&
+      value.hasOwnProperty('__id')
+        ? ((value.__id: any): string)
+        : null;
+    if (nextRecID != null) {
+      setSelectedRecordID(nextRecID);
     }
-  }, [records, value, setSelectedRecordID]);
+  }, [value, setSelectedRecordID]);
 
   const toggleIsOpen = useCallback(() => {
     setIsOpen(!isOpen);
@@ -83,32 +88,43 @@ export default function KeyValue({
     paddingLeft: `${(depth - 1) * 0.75}rem`,
   };
 
-  if (isSimpleType) {
-    let displayValue = getDisplayValue(value);
+  // If the value is a reference to another record
+  // Edge case: the id or __id of a record is a reference but we don't want to
+  // expand it
+  if (
+    value !== null &&
+    records.hasOwnProperty(value) &&
+    typeof value === 'string' &&
+    records[value] != null &&
+    (keyName === REF || path[path.length - 2] === REFS)
+  ) {
+    const referencedRecord = records[value];
+    return (
+      <div key="root" className={styles.Item} hidden={hidden} style={style}>
+        <span className={styles.Value}>
+          <KeyValue
+            key={keyName}
+            alphaSort={true}
+            depth={depth + 1}
+            keyName={keyName}
+            path={[keyName]}
+            value={referencedRecord}
+            records={records}
+            setSelectedRecordID={setSelectedRecordID}
+          />
+        </span>
+      </div>
+    );
+  } else if (isSimpleType) {
+    const displayValue = getDisplayValue(value);
 
-    if (
-      value !== null &&
-      records.hasOwnProperty(value) &&
-      typeof value === 'string'
-    ) {
-      return (
-        <div key="root" className={styles.Item} hidden={hidden} style={style}>
-          <div className={styles.ExpandCollapseToggleSpacer} />
-          <span className={styles.Name}>{name}</span>
-          <span className={styles.Value} onClick={selectRecordID}>
-            {displayValue}
-          </span>
-        </div>
-      );
-    } else {
-      return (
-        <div key="root" className={styles.Item} hidden={hidden} style={style}>
-          <div className={styles.ExpandCollapseToggleSpacer} />
-          <span className={styles.Name}>{name}</span>
-          <span className={styles.Value}>{displayValue}</span>
-        </div>
-      );
-    }
+    return (
+      <div key="root" className={styles.Item} hidden={hidden} style={style}>
+        <div className={styles.ExpandCollapseToggleSpacer} />
+        <span className={styles.Name}>{keyName}</span>
+        <span className={styles.Value}>{displayValue}</span>
+      </div>
+    );
   } else {
     if (Array.isArray(value)) {
       const hasChildren = value.length > 0;
@@ -120,7 +136,7 @@ export default function KeyValue({
               alphaSort={alphaSort}
               depth={depth + 1}
               hidden={hidden || !isOpen}
-              name={mapIndex.toString()}
+              keyName={mapIndex.toString()}
               path={path.concat(mapIndex)}
               value={value[mapIndex]}
               records={records}
@@ -144,7 +160,7 @@ export default function KeyValue({
             className={styles.Name}
             onClick={hasChildren ? toggleIsOpen : undefined}
           >
-            {name}
+            {keyName}
           </span>
           <span>
             Array
@@ -158,15 +174,22 @@ export default function KeyValue({
       // sortedEntries contains an array of tuples which contain a string and a value.
       // In some cases, the string is a __ref. In this case, there should be no other values
       // within the array because __ref is a reference to another record.
-      let entryReference = sortedEntries[0];
-      let recordFieldKey = entryReference == null ? null : entryReference[0];
-      let nextReferencedRecordID =
+      const entryReference = sortedEntries[0];
+      const recordFieldKey = entryReference == null ? null : entryReference[0];
+      const nextReferencedRecordID =
         entryReference == null ? null : entryReference[1];
-      let displayName =
+      // In the case of a reference to another record, we want the displayName/value, to be
+      // the id of the next record, so that users can click on it like a link
+      const displayName =
         sortedEntries === []
-          ? 'Object '
-          : recordFieldKey !== '__ref'
           ? 'Object'
+          : recordFieldKey !== REF || path[path.length - 2] === REFS
+          ? keyName === REF &&
+            value !== null &&
+            typeof value === 'object' &&
+            value.hasOwnProperty('__id')
+            ? ((value.__id: any): string)
+            : 'Object'
           : typeof nextReferencedRecordID === 'string' &&
             records[nextReferencedRecordID] != null
           ? ((records[nextReferencedRecordID].__typename: any): string)
@@ -179,7 +202,7 @@ export default function KeyValue({
               alphaSort={alphaSort}
               depth={depth + 1}
               hidden={hidden || !isOpen}
-              name={entriesName}
+              keyName={entriesName}
               path={path.concat(entriesName)}
               value={entriesVal}
               records={records}
@@ -203,9 +226,9 @@ export default function KeyValue({
             className={styles.Name}
             onClick={hasChildren ? toggleIsOpen : undefined}
           >
-            {name}
+            {keyName}
           </span>
-          <span>
+          <span onClick={keyName === REF ? selectRecordID : null}>
             {`${displayName || ''} `}
             {hasChildren ? '' : <span className={styles.Empty}>(empty)</span>}
           </span>
