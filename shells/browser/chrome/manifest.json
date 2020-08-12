@@ -41,7 +41,7 @@
     "persistent": false
   },
 
-  "permissions": ["file:///*", "http://*/*", "https://*/*"],
+  "permissions": ["file:///*", "http://*/*", "https://*/*", "webNavigation"],
 
   "content_scripts": [
     {
