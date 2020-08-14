@@ -23,6 +23,7 @@
   --light-color-background-invalid: #fff0f0;
   --light-color-background-search-bar: #ffffff;
   --light-color-background-selected: #0088fa;
+  --light-color-background-related: rgba(0, 136, 250, 0.2);
   --light-color-button-background: #ffffff;
   --light-color-button-background-focus: #ededed;
   --light-color-button: #5f6673;
@@ -91,6 +92,7 @@
   --dark-color-background-invalid: #5c0000;
   --dark-color-background-search-bar: #3a3b3c;
   --dark-color-background-selected: #178fb9;
+  --dark-color-background-related: rgba(255, 255, 255, 0.2);
   --dark-color-button-background: #282c34;
   --dark-color-button-background-focus: #3d424a;
   --dark-color-button: #afb3b9;

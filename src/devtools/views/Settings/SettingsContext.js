@@ -219,6 +219,7 @@ function updateThemeVariables(
   updateStyleHelper(theme, 'color-background-invalid', documentElements);
   updateStyleHelper(theme, 'color-background-search-bar', documentElements);
   updateStyleHelper(theme, 'color-background-selected', documentElements);
+  updateStyleHelper(theme, 'color-background-related', documentElements);
   updateStyleHelper(theme, 'color-border', documentElements);
   updateStyleHelper(theme, 'color-button-background', documentElements);
   updateStyleHelper(theme, 'color-button-background-focus', documentElements);

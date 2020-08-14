@@ -19,6 +19,26 @@ export type Props = {|
   checked: { [string]: boolean },
 |};
 
+const networkEventNames = [
+  'execute.start',
+  'execute.info',
+  'execute.next',
+  'execute.error',
+  'execute.complete',
+  'execute.unsubscribe',
+];
+
+function eventsAreLinked(events, selectedEventID, index) {
+  const currentEvent = events[index];
+  const selectedEvent = events[selectedEventID];
+return (
+    networkEventNames.includes(currentEvent.name) &&
+    networkEventNames.includes(selectedEvent.name) &&
+    currentEvent.transactionID != null &&
+    selectedEvent.transactionID === currentEvent.transactionID
+);
+}
+
 function appearsInObject(searchText: string, obj: Object) {
   if (obj == null) {
     return false;
@@ -51,6 +71,7 @@ function StoreEventDisplay({
   index,
   setSelectedEventID,
   selectedEventID,
+  events,
 }) {
   return (
     <div
@@ -59,7 +80,11 @@ function StoreEventDisplay({
         setSelectedEventID(index);
       }}
       className={`${styles.Record} ${
-        index === selectedEventID ? styles.SelectedRecord : ''
+        index === selectedEventID
+          ? styles.SelectedRecord
+          : eventsAreLinked(events, selectedEventID, index)
+          ? styles.RelatedRecord
+          : ''
       }`}
     >
       {displayText}
@@ -107,6 +132,7 @@ export default function AllEventsList({
             index={index}
             setSelectedEventID={setSelectedEventID}
             selectedEventID={selectedEventID}
+            events={events}
           />
         ) : (
           <StoreEventDisplay
@@ -115,6 +141,7 @@ export default function AllEventsList({
             index={index}
             setSelectedEventID={setSelectedEventID}
             selectedEventID={selectedEventID}
+            events={events}
           />
         );
       case 'store.gc':
@@ -163,6 +190,7 @@ export default function AllEventsList({
         index={index}
         setSelectedEventID={setSelectedEventID}
         selectedEventID={selectedEventID}
+        events={events}
       />
     );
   });

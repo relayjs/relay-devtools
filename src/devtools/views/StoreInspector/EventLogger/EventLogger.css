@@ -21,6 +21,12 @@
   background-color: var(--color-background-selected);
   color: var(--color-text-selected);
 }
+
+.Record.RelatedRecord,
+.Record.RelatedRecord:hover {
+  background-color: var(--color-background-related);
+}
+
 .Record::before {
   display: inline-block;
   width: 1em;
