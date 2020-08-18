@@ -31,6 +31,16 @@ const debug = (methodName, ...args) => {
   }
 };
 
+const storeEventNames = [
+  'queryresource.fetch',
+  'store.publish',
+  'store.restore',
+  'store.gc',
+  'store.snapshot',
+  'store.notify.complete',
+  'store.notify.start',
+];
+
 /**
  * The store is the single source of truth for updates from the backend.
  * ContextProviders can subscribe to the Store for specific things they want to provide.
@@ -386,9 +396,9 @@ export default class Store extends EventEmitter<{|
 
   clearNetworkEvents = (environmentID: number) => {
     const completed = new Set();
-    let eventArray = this._environmentEventsMap.get(environmentID);
-    if (eventArray !== undefined && eventArray.length > 0) {
-      for (const event of eventArray) {
+    let networkEventArray = this._environmentEventsMap.get(environmentID);
+    if (networkEventArray !== undefined && networkEventArray.length > 0) {
+      for (const event of networkEventArray) {
         if (
           event.name === 'execute.complete' ||
           event.name === 'execute.error' ||
@@ -397,18 +407,13 @@ export default class Store extends EventEmitter<{|
           completed.add(event.transactionID);
         }
       }
-      eventArray = eventArray.filter(
+      networkEventArray = networkEventArray.filter(
         event =>
-          event.name !== 'queryresource.fetch' &&
-          event.name !== 'store.publish' &&
-          event.name !== 'store.restore' &&
-          event.name !== 'store.gc' &&
-          event.name !== 'store.snapshot' &&
-          event.name !== 'store.notify.complete' &&
-          event.name !== 'store.notify.start' &&
+          storeEventNames.includes(event.name) &&
+          event.transactionID != null &&
           !completed.has(event.transactionID)
       );
-      this._environmentEventsMap.set(environmentID, eventArray);
+      this._environmentEventsMap.set(environmentID, networkEventArray);
       this.emit('mutated');
     }
   };
