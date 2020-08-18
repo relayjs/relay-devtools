@@ -104,10 +104,10 @@ export default function RecordingImportExportButtons(props: {|
             string,
             Array<LogEvent>
           >);
-          let envIDs = [];
-          let envNames = {};
+          const envIDs = [];
+          const envNames = {};
           parsedDataRecording.forEach((val, key) => {
-            let environment = String(key).split(' ');
+            const environment = String(key).split(' ');
             const id = parseInt(environment.shift());
             const name = environment.join(' ');
             envIDs.push(id);

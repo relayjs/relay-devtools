@@ -46,16 +46,16 @@ export default function StoreEventDisplay(props: {|
   selectedRecordID: string,
   setSelectedRecordID: string => void,
 |}) {
-  let { selectedEvent, selectedRecordID, setSelectedRecordID } = props;
+  const { selectedEvent, selectedRecordID, setSelectedRecordID } = props;
   const [tab, setTab] = useState(updatedRecordsTab);
   if (selectedEvent.name === 'store.publish') {
-    let recordsByType = new Map();
-    let records = selectedEvent.source;
+    const recordsByType = new Map();
+    const records = selectedEvent.source;
     if (records != null) {
-      for (let key in records) {
-        let rec = records[key];
+      for (const key in records) {
+        const rec = records[key];
         if (rec != null) {
-          let arr = recordsByType.get(rec.__typename);
+          const arr = recordsByType.get(rec.__typename);
           if (arr) {
             arr.push(key);
           } else {
@@ -64,7 +64,7 @@ export default function StoreEventDisplay(props: {|
         }
       }
     }
-    let selectedRecord = selectedEvent.source[selectedRecordID];
+    const selectedRecord = selectedEvent.source[selectedRecordID];
     let displayText = 'The following records have been published to the store:';
     if (selectedEvent.optimistic) {
       displayText =
@@ -90,18 +90,18 @@ export default function StoreEventDisplay(props: {|
       </div>
     );
   } else if (selectedEvent.name === 'store.gc') {
-    let records = {};
+    const records = {};
     selectedEvent.references
       .filter(ref => selectedEvent.gcRecords[ref] != null)
       .map(ref => (records[ref] = selectedEvent.gcRecords[ref]));
 
-    let recordsByType = new Map();
+    const recordsByType = new Map();
 
     if (records != null) {
-      for (let key in records) {
-        let rec = records[key];
+      for (const key in records) {
+        const rec = records[key];
         if (rec != null) {
-          let arr = recordsByType.get(rec.__typename);
+          const arr = recordsByType.get(rec.__typename);
           if (arr) {
             arr.push(key);
           } else {
@@ -110,7 +110,7 @@ export default function StoreEventDisplay(props: {|
         }
       }
     }
-    let selectedRecord = records[selectedRecordID];
+    const selectedRecord = records[selectedRecordID];
 
     return (
       <div className={styles.gcEvent}>
@@ -151,10 +151,10 @@ export default function StoreEventDisplay(props: {|
       </div>
     );
   } else if (selectedEvent.name === 'store.notify.complete') {
-    let records = {};
-    let invalidRecs = {};
-    let recordsByType = new Map();
-    let invalidatedRecordsByType = new Map();
+    const records = {};
+    const invalidRecs = {};
+    const recordsByType = new Map();
+    const invalidatedRecordsByType = new Map();
     let selectedRecord = null;
     let invalidatedSelectedRecord = null;
 
@@ -166,17 +166,17 @@ export default function StoreEventDisplay(props: {|
         });
 
       if (records != null) {
-        for (let key in records) {
-          let rec = records[key];
+        for (const key in records) {
+          const rec = records[key];
           if (rec != null) {
-            let arr = recordsByType.get(rec.__typename);
+            const arr = recordsByType.get(rec.__typename);
             if (arr) {
               arr.push(key);
             } else {
               recordsByType.set(rec.__typename, [key]);
             }
           } else {
-            let arr = recordsByType.get(rec['DeletedRecords']);
+            const arr = recordsByType.get(rec['DeletedRecords']);
             if (arr) {
               arr.push(key);
             } else {
@@ -188,10 +188,10 @@ export default function StoreEventDisplay(props: {|
       selectedRecord = records[selectedRecordID];
     } else if (tab === invalidatedRecordsTab) {
       if (selectedEvent.invalidatedRecords != null) {
-        for (let key in selectedEvent.invalidatedRecords) {
-          let rec = selectedEvent.invalidatedRecords[key];
+        for (const key in selectedEvent.invalidatedRecords) {
+          const rec = selectedEvent.invalidatedRecords[key];
           if (rec != null) {
-            let arr = invalidatedRecordsByType.get(rec.__typename);
+            const arr = invalidatedRecordsByType.get(rec.__typename);
             if (arr) {
               arr.push(key);
             } else {

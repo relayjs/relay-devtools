@@ -129,7 +129,7 @@ export default function KeyValue({
     if (Array.isArray(value)) {
       const hasChildren = value.length > 0;
 
-      let children = wasEverOpen
+      const children = wasEverOpen
         ? value.map<React.Node>((innerValue, mapIndex): React.Node => (
             <KeyValue
               key={mapIndex}
@@ -195,7 +195,7 @@ export default function KeyValue({
           ? ((records[nextReferencedRecordID].__typename: any): string)
           : 'Object';
 
-      let children = wasEverOpen
+      const children = wasEverOpen
         ? sortedEntries.map<Element<any>>(([entriesName, entriesVal]) => (
             <KeyValue
               key={entriesName}

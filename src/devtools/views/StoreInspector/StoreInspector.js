@@ -107,7 +107,7 @@ function RecordEventsMenu({
   setChecked,
 }) {
   const [importing, setImporting] = useState(false);
-  let className = isRecording
+  const className = isRecording
     ? styles.ActiveRecordToggle
     : styles.InactiveRecordToggle;
 
@@ -194,14 +194,14 @@ export default function StoreInspector(props: {|
 
   const [selectedRecordID, setSelectedRecordID] = useState('');
   let records = {};
-  let recordsByType = new Map();
+  const recordsByType = new Map();
 
   const refreshStore = useCallback(() => {
-    let currEnvID = props.currentEnvID;
+    const currEnvID = props.currentEnvID;
     if (currEnvID != null) {
-      let recordsArr = envSnapshotList[currEnvID] || [];
+      const recordsArr = envSnapshotList[currEnvID] || [];
       recordsArr.push(deepCopyFunction(records));
-      let recordsTypeArr = envSnapshotListByType[currEnvID] || [];
+      const recordsTypeArr = envSnapshotListByType[currEnvID] || [];
       recordsTypeArr.push(deepCopyFunction(recordsByType));
       setEnvSnapshotList({ ...envSnapshotList, [currEnvID]: recordsArr });
       setEnvSnapshotListByType({
@@ -231,18 +231,18 @@ export default function StoreInspector(props: {|
 
   const recordingImportEnvironmentID = store.getImportEnvID();
 
-  let allEvents = recordingImportEnvironmentID
+  const allEvents = recordingImportEnvironmentID
     ? store.getEvents(recordingImportEnvironmentID)
     : store.getEvents(currentEnvID);
 
   records = store.getRecords(currentEnvID);
-  let optimisticUpdates = store.getOptimisticUpdates(currentEnvID);
+  const optimisticUpdates = store.getOptimisticUpdates(currentEnvID);
   let selectedRecord = {};
   if (records != null) {
-    for (let key in records) {
-      let rec = records[key];
+    for (const key in records) {
+      const rec = records[key];
       if (rec != null) {
-        let arr = recordsByType.get(rec.__typename);
+        const arr = recordsByType.get(rec.__typename);
         if (arr) {
           arr.push(key);
         } else {

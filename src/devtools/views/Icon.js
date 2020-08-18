@@ -60,8 +60,8 @@ function getPathData(type) {
 }
 
 export default function Icon({ className = '', type }: Props) {
-  let pathData = getPathData(type);
-  let circlePathData =
+  const pathData = getPathData(type);
+  const circlePathData =
     pathData === PATH_GITHUB_FEEDBACK ? PATH_GITHUB_CIRCLE : null;
   if (pathData === PATH_GITHUB_FEEDBACK) {
     return (

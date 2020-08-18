@@ -30,7 +30,7 @@ export default function Toggle({
   onChange,
   title,
 }: Props) {
-  let defaultClassName = isDisabled
+  const defaultClassName = isDisabled
     ? styles.ToggleDisabled
     : isChecked
     ? styles.ToggleOn

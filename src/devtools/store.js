@@ -66,7 +66,7 @@ export default class Store extends EventEmitter<{|
   }
 
   getAllEventsArray(): $ReadOnlyArray<LogEvent> {
-    let allEvents = [];
+    const allEvents = [];
     this._environmentAllEvents.forEach((value, _) => allEvents.push(...value));
     return allEvents;
   }
@@ -85,7 +85,7 @@ export default class Store extends EventEmitter<{|
   }
 
   getAllEnvironmentEvents(): $ReadOnlyArray<LogEvent> {
-    let allEnvironmentEvents = [];
+    const allEnvironmentEvents = [];
     this._environmentEventsMap.forEach((value, _) =>
       allEnvironmentEvents.push(...value)
     );
@@ -141,7 +141,7 @@ export default class Store extends EventEmitter<{|
     if (newRecords == null) {
       return;
     }
-    let oldRecords = this._environmentStoreData.get(id);
+    const oldRecords = this._environmentStoreData.get(id);
     if (oldRecords == null) {
       this._environmentStoreData.set(id, newRecords);
       return;
@@ -179,7 +179,7 @@ export default class Store extends EventEmitter<{|
     if (newRecords == null) {
       return;
     }
-    let oldRecords = this._environmentStoreOptimisticData.get(id);
+    const oldRecords = this._environmentStoreOptimisticData.get(id);
     if (oldRecords == null) {
       this._environmentStoreOptimisticData.set(id, newRecords);
       return;
@@ -214,7 +214,7 @@ export default class Store extends EventEmitter<{|
   }
 
   onBridgeStoreSnapshot = (data: Array<StoreData>) => {
-    for (let { id, records } of data) {
+    for (const { id, records } of data) {
       this._environmentStoreData.set(id, records);
       this.emit('storeDataReceived');
     }
@@ -241,7 +241,7 @@ export default class Store extends EventEmitter<{|
   };
 
   setEnvironmentEvents = (id: number, data: LogEvent) => {
-    let arr = this._environmentEventsMap.get(id);
+    const arr = this._environmentEventsMap.get(id);
     if (arr) {
       arr.push(data);
     } else {
@@ -253,11 +253,11 @@ export default class Store extends EventEmitter<{|
   appendInformationToRequest = (id: number, data: LogEvent) => {
     switch (data.name) {
       case 'execute.start':
-        let requestArr = this._recordedRequests.get(id);
+        const requestArr = this._recordedRequests.get(id);
         if (requestArr) {
           requestArr.set(data.transactionID, data);
         } else {
-          let newRequest = new Map<number, LogEvent>();
+          const newRequest = new Map<number, LogEvent>();
           newRequest.set(data.transactionID, data);
           this._recordedRequests.set(id, newRequest);
         }
@@ -267,9 +267,9 @@ export default class Store extends EventEmitter<{|
       case 'execute.complete':
       case 'execute.error':
       case 'execute.unsubscribe':
-        let requests = this._recordedRequests.get(id);
+        const requests = this._recordedRequests.get(id);
         if (requests) {
-          let request = requests.get(data.transactionID);
+          const request = requests.get(data.transactionID);
           if (request && request.name === 'execute.start') {
             data.params = request.params;
             data.variables = request.variables;
@@ -291,12 +291,12 @@ export default class Store extends EventEmitter<{|
   };
 
   onBridgeEvents = (events: Array<EventData>) => {
-    for (let { id, data, eventType } of events) {
+    for (const { id, data, eventType } of events) {
       if (this._isRecording) {
-        let allEvents = this._environmentAllEvents.get(id);
+        const allEvents = this._environmentAllEvents.get(id);
         if (allEvents) {
           if (data.name === 'store.gc') {
-            let records = this.getRecords(id);
+            const records = this.getRecords(id);
             if (records != null) {
               data.gcRecords = {};
               data.references = Object.keys(records)
@@ -309,7 +309,7 @@ export default class Store extends EventEmitter<{|
                 });
             }
           } else if (data.name === 'store.notify.complete') {
-            let records = this.getRecords(id);
+            const records = this.getRecords(id);
             if (records != null) {
               data.invalidatedRecords = {};
               data.updatedRecords = {};
@@ -339,7 +339,7 @@ export default class Store extends EventEmitter<{|
   };
 
   onBridgeEnvironmentInit = (data: Array<EnvironmentInfo>) => {
-    for (let { id, environmentName } of data) {
+    for (const { id, environmentName } of data) {
       this._environmentNames.set(id, environmentName);
     }
     this.emit('environmentInitialized');
@@ -360,7 +360,7 @@ export default class Store extends EventEmitter<{|
       if (storeIDs == null) {
         return;
       }
-      for (let dataID of storeIDs) {
+      for (const dataID of storeIDs) {
         if (!references.includes(dataID)) {
           this.removeRecord(envID, dataID);
         }

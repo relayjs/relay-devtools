@@ -18,7 +18,7 @@ window.injectStyles = getLinkTags => {
 
     const linkTags = getLinkTags();
 
-    for (let linkTag of linkTags) {
+    for (const linkTag of linkTags) {
       document.head.appendChild(linkTag);
     }
   }

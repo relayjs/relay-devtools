@@ -37,7 +37,7 @@ export default function RecordList({
     return <div>Loading...</div>;
   }
 
-  let recordsArray = Array.from(recordsByType).map((recs, _) => {
+  const recordsArray = Array.from(recordsByType).map((recs, _) => {
     const typename = ((recs[0]: any): string);
     const ids = recs[1];
 

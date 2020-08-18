@@ -16,22 +16,22 @@ export function deepCopyFunction(inObject: any) {
   }
 
   if (Array.isArray(inObject)) {
-    let outObject = [];
+    const outObject = [];
     for (let i = 0; i < inObject.length; i++) {
-      let value = inObject[i];
+      const value = inObject[i];
       outObject[i] = deepCopyFunction(value);
     }
     return outObject;
   } else if (inObject instanceof Map) {
-    let outObject = new Map<mixed, mixed>();
+    const outObject = new Map<mixed, mixed>();
     inObject.forEach((val, key) => {
       outObject.set(key, deepCopyFunction(val));
     });
     return outObject;
   } else {
-    let outObject = {};
-    for (let key in inObject) {
-      let value = inObject[key];
+    const outObject = {};
+    for (const key in inObject) {
+      const value = inObject[key];
       if (typeof key === 'string' && key != null) {
         outObject[key] = deepCopyFunction(value);
       }
@@ -43,10 +43,10 @@ export function deepCopyFunction(inObject: any) {
 export function serializeEventLoggerRecording(store: Store) {
   const allEvents = Array.from(store.getAllEventsMap().entries());
   return (allEvents.map(entry => {
-    let envID = entry[0];
+    const envID = entry[0];
     const data = entry[1];
     const envName = store.getEnvironmentName(envID) || '';
-    let environment = envID + ' ' + envName;
+    const environment = envID + ' ' + envName;
     return [environment, data];
   }): Array<[string, mixed]>);
 }
@@ -56,9 +56,9 @@ export function deserializeEventLoggerRecording(raw: string, store: Store) {
     string,
     Array<LogEvent>
   >);
-  let envNames = {};
-  let envIDs = (Array.from(parsedDataRecording.keys()).map(key => {
-    let environment = String(key).split(' ');
+  const envNames = {};
+  const envIDs = (Array.from(parsedDataRecording.keys()).map(key => {
+    const environment = String(key).split(' ');
     // Taking out the id from the environment string
     const id = parseInt(environment.shift());
     // We are left with the environment name

@@ -73,7 +73,7 @@ export default function KeyValue({
     if (Array.isArray(value)) {
       const hasChildren = value.length > 0;
 
-      let children = wasOpen
+      const children = wasOpen
         ? value.map((innerValue, index) => (
             <KeyValue
               key={index}
@@ -121,7 +121,7 @@ export default function KeyValue({
       const hasChildren = entries.length > 0;
       const displayName = 'Object';
 
-      let children = wasOpen
+      const children = wasOpen
         ? entries.map<Element<any>>(([entriesName, entriesVal]) => (
             <KeyValue
               key={entriesName}

@@ -75,7 +75,7 @@ function appearsInResponse(searchText: string, response: Object) {
   if (response == null) {
     return false;
   }
-  for (let key in response) {
+  for (const key in response) {
     if (typeof response[key] == 'object' && response[key] !== null) {
       return appearsInResponse(searchText, response[key]);
     } else if (
@@ -197,7 +197,7 @@ function Network(props: {| +portalContainer: mixed, currentEnvID: ?number |}) {
     }
   }
   let selectedRequest = requests.get(selectedRequestID);
-  let requestArray = [];
+  const requestArray = [];
   requests.forEach((request, _) => {
     if (
       requestSearch
@@ -215,7 +215,7 @@ function Network(props: {| +portalContainer: mixed, currentEnvID: ?number |}) {
     }
   });
 
-  let requestRows = requestArray.map(request => {
+  const requestRows = requestArray.map(request => {
     if (selectedRequest == null) {
       selectedRequest = request;
     }

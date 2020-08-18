@@ -23,12 +23,12 @@ export default function Optimistic({ optimisticUpdates }: Props) {
   if (optimisticUpdates == null) {
     return <div>No Optimistic Updates!</div>;
   }
-  let optimisticUpdatesByType = new Map();
+  const optimisticUpdatesByType = new Map();
 
-  for (let key in optimisticUpdates) {
-    let rec = optimisticUpdates[key];
+  for (const key in optimisticUpdates) {
+    const rec = optimisticUpdates[key];
     if (rec != null) {
-      let arr = optimisticUpdatesByType.get(rec.__typename);
+      const arr = optimisticUpdatesByType.get(rec.__typename);
       if (arr) {
         arr.push(key);
       } else {
@@ -37,7 +37,7 @@ export default function Optimistic({ optimisticUpdates }: Props) {
     }
   }
 
-  let selectedRecord = optimisticUpdates[selectedRecordID];
+  const selectedRecord = optimisticUpdates[selectedRecordID];
 
   return (
     <div className={styles.TabContent}>

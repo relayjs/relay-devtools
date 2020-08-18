@@ -31,19 +31,20 @@ const networkEventNames = [
 function eventsAreLinked(events, selectedEventID, index) {
   const currentEvent = events[index];
   const selectedEvent = events[selectedEventID];
-return (
+  return (
     networkEventNames.includes(currentEvent.name) &&
     networkEventNames.includes(selectedEvent.name) &&
     currentEvent.transactionID != null &&
+    selectedEvent.transactionID != null &&
     selectedEvent.transactionID === currentEvent.transactionID
-);
+  );
 }
 
 function appearsInObject(searchText: string, obj: Object) {
   if (obj == null) {
     return false;
   }
-  for (let key in obj) {
+  for (const key in obj) {
     if (typeof obj[key] == 'object' && obj[key] !== null) {
       const appears = appearsInObject(searchText, obj[key]);
       if (appears) {

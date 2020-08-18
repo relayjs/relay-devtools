@@ -143,6 +143,7 @@ export default function launchEditor(
     return;
   }
 
+  // eslint-disable-next-line prefer-const
   let [editor, ...args] = guessEditor();
   if (!editor) {
     return;

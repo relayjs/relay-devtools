@@ -71,7 +71,7 @@ function RequestDetails(props: {| request: ?RequestEntry |}) {
 export default function NetworkEventDisplay(props: {|
   selectedEvent: LogEvent,
 |}) {
-  let { selectedEvent } = props;
+  const { selectedEvent } = props;
   if (selectedEvent.name === 'execute.start') {
     const request = {
       id: selectedEvent.transactionID,

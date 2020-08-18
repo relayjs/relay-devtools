@@ -96,10 +96,10 @@ function createPanelIfReactLoaded() {
 
       cloneStyleTags = () => {
         const linkTags = [];
-        for (let linkTag of document.getElementsByTagName('link')) {
+        for (const linkTag of document.getElementsByTagName('link')) {
           if (linkTag.rel === 'stylesheet') {
             const newLinkTag = document.createElement('link');
-            for (let attribute of linkTag.attributes) {
+            for (const attribute of linkTag.attributes) {
               newLinkTag.setAttribute(attribute.nodeName, attribute.nodeValue);
             }
             linkTags.push(newLinkTag);

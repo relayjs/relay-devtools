@@ -104,7 +104,7 @@ function getPathData(type) {
 }
 
 export default function ButtonIcon({ className = '', type }: Props) {
-  let pathData = getPathData(type);
+  const pathData = getPathData(type);
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

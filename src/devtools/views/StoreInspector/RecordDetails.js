@@ -39,8 +39,8 @@ export default function RecordDetails({
 
   const { __id, __typename, ...data } = selectedRecord;
 
-  let typename: string = (__typename: any);
-  let id: string = (__id: any);
+  const typename: string = (__typename: any);
+  const id: string = (__id: any);
 
   return (
     <div className={styles.RecordDetails}>

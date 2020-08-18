@@ -23,7 +23,7 @@ export type Props = {|
 
 function AllEventsDetails({ events, selectedEventID, setSelectedEventID }) {
   const [selectedRecordID, setSelectedRecordID] = useState('');
-  let selectedEvent = events[selectedEventID];
+  const selectedEvent = events[selectedEventID];
 
   if (events == null) {
     return null;

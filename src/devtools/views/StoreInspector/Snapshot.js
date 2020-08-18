@@ -24,7 +24,7 @@ function SnapshotList({
   setSelectedSnapshotID,
   selectedSnapshotID,
 }) {
-  let snapshotIDs = Object.keys(snapshotList).map(snapshotID => {
+  const snapshotIDs = Object.keys(snapshotList).map(snapshotID => {
     return (
       <div
         key={snapshotID}
@@ -54,12 +54,12 @@ function SnapshotDetails({
   selectedSnapshotID,
 }) {
   const [selectedRecordID, setSelectedRecordID] = useState('');
-  let snapshotRecords = snapshotList[selectedSnapshotID];
+  const snapshotRecords = snapshotList[selectedSnapshotID];
   if (snapshotRecords == null) {
     return null;
   }
-  let snapshotRecordsByType = snapshotListByType[selectedSnapshotID];
-  let selectedRecord = snapshotRecords[selectedRecordID];
+  const snapshotRecordsByType = snapshotListByType[selectedSnapshotID];
+  const selectedRecord = snapshotRecords[selectedRecordID];
 
   return (
     <div className={styles.TabContent}>
@@ -98,8 +98,8 @@ export default function Snapshots({
     );
   }
 
-  let snapshotList = envSnapshotList[currentEnvID];
-  let snapshotListByType = envSnapshotListByType[currentEnvID];
+  const snapshotList = envSnapshotList[currentEnvID];
+  const snapshotListByType = envSnapshotListByType[currentEnvID];
 
   return (
     <div className={styles.TabContent}>
