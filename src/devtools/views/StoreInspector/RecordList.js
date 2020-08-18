@@ -34,7 +34,7 @@ export default function RecordList({
   const [plusMinusCollapse, setPlusMinusCollapse] = useState({});
 
   if (records == null || recordsByType == null) {
-    return <div>Loading...</div>;
+    return <div className={styles.Loading}>Loading...</div>;
   }
 
   const recordsArray = Array.from(recordsByType).map((recs, _) => {

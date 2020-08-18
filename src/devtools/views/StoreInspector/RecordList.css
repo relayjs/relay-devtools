@@ -72,3 +72,8 @@
   font-style: italic;
   color: var(--color-text);
 }
+
+.Loading {
+  font-size: 16px;
+    padding: 0.5em;
+}

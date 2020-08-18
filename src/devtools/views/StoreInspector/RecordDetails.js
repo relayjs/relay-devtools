@@ -34,7 +34,7 @@ export default function RecordDetails({
   setSelectedRecordID,
 }: Props) {
   if (selectedRecord == null) {
-    return <div className={styles.RecordDetails}>No record selected</div>;
+    return <div className={styles.NoRecordDetails}>No record selected</div>;
   }
 
   const { __id, __typename, ...data } = selectedRecord;

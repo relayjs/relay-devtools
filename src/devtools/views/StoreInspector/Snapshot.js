@@ -92,7 +92,7 @@ export default function Snapshots({
     envSnapshotList[currentEnvID] == null
   ) {
     return (
-      <div>
+      <div className={styles.NoSnapshots}>
         No Snapshots! <br /> To take a snapshot, hit the snapshot button!
       </div>
     );

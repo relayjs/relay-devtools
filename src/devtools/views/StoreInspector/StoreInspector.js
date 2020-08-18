@@ -262,9 +262,9 @@ export default function StoreInspector(props: {|
         <button
           className={styles.RefreshButton}
           onClick={refreshStore}
-          title="Refresh"
+          title="Take Store Snapshot"
         >
-          Take Snapshot
+          Take Store Snapshot
         </button>
         <Button onClick={copyToClipboard} title="Copy to clipboard">
           <ButtonIcon type="copy" />
