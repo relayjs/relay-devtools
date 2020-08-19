@@ -20,6 +20,33 @@ export type Props = {|
   setSelectedRecordID: string => void,
 |};
 
+function appearsInObject(searchText: string, obj: Object) {
+  if (obj == null) {
+    return false;
+  }
+  for (const key in obj) {
+    if (typeof obj[key] == 'object' && obj[key] !== null) {
+      const appears = appearsInObject(searchText, obj[key]);
+      if (appears) {
+        return appears;
+      }
+    } else if (
+      (obj[key] !== null &&
+        obj[key]
+          .toString()
+          .toLowerCase()
+          .includes(searchText)) ||
+      key
+        .toString()
+        .toLowerCase()
+        .includes(searchText)
+    ) {
+      return true;
+    }
+  }
+  return false;
+}
+
 export default function RecordList({
   records,
   recordsByType,
@@ -88,7 +115,9 @@ export default function RecordList({
                 .some(
                   search =>
                     id.toLowerCase().includes(search.toLowerCase()) ||
-                    typename.toLowerCase().includes(search.toLowerCase())
+                    typename.toLowerCase().includes(search.toLowerCase()) ||
+                    (records[id] != null &&
+                      appearsInObject(search.toLowerCase(), records[id]))
                 )
             )
             .map(id => {

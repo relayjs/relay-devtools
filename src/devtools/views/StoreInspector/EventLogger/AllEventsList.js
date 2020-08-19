@@ -32,6 +32,8 @@ function eventsAreLinked(events, selectedEventID, index) {
   const currentEvent = events[index];
   const selectedEvent = events[selectedEventID];
   return (
+    currentEvent != null &&
+    selectedEvent != null &&
     networkEventNames.includes(currentEvent.name) &&
     networkEventNames.includes(selectedEvent.name) &&
     currentEvent.transactionID != null &&
