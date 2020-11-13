@@ -15,6 +15,7 @@ import { __DEBUG__ } from 'src/constants';
 
 import type { BackendBridge } from 'src/bridge';
 import type { DevToolsHook } from 'src/backend/types';
+import type { WallEvent } from 'src/types';
 
 type ConnectOptions = {
   host?: string,
@@ -85,13 +86,13 @@ export function connectToDevTools(options: ?ConnectOptions) {
           }
         };
       },
-      send(event: string, payload: any, transferable?: Array<any>) {
+      sendAll(events: Array<WallEvent>) {
         if (ws.readyState === ws.OPEN) {
           if (__DEBUG__) {
-            debug('wall.send()', event, payload);
+            debug('wall.sendAll()', events);
           }
 
-          ws.send(JSON.stringify({ event, payload }));
+          ws.send(JSON.stringify(events));
         } else {
           if (__DEBUG__) {
             debug(

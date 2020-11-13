@@ -9,14 +9,17 @@
 
 import EventEmitter from 'events';
 
-import type { EnvironmentInfo, EventData, StoreData, Wall } from './types';
+import type {
+  EnvironmentInfo,
+  EventData,
+  StoreData,
+  Wall,
+  WallEvent,
+} from './types';
 
-const BATCH_DURATION = 100;
+const BATCH_DURATION = 200;
 
-type Message = {|
-  event: string,
-  payload: any,
-|};
+type Message = Array<WallEvent>;
 
 type BackendEvents = {|
   events: [Array<EventData>],
@@ -48,11 +51,15 @@ class Bridge<
 
     this._wallUnlisten =
       wall.listen((message: Message) => {
-        (this: any).emit(message.event, message.payload);
+        if (Array.isArray(message)) {
+          for (const wallEvent of message) {
+            (this: any).emit(wallEvent.event, wallEvent.payload);
+          }
+        }
       }) || null;
   }
 
-  send(event: string, payload: any, transferable?: Array<any>) {
+  send(event: string, payload: any) {
     if (this._isShutdown) {
       console.warn(
         `Cannot send message "${event}" through a Bridge that has been shutdown.`
@@ -68,7 +75,7 @@ class Bridge<
     // - if there *has* been a message flushed in the last BATCH_DURATION ms
     //   (or we're waiting for our setTimeout-0 to fire), then _timeoutID will
     //   be set, and we'll simply add to the queue and wait for that
-    this._messageQueue.push(event, payload, transferable);
+    this._messageQueue.push({ event, payload });
     if (!this._timeoutID) {
       this._timeoutID = setTimeout(this._flush, 0);
     }
@@ -120,14 +127,8 @@ class Bridge<
     this._timeoutID = null;
 
     if (this._messageQueue.length) {
-      for (let i = 0; i < this._messageQueue.length; i += 3) {
-        this._wall.send(
-          this._messageQueue[i],
-          this._messageQueue[i + 1],
-          this._messageQueue[i + 2]
-        );
-      }
-      this._messageQueue.length = 0;
+      this._wall.sendAll(this._messageQueue);
+      this._messageQueue = [];
 
       // Check again for queued messages in BATCH_DURATION ms. This will keep
       // flushing in a loop as long as messages continue to be added. Once no

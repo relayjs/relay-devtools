@@ -7,10 +7,14 @@
  * @flow
  */
 
+export type WallEvent = {|
+  event: string,
+  payload: any,
+|};
 export type Wall = {|
   // `listen` returns the "unlisten" function.
   listen: (fn: Function) => Function,
-  send: (event: string, payload: any, transferable?: Array<any>) => void,
+  sendAll: (Array<WallEvent>) => void,
 |};
 
 export type Record = { [key: string]: mixed, ... };

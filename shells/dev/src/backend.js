@@ -10,6 +10,7 @@
 import Agent from 'src/backend/agent';
 import Bridge from 'src/bridge';
 import { initBackend } from 'src/backend';
+import type { WallEvent } from 'src/types';
 
 const bridge = new Bridge({
   listen(fn) {
@@ -21,8 +22,8 @@ const bridge = new Bridge({
       window.removeEventListener('message', listener);
     };
   },
-  send(event: string, payload: any, transferable?: Array<any>) {
-    window.parent.postMessage({ event, payload }, '*', transferable);
+  sendAll(events: Array<WallEvent>) {
+    window.parent.postMessage(events, '*');
   },
 });
 

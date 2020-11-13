@@ -60,8 +60,8 @@ inject('dist/app.js', () => {
             contentWindowParent.removeEventListener('message', listener);
           };
         },
-        send(event: string, payload: any, transferable?: Array<any>) {
-          contentWindow.postMessage({ event, payload }, '*', transferable);
+        sendAll(events) {
+          contentWindow.postMessage(events, '*');
         },
       });
 

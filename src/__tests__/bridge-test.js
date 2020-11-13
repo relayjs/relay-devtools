@@ -17,31 +17,35 @@ describe('Bridge', () => {
   it('should shutdown properly', () => {
     const wall = {
       listen: jest.fn(() => () => {}),
-      send: jest.fn(),
+      sendAll: jest.fn(),
     };
     const bridge = new Bridge(wall);
 
     // Check that we're wired up correctly.
     bridge.send('init');
     jest.runAllTimers();
-    expect(wall.send).toHaveBeenCalledWith('init', undefined, undefined);
+    expect(wall.sendAll).toHaveBeenCalledWith([
+      { event: 'init', payload: undefined },
+    ]);
 
     // Should flush pending messages and then shut down.
-    wall.send.mockClear();
+    wall.sendAll.mockClear();
     bridge.send('update', '1');
     bridge.send('update', '2');
     bridge.shutdown();
     jest.runAllTimers();
-    expect(wall.send).toHaveBeenCalledWith('update', '1', undefined);
-    expect(wall.send).toHaveBeenCalledWith('update', '2', undefined);
-    expect(wall.send).toHaveBeenCalledWith('shutdown', undefined, undefined);
+    expect(wall.sendAll).toHaveBeenCalledWith([
+      { event: 'update', payload: '1' },
+      { event: 'update', payload: '2' },
+      { event: 'shutdown', payload: undefined },
+    ]);
 
     // Verify that the Bridge doesn't send messages after shutdown.
     spyOn(console, 'warn');
-    wall.send.mockClear();
+    wall.sendAll.mockClear();
     bridge.send('should not send');
     jest.runAllTimers();
-    expect(wall.send).not.toHaveBeenCalled();
+    expect(wall.sendAll).not.toHaveBeenCalled();
     expect(console.warn).toHaveBeenCalledWith(
       'Cannot send message "should not send" through a Bridge that has been shutdown.'
     );

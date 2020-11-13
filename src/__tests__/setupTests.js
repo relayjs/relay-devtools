@@ -47,8 +47,8 @@ env.beforeEach(() => {
         }
       };
     },
-    send(event: string, payload: any, transferable?: Array<any>) {
-      bridgeListeners.forEach(callback => callback({ event, payload }));
+    sendAll(events) {
+      bridgeListeners.forEach(callback => callback(events));
     },
   });
 

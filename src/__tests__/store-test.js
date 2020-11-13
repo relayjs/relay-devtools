@@ -19,7 +19,7 @@ describe('Store', () => {
   it('should delete individual records correctly', () => {
     const wall = {
       listen: jest.fn(() => () => {}),
-      send: jest.fn(),
+      sendAll: jest.fn(),
     };
     const bridge = new Bridge(wall);
     const store = new Store(bridge);
@@ -75,7 +75,7 @@ describe('Store', () => {
   it('should merge records correctly', () => {
     const wall = {
       listen: jest.fn(() => () => {}),
-      send: jest.fn(),
+      sendAll: jest.fn(),
     };
     const bridge = new Bridge(wall);
     const store = new Store(bridge);
@@ -272,7 +272,7 @@ describe('Store', () => {
   it('should merge optimistic updates correctly', () => {
     const wall = {
       listen: jest.fn(() => () => {}),
-      send: jest.fn(),
+      sendAll: jest.fn(),
     };
     const bridge = new Bridge(wall);
     const store = new Store(bridge);

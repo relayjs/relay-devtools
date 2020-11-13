@@ -49,14 +49,13 @@ function setup(hook) {
         window.removeEventListener('message', listener);
       };
     },
-    send(event: string, payload: any, transferable?: Array<any>) {
+    sendAll(events) {
       window.postMessage(
         {
           source: 'relay-devtools-bridge',
-          payload: { event, payload: JSON.parse(JSON.stringify(payload)) },
+          payload: JSON.parse(JSON.stringify(events)),
         },
-        '*',
-        transferable
+        '*'
       );
     },
   });
