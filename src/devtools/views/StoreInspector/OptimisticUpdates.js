@@ -21,7 +21,9 @@ export type Props = {|
 export default function Optimistic({ optimisticUpdates }: Props) {
   const [selectedRecordID, setSelectedRecordID] = useState('');
   if (optimisticUpdates == null) {
-    return <div className={styles.NoOptimisticUpdates}>No Optimistic Updates!</div>;
+    return (
+      <div className={styles.NoOptimisticUpdates}>No Optimistic Updates!</div>
+    );
   }
   const optimisticUpdatesByType = new Map();
 
