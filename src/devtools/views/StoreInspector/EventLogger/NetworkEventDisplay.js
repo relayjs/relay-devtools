@@ -72,7 +72,10 @@ export default function NetworkEventDisplay(props: {|
   selectedEvent: LogEvent,
 |}) {
   const { selectedEvent } = props;
-  if (selectedEvent.name === 'execute.start') {
+  if (
+    selectedEvent.name === 'execute.start' ||
+    selectedEvent.name === 'network.start'
+  ) {
     const request = {
       id: selectedEvent.transactionID,
       params: selectedEvent.params,
@@ -90,7 +93,10 @@ export default function NetworkEventDisplay(props: {|
         <RequestDetails request={request} />
       </div>
     );
-  } else if (selectedEvent.name === 'execute.complete') {
+  } else if (
+    selectedEvent.name === 'execute.complete' ||
+    selectedEvent.name === 'network.complete'
+  ) {
     const request: RequestEntry = {
       id: selectedEvent.transactionID,
       params: selectedEvent.params,
@@ -108,7 +114,10 @@ export default function NetworkEventDisplay(props: {|
         <RequestDetails request={request} />
       </div>
     );
-  } else if (selectedEvent.name === 'execute.next') {
+  } else if (
+    selectedEvent.name === 'execute.next' ||
+    selectedEvent.name === 'network.next'
+  ) {
     const request: RequestEntry = {
       id: selectedEvent.transactionID,
       params: selectedEvent.params,
@@ -125,7 +134,10 @@ export default function NetworkEventDisplay(props: {|
         <RequestDetails request={request} />
       </div>
     );
-  } else if (selectedEvent.name === 'execute.info') {
+  } else if (
+    selectedEvent.name === 'execute.info' ||
+    selectedEvent.name === 'network.info'
+  ) {
     const request: RequestEntry = {
       id: selectedEvent.transactionID,
       params: selectedEvent.params,
@@ -142,7 +154,10 @@ export default function NetworkEventDisplay(props: {|
         <RequestDetails request={request} />
       </div>
     );
-  } else if (selectedEvent.name === 'execute.unsubscribe') {
+  } else if (
+    selectedEvent.name === 'execute.unsubscribe' ||
+    selectedEvent.name === 'network.unsubscribe'
+  ) {
     const request: RequestEntry = {
       id: selectedEvent.transactionID,
       params: selectedEvent.params,
@@ -159,7 +174,10 @@ export default function NetworkEventDisplay(props: {|
         <RequestDetails request={request} />
       </div>
     );
-  } else if (selectedEvent.name === 'execute.error') {
+  } else if (
+    selectedEvent.name === 'execute.error' ||
+    selectedEvent.name === 'network.error'
+  ) {
     const request: RequestEntry = {
       id: selectedEvent.transactionID,
       params: selectedEvent.params,

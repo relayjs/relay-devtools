@@ -62,40 +62,40 @@ export type LogEvent =
       invalidatedRecords: StoreRecords,
     |}
   | {|
-      +name: 'execute.info',
+      +name: 'execute.info' | 'network.info',
       +transactionID: number,
       +info: mixed,
       params: $FlowFixMe,
       variables: $FlowFixMe,
     |}
   | {|
-      +name: 'execute.start',
+      +name: 'execute.start' | 'network.start',
       +transactionID: number,
       +params: $FlowFixMe,
       +variables: $FlowFixMe,
     |}
   | {|
-      +name: 'execute.next',
+      +name: 'execute.next' | 'network.next',
       +transactionID: number,
       +response: $FlowFixMe,
       params: $FlowFixMe,
       variables: $FlowFixMe,
     |}
   | {|
-      +name: 'execute.error',
+      +name: 'execute.error' | 'network.error',
       +transactionID: number,
       +error: Error,
       params: $FlowFixMe,
       variables: $FlowFixMe,
     |}
   | {|
-      +name: 'execute.complete',
+      +name: 'execute.complete' | 'network.complete',
       +transactionID: number,
       params: $FlowFixMe,
       variables: $FlowFixMe,
     |}
   | {|
-      +name: 'execute.unsubscribe',
+      +name: 'execute.unsubscribe' | 'network.unsubscribe',
       +transactionID: number,
       params: $FlowFixMe,
       variables: $FlowFixMe,

@@ -26,6 +26,12 @@ const networkEventNames = [
   'execute.error',
   'execute.complete',
   'execute.unsubscribe',
+  'network.start',
+  'network.info',
+  'network.next',
+  'network.error',
+  'network.complete',
+  'network.unsubscribe',
 ];
 
 function eventsAreLinked(events, selectedEventID, index) {
@@ -121,6 +127,7 @@ export default function AllEventsList({
       checked['storeEvents'] &&
       !checked['networkEvents'] &&
       (event.name.toLowerCase().includes('execute') ||
+        event.name.toLowerCase().includes('network') ||
         event.name.toLowerCase().includes('query'))
     ) {
       return null;
@@ -166,21 +173,27 @@ export default function AllEventsList({
         displayText = 'QueryResource Fetch';
         break;
       case 'execute.start':
+      case 'network.start':
         displayText = 'Network Start';
         break;
       case 'execute.info':
+      case 'network.info':
         displayText = 'Network Info';
         break;
       case 'execute.next':
+      case 'network.next':
         displayText = 'Network Next';
         break;
       case 'execute.complete':
+      case 'network.complete':
         displayText = 'Network Complete';
         break;
       case 'execute.subscribe':
+      case 'network.subscribe':
         displayText = 'Network Unsubscribe';
         break;
       case 'execute.error':
+      case 'network.error':
         displayText = 'Network Error';
         break;
       default:

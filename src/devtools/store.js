@@ -263,6 +263,7 @@ export default class Store extends EventEmitter<{|
   appendInformationToRequest = (id: number, data: LogEvent) => {
     switch (data.name) {
       case 'execute.start':
+      case 'network.start':
         const requestArr = this._recordedRequests.get(id);
         if (requestArr) {
           requestArr.set(data.transactionID, data);
@@ -277,10 +278,19 @@ export default class Store extends EventEmitter<{|
       case 'execute.complete':
       case 'execute.error':
       case 'execute.unsubscribe':
+      case 'network.next':
+      case 'network.info':
+      case 'network.complete':
+      case 'network.error':
+      case 'network.unsubscribe':
         const requests = this._recordedRequests.get(id);
         if (requests) {
           const request = requests.get(data.transactionID);
-          if (request && request.name === 'execute.start') {
+          if (
+            request &&
+            (request.name === 'execute.start' ||
+              request.name === 'network.start')
+          ) {
             data.params = request.params;
             data.variables = request.variables;
           }
@@ -402,7 +412,10 @@ export default class Store extends EventEmitter<{|
         if (
           event.name === 'execute.complete' ||
           event.name === 'execute.error' ||
-          event.name === 'execute.unsubscribe'
+          event.name === 'execute.unsubscribe' ||
+          event.name === 'network.complete' ||
+          event.name === 'network.error' ||
+          event.name === 'network.unsubscribe'
         ) {
           completed.add(event.transactionID);
         }

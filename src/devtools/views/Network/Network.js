@@ -122,7 +122,8 @@ function Network(props: {| +portalContainer: mixed, currentEnvID: ?number |}) {
 
   for (const event of events) {
     switch (event.name) {
-      case 'execute.start': {
+      case 'execute.start':
+      case 'network.start': {
         requests.set(event.transactionID, {
           id: event.transactionID,
           params: event.params,
@@ -133,35 +134,40 @@ function Network(props: {| +portalContainer: mixed, currentEnvID: ?number |}) {
         });
         break;
       }
-      case 'execute.complete': {
+      case 'execute.complete':
+      case 'network.complete': {
         const request = requests.get(event.transactionID);
         if (request != null) {
           request.status = 'completed';
         }
         break;
       }
-      case 'execute.next': {
+      case 'execute.next':
+      case 'network.next': {
         const request = requests.get(event.transactionID);
         if (request != null) {
           request.responses.push(event.response);
         }
         break;
       }
-      case 'execute.info': {
+      case 'execute.info':
+      case 'network.info': {
         const request = requests.get(event.transactionID);
         if (request != null) {
           request.infos.push(event.info);
         }
         break;
       }
-      case 'execute.unsubscribe': {
+      case 'execute.unsubscribe':
+      case 'network.unsbuscribe': {
         const request = requests.get(event.transactionID);
         if (request != null) {
           request.status = 'unsubscribed';
         }
         break;
       }
-      case 'execute.error': {
+      case 'execute.error':
+      case 'network.error': {
         const request = requests.get(event.transactionID);
         if (request != null) {
           request.status = 'error';
@@ -190,7 +196,6 @@ function Network(props: {| +portalContainer: mixed, currentEnvID: ?number |}) {
         // ignore
         break;
       default: {
-        /*:: (event.name: null); */
         break;
         // ignore unknown events
       }
