@@ -2,8 +2,8 @@
   "manifest_version": 2,
   "name": "Relay Developer Tools",
   "description": "Adds Relay debugging tools to the Chrome Developer Tools.",
-  "version": "0.9.9",
-  "version_name": "0.9.9",
+  "version": "0.9.10",
+  "version_name": "0.9.10",
   "update_url": "https://our.intern.facebook.com/intern/browser_extensions/chrome/update.xml",
 
   "minimum_chrome_version": "78",
