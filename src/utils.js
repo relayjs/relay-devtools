@@ -5,6 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  *
  * @flow
+ * @format
  */
 
 // Pulled from react-compat
@@ -21,4 +22,18 @@ export function shallowDiffers(prev: Object, next: Object): boolean {
     }
   }
   return false;
+}
+
+export function getEventId(event: {
+  +transactionID?: ?number,
+  +networkRequestId?: ?number,
+  ...
+}): number {
+  const id = event.transactionID ?? event.networkRequestId;
+  if (id == null) {
+    throw new Error(
+      'Expected a transactionID or networkRequestId for the event.'
+    );
+  }
+  return id;
 }

@@ -5,11 +5,13 @@
  * LICENSE file in the root directory of this source tree.
  *
  * @flow
+ * @format
  */
 
 import React from 'react';
 import InspectedElementTree from '../../Components/InspectedElementTree';
 import type { LogEvent } from '../../../../types';
+import { getEventId } from '../../../../utils';
 
 import styles from './EventLogger.css';
 
@@ -77,7 +79,7 @@ export default function NetworkEventDisplay(props: {|
     selectedEvent.name === 'network.start'
   ) {
     const request = {
-      id: selectedEvent.transactionID,
+      id: getEventId(selectedEvent),
       params: selectedEvent.params,
       variables: selectedEvent.variables,
       status: 'active',
@@ -98,7 +100,7 @@ export default function NetworkEventDisplay(props: {|
     selectedEvent.name === 'network.complete'
   ) {
     const request: RequestEntry = {
-      id: selectedEvent.transactionID,
+      id: getEventId(selectedEvent),
       params: selectedEvent.params,
       variables: selectedEvent.variables,
       status: 'completed',
@@ -119,7 +121,7 @@ export default function NetworkEventDisplay(props: {|
     selectedEvent.name === 'network.next'
   ) {
     const request: RequestEntry = {
-      id: selectedEvent.transactionID,
+      id: getEventId(selectedEvent),
       params: selectedEvent.params,
       variables: selectedEvent.variables,
       status: 'active',
@@ -139,7 +141,7 @@ export default function NetworkEventDisplay(props: {|
     selectedEvent.name === 'network.info'
   ) {
     const request: RequestEntry = {
-      id: selectedEvent.transactionID,
+      id: getEventId(selectedEvent),
       params: selectedEvent.params,
       variables: selectedEvent.variables,
       status: 'active',
@@ -159,7 +161,7 @@ export default function NetworkEventDisplay(props: {|
     selectedEvent.name === 'network.unsubscribe'
   ) {
     const request: RequestEntry = {
-      id: selectedEvent.transactionID,
+      id: getEventId(selectedEvent),
       params: selectedEvent.params,
       variables: selectedEvent.variables,
       status: 'unsubscribed',
@@ -179,7 +181,7 @@ export default function NetworkEventDisplay(props: {|
     selectedEvent.name === 'network.error'
   ) {
     const request: RequestEntry = {
-      id: selectedEvent.transactionID,
+      id: getEventId(selectedEvent),
       params: selectedEvent.params,
       variables: selectedEvent.variables,
       status: 'error',

@@ -5,6 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  *
  * @flow
+ * @format
  */
 
 export type WallEvent = {|
@@ -63,40 +64,47 @@ export type LogEvent =
     |}
   | {|
       +name: 'execute.info' | 'network.info',
-      +transactionID: number,
+      +transactionID?: ?number,
+      +networkRequestId?: ?number,
       +info: mixed,
       params: $FlowFixMe,
       variables: $FlowFixMe,
     |}
   | {|
       +name: 'execute.start' | 'network.start',
-      +transactionID: number,
+      +transactionID?: ?number,
+      +networkRequestId?: ?number,
+      +info: mixed,
       +params: $FlowFixMe,
       +variables: $FlowFixMe,
     |}
   | {|
       +name: 'execute.next' | 'network.next',
-      +transactionID: number,
+      +transactionID?: ?number,
+      +networkRequestId?: ?number,
       +response: $FlowFixMe,
       params: $FlowFixMe,
       variables: $FlowFixMe,
     |}
   | {|
       +name: 'execute.error' | 'network.error',
-      +transactionID: number,
+      +transactionID?: ?number,
+      +networkRequestId?: ?number,
       +error: Error,
       params: $FlowFixMe,
       variables: $FlowFixMe,
     |}
   | {|
       +name: 'execute.complete' | 'network.complete',
-      +transactionID: number,
+      +transactionID?: ?number,
+      +networkRequestId?: ?number,
       params: $FlowFixMe,
       variables: $FlowFixMe,
     |}
   | {|
       +name: 'execute.unsubscribe' | 'network.unsubscribe',
-      +transactionID: number,
+      +transactionID?: ?number,
+      +networkRequestId?: ?number,
       params: $FlowFixMe,
       variables: $FlowFixMe,
     |};

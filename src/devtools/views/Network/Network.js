@@ -5,6 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  *
  * @flow
+ * @format
  */
 
 import React, { useCallback, useContext, useEffect, useState } from 'react';
@@ -12,6 +13,7 @@ import { StoreContext } from '../context';
 import ButtonIcon from '../ButtonIcon';
 import Button from '../Button';
 import InspectedElementTree from '../Components/InspectedElementTree';
+import { getEventId } from '../../../utils';
 
 import portaledContent from '../portaledContent';
 import styles from './Network.css';
@@ -124,8 +126,9 @@ function Network(props: {| +portalContainer: mixed, currentEnvID: ?number |}) {
     switch (event.name) {
       case 'execute.start':
       case 'network.start': {
-        requests.set(event.transactionID, {
-          id: event.transactionID,
+        const eventId = getEventId(event);
+        requests.set(eventId, {
+          id: eventId,
           params: event.params,
           variables: event.variables,
           status: 'active',
@@ -136,7 +139,8 @@ function Network(props: {| +portalContainer: mixed, currentEnvID: ?number |}) {
       }
       case 'execute.complete':
       case 'network.complete': {
-        const request = requests.get(event.transactionID);
+        const eventId = getEventId(event);
+        const request = requests.get(eventId);
         if (request != null) {
           request.status = 'completed';
         }
@@ -144,7 +148,8 @@ function Network(props: {| +portalContainer: mixed, currentEnvID: ?number |}) {
       }
       case 'execute.next':
       case 'network.next': {
-        const request = requests.get(event.transactionID);
+        const eventId = getEventId(event);
+        const request = requests.get(eventId);
         if (request != null) {
           request.responses.push(event.response);
         }
@@ -152,7 +157,8 @@ function Network(props: {| +portalContainer: mixed, currentEnvID: ?number |}) {
       }
       case 'execute.info':
       case 'network.info': {
-        const request = requests.get(event.transactionID);
+        const eventId = getEventId(event);
+        const request = requests.get(eventId);
         if (request != null) {
           request.infos.push(event.info);
         }
@@ -160,7 +166,8 @@ function Network(props: {| +portalContainer: mixed, currentEnvID: ?number |}) {
       }
       case 'execute.unsubscribe':
       case 'network.unsbuscribe': {
-        const request = requests.get(event.transactionID);
+        const eventId = getEventId(event);
+        const request = requests.get(eventId);
         if (request != null) {
           request.status = 'unsubscribed';
         }
@@ -168,7 +175,8 @@ function Network(props: {| +portalContainer: mixed, currentEnvID: ?number |}) {
       }
       case 'execute.error':
       case 'network.error': {
-        const request = requests.get(event.transactionID);
+        const eventId = getEventId(event);
+        const request = requests.get(eventId);
         if (request != null) {
           request.status = 'error';
         }

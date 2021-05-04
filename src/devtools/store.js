@@ -5,6 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  *
  * @flow
+ * @format
  */
 
 import EventEmitter from 'events';
@@ -19,6 +20,7 @@ import type {
   StoreRecords,
   Record,
 } from '../types';
+import { getEventId } from '../utils';
 
 const debug = (methodName, ...args) => {
   if (__DEBUG__) {
@@ -265,11 +267,12 @@ export default class Store extends EventEmitter<{|
       case 'execute.start':
       case 'network.start':
         const requestArr = this._recordedRequests.get(id);
+        const eventId = getEventId(data);
         if (requestArr) {
-          requestArr.set(data.transactionID, data);
+          requestArr.set(eventId, data);
         } else {
           const newRequest = new Map<number, LogEvent>();
-          newRequest.set(data.transactionID, data);
+          newRequest.set(eventId, data);
           this._recordedRequests.set(id, newRequest);
         }
         break;
@@ -285,7 +288,8 @@ export default class Store extends EventEmitter<{|
       case 'network.unsubscribe':
         const requests = this._recordedRequests.get(id);
         if (requests) {
-          const request = requests.get(data.transactionID);
+          const eventId = getEventId(data);
+          const request = requests.get(eventId);
           if (
             request &&
             (request.name === 'execute.start' ||
