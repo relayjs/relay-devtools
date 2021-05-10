@@ -3,6 +3,8 @@
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
+ *
+ * @format
  */
 
 /* global chrome */
@@ -11,7 +13,6 @@ import { createElement } from 'react';
 import { unstable_createRoot as createRoot, flushSync } from 'react-dom';
 import Bridge from 'src/bridge';
 import Store from 'src/devtools/store';
-import inject from './inject';
 import { createViewElementSource, getBrowserTheme } from './utils';
 import DevTools from 'src/devtools/views/DevTools';
 
@@ -69,7 +70,14 @@ function createPanelIfReactLoaded() {
 
         // Initialize the backend only once the Store has been initialized.
         // Otherwise the Store may miss important initial tree op codes.
-        inject(chrome.runtime.getURL('build/backend.js'));
+        chrome.devtools.inspectedWindow.eval(
+          `window.postMessage({ source: 'relay-devtools-inject-backend' }, window.origin);`,
+          function(response, evalError) {
+            if (evalError) {
+              console.error(evalError);
+            }
+          }
+        );
 
         const viewElementSourceFunction = createViewElementSource(
           bridge,

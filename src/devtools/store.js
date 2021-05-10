@@ -288,8 +288,8 @@ export default class Store extends EventEmitter<{|
       case 'network.unsubscribe':
         const requests = this._recordedRequests.get(id);
         if (requests) {
-          const eventId = getEventId(data);
-          const request = requests.get(eventId);
+          const eventId2 = getEventId(data);
+          const request = requests.get(eventId2);
           if (
             request &&
             (request.name === 'execute.start' ||

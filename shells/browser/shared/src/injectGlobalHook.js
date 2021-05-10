@@ -5,6 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  *
  * @flow
+ * @format
  */
 
 /* global chrome */
@@ -31,15 +32,19 @@ let lastDetectionResult;
 // So instead, the hook will use postMessage() to pass message to us here.
 // And when this happens, we'll send a message to the "background page".
 window.addEventListener('message', function(evt) {
-  if (
-    evt.source === window &&
-    evt.data &&
-    evt.data.source === 'relay-devtools-detector'
-  ) {
+  if (evt.source !== window || !evt.data) {
+    return;
+  }
+  if (evt.data.source === 'relay-devtools-detector') {
     lastDetectionResult = {
       hasDetectedReact: true,
     };
     chrome.runtime.sendMessage(lastDetectionResult);
+  } else if (evt.data.source === 'relay-devtools-inject-backend') {
+    const script = document.createElement('script');
+    script.src = chrome.runtime.getURL('build/backend.js');
+    nullthrows(document.documentElement).appendChild(script);
+    nullthrows(script.parentNode).removeChild(script);
   }
 });
 
