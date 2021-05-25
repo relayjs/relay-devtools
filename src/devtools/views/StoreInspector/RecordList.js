@@ -54,9 +54,13 @@ export default function RecordList({
   setSelectedRecordID,
 }: Props) {
   const [recordSearch, setRecordSearch] = useState('');
-  const fetchSearchBarText = useCallback(e => {
-    setRecordSearch(e.target.value);
-  }, []);
+  const fetchSearchBarText = useCallback(
+    e => {
+      setSelectedRecordID('');
+      setRecordSearch(e.target.value);
+    },
+    [setSelectedRecordID]
+  );
   const [recordListStyles, setRecordListStyles] = useState({});
   const [plusMinusCollapse, setPlusMinusCollapse] = useState({});
 
@@ -64,11 +68,27 @@ export default function RecordList({
     return <div className={styles.Loading}>Loading...</div>;
   }
 
-  const recordsArray = Array.from(recordsByType).map((recs, _) => {
+  const recordsArray = Array.from(recordsByType).flatMap((recs, _) => {
     const typename = ((recs[0]: any): string);
     const ids = recs[1];
+    const filtered_ids = ids.filter(id =>
+      recordSearch
+        .trim()
+        .split(' ')
+        .some(
+          search =>
+            id.toLowerCase().includes(search.toLowerCase()) ||
+            typename.toLowerCase().includes(search.toLowerCase()) ||
+            (records[id] != null &&
+              appearsInObject(search.toLowerCase(), records[id]))
+        )
+    );
 
-    return (
+    if (filtered_ids.length <= 0) {
+      return [];
+    }
+
+    return [
       <div key={typename}>
         <div className={styles.Collapse}>
           <button
@@ -107,38 +127,25 @@ export default function RecordList({
                 : recordListStyles[typename],
           }}
         >
-          {ids
-            .filter(id =>
-              recordSearch
-                .trim()
-                .split(' ')
-                .some(
-                  search =>
-                    id.toLowerCase().includes(search.toLowerCase()) ||
-                    typename.toLowerCase().includes(search.toLowerCase()) ||
-                    (records[id] != null &&
-                      appearsInObject(search.toLowerCase(), records[id]))
-                )
-            )
-            .map(id => {
-              return (
-                <div
-                  key={id}
-                  onClick={() => {
-                    setSelectedRecordID(id);
-                  }}
-                  className={`${styles.Record} ${
-                    id === selectedRecordID ? styles.SelectedRecord : ''
-                  }`}
-                >
-                  {id}
-                </div>
-              );
-            })}
+          {filtered_ids.map(id => {
+            return (
+              <div
+                key={id}
+                onClick={() => {
+                  setSelectedRecordID(id);
+                }}
+                className={`${styles.Record} ${
+                  id === selectedRecordID ? styles.SelectedRecord : ''
+                }`}
+              >
+                {id}
+              </div>
+            );
+          })}
         </div>
         <hr />
-      </div>
-    );
+      </div>,
+    ];
   });
 
   return (
