@@ -264,7 +264,6 @@ export default class Store extends EventEmitter<{|
 
   appendInformationToRequest = (id: number, data: LogEvent) => {
     switch (data.name) {
-      case 'execute.start':
       case 'network.start':
         const requestArr = this._recordedRequests.get(id);
         const eventId = getEventId(data);
@@ -276,11 +275,6 @@ export default class Store extends EventEmitter<{|
           this._recordedRequests.set(id, newRequest);
         }
         break;
-      case 'execute.next':
-      case 'execute.info':
-      case 'execute.complete':
-      case 'execute.error':
-      case 'execute.unsubscribe':
       case 'network.next':
       case 'network.info':
       case 'network.complete':
@@ -290,11 +284,7 @@ export default class Store extends EventEmitter<{|
         if (requests) {
           const eventId2 = getEventId(data);
           const request = requests.get(eventId2);
-          if (
-            request &&
-            (request.name === 'execute.start' ||
-              request.name === 'network.start')
-          ) {
+          if (request && request.name === 'network.start') {
             data.params = request.params;
             data.variables = request.variables;
           }
@@ -345,7 +335,7 @@ export default class Store extends EventEmitter<{|
                   (data.invalidatedRecords[recID] = { ...records[recID] })
               );
             }
-          } else if (data.name.startsWith('execute')) {
+          } else if (data.name.startsWith('network')) {
             this.appendInformationToRequest(id, data);
           }
           allEvents.push(data);
@@ -414,9 +404,6 @@ export default class Store extends EventEmitter<{|
     if (networkEventArray !== undefined && networkEventArray.length > 0) {
       for (const event of networkEventArray) {
         if (
-          event.name === 'execute.complete' ||
-          event.name === 'execute.error' ||
-          event.name === 'execute.unsubscribe' ||
           event.name === 'network.complete' ||
           event.name === 'network.error' ||
           event.name === 'network.unsubscribe'

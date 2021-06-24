@@ -5,6 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  *
  * @flow
+ * @format
  */
 
 import React, { useCallback, useMemo, useState } from 'react';
@@ -20,12 +21,6 @@ export type Props = {|
 |};
 
 const networkEventNames = [
-  'execute.start',
-  'execute.info',
-  'execute.next',
-  'execute.error',
-  'execute.complete',
-  'execute.unsubscribe',
   'network.start',
   'network.info',
   'network.next',
@@ -126,8 +121,7 @@ export default function AllEventsList({
     } else if (
       checked['storeEvents'] &&
       !checked['networkEvents'] &&
-      (event.name.toLowerCase().includes('execute') ||
-        event.name.toLowerCase().includes('network') ||
+      (event.name.toLowerCase().includes('network') ||
         event.name.toLowerCase().includes('query'))
     ) {
       return null;
@@ -172,27 +166,21 @@ export default function AllEventsList({
       case 'queryresource.fetch':
         displayText = 'QueryResource Fetch';
         break;
-      case 'execute.start':
       case 'network.start':
         displayText = 'Network Start';
         break;
-      case 'execute.info':
       case 'network.info':
         displayText = 'Network Info';
         break;
-      case 'execute.next':
       case 'network.next':
         displayText = 'Network Next';
         break;
-      case 'execute.complete':
       case 'network.complete':
         displayText = 'Network Complete';
         break;
-      case 'execute.subscribe':
       case 'network.subscribe':
         displayText = 'Network Unsubscribe';
         break;
-      case 'execute.error':
       case 'network.error':
         displayText = 'Network Error';
         break;

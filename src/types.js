@@ -63,7 +63,7 @@ export type LogEvent =
       invalidatedRecords: StoreRecords,
     |}
   | {|
-      +name: 'execute.info' | 'network.info',
+      +name: 'network.info',
       +transactionID?: ?number,
       +networkRequestId?: ?number,
       +info: mixed,
@@ -71,7 +71,7 @@ export type LogEvent =
       variables: $FlowFixMe,
     |}
   | {|
-      +name: 'execute.start' | 'network.start',
+      +name: 'network.start',
       +transactionID?: ?number,
       +networkRequestId?: ?number,
       +info: mixed,
@@ -79,7 +79,7 @@ export type LogEvent =
       +variables: $FlowFixMe,
     |}
   | {|
-      +name: 'execute.next' | 'network.next',
+      +name: 'network.next',
       +transactionID?: ?number,
       +networkRequestId?: ?number,
       +response: $FlowFixMe,
@@ -87,7 +87,7 @@ export type LogEvent =
       variables: $FlowFixMe,
     |}
   | {|
-      +name: 'execute.error' | 'network.error',
+      +name: 'network.error',
       +transactionID?: ?number,
       +networkRequestId?: ?number,
       +error: Error,
@@ -95,14 +95,14 @@ export type LogEvent =
       variables: $FlowFixMe,
     |}
   | {|
-      +name: 'execute.complete' | 'network.complete',
+      +name: 'network.complete',
       +transactionID?: ?number,
       +networkRequestId?: ?number,
       params: $FlowFixMe,
       variables: $FlowFixMe,
     |}
   | {|
-      +name: 'execute.unsubscribe' | 'network.unsubscribe',
+      +name: 'network.unsubscribe',
       +transactionID?: ?number,
       +networkRequestId?: ?number,
       params: $FlowFixMe,

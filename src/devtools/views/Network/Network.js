@@ -124,7 +124,6 @@ function Network(props: {| +portalContainer: mixed, currentEnvID: ?number |}) {
 
   for (const event of events) {
     switch (event.name) {
-      case 'execute.start':
       case 'network.start': {
         const eventId = getEventId(event);
         requests.set(eventId, {
@@ -137,7 +136,6 @@ function Network(props: {| +portalContainer: mixed, currentEnvID: ?number |}) {
         });
         break;
       }
-      case 'execute.complete':
       case 'network.complete': {
         const eventId = getEventId(event);
         const request = requests.get(eventId);
@@ -146,7 +144,6 @@ function Network(props: {| +portalContainer: mixed, currentEnvID: ?number |}) {
         }
         break;
       }
-      case 'execute.next':
       case 'network.next': {
         const eventId = getEventId(event);
         const request = requests.get(eventId);
@@ -155,7 +152,6 @@ function Network(props: {| +portalContainer: mixed, currentEnvID: ?number |}) {
         }
         break;
       }
-      case 'execute.info':
       case 'network.info': {
         const eventId = getEventId(event);
         const request = requests.get(eventId);
@@ -164,7 +160,6 @@ function Network(props: {| +portalContainer: mixed, currentEnvID: ?number |}) {
         }
         break;
       }
-      case 'execute.unsubscribe':
       case 'network.unsbuscribe': {
         const eventId = getEventId(event);
         const request = requests.get(eventId);
@@ -173,7 +168,6 @@ function Network(props: {| +portalContainer: mixed, currentEnvID: ?number |}) {
         }
         break;
       }
-      case 'execute.error':
       case 'network.error': {
         const eventId = getEventId(event);
         const request = requests.get(eventId);

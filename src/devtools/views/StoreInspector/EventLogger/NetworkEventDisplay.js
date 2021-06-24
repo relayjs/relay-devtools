@@ -74,10 +74,7 @@ export default function NetworkEventDisplay(props: {|
   selectedEvent: LogEvent,
 |}) {
   const { selectedEvent } = props;
-  if (
-    selectedEvent.name === 'execute.start' ||
-    selectedEvent.name === 'network.start'
-  ) {
+  if (selectedEvent.name === 'network.start') {
     const request = {
       id: getEventId(selectedEvent),
       params: selectedEvent.params,
@@ -90,15 +87,12 @@ export default function NetworkEventDisplay(props: {|
       <div className={styles.gcEvent}>
         <div className={styles.gcExplained}>
           The following network request has been sent. Responses will soon
-          follow in an execute.next event:
+          follow in an network.next event:
         </div>
         <RequestDetails request={request} />
       </div>
     );
-  } else if (
-    selectedEvent.name === 'execute.complete' ||
-    selectedEvent.name === 'network.complete'
-  ) {
+  } else if (selectedEvent.name === 'network.complete') {
     const request: RequestEntry = {
       id: getEventId(selectedEvent),
       params: selectedEvent.params,
@@ -116,10 +110,7 @@ export default function NetworkEventDisplay(props: {|
         <RequestDetails request={request} />
       </div>
     );
-  } else if (
-    selectedEvent.name === 'execute.next' ||
-    selectedEvent.name === 'network.next'
-  ) {
+  } else if (selectedEvent.name === 'network.next') {
     const request: RequestEntry = {
       id: getEventId(selectedEvent),
       params: selectedEvent.params,
@@ -136,10 +127,7 @@ export default function NetworkEventDisplay(props: {|
         <RequestDetails request={request} />
       </div>
     );
-  } else if (
-    selectedEvent.name === 'execute.info' ||
-    selectedEvent.name === 'network.info'
-  ) {
+  } else if (selectedEvent.name === 'network.info') {
     const request: RequestEntry = {
       id: getEventId(selectedEvent),
       params: selectedEvent.params,
@@ -156,10 +144,7 @@ export default function NetworkEventDisplay(props: {|
         <RequestDetails request={request} />
       </div>
     );
-  } else if (
-    selectedEvent.name === 'execute.unsubscribe' ||
-    selectedEvent.name === 'network.unsubscribe'
-  ) {
+  } else if (selectedEvent.name === 'network.unsubscribe') {
     const request: RequestEntry = {
       id: getEventId(selectedEvent),
       params: selectedEvent.params,
@@ -176,10 +161,7 @@ export default function NetworkEventDisplay(props: {|
         <RequestDetails request={request} />
       </div>
     );
-  } else if (
-    selectedEvent.name === 'execute.error' ||
-    selectedEvent.name === 'network.error'
-  ) {
+  } else if (selectedEvent.name === 'network.error') {
     const request: RequestEntry = {
       id: getEventId(selectedEvent),
       params: selectedEvent.params,
