@@ -32,7 +32,7 @@ const REFS = '__refs';
 function getDisplayValue(value) {
   return typeof value === 'string'
     ? `"${value}"`
-    : typeof value === 'boolean'
+    : typeof value === 'boolean' || typeof value === 'number'
     ? value.toString()
     : value === null
     ? 'null'
