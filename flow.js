@@ -23,6 +23,7 @@ declare module 'events' {
 }
 
 declare var __DEV__: boolean;
+declare var __ENABLE_LOGGER__: boolean;
 
 declare var jasmine: {|
   getEnv: () => {|

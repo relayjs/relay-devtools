@@ -14,6 +14,7 @@
   },
   "globals": {
     "__DEV__": "readonly",
+    "__ENABLE_LOGGER__": "readonly",
     "jasmine": "readonly",
     "spyOn": "readonly"
   }

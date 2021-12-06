@@ -19,8 +19,10 @@ if (!NODE_ENV) {
   console.error('NODE_ENV not set');
   process.exit(1);
 }
+const LOGGING_URL = process.env.LOGGING_URL;
 
 const __DEV__ = NODE_ENV === 'development';
+const __ENABLE_LOGGER__ = LOGGING_URL != null;
 
 const GITHUB_URL = getGitHubURL();
 const DEVTOOLS_VERSION = getVersionString();
@@ -45,10 +47,12 @@ module.exports = {
   plugins: [
     new DefinePlugin({
       __DEV__: true,
+      __ENABLE_LOGGER__,
       'process.env.DEVTOOLS_VERSION': `"${DEVTOOLS_VERSION}"`,
       'process.env.GITHUB_URL': `"${GITHUB_URL}"`,
       'process.env.GITHUB_ISSUES_URL': `"${GITHUB_ISSUES_URL}"`,
       'process.env.DEVTOOLS_FEEDBACK_GROUP': `"${DEVTOOLS_FEEDBACK_GROUP}"`,
+      'process.env.LOGGING_URL': `"${LOGGING_URL}"`,
     }),
   ],
   module: {
