@@ -15,7 +15,7 @@ import Bridge from 'src/bridge';
 import Store from 'src/devtools/store';
 import { createViewElementSource, getBrowserTheme } from './utils';
 import DevTools from 'src/devtools/views/DevTools';
-import registerDevToolsEventLogger from './registerDevToolsEventLogger';
+import registerDevToolsEventLogger from 'src/registerDevToolsEventLogger';
 
 let panelCreated = false;
 
@@ -44,7 +44,8 @@ function createPanelIfReactLoaded() {
       let currentPanel = null;
 
       const tabId = chrome.devtools.inspectedWindow.tabId;
-      registerDevToolsEventLogger('extension');
+      const version = chrome.runtime.getManifest().version;
+      registerDevToolsEventLogger('extension', version);
 
       function initBridgeAndStore() {
         const port = chrome.runtime.connect({

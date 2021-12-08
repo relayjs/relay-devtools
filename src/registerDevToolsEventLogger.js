@@ -14,17 +14,20 @@ import { registerEventLogger } from './Logger';
 let loggingIFrame = null;
 let missedEvents = [];
 
-export default function registerDevToolsEventLogger(surface: string) {
+export default function registerDevToolsEventLogger(
+  surface: string,
+  version: string
+) {
   if (__ENABLE_LOGGER__) {
     function logEvent(event: LogEvent) {
       if (loggingIFrame != null) {
         loggingIFrame.contentWindow.postMessage(
           {
             source: 'relay-devtools-logging',
-            event: event,
-            context: {
+            event: {
               surface,
-              version: process.env.DEVTOOLS_VERSION,
+              version,
+              ...event,
             },
           },
           '*'
@@ -38,7 +41,6 @@ export default function registerDevToolsEventLogger(surface: string) {
       if (loggingIFrame != null) {
         return;
       }
-
       loggingIFrame = iframe;
       if (missedEvents.length > 0) {
         missedEvents.forEach(logEvent);

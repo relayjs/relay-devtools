@@ -25,7 +25,7 @@ import RelayLogo from './RelayLogo';
 import tooltipStyles from './Tooltip.css';
 import Tooltip from '@reach/tooltip';
 import Icon from './Icon';
-
+import { logEvent } from '../../Logger';
 import styles from './DevTools.css';
 
 import './root.css';
@@ -113,6 +113,10 @@ export default function DevTools({
       store.removeListener('environmentInitialized', setEnv);
     };
   }, [store, setEnv]);
+
+  useEffect(() => {
+    logEvent({ event_name: 'loaded-dev-tools' });
+  }, []);
 
   const environmentChange = useCallback(e => {
     setCurrentEnvID(parseInt(e.target.value));
