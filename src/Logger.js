@@ -7,9 +7,20 @@
  * @flow strict-local
  */
 
-export type LogEvent = {|
-  +event_name: 'loaded-dev-tools',
-|};
+import type { TabID } from './devtools/views/DevTools';
+
+export type LogEvent =
+  | {|
+      +event_name: 'loaded-dev-tools',
+    |}
+  | {|
+      +event_name: 'selected-tab',
+      +extra: TabID, // selected tab
+    |}
+  | {|
+      +event_name: 'selected-store-tab',
+      +extra: string, // selected tab
+    |};
 
 export type LogFunction = LogEvent => void;
 

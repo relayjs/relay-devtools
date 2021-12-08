@@ -89,8 +89,16 @@ export default function DevTools({
   viewElementSourceRequiresFileLocation = false,
 }: Props) {
   const [tab, setTab] = useState(defaultTab);
+  const selectTab = useCallback(
+    (tabId: TabID) => {
+      logEvent({ event_name: 'selected-tab', extra: tabId });
+      setTab(tabId);
+    },
+    [setTab]
+  );
+
   if (overrideTab != null && overrideTab !== tab) {
-    setTab(overrideTab);
+    selectTab(overrideTab);
   }
 
   const [environmentIDs, setEnvironmentIDs] = useState(
@@ -155,7 +163,7 @@ export default function DevTools({
                   <TabBar
                     currentTab={tab}
                     id="DevTools"
-                    selectTab={setTab}
+                    selectTab={selectTab}
                     size="large"
                     tabs={tabs}
                   />

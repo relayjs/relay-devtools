@@ -21,7 +21,7 @@ import Snapshots from './Snapshot';
 import Optimistic from './OptimisticUpdates';
 import { deepCopyFunction } from './utils';
 import EventLogger from './EventLogger/EventLogger';
-
+import { logEvent } from '../../../Logger';
 import styles from './StoreInspector.css';
 
 export type TabID =
@@ -158,6 +158,13 @@ export default function StoreInspector(props: {|
   const store = useContext(StoreContext);
   const bridge = useContext(BridgeContext);
   const [tab, setTab] = useState(explorerTab);
+  const selectTab = useCallback(
+    tabInfo => {
+      logEvent({ event_name: 'selected-store-tab', extra: tabInfo.id });
+      setTab(tabInfo);
+    },
+    [setTab]
+  );
   const [, forceUpdate] = useState({});
   const [envSnapshotList, setEnvSnapshotList] = useState({});
   const [envSnapshotListByType, setEnvSnapshotListByType] = useState({});
@@ -276,7 +283,7 @@ export default function StoreInspector(props: {|
         <TabBar
           tabID={tab.id}
           id="StoreTab"
-          selectTab={setTab}
+          selectTab={selectTab}
           size="small"
           tabs={tabs}
         />
