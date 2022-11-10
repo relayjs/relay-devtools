@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "cross-spawn": "^7.0.1",
-    "electron": "^15.5.5",
+    "electron": "^18.3.7",
     "ip": "^1.1.4",
     "minimist": "^1.2.6",
     "relay-devtools-core": "^1.0.0",
