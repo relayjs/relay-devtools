@@ -160,7 +160,7 @@ function Network(props: {| +portalContainer: mixed, currentEnvID: ?number |}) {
         }
         break;
       }
-      case 'network.unsbuscribe': {
+      case 'network.unsubscribe': {
         const eventId = getEventId(event);
         const request = requests.get(eventId);
         if (request != null) {
