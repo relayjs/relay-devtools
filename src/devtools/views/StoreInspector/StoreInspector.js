@@ -277,8 +277,6 @@ export default function StoreInspector(props: {|
           <ButtonIcon type="copy" />
         </Button>
         <div className={styles.Spacer} />
-      </div>
-      <div className={styles.TabBar}>
         <div className={styles.Spacer} />
         <TabBar
           tabID={tab.id}
