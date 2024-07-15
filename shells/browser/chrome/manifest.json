@@ -2,19 +2,16 @@
   "manifest_version": 2,
   "name": "Relay Developer Tools",
   "description": "Adds Relay debugging tools to the Chrome Developer Tools.",
-  "version": "0.9.15",
-  "version_name": "0.9.15",
+  "version": "0.9.16",
+  "version_name": "0.9.16",
   "update_url": "https://www.internalfb.com/intern/browser_extensions/chrome/update.xml",
-
   "minimum_chrome_version": "78",
-
   "icons": {
     "16": "icons/enabled16.png",
     "32": "icons/enabled32.png",
     "48": "icons/enabled48.png",
     "128": "icons/enabled128.png"
   },
-
   "browser_action": {
     "default_icon": {
       "16": "icons/disabled16.png",
@@ -22,12 +19,9 @@
       "48": "icons/disabled48.png",
       "128": "icons/disabled128.png"
     },
-
     "default_popup": "popups/disabled.html"
   },
-
   "devtools_page": "main.html",
-
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
   "web_accessible_resources": [
     "main.html",
@@ -35,14 +29,11 @@
     "build/backend.js",
     "build/renderer.js"
   ],
-
   "background": {
     "scripts": ["build/background.js"],
     "persistent": false
   },
-
   "permissions": ["file:///*", "http://*/*", "https://*/*", "webNavigation"],
-
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
