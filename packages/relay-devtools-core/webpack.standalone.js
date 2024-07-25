@@ -6,7 +6,7 @@
  */
 
 const { resolve } = require('path');
-const { DefinePlugin } = require('webpack');
+const Webpack = require('webpack');
 const {
   getGitHubIssuesURL,
   getGitHubURL,
@@ -29,7 +29,7 @@ const DEVTOOLS_FEEDBACK_GROUP = getInternalDevToolsFeedbackGroup();
 
 module.exports = {
   mode: __DEV__ ? 'development' : 'production',
-  devtool: __DEV__ ? 'cheap-module-eval-source-map' : false,
+  devtool: __DEV__ ? 'eval-cheap-module-source-map' : false,
   target: 'electron-main',
   entry: {
     standalone: './src/standalone.js',
@@ -37,8 +37,10 @@ module.exports = {
   output: {
     path: __dirname + '/dist',
     filename: '[name].js',
-    library: '[name]',
-    libraryTarget: 'commonjs2',
+    library: {
+      name: '[name]',
+      type: 'commonjs2',
+    },
   },
   resolve: {
     alias: {
@@ -46,7 +48,7 @@ module.exports = {
     },
   },
   plugins: [
-    new DefinePlugin({
+    new Webpack.DefinePlugin({
       __DEV__: false,
       'process.env.DEVTOOLS_VERSION': `"${DEVTOOLS_VERSION}"`,
       'process.env.GITHUB_URL': `"${GITHUB_URL}"`,

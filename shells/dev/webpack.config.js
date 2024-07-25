@@ -5,14 +5,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const { resolve } = require('path');
-const { DefinePlugin } = require('webpack');
+const Webpack = require('webpack');
 const {
   getGitHubIssuesURL,
   getGitHubURL,
   getInternalDevToolsFeedbackGroup,
   getVersionString,
 } = require('../utils');
+const path = require('path');
 
 const NODE_ENV = process.env.NODE_ENV;
 if (!NODE_ENV) {
@@ -43,11 +43,11 @@ const config = {
   },
   resolve: {
     alias: {
-      src: resolve(__dirname, '../../src'),
+      src: path.resolve(__dirname, '../../src'),
     },
   },
   plugins: [
-    new DefinePlugin({
+    new Webpack.DefinePlugin({
       __DEV__: __DEV__,
       'process.env.GITHUB_URL': `"${GITHUB_URL}"`,
       'process.env.DEVTOOLS_VERSION': `"${DEVTOOLS_VERSION}"`,
@@ -84,18 +84,18 @@ const config = {
   },
 };
 
+config.output = {
+  path: path.resolve(__dirname, 'dist'),
+  filename: '[name].js',
+  publicPath: '/dist/',
+};
 if (TARGET === 'local') {
   config.devServer = {
+    static: {
+      directory:path.join(__dirname, '/'),
+    },
     hot: true,
     port: 8080,
-    clientLogLevel: 'warning',
-    publicPath: '/dist/',
-    stats: 'errors-only',
-  };
-} else {
-  config.output = {
-    path: resolve(__dirname, 'dist'),
-    filename: '[name].js',
   };
 }
 

@@ -152,7 +152,7 @@ function createInBrowserNetwork() {
   function fetchQuery(request, variables) {
     return new Promise(resolve => {
       setTimeout(() => {
-        resolve(graphql(schema, request.text, root, null, variables));
+        resolve(graphql({schema, source: request.text, rootValue:root,  variableValues: variables}));
       }, 1000 + Math.round(Math.random() * 1000));
     });
   }

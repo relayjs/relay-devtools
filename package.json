@@ -117,7 +117,7 @@
     "firefox-profile": "^1.0.2",
     "flow-bin": "^0.113.0",
     "fs-extra": "^3.0.1",
-    "graphql": "^14.4.2",
+    "graphql": "^16.9.0",
     "jest": "^24.9.0",
     "lint-staged": "^7.0.5",
     "local-storage-fallback": "^4.1.1",
@@ -140,9 +140,9 @@
     "scheduler": "^0.0.0-50b50c26f",
     "style-loader": "^0.23.1",
     "web-ext": "^3.0.0",
-    "webpack": "^4.41.3",
-    "webpack-cli": "^3.1.2",
-    "webpack-dev-server": "^3.10.0",
+    "webpack": "^5.93.0",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^5.0.4",
     "yargs": "^14.2.0"
   }
 }

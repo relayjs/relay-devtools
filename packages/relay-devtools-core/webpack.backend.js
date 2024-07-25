@@ -6,7 +6,7 @@
  */
 
 const { resolve } = require('path');
-const { DefinePlugin } = require('webpack');
+const Webpack = require('webpack');
 const {
   getGitHubIssuesURL,
   getGitHubURL,
@@ -29,7 +29,7 @@ const DEVTOOLS_FEEDBACK_GROUP = getInternalDevToolsFeedbackGroup();
 
 module.exports = {
   mode: 'development', // TODO TESTING __DEV__ ? 'development' : 'production',
-  devtool: __DEV__ ? 'cheap-module-eval-source-map' : false,
+  devtool: __DEV__ ? 'eval-cheap-module-source-map' : false,
   entry: {
     backend: './src/backend.js',
   },
@@ -38,8 +38,10 @@ module.exports = {
     filename: '[name].js',
 
     // This name is important; standalone references it in order to connect.
-    library: 'RelayDevToolsBackend',
-    libraryTarget: 'umd',
+    library: {
+      name:'RelayDevToolsBackend',
+      type: 'umd',
+    }
   },
   resolve: {
     alias: {
@@ -47,7 +49,7 @@ module.exports = {
     },
   },
   plugins: [
-    new DefinePlugin({
+    new Webpack.DefinePlugin({
       __DEV__: true,
       'process.env.DEVTOOLS_VERSION': `"${DEVTOOLS_VERSION}"`,
       'process.env.GITHUB_URL': `"${GITHUB_URL}"`,

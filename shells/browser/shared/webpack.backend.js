@@ -31,7 +31,7 @@ const DEVTOOLS_FEEDBACK_GROUP = getInternalDevToolsFeedbackGroup();
 
 module.exports = {
   mode: __DEV__ ? 'development' : 'production',
-  devtool: __DEV__ ? 'cheap-module-eval-source-map' : false,
+  devtool: __DEV__ ? 'eval-cheap-module-source-map' : false,
   entry: {
     backend: './src/backend.js',
   },
