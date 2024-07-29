@@ -44,6 +44,7 @@ const config = {
   resolve: {
     alias: {
       src: path.resolve(__dirname, '../../src'),
+      '@babel/runtime': path.resolve(__dirname, '../../node_modules/@babel/runtime'),
     },
   },
   plugins: [
