@@ -10,7 +10,7 @@
 import type Store from '../../store';
 import type { LogEvent } from '../../../types';
 
-export function deepCopyFunction(inObject: any) {
+export function deepCopyFunction(inObject: any): any | Map<mixed, mixed> | { ... } {
   if (typeof inObject !== 'object' || inObject === null) {
     return inObject;
   }
@@ -24,12 +24,12 @@ export function deepCopyFunction(inObject: any) {
     return outObject;
   } else if (inObject instanceof Map) {
     const outObject = new Map<mixed, mixed>();
-    inObject.forEach((val, key) => {
+    inObject.forEach((val: any, key: mixed) => {
       outObject.set(key, deepCopyFunction(val));
     });
     return outObject;
   } else {
-    const outObject = {};
+    const outObject: $FlowFixMe = {};
     for (const key in inObject) {
       const value = inObject[key];
       if (typeof key === 'string' && key != null) {
@@ -40,7 +40,7 @@ export function deepCopyFunction(inObject: any) {
   }
 }
 
-export function serializeEventLoggerRecording(store: Store) {
+export function serializeEventLoggerRecording(store: Store): Array<[string, mixed]> {
   const allEvents = Array.from(store.getAllEventsMap().entries());
   return (allEvents.map(entry => {
     const envID = entry[0];
@@ -51,12 +51,12 @@ export function serializeEventLoggerRecording(store: Store) {
   }): Array<[string, mixed]>);
 }
 
-export function deserializeEventLoggerRecording(raw: string, store: Store) {
+export function deserializeEventLoggerRecording(raw: string, store: Store): Array<number> {
   const parsedDataRecording = ((new Map(JSON.parse(raw)): any): Map<
     string,
     Array<LogEvent>
   >);
-  const envNames = {};
+  const envNames: $FlowFixMe = {};
   const envIDs = (Array.from(parsedDataRecording.keys()).map(key => {
     const environment = String(key).split(' ');
     // Taking out the id from the environment string

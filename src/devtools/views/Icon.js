@@ -28,7 +28,7 @@ type Props = {|
   type: IconType,
 |};
 
-function getPathData(type) {
+function getPathData(type: IconType) {
   switch (type) {
     case 'arrow':
       return PATH_ARROW;
@@ -59,7 +59,7 @@ function getPathData(type) {
   }
 }
 
-export default function Icon({ className = '', type }: Props) {
+export default function Icon({ className = '', type }: Props): React$MixedElement {
   const pathData = getPathData(type);
   const circlePathData =
     pathData === PATH_GITHUB_FEEDBACK ? PATH_GITHUB_CIRCLE : null;

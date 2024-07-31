@@ -22,7 +22,7 @@ function sayHelloToBackend() {
   );
 }
 
-function handleMessageFromDevtools(message) {
+function handleMessageFromDevtools(message: any) {
   window.postMessage(
     {
       source: 'relay-devtools-content-script',
@@ -32,7 +32,7 @@ function handleMessageFromDevtools(message) {
   );
 }
 
-function handleMessageFromPage(evt) {
+function handleMessageFromPage(evt: any) {
   if (
     evt.source === window &&
     evt.data &&
@@ -76,7 +76,7 @@ sayHelloToBackend();
 // In the event of a page reload, the content script might be loaded before the backend is injected.
 // Because of this we need to poll the backend until it has been initialized.
 if (!backendInitialized) {
-  const intervalID = setInterval(() => {
+  const intervalID: IntervalID = setInterval(() => {
     if (backendInitialized || backendDisconnected) {
       clearInterval(intervalID);
     } else {

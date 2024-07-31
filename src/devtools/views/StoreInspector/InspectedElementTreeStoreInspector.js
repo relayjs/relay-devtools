@@ -30,7 +30,7 @@ export default function InspectedElementTree({
   records,
   setSelectedRecordID,
   showWhenEmpty = false,
-}: Props) {
+}: Props): null | React$MixedElement {
   const sortedEntries = useMemo(
     () => Object.entries(data).sort(alphaSortEntries),
     [data]

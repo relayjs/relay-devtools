@@ -40,17 +40,17 @@ export default function TabBar({
   selectTab,
   size,
   tabs,
-}: Props) {
+}: Props): React$MixedElement {
   if (!tabs.some(tab => tab.id === currentTab)) {
     selectTab(tabs[0].id);
   }
 
   const onChange = useCallback(
-    ({ currentTarget }) => selectTab(currentTarget.value),
+    ({currentTarget}: any) => selectTab(currentTarget.value),
     [selectTab]
   );
 
-  const handleKeyDown = useCallback(event => {
+  const handleKeyDown = useCallback((event: any) => {
     switch (event.key) {
       case 'ArrowDown':
       case 'ArrowLeft':

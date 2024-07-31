@@ -16,8 +16,8 @@ export type Props = {
 };
 
 export default function portaledContent(
-  Component: React$StatelessFunctionalComponent<any>
-): React$StatelessFunctionalComponent<any> {
+  Component: any,
+): any {
   return function PortaledContent({ portalContainer, ...rest }: Props) {
     const children = (
       <ErrorBoundary>

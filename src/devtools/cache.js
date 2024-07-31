@@ -59,7 +59,7 @@ const Rejected = 2;
 const ReactCurrentDispatcher = (React: any)
   .__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentDispatcher;
 
-function readContext(Context, observedBits) {
+function readContext(Context: React$Context<null>, observedBits: void) {
   const dispatcher = ReactCurrentDispatcher.current;
   if (dispatcher === null) {
     throw new Error(
@@ -90,7 +90,7 @@ function getEntriesForResource(
   if (entriesForResource === undefined) {
     const config = resourceConfigs.get(resource);
     entriesForResource =
-      config !== undefined && config.useWeakMap ? new WeakMap() : new Map();
+      config !== undefined && config.useWeakMap ? (new WeakMap(): $FlowFixMe) : new Map();
     entries.set(resource, entriesForResource);
   }
   return entriesForResource;

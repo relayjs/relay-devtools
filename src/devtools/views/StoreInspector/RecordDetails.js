@@ -32,7 +32,7 @@ export default function RecordDetails({
   records,
   selectedRecord,
   setSelectedRecordID,
-}: Props) {
+}: Props): React$MixedElement {
   if (selectedRecord == null) {
     return <div className={styles.NoRecordDetails}>No record selected</div>;
   }

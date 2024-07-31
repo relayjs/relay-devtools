@@ -29,7 +29,7 @@ type KeyValueProps = {|
 const REF = '__ref';
 const REFS = '__refs';
 
-function getDisplayValue(value) {
+function getDisplayValue(value: mixed) {
   return typeof value === 'string'
     ? `"${value}"`
     : typeof value === 'boolean' || typeof value === 'number'
@@ -48,7 +48,11 @@ export default function KeyValue({
   value,
   records,
   setSelectedRecordID,
-}: KeyValueProps) {
+}: KeyValueProps):
+  | React.Element<"div">
+  | Array<React.Node>
+  | Array<Element<any>>
+  | Array<any | React.Element<"div">> {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [wasEverOpen, setWasEverOpen] = useState<boolean>(isOpen);
   useEffect(() => {
@@ -129,8 +133,8 @@ export default function KeyValue({
     if (Array.isArray(value)) {
       const hasChildren = value.length > 0;
 
-      const children = wasEverOpen
-        ? value.map<React.Node>((innerValue, mapIndex): React.Node => (
+      const children: Array<React.Node> | Array<any | React.Element<"div">> = wasEverOpen
+        ? value.map((innerValue, mapIndex): React.Node => (
             <KeyValue
               key={mapIndex}
               alphaSort={alphaSort}
@@ -195,8 +199,8 @@ export default function KeyValue({
           ? ((records[nextReferencedRecordID].__typename: any): string)
           : 'Object';
 
-      const children = wasEverOpen
-        ? sortedEntries.map<Element<any>>(([entriesName, entriesVal]) => (
+      const children: Array<Element<any>> | Array<any | React.Element<"div">> = wasEverOpen
+        ? sortedEntries.map(([entriesName, entriesVal]) => (
             <KeyValue
               key={entriesName}
               alphaSort={alphaSort}

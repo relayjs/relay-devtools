@@ -7,7 +7,8 @@
  * @flow
  */
 
-/**
+import type { INetwork } from "../../../../node_modules/relay-runtime/network/RelayNetworkTypes";import type { Variables } from "../../../../node_modules/relay-runtime/util/RelayRuntimeTypes";
+import type { RequestParameters } from "../../../../node_modules/relay-runtime/util/RelayConcreteNode";/**
  * This file implements the Relay "network" as a server running in the browser.
  * This allows the test app to send network requests that can be observed without
  * running a separate server.
@@ -20,7 +21,7 @@ import Chance from 'chance';
 const chance = new Chance();
 
 let nextID = 1000;
-function guid(prefix) {
+function guid(prefix: string) {
   return `${prefix}-${nextID++}`;
 }
 
@@ -68,7 +69,7 @@ const schema = buildSchema(`
   }
 `);
 
-function createInBrowserNetwork() {
+function createInBrowserNetwork(): INetwork {
   class User {
     +__typename: 'User';
     +id: string;
@@ -80,7 +81,7 @@ function createInBrowserNetwork() {
     |};
     _friends: $ReadOnlyArray<User>;
 
-    constructor(id) {
+    constructor(id: string | void) {
       this.__typename = 'User';
       this.id = id == null ? guid('user') : id;
       this._gender = chance.pick(['male', 'female']);
@@ -89,7 +90,7 @@ function createInBrowserNetwork() {
       });
     }
 
-    profilePicture() {
+    profilePicture(): { +url: string, ... } {
       if (!this._profilePicture) {
         this._profilePicture = {
           url: `https://randomuser.me/api/portraits/thumb/${
@@ -100,7 +101,18 @@ function createInBrowserNetwork() {
       return this._profilePicture;
     }
 
-    friends() {
+    friends(): {
+  count: number,
+  edges: Array<{ cursor: number, node: User, ... }>,
+  pageInfo: () => {
+    endCursor: string,
+    hasNextPage: boolean,
+    hasPreviousPage: boolean,
+    startCursor: string,
+    ...
+  },
+  ...
+} {
       if (!this._friends) {
         this._friends = [];
         for (let i = 0; i < 4; i++) {
@@ -122,7 +134,7 @@ function createInBrowserNetwork() {
     };
   }
 
-  function createConnection(nodes) {
+  function createConnection(nodes: $ReadOnlyArray<User>) {
     return {
       count: nodes.length + 1,
       edges: nodes.map((node, index) => ({
@@ -133,23 +145,23 @@ function createInBrowserNetwork() {
     };
   }
 
-  const userMap = new Map();
-  function createUser(id) {
+  const userMap = new Map<string, User>();
+  function createUser(id: string |void) {
     const user = new User(id);
     userMap.set(user.id, user);
     return user;
   }
 
   const root = {
-    node: ({ id }) => {
-      if (!userMap.has(id)) {
+    node: ({ id }: {id : string | void}) => {
+      if (id == null || !userMap.has(id)) {
         return createUser(id);
       }
       return userMap.get(id);
     },
   };
 
-  function fetchQuery(request, variables) {
+  function fetchQuery(request: RequestParameters, variables: Variables): $FlowFixMe {
     return new Promise(resolve => {
       setTimeout(() => {
         resolve(graphql({schema, source: request.text, rootValue:root,  variableValues: variables}));

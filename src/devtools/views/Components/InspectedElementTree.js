@@ -25,7 +25,7 @@ export default function InspectedElementTree({
   data,
   label,
   showWhenEmpty = false,
-}: Props) {
+}: Props): null | React$MixedElement {
   //TODO(damassart): Clean this up
   const entries = data != null ? Object.entries(data) : null;
   if (entries !== null) {

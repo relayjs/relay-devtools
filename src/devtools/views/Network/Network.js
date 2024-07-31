@@ -73,7 +73,7 @@ function RequestDetails(props: {| request: ?RequestEntry |}) {
   );
 }
 
-function appearsInResponse(searchText: string, response: Object) {
+function appearsInResponse(searchText: string, response: Object): boolean {
   if (response == null) {
     return false;
   }
@@ -93,12 +93,12 @@ function appearsInResponse(searchText: string, response: Object) {
   return false;
 }
 
-function Network(props: {| +portalContainer: mixed, currentEnvID: ?number |}) {
+function Network(props: {| +portalContainer: mixed, currentEnvID: ?number |}): React$MixedElement | null {
   const store = useContext(StoreContext);
 
   const [, forceUpdate] = useState({});
   const [requestSearch, setRequestSearch] = useState('');
-  const fetchSearchBarText = useCallback(e => {
+  const fetchSearchBarText = useCallback((e: any) => {
     setRequestSearch(e.target.value);
   }, []);
 
@@ -293,4 +293,4 @@ function Network(props: {| +portalContainer: mixed, currentEnvID: ?number |}) {
   );
 }
 
-export default portaledContent(Network);
+export default (portaledContent(Network): $FlowFixMe);

@@ -13,7 +13,7 @@ const argv = require('minimist')(process.argv.slice(2));
 const projectRoots = argv._;
 const defaultThemeName = argv.theme;
 
-let mainWindow = null;
+let mainWindow: null | typeof BrowserWindow = null;
 
 app.on('window-all-closed', function() {
   app.quit();
@@ -31,10 +31,11 @@ app.on('ready', function() {
       nodeIntegration: true,
     },
   });
+  const mw = mainWindow;
 
   // and load the index.html of the app.
-  mainWindow.loadURL('file://' + __dirname + '/app.html'); // eslint-disable-line no-path-concat
-  mainWindow.webContents.executeJavaScript(
+  mw.loadURL('file://' + __dirname + '/app.html'); // eslint-disable-line no-path-concat
+  mw.webContents.executeJavaScript(
     // We use this so that RN can keep relative JSX __source filenames
     // but "click to open in editor" still works. js1 passes project roots
     // as the argument to DevTools.
@@ -42,7 +43,7 @@ app.on('ready', function() {
   );
 
   if (argv.theme) {
-    mainWindow.webContents.executeJavaScript(
+    mw.webContents.executeJavaScript(
       'window.devtools.setDefaultThemeName(' +
         JSON.stringify(defaultThemeName) +
         ')'
@@ -50,7 +51,7 @@ app.on('ready', function() {
   }
 
   // Emitted when the window is closed.
-  mainWindow.on('closed', function() {
+  mw.on('closed', function() {
     mainWindow = null;
   });
 });

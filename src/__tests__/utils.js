@@ -22,7 +22,7 @@ export function act(callback: Function): void {
 }
 
 export async function actAsync(
-  cb: () => *,
+  cb: () => mixed,
   recursivelyFlush: boolean = true
 ): Promise<void> {
   const TestUtils = require('react-dom/test-utils');

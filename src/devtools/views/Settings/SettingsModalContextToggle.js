@@ -12,7 +12,7 @@ import { SettingsModalContext } from './SettingsModalContext';
 import Button from '../Button';
 import ButtonIcon from '../ButtonIcon';
 
-export default function SettingsModalContextToggle() {
+export default function SettingsModalContextToggle(): React$MixedElement {
   const { setIsModalShowing } = useContext(SettingsModalContext);
 
   const showFilterModal = useCallback(() => setIsModalShowing(true), [

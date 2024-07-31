@@ -43,7 +43,7 @@ type Props = {|
   type: IconType,
 |};
 
-function getPathData(type) {
+function getPathData(type: IconType) {
   switch (type) {
     case 'add':
       return PATH_ADD;
@@ -103,7 +103,7 @@ function getPathData(type) {
   }
 }
 
-export default function ButtonIcon({ className = '', type }: Props) {
+export default function ButtonIcon({ className = '', type }: Props): React$MixedElement {
   const pathData = getPathData(type);
   return (
     <svg

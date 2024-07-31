@@ -155,7 +155,7 @@ export default function launchEditor(
     args.push(filePath);
   }
 
-  if (childProcess && isTerminalEditor(editor)) {
+  if (isTerminalEditor(editor) && childProcess) {
     // There's an existing editor process already and it's attached
     // to the terminal, so go kill it. Otherwise two separate editor
     // instances attach to the stdin/stdout which gets confusing.
@@ -171,8 +171,9 @@ export default function launchEditor(
   } else {
     childProcess = spawn(editor, args, { stdio: 'inherit' });
   }
-  childProcess.on('error', function() {});
-  childProcess.on('exit', function(errorCode) {
+  const cp = childProcess;
+  cp.on('error', function() {});
+  cp.on('exit', function(errorCode) {
     childProcess = null;
   });
 }

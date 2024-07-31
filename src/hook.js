@@ -7,6 +7,12 @@
  * @flow
  */
 
+import type {
+  RelayEnvironment as $IMPORTED_TYPE$_RelayEnvironment,
+  EnvironmentWrapper,
+  EnvironmentID,
+} from "src/backend/types";
+import type { RelayEnvironment, Handler } from "src/backend/types";
 /**
  * Install the hook on window, which is an event emitter.
  * Note because Chrome content scripts cannot directly modify the window object,
@@ -22,12 +28,12 @@ export function installHook(target: any): DevToolsHook | null {
   if (target.hasOwnProperty('__RELAY_DEVTOOLS_HOOK__')) {
     return null;
   }
-  const listeners = {};
-  const environments = new Map();
+  const listeners: {[string]: Array<Handler>} = {};
+  const environments = new Map<EnvironmentID, $IMPORTED_TYPE$_RelayEnvironment>();
 
   let uidCounter = 0;
 
-  function registerEnvironment(environment) {
+  function registerEnvironment(environment: RelayEnvironment) {
     const id = ++uidCounter;
     environments.set(id, environment);
 
@@ -36,19 +42,19 @@ export function installHook(target: any): DevToolsHook | null {
     return id;
   }
 
-  function sub(event, fn) {
+  function sub(event: string, fn: Handler) {
     hook.on(event, fn);
     return () => hook.off(event, fn);
   }
 
-  function on(event, fn) {
+  function on(event: string, fn: Handler) {
     if (!listeners[event]) {
       listeners[event] = [];
     }
     listeners[event].push(fn);
   }
 
-  function off(event, fn) {
+  function off(event: string, fn: Handler) {
     if (!listeners[event]) {
       return;
     }
@@ -61,13 +67,13 @@ export function installHook(target: any): DevToolsHook | null {
     }
   }
 
-  function emit(event, data) {
+  function emit(event: string, data: any) {
     if (listeners[event]) {
       listeners[event].map(fn => fn(data));
     }
   }
 
-  const environmentWrappers = new Map();
+  const environmentWrappers = new Map<EnvironmentID, EnvironmentWrapper>();
 
   const hook: DevToolsHook = {
     registerEnvironment,

@@ -29,7 +29,7 @@ const networkEventNames = [
   'network.unsubscribe',
 ];
 
-function eventsAreLinked(events, selectedEventID, index) {
+function eventsAreLinked(events: any | $ReadOnlyArray<LogEvent>, selectedEventID: any | number, index: any | number) {
   const currentEvent = events[index];
   const selectedEvent = events[selectedEventID];
   return (
@@ -43,13 +43,13 @@ function eventsAreLinked(events, selectedEventID, index) {
   );
 }
 
-function appearsInObject(searchText: string, obj: Object) {
+function appearsInObject(searchText: string, obj: Object): boolean {
   if (obj == null) {
     return false;
   }
   for (const key in obj) {
     if (typeof obj[key] == 'object' && obj[key] !== null) {
-      const appears = appearsInObject(searchText, obj[key]);
+      const appears: boolean = appearsInObject(searchText, obj[key]);
       if (appears) {
         return appears;
       }
@@ -76,7 +76,13 @@ function StoreEventDisplay({
   setSelectedEventID,
   selectedEventID,
   events,
-}) {
+}: {|
+  displayText: string,
+  events: $ReadOnlyArray<LogEvent>,
+  index: number,
+  selectedEventID: number,
+  setSelectedEventID: (number) => void,
+|}) {
   return (
     <div
       key={index}
@@ -101,9 +107,9 @@ export default function AllEventsList({
   selectedEventID,
   setSelectedEventID,
   checked,
-}: Props) {
+}: Props): React$MixedElement {
   const [eventSearch, setEventSearch] = useState('');
-  const fetchSearchBarText = useCallback(e => {
+  const fetchSearchBarText = useCallback((e: any) => {
     setEventSearch(e.target.value);
   }, []);
 
@@ -178,7 +184,7 @@ export default function AllEventsList({
       case 'network.complete':
         displayText = 'Network Complete';
         break;
-      case 'network.subscribe':
+      case 'network.unsubscribe':
         displayText = 'Network Unsubscribe';
         break;
       case 'network.error':
@@ -208,9 +214,9 @@ export default function AllEventsList({
             .trim()
             .split(' ')
             .some(
-              search =>
+              (search: any) =>
                 (event != null &&
-                  String(event.props.displayText)
+                  String((event: $FlowFixMe).props.displayText)
                     .toLowerCase()
                     .includes(search.toLowerCase())) ||
                 (events[index] != null &&

@@ -72,7 +72,7 @@ function RequestDetails(props: {| request: ?RequestEntry |}) {
 
 export default function NetworkEventDisplay(props: {|
   selectedEvent: LogEvent,
-|}) {
+|}): React$MixedElement | null {
   const { selectedEvent } = props;
   if (selectedEvent.name === 'network.start') {
     const request = {
@@ -89,7 +89,7 @@ export default function NetworkEventDisplay(props: {|
           The following network request has been sent. Responses will soon
           follow in an network.next event:
         </div>
-        <RequestDetails request={request} />
+        <RequestDetails request={(request: $FlowFixMe)} />
       </div>
     );
   } else if (selectedEvent.name === 'network.complete') {

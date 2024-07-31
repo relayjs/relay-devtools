@@ -25,7 +25,7 @@ export default function Button({
   className = '',
   title = '',
   ...rest
-}: Props) {
+}: Props): React$MixedElement {
   const innerButton = (
     <button {...rest} className={`${styles.Button} ${className}`}>
       <span className={`${styles.ButtonContent} ${className}`} tabIndex={-1}>

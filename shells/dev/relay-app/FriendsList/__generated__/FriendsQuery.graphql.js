@@ -1,6 +1,8 @@
 /**
+ * @generated SignedSource<<c7d5a2ad9ae46e0814c135d3836b0ff6>>
  * @flow
- * @relayHash 5330ca35aecfb330db735a5781ea5e77
+ * @lightSyntaxTransform
+ * @nogrep
  */
 
 /* eslint-disable */
@@ -8,345 +10,312 @@
 'use strict';
 
 /*::
-import type { ConcreteRequest } from 'relay-runtime';
-type Friends_user$ref = any;
-export type FriendsQueryVariables = {||};
-export type FriendsQueryResponse = {|
+import type { ConcreteRequest, Query } from 'relay-runtime';
+import type { Friends_user$fragmentType } from "./Friends_user.graphql";
+export type FriendsQuery$variables = {||};
+export type FriendsQuery$data = {|
   +user: ?{|
     +id?: string,
-    +$fragmentRefs: Friends_user$ref,
-  |}
+    +$fragmentSpreads: Friends_user$fragmentType,
+  |},
 |};
 export type FriendsQuery = {|
-  variables: FriendsQueryVariables,
-  response: FriendsQueryResponse,
+  response: FriendsQuery$data,
+  variables: FriendsQuery$variables,
 |};
 */
 
-/*
-query FriendsQuery {
-  user: node(id: "my-id") {
-    __typename
-    ... on User {
-      id
-      ...Friends_user
-    }
-    id
+var node/*: ConcreteRequest*/ = (function(){
+var v0 = [
+  {
+    "kind": "Literal",
+    "name": "id",
+    "value": "my-id"
   }
-}
-
-fragment Friends_user on User {
-  friends(first: 10) {
-    count
-    edges {
-      node {
-        id
-        ...FriendCard_user
-        __typename
+],
+v1 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+},
+v2 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "__typename",
+  "storageKey": null
+},
+v3 = [
+  {
+    "kind": "Literal",
+    "name": "first",
+    "value": 10
+  }
+],
+v4 = {
+  "enumValues": null,
+  "nullable": false,
+  "plural": false,
+  "type": "String"
+},
+v5 = {
+  "enumValues": null,
+  "nullable": true,
+  "plural": false,
+  "type": "String"
+},
+v6 = {
+  "enumValues": null,
+  "nullable": false,
+  "plural": false,
+  "type": "ID"
+};
+return {
+  "fragment": {
+    "argumentDefinitions": [],
+    "kind": "Fragment",
+    "metadata": null,
+    "name": "FriendsQuery",
+    "selections": [
+      {
+        "alias": "user",
+        "args": (v0/*: any*/),
+        "concreteType": null,
+        "kind": "LinkedField",
+        "name": "node",
+        "plural": false,
+        "selections": [
+          {
+            "kind": "InlineFragment",
+            "selections": [
+              (v1/*: any*/),
+              {
+                "args": null,
+                "kind": "FragmentSpread",
+                "name": "Friends_user"
+              }
+            ],
+            "type": "User",
+            "abstractKey": null
+          }
+        ],
+        "storageKey": "node(id:\"my-id\")"
       }
-      cursor
-    }
-    pageInfo {
-      endCursor
-      hasNextPage
-    }
-  }
-}
-
-fragment FriendCard_user on User {
-  name
-  profilePicture {
-    url
-  }
-}
-*/
-
-const node /*: ConcreteRequest*/ = (function() {
-  var v0 = [
-      {
-        kind: 'Literal',
-        name: 'id',
-        value: 'my-id',
-      },
     ],
-    v1 = {
-      kind: 'ScalarField',
-      alias: null,
-      name: 'id',
-      args: null,
-      storageKey: null,
-    },
-    v2 = {
-      kind: 'ScalarField',
-      alias: null,
-      name: '__typename',
-      args: null,
-      storageKey: null,
-    },
-    v3 = [
+    "type": "Query",
+    "abstractKey": null
+  },
+  "kind": "Request",
+  "operation": {
+    "argumentDefinitions": [],
+    "kind": "Operation",
+    "name": "FriendsQuery",
+    "selections": [
       {
-        kind: 'Literal',
-        name: 'first',
-        value: 10,
-      },
-    ],
-    v4 = {
-      type: 'String',
-      enumValues: null,
-      plural: false,
-      nullable: true,
-    };
-  return {
-    kind: 'Request',
-    fragment: {
-      kind: 'Fragment',
-      name: 'FriendsQuery',
-      type: 'Query',
-      metadata: null,
-      argumentDefinitions: [],
-      selections: [
-        {
-          kind: 'LinkedField',
-          alias: 'user',
-          name: 'node',
-          storageKey: 'node(id:"my-id")',
-          args: (v0 /*: any*/),
-          concreteType: null,
-          plural: false,
-          selections: [
-            {
-              kind: 'InlineFragment',
-              type: 'User',
-              selections: [
-                (v1 /*: any*/),
-                {
-                  kind: 'FragmentSpread',
-                  name: 'Friends_user',
-                  args: null,
-                },
-              ],
-            },
-          ],
+        "alias": "user",
+        "args": (v0/*: any*/),
+        "concreteType": null,
+        "kind": "LinkedField",
+        "name": "node",
+        "plural": false,
+        "selections": [
+          (v2/*: any*/),
+          (v1/*: any*/),
+          {
+            "kind": "InlineFragment",
+            "selections": [
+              {
+                "alias": null,
+                "args": (v3/*: any*/),
+                "concreteType": "FriendsConnection",
+                "kind": "LinkedField",
+                "name": "friends",
+                "plural": false,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "count",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "FriendsEdge",
+                    "kind": "LinkedField",
+                    "name": "edges",
+                    "plural": true,
+                    "selections": [
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "User",
+                        "kind": "LinkedField",
+                        "name": "node",
+                        "plural": false,
+                        "selections": [
+                          (v1/*: any*/),
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "name",
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "ProfilePicture",
+                            "kind": "LinkedField",
+                            "name": "profilePicture",
+                            "plural": false,
+                            "selections": [
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "url",
+                                "storageKey": null
+                              }
+                            ],
+                            "storageKey": null
+                          },
+                          (v2/*: any*/)
+                        ],
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "cursor",
+                        "storageKey": null
+                      }
+                    ],
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "PageInfo",
+                    "kind": "LinkedField",
+                    "name": "pageInfo",
+                    "plural": false,
+                    "selections": [
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "endCursor",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "hasNextPage",
+                        "storageKey": null
+                      }
+                    ],
+                    "storageKey": null
+                  }
+                ],
+                "storageKey": "friends(first:10)"
+              },
+              {
+                "alias": null,
+                "args": (v3/*: any*/),
+                "filters": null,
+                "handle": "connection",
+                "key": "User_friends",
+                "kind": "LinkedHandle",
+                "name": "friends"
+              }
+            ],
+            "type": "User",
+            "abstractKey": null
+          }
+        ],
+        "storageKey": "node(id:\"my-id\")"
+      }
+    ]
+  },
+  "params": {
+    "cacheID": "98f3b773bdfc26cfa52cd8d9bdeed4ca",
+    "id": null,
+    "metadata": {
+      "relayTestingSelectionTypeInfo": {
+        "user": {
+          "enumValues": null,
+          "nullable": true,
+          "plural": false,
+          "type": "Node"
         },
-      ],
-    },
-    operation: {
-      kind: 'Operation',
-      name: 'FriendsQuery',
-      argumentDefinitions: [],
-      selections: [
-        {
-          kind: 'LinkedField',
-          alias: 'user',
-          name: 'node',
-          storageKey: 'node(id:"my-id")',
-          args: (v0 /*: any*/),
-          concreteType: null,
-          plural: false,
-          selections: [
-            (v2 /*: any*/),
-            (v1 /*: any*/),
-            {
-              kind: 'InlineFragment',
-              type: 'User',
-              selections: [
-                {
-                  kind: 'LinkedField',
-                  alias: null,
-                  name: 'friends',
-                  storageKey: 'friends(first:10)',
-                  args: (v3 /*: any*/),
-                  concreteType: 'FriendsConnection',
-                  plural: false,
-                  selections: [
-                    {
-                      kind: 'ScalarField',
-                      alias: null,
-                      name: 'count',
-                      args: null,
-                      storageKey: null,
-                    },
-                    {
-                      kind: 'LinkedField',
-                      alias: null,
-                      name: 'edges',
-                      storageKey: null,
-                      args: null,
-                      concreteType: 'FriendsEdge',
-                      plural: true,
-                      selections: [
-                        {
-                          kind: 'LinkedField',
-                          alias: null,
-                          name: 'node',
-                          storageKey: null,
-                          args: null,
-                          concreteType: 'User',
-                          plural: false,
-                          selections: [
-                            (v1 /*: any*/),
-                            {
-                              kind: 'ScalarField',
-                              alias: null,
-                              name: 'name',
-                              args: null,
-                              storageKey: null,
-                            },
-                            {
-                              kind: 'LinkedField',
-                              alias: null,
-                              name: 'profilePicture',
-                              storageKey: null,
-                              args: null,
-                              concreteType: 'ProfilePicture',
-                              plural: false,
-                              selections: [
-                                {
-                                  kind: 'ScalarField',
-                                  alias: null,
-                                  name: 'url',
-                                  args: null,
-                                  storageKey: null,
-                                },
-                              ],
-                            },
-                            (v2 /*: any*/),
-                          ],
-                        },
-                        {
-                          kind: 'ScalarField',
-                          alias: null,
-                          name: 'cursor',
-                          args: null,
-                          storageKey: null,
-                        },
-                      ],
-                    },
-                    {
-                      kind: 'LinkedField',
-                      alias: null,
-                      name: 'pageInfo',
-                      storageKey: null,
-                      args: null,
-                      concreteType: 'PageInfo',
-                      plural: false,
-                      selections: [
-                        {
-                          kind: 'ScalarField',
-                          alias: null,
-                          name: 'endCursor',
-                          args: null,
-                          storageKey: null,
-                        },
-                        {
-                          kind: 'ScalarField',
-                          alias: null,
-                          name: 'hasNextPage',
-                          args: null,
-                          storageKey: null,
-                        },
-                      ],
-                    },
-                  ],
-                },
-                {
-                  kind: 'LinkedHandle',
-                  alias: null,
-                  name: 'friends',
-                  args: (v3 /*: any*/),
-                  handle: 'connection',
-                  key: 'User_friends',
-                  filters: null,
-                },
-              ],
-            },
-          ],
+        "user.__typename": (v4/*: any*/),
+        "user.friends": {
+          "enumValues": null,
+          "nullable": true,
+          "plural": false,
+          "type": "FriendsConnection"
         },
-      ],
-    },
-    params: {
-      operationKind: 'query',
-      name: 'FriendsQuery',
-      id: null,
-      text:
-        'query FriendsQuery {\n  user: node(id: "my-id") {\n    __typename\n    ... on User {\n      id\n      ...Friends_user\n    }\n    id\n  }\n}\n\nfragment Friends_user on User {\n  friends(first: 10) {\n    count\n    edges {\n      node {\n        id\n        ...FriendCard_user\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment FriendCard_user on User {\n  name\n  profilePicture {\n    url\n  }\n}\n',
-      metadata: {
-        relayTestingSelectionTypeInfo: {
-          user: {
-            type: 'Node',
-            enumValues: null,
-            plural: false,
-            nullable: true,
-          },
-          'user.id': {
-            type: 'ID',
-            enumValues: null,
-            plural: false,
-            nullable: false,
-          },
-          'user.friends': {
-            type: 'FriendsConnection',
-            enumValues: null,
-            plural: false,
-            nullable: true,
-          },
-          'user.friends.count': {
-            type: 'Int',
-            enumValues: null,
-            plural: false,
-            nullable: true,
-          },
-          'user.friends.edges': {
-            type: 'FriendsEdge',
-            enumValues: null,
-            plural: true,
-            nullable: true,
-          },
-          'user.friends.pageInfo': {
-            type: 'PageInfo',
-            enumValues: null,
-            plural: false,
-            nullable: true,
-          },
-          'user.friends.edges.node': {
-            type: 'User',
-            enumValues: null,
-            plural: false,
-            nullable: true,
-          },
-          'user.friends.edges.node.id': {
-            type: 'ID',
-            enumValues: null,
-            plural: false,
-            nullable: true,
-          },
-          'user.friends.edges.cursor': (v4 /*: any*/),
-          'user.friends.pageInfo.endCursor': (v4 /*: any*/),
-          'user.friends.pageInfo.hasNextPage': {
-            type: 'Boolean',
-            enumValues: null,
-            plural: false,
-            nullable: true,
-          },
-          'user.friends.edges.node.name': (v4 /*: any*/),
-          'user.friends.edges.node.profilePicture': {
-            type: 'ProfilePicture',
-            enumValues: null,
-            plural: false,
-            nullable: true,
-          },
-          'user.friends.edges.node.__typename': {
-            type: 'String',
-            enumValues: null,
-            plural: false,
-            nullable: false,
-          },
-          'user.friends.edges.node.profilePicture.url': (v4 /*: any*/),
+        "user.friends.count": {
+          "enumValues": null,
+          "nullable": true,
+          "plural": false,
+          "type": "Int"
         },
-      },
+        "user.friends.edges": {
+          "enumValues": null,
+          "nullable": true,
+          "plural": true,
+          "type": "FriendsEdge"
+        },
+        "user.friends.edges.cursor": (v5/*: any*/),
+        "user.friends.edges.node": {
+          "enumValues": null,
+          "nullable": true,
+          "plural": false,
+          "type": "User"
+        },
+        "user.friends.edges.node.__typename": (v4/*: any*/),
+        "user.friends.edges.node.id": (v6/*: any*/),
+        "user.friends.edges.node.name": (v5/*: any*/),
+        "user.friends.edges.node.profilePicture": {
+          "enumValues": null,
+          "nullable": true,
+          "plural": false,
+          "type": "ProfilePicture"
+        },
+        "user.friends.edges.node.profilePicture.url": (v5/*: any*/),
+        "user.friends.pageInfo": {
+          "enumValues": null,
+          "nullable": true,
+          "plural": false,
+          "type": "PageInfo"
+        },
+        "user.friends.pageInfo.endCursor": (v5/*: any*/),
+        "user.friends.pageInfo.hasNextPage": {
+          "enumValues": null,
+          "nullable": true,
+          "plural": false,
+          "type": "Boolean"
+        },
+        "user.id": (v6/*: any*/)
+      }
     },
-  };
+    "name": "FriendsQuery",
+    "operationKind": "query",
+    "text": "query FriendsQuery {\n  user: node(id: \"my-id\") {\n    __typename\n    ... on User {\n      id\n      ...Friends_user\n    }\n    id\n  }\n}\n\nfragment FriendCard_user on User {\n  name\n  profilePicture {\n    url\n  }\n}\n\nfragment Friends_user on User {\n  friends(first: 10) {\n    count\n    edges {\n      node {\n        id\n        ...FriendCard_user\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+  }
+};
 })();
-// prettier-ignore
-(node/*: any*/).hash = 'a6b9278522433a2fc15be2fa73724fdb';
-module.exports = node;
+
+(node/*: any*/).hash = "a6b9278522433a2fc15be2fa73724fdb";
+
+module.exports = ((node/*: any*/)/*: Query<
+  FriendsQuery$variables,
+  FriendsQuery$data,
+>*/);

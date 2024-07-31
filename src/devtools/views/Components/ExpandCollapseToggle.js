@@ -21,7 +21,7 @@ type ExpandCollapseToggleProps = {|
 export default function ExpandCollapseToggle({
   isOpen,
   setIsOpen,
-}: ExpandCollapseToggleProps) {
+}: ExpandCollapseToggleProps): React$MixedElement {
   return (
     <Button
       className={styles.ExpandCollapseToggle}

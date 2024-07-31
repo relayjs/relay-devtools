@@ -19,7 +19,7 @@ export function attach(
   environment: RelayEnvironment,
   global: Object
 ): EnvironmentWrapper {
-  let pendingEventsQueue = [];
+  let pendingEventsQueue: Array<any> | null = [];
   const store = environment.getStore();
 
   const originalLog = environment.__log;
@@ -90,22 +90,27 @@ export function attach(
   function flushInitialOperations() {
     // TODO(damassart): Make this a modular function
     if (pendingEventsQueue != null) {
-      pendingEventsQueue.forEach(pendingEvent => {
-        hook.emit('environment.event', {
-          id: rendererID,
-          envName: environment.configName,
-          data: pendingEvent,
-          eventType: 'environment',
-        });
-      });
+      pendingEventsQueue.forEach(
+        pendingEvent => {
+          hook.emit(
+            'environment.event',
+            {
+              id: rendererID,
+              envName: environment.configName,
+              data: pendingEvent,
+              eventType: 'environment',
+            },
+          );
+        },
+      );
       pendingEventsQueue = null;
     }
-    this.sendStoreRecords();
+    sendStoreRecords();
   }
 
   return {
     cleanup,
     sendStoreRecords,
-    flushInitialOperations,
+    flushInitialOperations
   };
 }

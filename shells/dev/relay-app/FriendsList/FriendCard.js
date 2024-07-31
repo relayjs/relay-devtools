@@ -10,13 +10,13 @@
 import React from 'react';
 import { graphql, createFragmentContainer } from 'react-relay';
 import styles from './FriendCard.css';
-import type { FriendCard_user } from './__generated__/FriendCard_user.graphql';
+import type { FriendCard_user$data } from './__generated__/FriendCard_user.graphql';
 
 type Props = {|
-  +user: FriendCard_user,
+  +user: FriendCard_user$data,
 |};
 
-export default createFragmentContainer(
+export default (createFragmentContainer(
   function FriendCard(props: Props) {
     return (
       <div className={styles.Card}>
@@ -39,4 +39,4 @@ export default createFragmentContainer(
       }
     `,
   }
-);
+): $FlowFixMe);

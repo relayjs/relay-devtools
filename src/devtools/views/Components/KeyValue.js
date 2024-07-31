@@ -7,7 +7,7 @@
  * @flow
  */
 
-import React, { useState } from 'react';
+import type { Element as $IMPORTED_TYPE$_Element } from "react";import React, { useState } from 'react';
 import type { Element } from 'react';
 // import EditableValue from './EditableValue';
 import ExpandCollapseToggle from './ExpandCollapseToggle';
@@ -30,7 +30,11 @@ export default function KeyValue({
   name,
   path,
   value,
-}: KeyValueProps) {
+}: KeyValueProps):
+  | any
+  | $IMPORTED_TYPE$_Element<"div">
+  | Array<Element<any>>
+  | Array<any | $IMPORTED_TYPE$_Element<"div">> {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [wasOpen, setWasOpen] = useState<boolean>(isOpen);
   if (isOpen && !wasOpen) {
@@ -73,7 +77,7 @@ export default function KeyValue({
     if (Array.isArray(value)) {
       const hasChildren = value.length > 0;
 
-      const children = wasOpen
+      const children: any | Array<any | $IMPORTED_TYPE$_Element<"div">> = wasOpen
         ? value.map((innerValue, index) => (
             <KeyValue
               key={index}
@@ -115,14 +119,14 @@ export default function KeyValue({
       //TODO(damassart): Fix this
       const entries = Object.entries(value);
       if (alphaSort) {
-        entries.sort(alphaSortEntries);
+        entries.sort((alphaSortEntries: $FlowFixMe));
       }
 
       const hasChildren = entries.length > 0;
       const displayName = 'Object';
 
-      const children = wasOpen
-        ? entries.map<Element<any>>(([entriesName, entriesVal]) => (
+      const children: Array<Element<any>> | Array<any | $IMPORTED_TYPE$_Element<"div">> = wasOpen
+        ? entries.map(([entriesName, entriesVal]) => (
             <KeyValue
               key={entriesName}
               alphaSort={alphaSort}

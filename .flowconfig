@@ -9,20 +9,19 @@ shells/dev/build/*
 [include]
 
 [libs]
-/flow-typed/
 ./flow.js
 
 [lints]
 
 [options]
-esproposal.class_instance_fields=enable
-suppress_comment=\\(.\\|\n\\)*\\$FlowFixMe
-suppress_comment=\\(.\\|\n\\)*\\$FlowIssue
-suppress_comment=\\(.\\|\n\\)*\\$FlowIgnore
 module.name_mapper='^src' ->'<PROJECT_ROOT>/src'
-esproposal.optional_chaining=enable
+suppress_type=$FlowIssue
+suppress_type=$FlowFixMe
+suppress_type=$FlowFixMeProps
+suppress_type=$FlowFixMeState
+suppress_type=$FlowExpectedError
 
 [strict]
 
 [version]
-^0.113.0
+^0.241.0

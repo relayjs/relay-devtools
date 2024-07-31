@@ -13,7 +13,7 @@
 import nullthrows from 'nullthrows';
 import { installHook } from 'src/hook';
 
-function injectCode(code) {
+function injectCode(code: string) {
   const script = document.createElement('script');
   script.textContent = code;
 

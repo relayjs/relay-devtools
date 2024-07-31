@@ -11,15 +11,15 @@ import React, { Fragment } from 'react';
 import { graphql, createPaginationContainer } from 'react-relay';
 import FriendCard from './FriendCard';
 import styles from './Friends.css';
-import type { Friends_user } from './__generated__/Friends_user.graphql';
-import type { RelayProps } from 'react-relay';
+import type { Friends_user$data } from './__generated__/Friends_user.graphql';
+import type { $RelayProps } from 'react-relay';
 
 type Props = {|
-  +user: Friends_user,
-  +relay: RelayProps,
+  +user: Friends_user$data,
+  +relay: $RelayProps<any>,
 |};
 
-export default createPaginationContainer(
+export default (createPaginationContainer(
   function Friends(props: Props) {
     const edges = Array.isArray(props.user.friends?.edges)
       ? props.user.friends?.edges
@@ -92,4 +92,4 @@ export default createPaginationContainer(
       }
     `,
   }
-);
+): $FlowFixMe);

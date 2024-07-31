@@ -51,7 +51,7 @@ export default class ErrorBoundary extends Component<Props, State> {
     });
   }
 
-  render() {
+  render(): $FlowFixMe {
     const { children } = this.props;
     const { callStack, componentStack, errorMessage, hasError } = this.state;
 

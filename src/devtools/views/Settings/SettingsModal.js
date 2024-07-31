@@ -19,12 +19,12 @@ import styles from './SettingsModal.css';
 
 type TabID = 'general' | 'components';
 
-export default function SettingsModal(_: {||}) {
+export default function SettingsModal(_: {||}): React$MixedElement | null {
   const { isModalShowing } = useContext(SettingsModalContext);
   return !isModalShowing ? null : <SettingsModalImpl />;
 }
 
-function getSelectedTabView(selectedTabID) {
+function getSelectedTabView(selectedTabID: TabID) {
   switch (selectedTabID) {
     case 'general':
       return <GeneralSettings />;

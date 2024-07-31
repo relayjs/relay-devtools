@@ -7,7 +7,7 @@
  * @flow
  */
 
-describe('Store', () => {
+import type { WallEvent } from "../types";describe('Store', () => {
   let Store;
   let Bridge;
 
@@ -19,9 +19,9 @@ describe('Store', () => {
   it('should delete individual records correctly', () => {
     const wall = {
       listen: jest.fn(() => () => {}),
-      sendAll: jest.fn(),
+      sendAll: jest.fn<[Array<WallEvent>], void>(),
     };
-    const bridge = new Bridge(wall);
+    const bridge = new Bridge<any, any>((wall: $FlowFixMe));
     const store = new Store(bridge);
 
     store.mergeRecords(1, {
@@ -73,11 +73,11 @@ describe('Store', () => {
   });
 
   it('should merge records correctly', () => {
-    const wall = {
+    const wall: $FlowFixMe = {
       listen: jest.fn(() => () => {}),
-      sendAll: jest.fn(),
+      sendAll: jest.fn<[Array<WallEvent>], void>(),
     };
-    const bridge = new Bridge(wall);
+    const bridge = new Bridge<any, any>(wall);
     const store = new Store(bridge);
 
     // Testing case when oldRecords is null and we just set the map to the newRecords
@@ -270,11 +270,11 @@ describe('Store', () => {
   });
 
   it('should merge optimistic updates correctly', () => {
-    const wall = {
-      listen: jest.fn(() => () => {}),
-      sendAll: jest.fn(),
+    const wall: $FlowFixMe = {
+      listen: jest.fn<[any], _>(() => () => {}),
+      sendAll: jest.fn<[Array<WallEvent>], void>(),
     };
-    const bridge = new Bridge(wall);
+    const bridge = new Bridge<any, any>(wall);
     const store = new Store(bridge);
 
     // Testing with a real optimistic source

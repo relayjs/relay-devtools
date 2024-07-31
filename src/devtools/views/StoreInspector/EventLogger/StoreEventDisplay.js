@@ -45,11 +45,11 @@ export default function StoreEventDisplay(props: {|
   selectedEvent: LogEvent,
   selectedRecordID: string,
   setSelectedRecordID: string => void,
-|}) {
+|}): React$MixedElement | null {
   const { selectedEvent, selectedRecordID, setSelectedRecordID } = props;
   const [tab, setTab] = useState(updatedRecordsTab);
   if (selectedEvent.name === 'store.publish') {
-    const recordsByType = new Map();
+    const recordsByType = new Map<any, Array<string>>();
     const records = selectedEvent.source;
     if (records != null) {
       for (const key in records) {
@@ -90,12 +90,12 @@ export default function StoreEventDisplay(props: {|
       </div>
     );
   } else if (selectedEvent.name === 'store.gc') {
-    const records = {};
+    const records: $FlowFixMe = {};
     selectedEvent.references
       .filter(ref => selectedEvent.gcRecords[ref] != null)
       .map(ref => (records[ref] = selectedEvent.gcRecords[ref]));
 
-    const recordsByType = new Map();
+    const recordsByType = new Map<any, Array<string>>();
 
     if (records != null) {
       for (const key in records) {
@@ -151,10 +151,10 @@ export default function StoreEventDisplay(props: {|
       </div>
     );
   } else if (selectedEvent.name === 'store.notify.complete') {
-    const records = {};
+    const records: $FlowFixMe = {};
     const invalidRecs = {};
-    const recordsByType = new Map();
-    const invalidatedRecordsByType = new Map();
+    const recordsByType = new Map<any | string, Array<string>>();
+    const invalidatedRecordsByType = new Map<mixed, Array<string>>();
     let selectedRecord = null;
     let invalidatedSelectedRecord = null;
 
@@ -211,7 +211,7 @@ export default function StoreEventDisplay(props: {|
           <TabBar
             tabID={tab.id}
             id="StoreTab"
-            selectTab={setTab}
+            selectTab={(setTab: $FlowFixMe)}
             size="small"
             tabs={notifyCompleteTabs}
           />

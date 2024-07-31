@@ -29,7 +29,7 @@ export default function Toggle({
   isChecked,
   onChange,
   title,
-}: Props) {
+}: Props): React$MixedElement {
   const defaultClassName = isDisabled
     ? styles.ToggleDisabled
     : isChecked

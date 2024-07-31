@@ -67,7 +67,7 @@ export function useLocalStorage<T>(
   const [storedValue, setStoredValue] = useState(getValueFromLocalStorage);
 
   const setValue = useCallback(
-    value => {
+    (value: any | T | (() => T)) => {
       try {
         const valueToStore =
           value instanceof Function ? (value: any)(storedValue) : value;
@@ -83,7 +83,7 @@ export function useLocalStorage<T>(
   // Listen for changes to this local storage value made from other windows.
   // This enables the e.g. "⚛️ Elements" tab to update in response to changes from "⚛️ Settings".
   useLayoutEffect(() => {
-    const onStorage = event => {
+    const onStorage = (event: any) => {
       const newValue = getValueFromLocalStorage();
       if (key === event.key && storedValue !== newValue) {
         setValue(newValue);

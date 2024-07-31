@@ -44,12 +44,12 @@ type ModalDialogContextType = {|
   dispatch: Dispatch,
 |};
 
-const ModalDialogContext = createContext<ModalDialogContextType>(
+const ModalDialogContext: $FlowFixMe = createContext<ModalDialogContextType>(
   ((null: any): ModalDialogContextType)
 );
 ModalDialogContext.displayName = 'ModalDialogContext';
 
-function dialogReducer(state, action) {
+function dialogReducer(state: State, action: Action) {
   switch (action.type) {
     case 'HIDE':
       return {
@@ -72,7 +72,7 @@ type Props = {|
   children: React$Node,
 |};
 
-function ModalDialogContextController({ children }: Props) {
+function ModalDialogContextController({ children }: Props): React$MixedElement {
   const [state, dispatch] = useReducer<State, Action>(dialogReducer, {
     content: null,
     isVisible: false,
@@ -96,7 +96,7 @@ function ModalDialogContextController({ children }: Props) {
   );
 }
 
-function ModalDialog(_: {||}) {
+function ModalDialog(_: {||}): React$MixedElement | null  {
   const { isVisible } = useContext(ModalDialogContext);
   return isVisible ? <ModalDialogImpl /> : null;
 }

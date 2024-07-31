@@ -18,14 +18,14 @@ export type Props = {|
   optimisticUpdates: ?StoreRecords,
 |};
 
-export default function Optimistic({ optimisticUpdates }: Props) {
+export default function Optimistic({ optimisticUpdates }: Props): React$MixedElement {
   const [selectedRecordID, setSelectedRecordID] = useState('');
   if (optimisticUpdates == null) {
     return (
       <div className={styles.NoOptimisticUpdates}>No Optimistic Updates!</div>
     );
   }
-  const optimisticUpdatesByType = new Map();
+  const optimisticUpdatesByType = new Map<mixed, Array<string>>();
 
   for (const key in optimisticUpdates) {
     const rec = optimisticUpdates[key];

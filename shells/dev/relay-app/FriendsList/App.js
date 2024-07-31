@@ -13,7 +13,7 @@ import { graphql, QueryRenderer } from 'react-relay';
 import createInBrowserNetwork from './createInBrowserNetwork';
 import Friends from './Friends';
 
-function createNewEnvironment(configName) {
+function createNewEnvironment(configName: string) {
   const source = new RecordSource();
   const store = new Store(source);
   var environment = new Environment({
@@ -37,7 +37,7 @@ export type Item = {|
 
 type Props = {||};
 
-export default function App(props: Props) {
+export default function App(props: Props): React$MixedElement {
   // Add initial environment to environmentList
   const [environmentList, updateEnvironmentList] = useState({
     'Example Environment': initialEnvironment,
@@ -53,12 +53,12 @@ export default function App(props: Props) {
 
     updateEnvironmentList({
       ...environmentList,
-      [newEnvironment.configName]: newEnvironment,
+      [(newEnvironment.configName: $FlowFixMe)]: newEnvironment,
     });
   }, [environmentList]);
 
   const selectNewEnvironment = useCallback(
-    e => {
+    (e: any) => {
       setCurrentEnvironment(environmentList[e.target.value]);
     },
     [environmentList]

@@ -37,7 +37,7 @@ env.beforeEach(() => {
   installHook(global);
 
   const bridgeListeners = [];
-  const bridge = new Bridge({
+  const bridge = new Bridge<any, any>({
     listen(callback) {
       bridgeListeners.push(callback);
       return () => {

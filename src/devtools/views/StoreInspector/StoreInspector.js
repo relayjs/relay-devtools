@@ -23,6 +23,7 @@ import { deepCopyFunction } from './utils';
 import EventLogger from './EventLogger/EventLogger';
 import { logEvent } from '../../../Logger';
 import styles from './StoreInspector.css';
+import type { ReactSetStateFunction } from "react";
 
 export type TabID =
   | 'explorer'
@@ -60,9 +61,18 @@ const recorderTab = {
 
 const tabs = [explorerTab, snapshotTab, optimisticTab, recorderTab];
 
-function FilterButtons({ checked, setChecked, isRecording, store }) {
+function FilterButtons({ checked, setChecked, isRecording, store }: {|
+  checked: any | {| networkEvents: boolean, storeEvents: boolean |},
+  isRecording: any | boolean,
+  setChecked:
+    | any
+    | ReactSetStateFunction<
+      any | {| networkEvents: boolean, storeEvents: boolean |},
+    >,
+  store: any,
+|}) {
   const updateChecked = useCallback(
-    e => {
+    (e: any) => {
       setChecked({
         ...checked,
         [e.target.name]: !checked[e.target.name],
@@ -105,7 +115,17 @@ function RecordEventsMenu({
   store,
   checked,
   setChecked,
-}) {
+}: {|
+  checked: any | {| networkEvents: boolean, storeEvents: boolean |},
+  isRecording: boolean,
+  setChecked: ReactSetStateFunction<
+    any | {| networkEvents: boolean, storeEvents: boolean |},
+  >,
+  startRecording: () => void,
+  stopAndClearRecording: () => void,
+  stopRecording: () => void,
+  store: any,
+|}) {
   const [importing, setImporting] = useState(false);
   const className = isRecording
     ? styles.ActiveRecordToggle
@@ -154,20 +174,20 @@ function RecordEventsMenu({
 export default function StoreInspector(props: {|
   +portalContainer: mixed,
   currentEnvID: ?number,
-|}) {
+|}): null | React$MixedElement {
   const store = useContext(StoreContext);
   const bridge = useContext(BridgeContext);
   const [tab, setTab] = useState(explorerTab);
   const selectTab = useCallback(
-    tabInfo => {
+    (tabInfo: $FlowFixMe) => {
       logEvent({ event_name: 'selected-store-tab', extra: tabInfo.id });
       setTab(tabInfo);
     },
     [setTab]
   );
   const [, forceUpdate] = useState({});
-  const [envSnapshotList, setEnvSnapshotList] = useState({});
-  const [envSnapshotListByType, setEnvSnapshotListByType] = useState({});
+  const [envSnapshotList, setEnvSnapshotList] = useState<{[$FlowFixMe]: any}>({});
+  const [envSnapshotListByType, setEnvSnapshotListByType] = useState<{[$FlowFixMe]: any}>({});
   const [isRecording, setIsRecording] = useState(false);
   const [checked, setChecked] = useState({
     networkEvents: true,
@@ -201,7 +221,7 @@ export default function StoreInspector(props: {|
 
   const [selectedRecordID, setSelectedRecordID] = useState('');
   let records = {};
-  const recordsByType = new Map();
+  const recordsByType = new Map<mixed, Array<string>>();
 
   const refreshStore = useCallback(() => {
     const currEnvID = props.currentEnvID;
@@ -210,10 +230,10 @@ export default function StoreInspector(props: {|
       recordsArr.push(deepCopyFunction(records));
       const recordsTypeArr = envSnapshotListByType[currEnvID] || [];
       recordsTypeArr.push(deepCopyFunction(recordsByType));
-      setEnvSnapshotList({ ...envSnapshotList, [currEnvID]: recordsArr });
+      setEnvSnapshotList({ ...envSnapshotList, [(currEnvID: $FlowFixMe)]: recordsArr });
       setEnvSnapshotListByType({
         ...envSnapshotListByType,
-        [currEnvID]: recordsTypeArr,
+        [(currEnvID: $FlowFixMe)]: recordsTypeArr,
       });
       bridge.send('refreshStore', currEnvID);
     }

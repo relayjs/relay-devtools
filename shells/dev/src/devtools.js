@@ -48,9 +48,9 @@ mountButton.addEventListener('click', function() {
 inject('dist/app.js', () => {
   initDevTools({
     connect(cb) {
-      const bridge = new Bridge({
+      const bridge = new Bridge<any, any>({
         listen(fn) {
-          const listener = ({ data }) => {
+          const listener = ({data}: any) => {
             fn(data);
           };
           // Preserve the reference to the window we subscribe to, so we can unsubscribe from it when required.
@@ -72,7 +72,7 @@ inject('dist/app.js', () => {
       const root = createRoot(container);
       const batch = root.createBatch();
       batch.render(
-        createElement(DevTools, {
+        (createElement: $FlowFixMe)(DevTools, {
           bridge,
           browserTheme: 'light',
           showTabBar: true,
@@ -94,7 +94,7 @@ inject('dist/app.js', () => {
   });
 });
 
-function inject(sourcePath, callback) {
+function inject(sourcePath: string, callback: void | (() => void)) {
   const script = contentDocument.createElement('script');
   script.onload = callback;
   script.src = sourcePath;

@@ -20,13 +20,13 @@ export type Props = {|
   setSelectedRecordID: string => void,
 |};
 
-function appearsInObject(searchText: string, obj: Object) {
+function appearsInObject(searchText: string, obj: Object): boolean {
   if (obj == null) {
     return false;
   }
   for (const key in obj) {
     if (typeof obj[key] == 'object' && obj[key] !== null) {
-      const appears = appearsInObject(searchText, obj[key]);
+      const appears: boolean = appearsInObject(searchText, obj[key]);
       if (appears) {
         return appears;
       }
@@ -52,17 +52,17 @@ export default function RecordList({
   recordsByType,
   selectedRecordID,
   setSelectedRecordID,
-}: Props) {
+}: Props): React$MixedElement {
   const [recordSearch, setRecordSearch] = useState('');
   const fetchSearchBarText = useCallback(
-    e => {
+    (e: any) => {
       setSelectedRecordID('');
       setRecordSearch(e.target.value);
     },
     [setSelectedRecordID]
   );
-  const [recordListStyles, setRecordListStyles] = useState({});
-  const [plusMinusCollapse, setPlusMinusCollapse] = useState({});
+  const [recordListStyles, setRecordListStyles] = useState<{[string]: any}>({});
+  const [plusMinusCollapse, setPlusMinusCollapse] = useState<{[string]: any}>({});
 
   if (records == null || recordsByType == null) {
     return <div className={styles.Loading}>Loading...</div>;
@@ -85,7 +85,7 @@ export default function RecordList({
     );
 
     if (filtered_ids.length <= 0) {
-      return [];
+      return ([]: $FlowFixMe);
     }
 
     return [

@@ -20,19 +20,19 @@ import './styles.css';
 
 const roots = [];
 
-function mountHelper(App) {
+function mountHelper(App: ((_: mixed) => React$MixedElement)) {
   const container = document.createElement('div');
 
   ((document.body: any): HTMLBodyElement).appendChild(container);
 
   const root = createRoot(container);
-  root.render(createElement(App));
+  root.render((createElement: $FlowFixMe)(App));
 
   roots.push(root);
 }
 
 function mountTestApp() {
-  mountHelper(FriendsList);
+  mountHelper((FriendsList: $FlowFixMe));
 }
 
 function unmountTestApp() {

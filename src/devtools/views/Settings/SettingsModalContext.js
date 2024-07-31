@@ -17,14 +17,14 @@ type Context = {
   setIsModalShowing: (value: boolean) => void,
 };
 
-const SettingsModalContext = createContext<Context>(((null: any): Context));
+const SettingsModalContext: $FlowFixMe = createContext<Context>(((null: any): Context));
 SettingsModalContext.displayName = 'SettingsModalContext';
 
 function SettingsModalContextController({
   children,
 }: {|
   children: React$Node,
-|}) {
+|}): React$MixedElement {
   const [isModalShowing, setIsModalShowing] = useState<boolean>(false);
 
   const value = useMemo(() => ({ isModalShowing, setIsModalShowing }), [

@@ -27,7 +27,7 @@ type Context = {|
   setTheme(value: Theme): void,
 |};
 
-const SettingsContext = createContext<Context>(((null: any): Context));
+const SettingsContext: $FlowFixMe = createContext<Context>(((null: any): Context));
 SettingsContext.displayName = 'SettingsContext';
 
 type DocumentElements = Array<HTMLElement>;
@@ -46,7 +46,7 @@ function SettingsContextController({
   rootContainer,
   networkPortalContainer,
   settingsPortalContainer,
-}: Props) {
+}: Props): React$MixedElement {
   const [displayDensity, setDisplayDensity] = useLocalStorage<DisplayDensity>(
     'Relay::DevTools::displayDensity',
     'compact'

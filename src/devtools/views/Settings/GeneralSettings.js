@@ -12,19 +12,19 @@ import { SettingsContext } from './SettingsContext';
 
 import styles from './SettingsShared.css';
 
-export default function GeneralSettings(_: {||}) {
+export default function GeneralSettings(_: {||}): React$MixedElement {
   const { displayDensity, setDisplayDensity, theme, setTheme } = useContext(
     SettingsContext
   );
 
   const updateDisplayDensity = useCallback(
-    ({ currentTarget }) => {
+    ({currentTarget}: any) => {
       setDisplayDensity(currentTarget.value);
     },
     [setDisplayDensity]
   );
   const updateTheme = useCallback(
-    ({ currentTarget }) => {
+    ({currentTarget}: any) => {
       setTheme(currentTarget.value);
     },
     [setTheme]

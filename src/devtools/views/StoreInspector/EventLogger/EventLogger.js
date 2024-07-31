@@ -14,6 +14,7 @@ import StoreEventDisplay from './StoreEventDisplay';
 import type { LogEvent } from '../../../../types';
 
 import styles from './EventLogger.css';
+import type { ReactSetStateFunction } from "react";
 
 export type Props = {|
   allEvents: ?$ReadOnlyArray<LogEvent>,
@@ -21,7 +22,11 @@ export type Props = {|
   checked: { [string]: boolean },
 |};
 
-function AllEventsDetails({ events, selectedEventID, setSelectedEventID }) {
+function AllEventsDetails({ events, selectedEventID, setSelectedEventID }: {|
+  events: $ReadOnlyArray<LogEvent>,
+  selectedEventID: number,
+  setSelectedEventID: ReactSetStateFunction<number>,
+|}) {
   const [selectedRecordID, setSelectedRecordID] = useState('');
   const selectedEvent = events[selectedEventID];
 
@@ -51,7 +56,7 @@ export default function EventLogger({
   allEvents,
   isRecording,
   checked,
-}: Props) {
+}: Props): React$MixedElement | null {
   const [selectedEventID, setSelectedEventID] = useState(0);
 
   if (allEvents == null && !isRecording) {

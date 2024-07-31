@@ -22,7 +22,7 @@ import type {
 } from '../types';
 import { getEventId } from '../utils';
 
-const debug = (methodName, ...args) => {
+const debug = (methodName: string, ...args: [string]) => {
   if (__DEBUG__) {
     console.log(
       `%cStore %c${methodName}`,
@@ -78,7 +78,7 @@ export default class Store extends EventEmitter<{|
   }
 
   getAllEventsArray(): $ReadOnlyArray<LogEvent> {
-    const allEvents = [];
+    const allEvents: Array<LogEvent> = [];
     this._environmentAllEvents.forEach((value, _) => allEvents.push(...value));
     return allEvents;
   }
@@ -97,7 +97,7 @@ export default class Store extends EventEmitter<{|
   }
 
   getAllEnvironmentEvents(): $ReadOnlyArray<LogEvent> {
-    const allEnvironmentEvents = [];
+    const allEnvironmentEvents: Array<LogEvent> = [];
     this._environmentEventsMap.forEach((value, _) =>
       allEnvironmentEvents.push(...value)
     );
@@ -399,7 +399,7 @@ export default class Store extends EventEmitter<{|
   };
 
   clearNetworkEvents = (environmentID: number) => {
-    const completed = new Set();
+    const completed = new Set<?number>();
     let networkEventArray = this._environmentEventsMap.get(environmentID);
     if (networkEventArray !== undefined && networkEventArray.length > 0) {
       for (const event of networkEventArray) {

@@ -12,9 +12,9 @@ import Bridge from 'src/bridge';
 import { initBackend } from 'src/backend';
 import type { WallEvent } from 'src/types';
 
-const bridge = new Bridge({
+const bridge = new Bridge<any, any>({
   listen(fn) {
-    const listener = event => {
+    const listener = (event: any) => {
       fn(event.data);
     };
     window.addEventListener('message', listener);
@@ -23,7 +23,7 @@ const bridge = new Bridge({
     };
   },
   sendAll(events: Array<WallEvent>) {
-    window.parent.postMessage(events, '*');
+    window.parent.postMessage(JSON.parse(JSON.stringify(events)), '*');
   },
 });
 

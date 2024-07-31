@@ -9,7 +9,7 @@
 
 /* global chrome */
 
-const ports = {};
+const ports: $FlowFixMe = {};
 
 const IS_FIREFOX = navigator.userAgent.indexOf('Firefox') >= 0;
 
@@ -50,13 +50,13 @@ function installContentScript(tabId: number) {
   );
 }
 
-function doublePipe(one, two) {
+function doublePipe(one: any, two: any) {
   one.onMessage.addListener(lOne);
-  function lOne(message) {
+  function lOne(message: any) {
     two.postMessage(message);
   }
   two.onMessage.addListener(lTwo);
-  function lTwo(message) {
+  function lTwo(message: any) {
     one.postMessage(message);
   }
   function shutdown() {
@@ -69,7 +69,7 @@ function doublePipe(one, two) {
   two.onDisconnect.addListener(shutdown);
 }
 
-function setIconAndPopup(relayBuildType, tabId) {
+function setIconAndPopup(relayBuildType: string, tabId: number) {
   chrome.browserAction.setIcon({
     tabId: tabId,
     path: {

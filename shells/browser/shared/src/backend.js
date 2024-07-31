@@ -11,7 +11,7 @@
 // Running module factories is intentionally delayed until we know the hook exists.
 // This is to avoid issues like: https://github.com/facebook/react-devtools/issues/1039
 
-function welcome(event) {
+function welcome(event: any) {
   if (
     event.source !== window ||
     event.data.source !== 'relay-devtools-content-script'
@@ -26,14 +26,14 @@ function welcome(event) {
 
 window.addEventListener('message', welcome);
 
-function setup(hook) {
+function setup(hook: any) {
   const Agent = require('src/backend/agent').default;
   const Bridge = require('src/bridge').default;
   const { initBackend } = require('src/backend');
 
-  const bridge = new Bridge({
+  const bridge = new Bridge<any, any>({
     listen(fn) {
-      const listener = event => {
+      const listener = (event: any) => {
         if (
           event.source !== window ||
           !event.data ||

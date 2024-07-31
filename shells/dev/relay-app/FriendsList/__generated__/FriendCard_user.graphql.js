@@ -1,5 +1,8 @@
 /**
+ * @generated SignedSource<<c190e08fe0062b0302f8d20582528753>>
  * @flow
+ * @lightSyntaxTransform
+ * @nogrep
  */
 
 /* eslint-disable */
@@ -7,59 +10,62 @@
 'use strict';
 
 /*::
-import type { ReaderFragment } from 'relay-runtime';
-import type { FragmentReference } from "relay-runtime";
-declare export opaque type FriendCard_user$ref: FragmentReference;
-declare export opaque type FriendCard_user$fragmentType: FriendCard_user$ref;
-export type FriendCard_user = {|
+import type { Fragment, ReaderFragment } from 'relay-runtime';
+import type { FragmentType } from "relay-runtime";
+declare export opaque type FriendCard_user$fragmentType: FragmentType;
+export type FriendCard_user$data = {|
   +name: ?string,
   +profilePicture: ?{|
-    +url: ?string
+    +url: ?string,
   |},
-  +$refType: FriendCard_user$ref,
+  +$fragmentType: FriendCard_user$fragmentType,
 |};
-export type FriendCard_user$data = FriendCard_user;
 export type FriendCard_user$key = {
   +$data?: FriendCard_user$data,
-  +$fragmentRefs: FriendCard_user$ref,
+  +$fragmentSpreads: FriendCard_user$fragmentType,
+  ...
 };
 */
 
-
-const node/*: ReaderFragment*/ = {
-  "kind": "Fragment",
-  "name": "FriendCard_user",
-  "type": "User",
-  "metadata": null,
+var node/*: ReaderFragment*/ = {
   "argumentDefinitions": [],
+  "kind": "Fragment",
+  "metadata": null,
+  "name": "FriendCard_user",
   "selections": [
     {
-      "kind": "ScalarField",
       "alias": null,
-      "name": "name",
       "args": null,
+      "kind": "ScalarField",
+      "name": "name",
       "storageKey": null
     },
     {
-      "kind": "LinkedField",
       "alias": null,
-      "name": "profilePicture",
-      "storageKey": null,
       "args": null,
       "concreteType": "ProfilePicture",
+      "kind": "LinkedField",
+      "name": "profilePicture",
       "plural": false,
       "selections": [
         {
-          "kind": "ScalarField",
           "alias": null,
-          "name": "url",
           "args": null,
+          "kind": "ScalarField",
+          "name": "url",
           "storageKey": null
         }
-      ]
+      ],
+      "storageKey": null
     }
-  ]
+  ],
+  "type": "User",
+  "abstractKey": null
 };
-// prettier-ignore
-(node/*: any*/).hash = 'aa6a813be40074e272758f996347f889';
-module.exports = node;
+
+(node/*: any*/).hash = "aa6a813be40074e272758f996347f889";
+
+module.exports = ((node/*: any*/)/*: Fragment<
+  FriendCard_user$fragmentType,
+  FriendCard_user$data,
+>*/);

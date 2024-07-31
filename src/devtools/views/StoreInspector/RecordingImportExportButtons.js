@@ -45,12 +45,12 @@ export default function RecordingImportExportButtons(props: {|
   store: Store,
   importing: boolean,
   setImporting: boolean => void,
-|}) {
+|}): React$MixedElement {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const downloadRef = useRef<HTMLAnchorElement | null>(null);
   const [err, setErr] = useState('');
-  const [environmentIDs, setEnvironmentIDs] = useState([]);
-  const [environmentNames, setEnvironmentNames] = useState({});
+  const [environmentIDs, setEnvironmentIDs] = useState<Array<number>>([]);
+  const [environmentNames, setEnvironmentNames] = useState<{||}>({});
 
   const downloadData = useCallback(() => {
     const anchorElement = downloadRef.current;
@@ -87,7 +87,7 @@ export default function RecordingImportExportButtons(props: {|
   }, [props.isRecording]);
 
   const environmentChange = useCallback(
-    e => {
+    (e: any) => {
       props.store.setImportEnvID(parseInt(e.target.value));
     },
     [props.store]
@@ -111,7 +111,7 @@ export default function RecordingImportExportButtons(props: {|
             const id = parseInt(environment.shift());
             const name = environment.join(' ');
             envIDs.push(id);
-            envNames[id] = name;
+            envNames[(id: $FlowFixMe)] = name;
             props.store.setAllEventsMap(id, val);
           });
           props.store.setImportEnvID(envIDs[0]);
@@ -162,7 +162,7 @@ export default function RecordingImportExportButtons(props: {|
           {environmentIDs.map(key => {
             return (
               <option key={key} value={key}>
-                {key}: {environmentNames[key]}
+                {key}: {environmentNames[(key: $FlowFixMe)]}
               </option>
             );
           })}

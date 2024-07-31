@@ -87,7 +87,7 @@ export default function DevTools({
   store,
   viewElementSourceFunction,
   viewElementSourceRequiresFileLocation = false,
-}: Props) {
+}: Props): React$MixedElement {
   const [tab, setTab] = useState(defaultTab);
   const selectTab = useCallback(
     (tabId: TabID) => {
@@ -126,7 +126,7 @@ export default function DevTools({
     logEvent({ event_name: 'loaded-dev-tools' });
   }, []);
 
-  const environmentChange = useCallback(e => {
+  const environmentChange = useCallback((e: any) => {
     setCurrentEnvID(parseInt(e.target.value));
   }, []);
 

@@ -7,7 +7,7 @@
  * @flow
  */
 
-describe('Bridge', () => {
+import type { WallEvent } from "../types";describe('Bridge', () => {
   let Bridge;
 
   beforeEach(() => {
@@ -16,10 +16,10 @@ describe('Bridge', () => {
 
   it('should shutdown properly', () => {
     const wall = {
-      listen: jest.fn(() => () => {}),
-      sendAll: jest.fn(),
+      listen: jest.fn<[any], _>(() => () => {}),
+      sendAll: jest.fn<[Array<WallEvent>], void>(),
     };
-    const bridge = new Bridge(wall);
+    const bridge = new Bridge<any, any>(wall);
 
     // Check that we're wired up correctly.
     bridge.send('init');

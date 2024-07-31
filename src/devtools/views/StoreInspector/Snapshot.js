@@ -12,6 +12,7 @@ import RecordList from './RecordList';
 import RecordDetails from './RecordDetails';
 
 import styles from './Snapshot.css';
+import type { ReactSetStateFunction } from "react";
 
 export type Props = {|
   envSnapshotList: Object,
@@ -23,13 +24,17 @@ function SnapshotList({
   snapshotList,
   setSelectedSnapshotID,
   selectedSnapshotID,
-}) {
+}: {|
+  selectedSnapshotID: number | string,
+  setSelectedSnapshotID: ReactSetStateFunction<number>,
+  snapshotList: any,
+|}) {
   const snapshotIDs = Object.keys(snapshotList).map(snapshotID => {
     return (
       <div
         key={snapshotID}
         onClick={() => {
-          setSelectedSnapshotID(snapshotID);
+          setSelectedSnapshotID((snapshotID: $FlowFixMe));
         }}
         className={`${styles.Record} ${
           snapshotID === selectedSnapshotID ? styles.SelectedRecord : ''
@@ -52,7 +57,11 @@ function SnapshotDetails({
   snapshotList,
   snapshotListByType,
   selectedSnapshotID,
-}) {
+}: {|
+  selectedSnapshotID: number | string,
+  snapshotList: any,
+  snapshotListByType: any,
+|}) {
   const [selectedRecordID, setSelectedRecordID] = useState('');
   const snapshotRecords = snapshotList[selectedSnapshotID];
   if (snapshotRecords == null) {
@@ -82,7 +91,7 @@ export default function Snapshots({
   envSnapshotList,
   envSnapshotListByType,
   currentEnvID,
-}: Props) {
+}: Props): React$MixedElement {
   const [selectedSnapshotID, setSelectedSnapshotID] = useState(0);
 
   if (

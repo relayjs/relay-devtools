@@ -11,7 +11,7 @@ import React from 'react';
 
 import styles from './RelayLogo.css';
 
-export default function RelayLogo() {
+export default function RelayLogo(): React$MixedElement {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
