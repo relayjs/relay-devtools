@@ -90,19 +90,14 @@ export function attach(
   function flushInitialOperations() {
     // TODO(damassart): Make this a modular function
     if (pendingEventsQueue != null) {
-      pendingEventsQueue.forEach(
-        pendingEvent => {
-          hook.emit(
-            'environment.event',
-            {
-              id: rendererID,
-              envName: environment.configName,
-              data: pendingEvent,
-              eventType: 'environment',
-            },
-          );
-        },
-      );
+      pendingEventsQueue.forEach(pendingEvent => {
+        hook.emit('environment.event', {
+          id: rendererID,
+          envName: environment.configName,
+          data: pendingEvent,
+          eventType: 'environment',
+        });
+      });
       pendingEventsQueue = null;
     }
     sendStoreRecords();
@@ -111,6 +106,6 @@ export function attach(
   return {
     cleanup,
     sendStoreRecords,
-    flushInitialOperations
+    flushInitialOperations,
   };
 }

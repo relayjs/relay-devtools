@@ -18,13 +18,13 @@ export default function GeneralSettings(_: {||}): React$MixedElement {
   );
 
   const updateDisplayDensity = useCallback(
-    ({currentTarget}: any) => {
+    ({ currentTarget }: any) => {
       setDisplayDensity(currentTarget.value);
     },
     [setDisplayDensity]
   );
   const updateTheme = useCallback(
-    ({currentTarget}: any) => {
+    ({ currentTarget }: any) => {
       setTheme(currentTarget.value);
     },
     [setTheme]

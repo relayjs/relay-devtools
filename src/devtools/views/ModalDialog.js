@@ -96,7 +96,7 @@ function ModalDialogContextController({ children }: Props): React$MixedElement {
   );
 }
 
-function ModalDialog(_: {||}): React$MixedElement | null  {
+function ModalDialog(_: {||}): React$MixedElement | null {
   const { isVisible } = useContext(ModalDialogContext);
   return isVisible ? <ModalDialogImpl /> : null;
 }

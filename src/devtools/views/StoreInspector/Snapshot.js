@@ -12,7 +12,7 @@ import RecordList from './RecordList';
 import RecordDetails from './RecordDetails';
 
 import styles from './Snapshot.css';
-import type { ReactSetStateFunction } from "react";
+import type { ReactSetStateFunction } from 'react';
 
 export type Props = {|
   envSnapshotList: Object,

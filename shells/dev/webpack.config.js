@@ -44,7 +44,10 @@ const config = {
   resolve: {
     alias: {
       src: path.resolve(__dirname, '../../src'),
-      '@babel/runtime': path.resolve(__dirname, '../../node_modules/@babel/runtime'),
+      '@babel/runtime': path.resolve(
+        __dirname,
+        '../../node_modules/@babel/runtime'
+      ),
     },
   },
   plugins: [
@@ -93,7 +96,7 @@ config.output = {
 if (TARGET === 'local') {
   config.devServer = {
     static: {
-      directory:path.join(__dirname, '/'),
+      directory: path.join(__dirname, '/'),
     },
     hot: true,
     port: 8080,

@@ -7,8 +7,10 @@
  * @flow
  */
 
-import type { INetwork } from "../../../../node_modules/relay-runtime/network/RelayNetworkTypes";import type { Variables } from "../../../../node_modules/relay-runtime/util/RelayRuntimeTypes";
-import type { RequestParameters } from "../../../../node_modules/relay-runtime/util/RelayConcreteNode";/**
+import type { INetwork } from '../../../../node_modules/relay-runtime/network/RelayNetworkTypes';
+import type { Variables } from '../../../../node_modules/relay-runtime/util/RelayRuntimeTypes';
+import type { RequestParameters } from '../../../../node_modules/relay-runtime/util/RelayConcreteNode';
+/**
  * This file implements the Relay "network" as a server running in the browser.
  * This allows the test app to send network requests that can be observed without
  * running a separate server.
@@ -102,17 +104,17 @@ function createInBrowserNetwork(): INetwork {
     }
 
     friends(): {
-  count: number,
-  edges: Array<{ cursor: number, node: User, ... }>,
-  pageInfo: () => {
-    endCursor: string,
-    hasNextPage: boolean,
-    hasPreviousPage: boolean,
-    startCursor: string,
-    ...
-  },
-  ...
-} {
+      count: number,
+      edges: Array<{ cursor: number, node: User, ... }>,
+      pageInfo: () => {
+        endCursor: string,
+        hasNextPage: boolean,
+        hasPreviousPage: boolean,
+        startCursor: string,
+        ...
+      },
+      ...
+    } {
       if (!this._friends) {
         this._friends = [];
         for (let i = 0; i < 4; i++) {
@@ -146,14 +148,14 @@ function createInBrowserNetwork(): INetwork {
   }
 
   const userMap = new Map<string, User>();
-  function createUser(id: string |void) {
+  function createUser(id: string | void) {
     const user = new User(id);
     userMap.set(user.id, user);
     return user;
   }
 
   const root = {
-    node: ({ id }: {id : string | void}) => {
+    node: ({ id }: { id: string | void }) => {
       if (id == null || !userMap.has(id)) {
         return createUser(id);
       }
@@ -161,10 +163,20 @@ function createInBrowserNetwork(): INetwork {
     },
   };
 
-  function fetchQuery(request: RequestParameters, variables: Variables): $FlowFixMe {
+  function fetchQuery(
+    request: RequestParameters,
+    variables: Variables
+  ): $FlowFixMe {
     return new Promise(resolve => {
       setTimeout(() => {
-        resolve(graphql({schema, source: request.text, rootValue:root,  variableValues: variables}));
+        resolve(
+          graphql({
+            schema,
+            source: request.text,
+            rootValue: root,
+            variableValues: variables,
+          })
+        );
       }, 1000 + Math.round(Math.random() * 1000));
     });
   }

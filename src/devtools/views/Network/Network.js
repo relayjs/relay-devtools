@@ -93,7 +93,10 @@ function appearsInResponse(searchText: string, response: Object): boolean {
   return false;
 }
 
-function Network(props: {| +portalContainer: mixed, currentEnvID: ?number |}): React$MixedElement | null {
+function Network(props: {|
+  +portalContainer: mixed,
+  currentEnvID: ?number,
+|}): React$MixedElement | null {
   const store = useContext(StoreContext);
 
   const [, forceUpdate] = useState({});

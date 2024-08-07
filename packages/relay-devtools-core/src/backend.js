@@ -28,7 +28,10 @@ installHook(window);
 
 const hook: DevToolsHook = window.__RELAY_DEVTOOLS_HOOK__;
 
-function debug(methodName: string, ...args: [] | [any] | [string] | [Array<WallEvent>]) {
+function debug(
+  methodName: string,
+  ...args: [] | [any] | [string] | [Array<WallEvent>]
+) {
   if (__DEBUG__) {
     console.log(
       `%c[core/backend] %c${methodName}`,
@@ -40,7 +43,12 @@ function debug(methodName: string, ...args: [] | [any] | [string] | [Array<WallE
 }
 
 export function connectToDevTools(options: ?ConnectOptions) {
-  const {host = 'localhost', port = 8097, websocket, isAppActive = () => true} = options || {};
+  const {
+    host = 'localhost',
+    port = 8097,
+    websocket,
+    isAppActive = () => true,
+  } = options || {};
 
   let retryTimeoutID: TimeoutID | null = null;
 

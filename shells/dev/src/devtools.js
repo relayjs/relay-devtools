@@ -50,7 +50,7 @@ inject('dist/app.js', () => {
     connect(cb) {
       const bridge = new Bridge<any, any>({
         listen(fn) {
-          const listener = ({data}: any) => {
+          const listener = ({ data }: any) => {
             fn(data);
           };
           // Preserve the reference to the window we subscribe to, so we can unsubscribe from it when required.

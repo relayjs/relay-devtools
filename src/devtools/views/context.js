@@ -17,5 +17,7 @@ export const BridgeContext: $FlowFixMe = createContext<FrontendBridge>(
 );
 BridgeContext.displayName = 'BridgeContext';
 
-export const StoreContext: $FlowFixMe = createContext<Store>(((null: any): Store));
+export const StoreContext: $FlowFixMe = createContext<Store>(
+  ((null: any): Store)
+);
 StoreContext.displayName = 'StoreContext';

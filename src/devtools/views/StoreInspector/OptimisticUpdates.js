@@ -18,7 +18,9 @@ export type Props = {|
   optimisticUpdates: ?StoreRecords,
 |};
 
-export default function Optimistic({ optimisticUpdates }: Props): React$MixedElement {
+export default function Optimistic({
+  optimisticUpdates,
+}: Props): React$MixedElement {
   const [selectedRecordID, setSelectedRecordID] = useState('');
   if (optimisticUpdates == null) {
     return (

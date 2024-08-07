@@ -7,7 +7,8 @@
  * @flow
  */
 
-import type { WallEvent } from "../types";describe('Bridge', () => {
+import type { WallEvent } from '../types';
+describe('Bridge', () => {
   let Bridge;
 
   beforeEach(() => {

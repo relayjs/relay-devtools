@@ -61,8 +61,12 @@ export default function RecordList({
     },
     [setSelectedRecordID]
   );
-  const [recordListStyles, setRecordListStyles] = useState<{[string]: any}>({});
-  const [plusMinusCollapse, setPlusMinusCollapse] = useState<{[string]: any}>({});
+  const [recordListStyles, setRecordListStyles] = useState<{ [string]: any }>(
+    {}
+  );
+  const [plusMinusCollapse, setPlusMinusCollapse] = useState<{ [string]: any }>(
+    {}
+  );
 
   if (records == null || recordsByType == null) {
     return <div className={styles.Loading}>Loading...</div>;

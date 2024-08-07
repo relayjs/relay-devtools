@@ -27,7 +27,9 @@ type Context = {|
   setTheme(value: Theme): void,
 |};
 
-const SettingsContext: $FlowFixMe = createContext<Context>(((null: any): Context));
+const SettingsContext: $FlowFixMe = createContext<Context>(
+  ((null: any): Context)
+);
 SettingsContext.displayName = 'SettingsContext';
 
 type DocumentElements = Array<HTMLElement>;

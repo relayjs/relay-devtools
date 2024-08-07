@@ -103,7 +103,10 @@ function getPathData(type: IconType) {
   }
 }
 
-export default function ButtonIcon({ className = '', type }: Props): React$MixedElement {
+export default function ButtonIcon({
+  className = '',
+  type,
+}: Props): React$MixedElement {
   const pathData = getPathData(type);
   return (
     <svg

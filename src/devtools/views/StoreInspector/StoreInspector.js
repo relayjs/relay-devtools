@@ -23,7 +23,7 @@ import { deepCopyFunction } from './utils';
 import EventLogger from './EventLogger/EventLogger';
 import { logEvent } from '../../../Logger';
 import styles from './StoreInspector.css';
-import type { ReactSetStateFunction } from "react";
+import type { ReactSetStateFunction } from 'react';
 
 export type TabID =
   | 'explorer'
@@ -61,14 +61,19 @@ const recorderTab = {
 
 const tabs = [explorerTab, snapshotTab, optimisticTab, recorderTab];
 
-function FilterButtons({ checked, setChecked, isRecording, store }: {|
+function FilterButtons({
+  checked,
+  setChecked,
+  isRecording,
+  store,
+}: {|
   checked: any | {| networkEvents: boolean, storeEvents: boolean |},
   isRecording: any | boolean,
   setChecked:
     | any
     | ReactSetStateFunction<
-      any | {| networkEvents: boolean, storeEvents: boolean |},
-    >,
+        any | {| networkEvents: boolean, storeEvents: boolean |}
+      >,
   store: any,
 |}) {
   const updateChecked = useCallback(
@@ -119,7 +124,7 @@ function RecordEventsMenu({
   checked: any | {| networkEvents: boolean, storeEvents: boolean |},
   isRecording: boolean,
   setChecked: ReactSetStateFunction<
-    any | {| networkEvents: boolean, storeEvents: boolean |},
+    any | {| networkEvents: boolean, storeEvents: boolean |}
   >,
   startRecording: () => void,
   stopAndClearRecording: () => void,
@@ -186,8 +191,12 @@ export default function StoreInspector(props: {|
     [setTab]
   );
   const [, forceUpdate] = useState({});
-  const [envSnapshotList, setEnvSnapshotList] = useState<{[$FlowFixMe]: any}>({});
-  const [envSnapshotListByType, setEnvSnapshotListByType] = useState<{[$FlowFixMe]: any}>({});
+  const [envSnapshotList, setEnvSnapshotList] = useState<{ [$FlowFixMe]: any }>(
+    {}
+  );
+  const [envSnapshotListByType, setEnvSnapshotListByType] = useState<{
+    [$FlowFixMe]: any,
+  }>({});
   const [isRecording, setIsRecording] = useState(false);
   const [checked, setChecked] = useState({
     networkEvents: true,
@@ -230,7 +239,10 @@ export default function StoreInspector(props: {|
       recordsArr.push(deepCopyFunction(records));
       const recordsTypeArr = envSnapshotListByType[currEnvID] || [];
       recordsTypeArr.push(deepCopyFunction(recordsByType));
-      setEnvSnapshotList({ ...envSnapshotList, [(currEnvID: $FlowFixMe)]: recordsArr });
+      setEnvSnapshotList({
+        ...envSnapshotList,
+        [(currEnvID: $FlowFixMe)]: recordsArr,
+      });
       setEnvSnapshotListByType({
         ...envSnapshotListByType,
         [(currEnvID: $FlowFixMe)]: recordsTypeArr,

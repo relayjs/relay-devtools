@@ -17,7 +17,9 @@ type Context = {
   setIsModalShowing: (value: boolean) => void,
 };
 
-const SettingsModalContext: $FlowFixMe = createContext<Context>(((null: any): Context));
+const SettingsModalContext: $FlowFixMe = createContext<Context>(
+  ((null: any): Context)
+);
 SettingsModalContext.displayName = 'SettingsModalContext';
 
 function SettingsModalContextController({

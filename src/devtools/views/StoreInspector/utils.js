@@ -10,7 +10,9 @@
 import type Store from '../../store';
 import type { LogEvent } from '../../../types';
 
-export function deepCopyFunction(inObject: any): any | Map<mixed, mixed> | { ... } {
+export function deepCopyFunction(
+  inObject: any
+): any | Map<mixed, mixed> | { ... } {
   if (typeof inObject !== 'object' || inObject === null) {
     return inObject;
   }
@@ -40,7 +42,9 @@ export function deepCopyFunction(inObject: any): any | Map<mixed, mixed> | { ...
   }
 }
 
-export function serializeEventLoggerRecording(store: Store): Array<[string, mixed]> {
+export function serializeEventLoggerRecording(
+  store: Store
+): Array<[string, mixed]> {
   const allEvents = Array.from(store.getAllEventsMap().entries());
   return (allEvents.map(entry => {
     const envID = entry[0];
@@ -51,7 +55,10 @@ export function serializeEventLoggerRecording(store: Store): Array<[string, mixe
   }): Array<[string, mixed]>);
 }
 
-export function deserializeEventLoggerRecording(raw: string, store: Store): Array<number> {
+export function deserializeEventLoggerRecording(
+  raw: string,
+  store: Store
+): Array<number> {
   const parsedDataRecording = ((new Map(JSON.parse(raw)): any): Map<
     string,
     Array<LogEvent>

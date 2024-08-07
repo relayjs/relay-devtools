@@ -49,15 +49,16 @@ module.exports = api => {
   }
   return {
     plugins,
-    sourceType: "unambiguous",
-    ignore: [
-        /\/node_modules\//,
-    ],
+    sourceType: 'unambiguous',
+    ignore: [/\/node_modules\//],
     presets: [
-      ['@babel/preset-env', {
-        useBuiltIns: 'entry',
-        targets,
-    }],
+      [
+        '@babel/preset-env',
+        {
+          useBuiltIns: 'entry',
+          targets,
+        },
+      ],
       '@babel/preset-react',
       '@babel/preset-flow',
     ],

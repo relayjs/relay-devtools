@@ -36,13 +36,13 @@ export default function TabBar({
   selectTab,
   size,
   tabs,
-}: Props): React$MixedElement{
+}: Props): React$MixedElement {
   if (!tabs.some(tab => tab.id === tabID)) {
     selectTab(tabs[0]);
   }
 
   const onChange = useCallback(
-    ({currentTarget}: any) => selectTab(currentTarget.value),
+    ({ currentTarget }: any) => selectTab(currentTarget.value),
     [selectTab]
   );
 

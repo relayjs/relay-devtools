@@ -59,7 +59,10 @@ function getPathData(type: IconType) {
   }
 }
 
-export default function Icon({ className = '', type }: Props): React$MixedElement {
+export default function Icon({
+  className = '',
+  type,
+}: Props): React$MixedElement {
   const pathData = getPathData(type);
   const circlePathData =
     pathData === PATH_GITHUB_FEEDBACK ? PATH_GITHUB_CIRCLE : null;

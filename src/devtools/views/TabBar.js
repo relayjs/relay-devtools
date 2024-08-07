@@ -46,7 +46,7 @@ export default function TabBar({
   }
 
   const onChange = useCallback(
-    ({currentTarget}: any) => selectTab(currentTarget.value),
+    ({ currentTarget }: any) => selectTab(currentTarget.value),
     [selectTab]
   );
 

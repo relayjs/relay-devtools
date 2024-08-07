@@ -20,7 +20,7 @@ import './styles.css';
 
 const roots = [];
 
-function mountHelper(App: ((_: mixed) => React$MixedElement)) {
+function mountHelper(App: (_: mixed) => React$MixedElement) {
   const container = document.createElement('div');
 
   ((document.body: any): HTMLBodyElement).appendChild(container);

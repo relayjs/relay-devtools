@@ -49,10 +49,10 @@ export default function KeyValue({
   records,
   setSelectedRecordID,
 }: KeyValueProps):
-  | React.Element<"div">
+  | React.Element<'div'>
   | Array<React.Node>
   | Array<Element<any>>
-  | Array<any | React.Element<"div">> {
+  | Array<any | React.Element<'div'>> {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [wasEverOpen, setWasEverOpen] = useState<boolean>(isOpen);
   useEffect(() => {
@@ -133,7 +133,9 @@ export default function KeyValue({
     if (Array.isArray(value)) {
       const hasChildren = value.length > 0;
 
-      const children: Array<React.Node> | Array<any | React.Element<"div">> = wasEverOpen
+      const children:
+        | Array<React.Node>
+        | Array<any | React.Element<'div'>> = wasEverOpen
         ? value.map((innerValue, mapIndex): React.Node => (
             <KeyValue
               key={mapIndex}
@@ -199,7 +201,9 @@ export default function KeyValue({
           ? ((records[nextReferencedRecordID].__typename: any): string)
           : 'Object';
 
-      const children: Array<Element<any>> | Array<any | React.Element<"div">> = wasEverOpen
+      const children:
+        | Array<Element<any>>
+        | Array<any | React.Element<'div'>> = wasEverOpen
         ? sortedEntries.map(([entriesName, entriesVal]) => (
             <KeyValue
               key={entriesName}

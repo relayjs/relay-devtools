@@ -7,7 +7,8 @@
  * @flow
  */
 
-import type { Element as $IMPORTED_TYPE$_Element } from "react";import React, { useState } from 'react';
+import type { Element as $IMPORTED_TYPE$_Element } from 'react';
+import React, { useState } from 'react';
 import type { Element } from 'react';
 // import EditableValue from './EditableValue';
 import ExpandCollapseToggle from './ExpandCollapseToggle';
@@ -32,9 +33,9 @@ export default function KeyValue({
   value,
 }: KeyValueProps):
   | any
-  | $IMPORTED_TYPE$_Element<"div">
+  | $IMPORTED_TYPE$_Element<'div'>
   | Array<Element<any>>
-  | Array<any | $IMPORTED_TYPE$_Element<"div">> {
+  | Array<any | $IMPORTED_TYPE$_Element<'div'>> {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [wasOpen, setWasOpen] = useState<boolean>(isOpen);
   if (isOpen && !wasOpen) {
@@ -77,7 +78,9 @@ export default function KeyValue({
     if (Array.isArray(value)) {
       const hasChildren = value.length > 0;
 
-      const children: any | Array<any | $IMPORTED_TYPE$_Element<"div">> = wasOpen
+      const children:
+        | any
+        | Array<any | $IMPORTED_TYPE$_Element<'div'>> = wasOpen
         ? value.map((innerValue, index) => (
             <KeyValue
               key={index}
@@ -125,7 +128,9 @@ export default function KeyValue({
       const hasChildren = entries.length > 0;
       const displayName = 'Object';
 
-      const children: Array<Element<any>> | Array<any | $IMPORTED_TYPE$_Element<"div">> = wasOpen
+      const children:
+        | Array<Element<any>>
+        | Array<any | $IMPORTED_TYPE$_Element<'div'>> = wasOpen
         ? entries.map(([entriesName, entriesVal]) => (
             <KeyValue
               key={entriesName}

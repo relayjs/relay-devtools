@@ -29,7 +29,11 @@ const networkEventNames = [
   'network.unsubscribe',
 ];
 
-function eventsAreLinked(events: any | $ReadOnlyArray<LogEvent>, selectedEventID: any | number, index: any | number) {
+function eventsAreLinked(
+  events: any | $ReadOnlyArray<LogEvent>,
+  selectedEventID: any | number,
+  index: any | number
+) {
   const currentEvent = events[index];
   const selectedEvent = events[selectedEventID];
   return (
@@ -81,7 +85,7 @@ function StoreEventDisplay({
   events: $ReadOnlyArray<LogEvent>,
   index: number,
   selectedEventID: number,
-  setSelectedEventID: (number) => void,
+  setSelectedEventID: number => void,
 |}) {
   return (
     <div

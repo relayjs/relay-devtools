@@ -14,7 +14,7 @@ import StoreEventDisplay from './StoreEventDisplay';
 import type { LogEvent } from '../../../../types';
 
 import styles from './EventLogger.css';
-import type { ReactSetStateFunction } from "react";
+import type { ReactSetStateFunction } from 'react';
 
 export type Props = {|
   allEvents: ?$ReadOnlyArray<LogEvent>,
@@ -22,7 +22,11 @@ export type Props = {|
   checked: { [string]: boolean },
 |};
 
-function AllEventsDetails({ events, selectedEventID, setSelectedEventID }: {|
+function AllEventsDetails({
+  events,
+  selectedEventID,
+  setSelectedEventID,
+}: {|
   events: $ReadOnlyArray<LogEvent>,
   selectedEventID: number,
   setSelectedEventID: ReactSetStateFunction<number>,

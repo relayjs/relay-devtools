@@ -39,9 +39,9 @@ module.exports = {
 
     // This name is important; standalone references it in order to connect.
     library: {
-      name:'RelayDevToolsBackend',
+      name: 'RelayDevToolsBackend',
       type: 'umd',
-    }
+    },
   },
   resolve: {
     alias: {

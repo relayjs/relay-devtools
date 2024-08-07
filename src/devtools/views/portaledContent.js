@@ -15,9 +15,7 @@ export type Props = {
   portalContainer?: Element,
 };
 
-export default function portaledContent(
-  Component: any,
-): any {
+export default function portaledContent(Component: any): any {
   return function PortaledContent({ portalContainer, ...rest }: Props) {
     const children = (
       <ErrorBoundary>

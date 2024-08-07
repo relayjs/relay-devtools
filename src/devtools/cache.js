@@ -90,7 +90,9 @@ function getEntriesForResource(
   if (entriesForResource === undefined) {
     const config = resourceConfigs.get(resource);
     entriesForResource =
-      config !== undefined && config.useWeakMap ? (new WeakMap(): $FlowFixMe) : new Map();
+      config !== undefined && config.useWeakMap
+        ? (new WeakMap(): $FlowFixMe)
+        : new Map();
     entries.set(resource, entriesForResource);
   }
   return entriesForResource;

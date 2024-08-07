@@ -11,8 +11,8 @@ import type {
   RelayEnvironment as $IMPORTED_TYPE$_RelayEnvironment,
   EnvironmentWrapper,
   EnvironmentID,
-} from "src/backend/types";
-import type { RelayEnvironment, Handler } from "src/backend/types";
+} from 'src/backend/types';
+import type { RelayEnvironment, Handler } from 'src/backend/types';
 /**
  * Install the hook on window, which is an event emitter.
  * Note because Chrome content scripts cannot directly modify the window object,
@@ -28,8 +28,11 @@ export function installHook(target: any): DevToolsHook | null {
   if (target.hasOwnProperty('__RELAY_DEVTOOLS_HOOK__')) {
     return null;
   }
-  const listeners: {[string]: Array<Handler>} = {};
-  const environments = new Map<EnvironmentID, $IMPORTED_TYPE$_RelayEnvironment>();
+  const listeners: { [string]: Array<Handler> } = {};
+  const environments = new Map<
+    EnvironmentID,
+    $IMPORTED_TYPE$_RelayEnvironment
+  >();
 
   let uidCounter = 0;
 

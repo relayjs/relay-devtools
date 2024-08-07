@@ -7,7 +7,8 @@
  * @flow
  */
 
-import type { WallEvent } from "../types";describe('Store', () => {
+import type { WallEvent } from '../types';
+describe('Store', () => {
   let Store;
   let Bridge;
 
