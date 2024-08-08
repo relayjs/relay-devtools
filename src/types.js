@@ -25,6 +25,7 @@ export type UpdatedRecords = { [dataID: DataID]: boolean, ... };
 export type StoreRecords = { [DataID]: ?Record, ... };
 
 // Copied from relay
+// TODO: keep this up to date with relay
 export type LogEvent =
   | {|
       +name: 'queryresource.fetch',
@@ -42,7 +43,7 @@ export type LogEvent =
       +optimistic: boolean,
     |}
   | {|
-      +name: 'store.gc',
+      +name: 'store.gc', // TODO: Support the new GC event name
       references: Array<DataID>,
       gcRecords: StoreRecords,
     |}

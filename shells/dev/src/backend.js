@@ -23,7 +23,7 @@ const bridge = new Bridge<any, any>({
     };
   },
   sendAll(events: Array<WallEvent>) {
-    window.parent.postMessage(JSON.parse(JSON.stringify(events)), '*');
+    window.parent.postMessage(events, '*');
   },
 });
 

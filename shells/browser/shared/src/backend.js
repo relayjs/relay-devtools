@@ -53,7 +53,7 @@ function setup(hook: any) {
       window.postMessage(
         {
           source: 'relay-devtools-bridge',
-          payload: JSON.parse(JSON.stringify(events)),
+          payload: events,
         },
         '*'
       );

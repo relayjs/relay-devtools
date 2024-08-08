@@ -13,6 +13,64 @@ import type {
   EnvironmentWrapper,
 } from './types';
 
+const UNUSED_EXPENSIVE_FIELDS = [
+  'selector',
+  'sourceOperation',
+  'updatedOwners',
+  'operation',
+  'profilerContext',
+];
+
+const SUPPORTED_EVENTS = new Set([
+  'queryresource.fetch',
+  'network.info',
+  'store.publish',
+  'store.gc',
+  'store.restore',
+  'store.snapshot',
+  'store.notify.start',
+  'store.notify.complete',
+  'network.info',
+  'network.start',
+  'network.next',
+  'network.error',
+  'network.complete',
+  'network.unsubscribe',
+]);
+
+function sanitizeEvent(event: Object): Object {
+  // Convert some common data structures to objects or arrays
+  // Remove unused Relay data structures
+  const newEvent: Object = {};
+  const keys = Object.keys(event);
+  for (const key of keys) {
+    const value = event[key];
+    if (typeof value === 'function' || UNUSED_EXPENSIVE_FIELDS.includes(key)) {
+      continue;
+    } else if (value == null) {
+      newEvent[key] = value;
+    } else if (typeof value !== 'object') {
+      newEvent[key] = value;
+    } else if (value instanceof Map) {
+      newEvent[key] = Object.fromEntries((value: Map<mixed, mixed>));
+    } else if (value instanceof Set) {
+      newEvent[key] = Array.from(value);
+    } else if (typeof value.toJSON == 'function') {
+      // Convert RecordSource to Object, there are arbitary values for resolvers
+      newEvent[key] = JSON.parse(JSON.stringify(value.toJSON()));
+    } else if (
+      (key === 'info' && event.name === 'network.info') ||
+      key === 'cacheConfig'
+    ) {
+      // Network info contains arbitary data
+      newEvent[key] = JSON.parse(JSON.stringify(value));
+    } else {
+      newEvent[key] = value;
+    }
+  }
+  return newEvent;
+}
+
 export function attach(
   hook: DevToolsHook,
   rendererID: number,
@@ -25,13 +83,17 @@ export function attach(
   const originalLog = environment.__log;
   environment.__log = event => {
     originalLog(event);
+    if (!SUPPORTED_EVENTS.has(event.name)) {
+      return;
+    }
+    const sanitizedEvent = sanitizeEvent(event);
     // TODO(damassart): Make this a modular function
     if (pendingEventsQueue !== null) {
-      pendingEventsQueue.push(event);
+      pendingEventsQueue.push(sanitizedEvent);
     } else {
       hook.emit('environment.event', {
         id: rendererID,
-        data: event,
+        data: sanitizedEvent,
         eventType: 'environment',
       });
     }
@@ -43,33 +105,15 @@ export function attach(
     if (storeOriginalLog !== null) {
       storeOriginalLog(event);
     }
-    switch (event.name) {
-      case 'store.gc':
-        // references is a Set, but we can't serialize Sets,
-        // so we convert references to an Array
-        event.references = Array.from(event.references);
-        hook.emit('environment.event', {
-          id: rendererID,
-          data: event,
-          eventType: 'store',
-        });
-        break;
-      case 'store.notify.complete':
-        event.invalidatedRecordIDs = Array.from(event.invalidatedRecordIDs);
-        hook.emit('environment.event', {
-          id: rendererID,
-          data: event,
-          eventType: 'store',
-        });
-        break;
-      default:
-        hook.emit('environment.event', {
-          id: rendererID,
-          data: event,
-          eventType: 'store',
-        });
-        break;
+    if (!SUPPORTED_EVENTS.has(event.name)) {
+      return;
     }
+    const sanitizedEvent = sanitizeEvent(event);
+    hook.emit('environment.event', {
+      id: rendererID,
+      data: sanitizedEvent,
+      eventType: 'store',
+    });
   };
 
   function cleanup() {
@@ -79,7 +123,7 @@ export function attach(
   }
 
   function sendStoreRecords() {
-    const records = store.getSource().toJSON();
+    const records = JSON.parse(JSON.stringify(store.getSource().toJSON()));
     hook.emit('environment.store', {
       name: 'refresh.store',
       id: rendererID,
