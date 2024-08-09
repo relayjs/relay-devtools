@@ -96,8 +96,8 @@ const postProcess = async (tempPath, destinationPath) => {
   const packedDestPath = join(destinationPath, 'RelayDevTools.zip');
   const unpackedDestPath = join(destinationPath, 'unpacked');
 
-  await move(unpackedSourcePath, unpackedDestPath); // Copy built files to destination
-  await move(packedSourcePath, packedDestPath); // Copy built files to destination
+  await move(unpackedSourcePath, unpackedDestPath, { overwrite: true }); // Copy built files to destination
+  await move(packedSourcePath, packedDestPath, { overwrite: true }); // Copy built files to destination
   await remove(tempPath); // Clean up temp directory and files
 };
 

@@ -2,8 +2,8 @@
   "manifest_version": 2,
   "name": "Relay Developer Tools",
   "description": "Adds Relay debugging tools to the Chrome Developer Tools.",
-  "version": "0.9.16",
-  "version_name": "0.9.16",
+  "version": "0.9.17",
+  "version_name": "0.9.17",
   "update_url": "https://www.internalfb.com/intern/browser_extensions/chrome/update.xml",
   "minimum_chrome_version": "78",
   "icons": {
