@@ -47,9 +47,7 @@ function sanitizeEvent(event: Object): Object {
     const value = event[key];
     if (typeof value === 'function' || UNUSED_EXPENSIVE_FIELDS.includes(key)) {
       continue;
-    } else if (value == null) {
-      newEvent[key] = value;
-    } else if (typeof value !== 'object') {
+    } else if (value == null || typeof value !== 'object') {
       newEvent[key] = value;
     } else if (value instanceof Map) {
       newEvent[key] = Object.fromEntries((value: Map<mixed, mixed>));
@@ -60,9 +58,10 @@ function sanitizeEvent(event: Object): Object {
       newEvent[key] = JSON.parse(JSON.stringify(value.toJSON()));
     } else if (
       (key === 'info' && event.name === 'network.info') ||
+      event.name === 'network.start' ||
       key === 'cacheConfig'
     ) {
-      // Network info contains arbitary data
+      // Some network events contain arbitary data
       newEvent[key] = JSON.parse(JSON.stringify(value));
     } else {
       newEvent[key] = value;
