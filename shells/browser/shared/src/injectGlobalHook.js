@@ -11,16 +11,12 @@
 /* global chrome */
 
 import nullthrows from 'nullthrows';
-import { installHook } from 'src/hook';
 
-function injectCode(code: string) {
+function injectCode() {
   const script = document.createElement('script');
-  script.textContent = code;
-
-  // This script runs before the <head> element is created,
-  // so we add the script to <html> instead.
-  nullthrows(document.documentElement).appendChild(script);
-  nullthrows(script.parentNode).removeChild(script);
+  script.src = chrome.runtime.getURL('build/injectedRelayDevToolsDetector.js');
+  document.documentElement.appendChild(script);
+  script.remove();
 }
 
 let lastDetectionResult;
@@ -59,14 +55,4 @@ window.addEventListener('pageshow', function(evt) {
   chrome.runtime.sendMessage(lastDetectionResult);
 });
 
-const detectRelay = `
-window.__RELAY_DEVTOOLS_HOOK__.on('environment', function(evt) {
-  window.postMessage({
-    source: 'relay-devtools-detector',
-  }, '*');
-});
-`;
-
-// Inject a `__RELAY_DEVTOOLS_HOOK__` global so that Relay can detect that the
-// devtools are installed (and skip its suggestion to install the devtools).
-injectCode(';(' + installHook.toString() + '(window))' + detectRelay);
+injectCode();
