@@ -1,5 +1,5 @@
 {
-  "manifest_version": 2,
+  "manifest_version": 3,
   "name": "Relay Developer Tools",
   "description": "Adds Relay debugging tools to the Chrome Developer Tools.",
   "version": "0.9.17",
@@ -12,7 +12,7 @@
     "48": "icons/enabled48.png",
     "128": "icons/enabled128.png"
   },
-  "browser_action": {
+  "action": {
     "default_icon": {
       "16": "icons/disabled16.png",
       "32": "icons/disabled32.png",
@@ -22,22 +22,23 @@
     "default_popup": "popups/disabled.html"
   },
   "devtools_page": "main.html",
-  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  },
   "web_accessible_resources": [
-    "main.html",
-    "panel.html",
-    "build/backend.js",
-    "build/renderer.js"
+    {
+      "resources": ["main.html", "panel.html", "build/*.js"],
+      "matches": ["<all_urls>"]
+    }
   ],
   "background": {
-    "scripts": ["build/background.js"],
-    "persistent": false
+    "service_worker": "build/background.js"
   },
-  "permissions": ["file:///*", "http://*/*", "https://*/*", "webNavigation"],
+  "permissions": ["webNavigation", "scripting", "tabs"],
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["build/injectGlobalHook.js"],
+      "js": ["build/injectGlobalHook.js", "build/contentScript.js"],
       "run_at": "document_start"
     }
   ]
