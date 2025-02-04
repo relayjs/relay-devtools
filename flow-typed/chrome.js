@@ -56,6 +56,16 @@ declare var chrome: {
       popup: string,
     }) => void,
   },
+  action: {
+    setIcon: (options: {
+      tabId: number,
+      path: { [key: string]: string },
+    }) => void,
+    setPopup: (options: {
+      tabId: number,
+      popup: string,
+    }) => void,
+  },
   runtime: {
     getURL: (path: string) => string,
     sendMessage: (config: Object) => void,

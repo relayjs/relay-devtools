@@ -39,6 +39,7 @@ module.exports = {
     main: './src/main.js',
     panel: './src/panel.js',
     renderer: './src/renderer.js',
+    injectedRelayDevToolsDetector: './src/injectedRelayDevToolsDetector.js',
   },
   output: {
     path: __dirname + '/build',
