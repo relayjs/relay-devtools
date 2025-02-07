@@ -4,8 +4,7 @@
   "description": "Adds Relay debugging tools to the Chrome Developer Tools.",
   "version": "0.9.17",
   "version_name": "0.9.17",
-  "update_url": "https://www.internalfb.com/intern/browser_extensions/chrome/update.xml",
-  "minimum_chrome_version": "78",
+  "minimum_chrome_version": "88",
   "icons": {
     "16": "icons/enabled16.png",
     "32": "icons/enabled32.png",
@@ -34,12 +33,13 @@
   "background": {
     "service_worker": "build/background.js"
   },
-  "permissions": ["webNavigation", "scripting", "tabs"],
+  "permissions": ["webNavigation", "scripting"],
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
       "js": ["build/injectGlobalHook.js", "build/contentScript.js"],
       "run_at": "document_start"
     }
-  ]
+  ],
+  "host_permissions": ["<all_urls>"]
 }
