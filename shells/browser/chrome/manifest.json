@@ -2,8 +2,8 @@
   "manifest_version": 3,
   "name": "Relay Developer Tools",
   "description": "Adds Relay debugging tools to the Chrome Developer Tools.",
-  "version": "0.9.17",
-  "version_name": "0.9.17",
+  "version": "0.9.18",
+  "version_name": "0.9.18",
   "minimum_chrome_version": "88",
   "icons": {
     "16": "icons/enabled16.png",
@@ -26,20 +26,36 @@
   },
   "web_accessible_resources": [
     {
-      "resources": ["main.html", "panel.html", "build/*.js"],
-      "matches": ["<all_urls>"]
+      "resources": [
+        "main.html",
+        "panel.html",
+        "build/*.js"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
     }
   ],
   "background": {
     "service_worker": "build/background.js"
   },
-  "permissions": ["webNavigation", "scripting"],
+  "permissions": [
+    "webNavigation",
+    "scripting"
+  ],
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
-      "js": ["build/injectGlobalHook.js", "build/contentScript.js"],
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "build/injectGlobalHook.js",
+        "build/contentScript.js"
+      ],
       "run_at": "document_start"
     }
   ],
-  "host_permissions": ["<all_urls>"]
+  "host_permissions": [
+    "<all_urls>"
+  ]
 }
