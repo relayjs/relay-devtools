@@ -47,27 +47,36 @@ function sanitizeEvent(event: Object): Object {
     const value = event[key];
     if (typeof value === 'function' || UNUSED_EXPENSIVE_FIELDS.includes(key)) {
       continue;
-    } else if (value == null || typeof value !== 'object') {
-      newEvent[key] = value;
-    } else if (value instanceof Map) {
-      newEvent[key] = Object.fromEntries((value: Map<mixed, mixed>));
-    } else if (value instanceof Set) {
-      newEvent[key] = Array.from(value);
-    } else if (typeof value.toJSON == 'function') {
-      // Convert RecordSource to Object, there are arbitary values for resolvers
-      newEvent[key] = JSON.parse(JSON.stringify(value.toJSON()));
-    } else if (
-      (key === 'info' && event.name === 'network.info') ||
-      event.name === 'network.start' ||
-      key === 'cacheConfig'
-    ) {
-      // Some network events contain arbitary data
-      newEvent[key] = JSON.parse(JSON.stringify(value));
-    } else {
-      newEvent[key] = value;
     }
+    newEvent[key] = makeCloneable(value);
   }
   return newEvent;
+}
+
+function makeCloneable(obj: mixed): Object {
+  if (obj === null || typeof obj !== 'object') return obj;
+
+  if (Array.isArray(obj)) {
+    return obj.map(makeCloneable);
+  }
+
+  if (typeof obj.toJSON == 'function') {
+    // Convert RecordSource to Object, there are arbitary values for resolvers
+    // $FlowFixMe[incompatible-use]
+    return makeCloneable(obj.toJSON());
+  }
+  const result: Object = {};
+  for (const [key, value] of Object.entries(obj)) {
+    if (
+      typeof value === 'function' ||
+      typeof value === 'symbol' ||
+      value instanceof Node
+    ) {
+      continue;
+    }
+    result[key] = makeCloneable(value);
+  }
+  return result;
 }
 
 export function attach(
@@ -80,7 +89,7 @@ export function attach(
   const store = environment.getStore();
 
   const originalLog = environment.__log;
-  environment.__log = event => {
+  environment.__log = (event) => {
     originalLog(event);
     if (!SUPPORTED_EVENTS.has(event.name)) {
       return;
@@ -100,7 +109,7 @@ export function attach(
 
   const storeOriginalLog = store.__log;
   // TODO(damassart): Make this cleaner
-  store.__log = event => {
+  store.__log = (event) => {
     if (storeOriginalLog !== null) {
       storeOriginalLog(event);
     }
@@ -133,7 +142,7 @@ export function attach(
   function flushInitialOperations() {
     // TODO(damassart): Make this a modular function
     if (pendingEventsQueue != null) {
-      pendingEventsQueue.forEach(pendingEvent => {
+      pendingEventsQueue.forEach((pendingEvent) => {
         hook.emit('environment.event', {
           id: rendererID,
           envName: environment.configName,
