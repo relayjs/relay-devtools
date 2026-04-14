@@ -17,6 +17,13 @@ const main = async () => {
   const { crx, keyPath } = argv;
 
   if (crx) {
+    console.warn(
+      chalk.yellow(
+        'WARNING: --crx flag is deprecated. CRX signing is now handled by crx3make.\n' +
+        'Use "yarn build:extension:chrome" to build, then sign with crx3make separately.\n' +
+        'See fb/bundle.sh for the updated workflow.'
+      )
+    );
     if (!keyPath || !existsSync(keyPath)) {
       console.error('Must specify a key file (.pem) to build CRX');
       process.exit(1);
