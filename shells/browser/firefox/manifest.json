@@ -1,4 +1,5 @@
 {
+  "$schema": "https://interncache-all.fbcdn.net/manifold/rl_source_control/flat/chrome-manifest.json",
   "manifest_version": 2,
   "name": "React Developer Tools",
   "description": "Adds React debugging tools to the Firefox Developer Tools.",
