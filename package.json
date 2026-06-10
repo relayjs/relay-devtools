@@ -143,5 +143,8 @@
     "webpack-cli": "^5.1.4",
     "webpack-dev-server": "^5.0.4",
     "yargs": "^14.2.0"
+  },
+  "resolutions": {
+    "minimist": "0.2.4"
   }
 }
