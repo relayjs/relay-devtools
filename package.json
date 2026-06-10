@@ -145,6 +145,7 @@
     "yargs": "^14.2.0"
   },
   "resolutions": {
-    "minimist": "0.2.4"
+    "minimist": "0.2.4",
+    "underscore": "1.12.1"
   }
 }
